@@ -88,9 +88,8 @@ export const Quiz = () => {
   const { state } = useLocation();
   const toast = useToast();
   const hasInitializedRef = useRef(false);
-  const isMountedRef = useRef(false);
 
-  const [list] = useState<WordList | null>(state?.list || null);
+  const [list, setList] = useState<WordList | null>(state?.list || null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState('');
@@ -108,14 +107,13 @@ export const Quiz = () => {
   const [isUpdatingPoints, setIsUpdatingPoints] = useState(false);
 
   useEffect(() => {
-    if (isMountedRef.current) return;
-    isMountedRef.current = true;
-
     const initQuiz = async () => {
-      if (!id || !list || hasInitializedRef.current) return;
+      if (!id || hasInitializedRef.current) return;
 
       try {
         setIsLoading(true);
+        const resolvedList = list ?? await apiService.getList(id);
+        setList(resolvedList);
 
         const response = await apiService.startQuiz(id);
         if (response && response.questions && response.total_questions) {
@@ -137,7 +135,7 @@ export const Quiz = () => {
           duration: 5000,
           isClosable: true,
         });
-        navigate(`/lists/${id}`);
+        navigate(id ? `/lists/${id}` : '/lists');
       } finally {
         setIsLoading(false);
       }

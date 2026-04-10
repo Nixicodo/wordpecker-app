@@ -308,7 +308,7 @@ export const Lists = () => {
                         gap={2} 
                         direction={{ base: 'column', sm: 'row' }}
                       >
-                        <Link to={`/learn/${list.id}`} style={{ flex: 1 }}>
+                        <Link to={`/learn/${list.id}`} state={{ list }} style={{ flex: 1 }}>
                           <Button 
                             w="full"
                             variant="ghost"
@@ -325,7 +325,7 @@ export const Lists = () => {
                           {isZh ? '学习' : 'Learn'}
                         </Button>
                       </Link>
-                      <Link to={`/quiz/${list.id}`} style={{ flex: 1 }}>
+                      <Link to={`/quiz/${list.id}`} state={{ list }} style={{ flex: 1 }}>
                         <Button 
                           w="full"
                           variant="ghost"

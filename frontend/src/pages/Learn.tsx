@@ -84,9 +84,8 @@ export const Learn = () => {
   const { state } = useLocation();
   const toast = useToast();
   const hasInitializedRef = useRef(false);
-  const isMountedRef = useRef(false);
 
-  const [list] = useState<WordList | null>(state?.list || null);
+  const [list, setList] = useState<WordList | null>(state?.list || null);
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [currentExercise, setCurrentExercise] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState('');
@@ -99,14 +98,13 @@ export const Learn = () => {
   const [actualCorrectness, setActualCorrectness] = useState<boolean | null>(null);
 
   useEffect(() => {
-    if (isMountedRef.current) return;
-    isMountedRef.current = true;
-
     const initLearn = async () => {
-      if (!id || !list || hasInitializedRef.current) return;
+      if (!id || hasInitializedRef.current) return;
 
       try {
         setIsLoading(true);
+        const resolvedList = list ?? await apiService.getList(id);
+        setList(resolvedList);
 
         const response = await apiService.startLearning(id);
         if (response && response.exercises) {
@@ -127,7 +125,7 @@ export const Learn = () => {
           duration: 5000,
           isClosable: true,
         });
-        navigate(`/lists/${id}`);
+        navigate(id ? `/lists/${id}` : '/lists');
       } finally {
         setIsLoading(false);
       }
