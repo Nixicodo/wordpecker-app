@@ -6,24 +6,10 @@ import { UserPreferences } from '../preferences/model';
 import { QuestionType } from '../../types';
 import { learnAgentService } from './agent-service';
 import { getUserLanguages } from '../../utils/getUserLanguages';
-import { listIdSchema } from './schemas';
+import { listIdSchema, updatePointsSchema } from './schemas';
+import { applyLearnedPointResults, selectWeakWords } from '../../services/learningProgress';
 
 const router = Router();
-
-const selectSmartWords = (words: any[], listId: string) =>
-  words
-    .map(word => {
-      const context = word.ownedByLists.find((ctx: any) => ctx.listId.toString() === listId);
-      return {
-        id: word._id.toString(),
-        value: word.value,
-        meaning: context?.meaning || '',
-        learnedPoint: context?.learnedPoint || 0
-      };
-    })
-    .sort((a, b) => a.learnedPoint !== b.learnedPoint ? a.learnedPoint - b.learnedPoint : Math.random() - 0.5)
-    .slice(0, 5)
-    .map(({ learnedPoint, ...word }) => word);
 
 const getExerciseTypes = async (userId: string): Promise<QuestionType[]> => {
   if (!userId) return ['multiple_choice', 'fill_blank', 'true_false'];
@@ -49,7 +35,7 @@ router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
 
     const userId = req.headers['user-id'] as string;
     const [selectedWords, exerciseTypes, { baseLanguage, targetLanguage }] = await Promise.all([
-      selectSmartWords(words, listId),
+      selectWeakWords(words, listId),
       getExerciseTypes(userId),
       getUserLanguages(userId || 'default')
     ]);
@@ -84,7 +70,7 @@ router.post('/:listId/more', validate(listIdSchema), async (req, res) => {
 
     const userId = req.headers['user-id'] as string;
     const [selectedWords, exerciseTypes, { baseLanguage, targetLanguage }] = await Promise.all([
-      selectSmartWords(words, listId),
+      selectWeakWords(words, listId),
       getExerciseTypes(userId),
       getUserLanguages(userId || 'default')
     ]);
@@ -100,6 +86,19 @@ router.post('/:listId/more', validate(listIdSchema), async (req, res) => {
     res.json({ exercises });
   } catch (error) {
     res.status(500).json({ message: 'Error getting more exercises' });
+  }
+});
+
+router.put('/:listId/learned-points', validate(updatePointsSchema), async (req, res) => {
+  try {
+    const { listId } = req.params;
+    const { results } = req.body;
+
+    await applyLearnedPointResults(listId, results);
+    res.json({ message: 'Learned points updated successfully' });
+  } catch (error) {
+    console.error('Error updating learned points after learning session:', error);
+    res.status(500).json({ message: 'Error updating learned points' });
   }
 });
 

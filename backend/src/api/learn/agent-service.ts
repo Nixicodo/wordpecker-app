@@ -1,4 +1,4 @@
-import { ExerciseResult, ExerciseResultType, ExerciseType } from '../../agents/exercise-agent/schemas';
+import { ExerciseResult, ExerciseResultType, ExerciseWithId } from '../../agents/exercise-agent/schemas';
 import { generateStructuredResult } from '../../services/structuredChat';
 import { generationCache } from '../../services/generationCache';
 import { generateLocalExercises } from '../../services/localExerciseGenerator';
@@ -46,7 +46,7 @@ export class LearnAgentService {
     exerciseTypes: string[],
     baseLanguage: string,
     targetLanguage: string,
-  ): Promise<ExerciseType[]> {
+  ): Promise<ExerciseWithId[]> {
     const wordsContext = words.map(w => `${w.value}: ${w.meaning}`).join('\n');
     const prompt = `Create learning exercises for these ${targetLanguage} vocabulary words for ${baseLanguage}-speaking learners:
 
@@ -83,7 +83,13 @@ Create exactly ${words.length} exercises (one per word).`;
       'Learning exercise generation timed out',
     );
 
-    return result.exercises;
+    return result.exercises.map(exercise => {
+      const matchingWord = words.find(w => w.value === exercise.word);
+      return {
+        ...exercise,
+        wordId: matchingWord?.id || null
+      };
+    });
   }
 
   async generateExercises(
@@ -92,7 +98,7 @@ Create exactly ${words.length} exercises (one per word).`;
     exerciseTypes: string[], 
     baseLanguage: string, 
     targetLanguage: string
-  ): Promise<ExerciseType[]> {
+  ): Promise<ExerciseWithId[]> {
     const cacheKey = this.buildCacheKey(words, context, exerciseTypes, baseLanguage, targetLanguage);
 
     return generationCache.getOrCreate(cacheKey, async () => {

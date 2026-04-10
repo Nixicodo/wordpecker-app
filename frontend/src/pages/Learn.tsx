@@ -36,6 +36,11 @@ import { validateAnswer } from '../utils/answerValidation';
 const UI = {
   startErrorTitle: '\u542f\u52a8\u5b66\u4e60\u5931\u8d25',
   startErrorDescription: '\u65e0\u6cd5\u5f00\u59cb\u5b66\u4e60\u6d41\u7a0b',
+  progressSaved: '\u7ecf\u9a8c\u5df2\u7ed3\u7b97',
+  progressSavedDescription: '\u5df2\u66f4\u65b0',
+  wordUnit: '\u4e2a\u5355\u8bcd\u7684\u5b66\u4e60\u8fdb\u5ea6',
+  progressSaveFailed: '\u7ed3\u7b97\u5931\u8d25',
+  progressSaveFailedDescription: '\u5b66\u4e60\u7ed3\u679c\u5df2\u8bb0\u5f55\uff0c\u4f46\u7ecf\u9a8c\u66f4\u65b0\u5931\u8d25',
   loadMoreErrorTitle: '\u52a0\u8f7d\u66f4\u591a\u7ec3\u4e60\u5931\u8d25',
   loadMoreErrorDescription: '\u65e0\u6cd5\u52a0\u8f7d\u66f4\u591a\u7ec3\u4e60',
   noExercises: '\u5f53\u524d\u6ca1\u6709\u53ef\u7528\u7ec3\u4e60',
@@ -64,8 +69,9 @@ const UI = {
   finalScore: '\u6700\u7ec8\u5f97\u5206\uff1a',
   points: '\u5206',
   validating: '\u6b63\u5728\u6821\u9a8c\u2026\u2026',
+  saving: '\u6b63\u5728\u7ed3\u7b97\u2026\u2026',
   submitAnswer: '\u63d0\u4ea4\u7b54\u6848',
-  complete: '\u5b8c\u6210',
+  saveAndComplete: '\u7ed3\u7b97\u5e76\u5b8c\u6210',
   continueLearning: '\u7ee7\u7eed\u5b66\u4e60',
   finishSession: '\u5b8c\u6210\u672c\u8f6e\u5b66\u4e60',
   nextExercise: '\u4e0b\u4e00\u9898',
@@ -96,6 +102,8 @@ export const Learn = () => {
   const [sessionProgress, setSessionProgress] = useState<any>(null);
   const [isValidating, setIsValidating] = useState(false);
   const [actualCorrectness, setActualCorrectness] = useState<boolean | null>(null);
+  const [learningResults, setLearningResults] = useState<Array<{wordId: string, correct: boolean}>>([]);
+  const [isUpdatingPoints, setIsUpdatingPoints] = useState(false);
 
   useEffect(() => {
     const initLearn = async () => {
@@ -184,6 +192,12 @@ export const Learn = () => {
         sessionService.answerQuestion(selectedAnswer, exercise, isValid);
         setSessionProgress(sessionService.getCurrentProgress());
       }
+      if (exercise.wordId) {
+        setLearningResults(prev => [...prev, {
+          wordId: exercise.wordId as string,
+          correct: isValid
+        }]);
+      }
     } catch (error) {
       console.error('Error validating answer:', error);
       const fallbackCorrect = selectedAnswer === exercise.correctAnswer;
@@ -194,8 +208,45 @@ export const Learn = () => {
         sessionService.answerQuestion(selectedAnswer, exercise, fallbackCorrect);
         setSessionProgress(sessionService.getCurrentProgress());
       }
+      if (exercise.wordId) {
+        setLearningResults(prev => [...prev, {
+          wordId: exercise.wordId as string,
+          correct: fallbackCorrect
+        }]);
+      }
     } finally {
       setIsValidating(false);
+    }
+  };
+
+  const updateLearnedPoints = async () => {
+    if (!id || learningResults.length === 0) {
+      navigate(`/lists/${id}`);
+      return;
+    }
+
+    setIsUpdatingPoints(true);
+    try {
+      await apiService.updateLearningLearnedPoints(id, learningResults);
+      toast({
+        title: UI.progressSaved,
+        description: `${UI.progressSavedDescription} ${learningResults.length} ${UI.wordUnit}`,
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      });
+    } catch (error: any) {
+      console.error('Error updating learned points after learning session:', error);
+      toast({
+        title: UI.progressSaveFailed,
+        description: UI.progressSaveFailedDescription,
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+      });
+    } finally {
+      setIsUpdatingPoints(false);
+      navigate(`/lists/${id}`);
     }
   };
 
@@ -484,14 +535,16 @@ export const Learn = () => {
                 variant="outline"
                 colorScheme="green"
                 size="lg"
-                onClick={() => navigate(`/lists/${id}`)}
+                onClick={updateLearnedPoints}
+                isLoading={isUpdatingPoints}
+                loadingText={UI.saving}
                 _hover={{
                   transform: 'translateY(-2px)',
                   shadow: 'lg'
                 }}
                 transition="all 0.2s"
               >
-                {UI.complete}
+                {UI.saveAndComplete}
               </Button>
               <Button
                 variant="solid"

@@ -89,6 +89,8 @@ export const apiService = {
     api.post(`/api/learn/${listId}/start`),
   getExercises: (listId: string): ApiResponse<LearnExercisesResponse> => 
     api.post(`/api/learn/${listId}/more`),
+  updateLearningLearnedPoints: (listId: string, results: Array<{wordId: string, correct: boolean}>): ApiResponse<{message: string}> =>
+    api.put(`/api/learn/${listId}/learned-points`, { results }),
 
   // Quiz
   startQuiz: (listId: string): ApiResponse<QuizStartResponse> => 

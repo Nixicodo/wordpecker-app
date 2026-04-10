@@ -8,6 +8,7 @@ import { UserPreferences } from '../api/preferences/model';
 import listRoutes from '../api/lists/routes';
 import wordRoutes from '../api/words/routes';
 import preferencesRoutes from '../api/preferences/routes';
+import learnRoutes from '../api/learn/routes';
 import quizRoutes from '../api/quiz/routes';
 import {
   getLearningSnapshotPath,
@@ -32,6 +33,7 @@ describe('repository learning snapshot integration', () => {
   app.use('/api/lists', listRoutes);
   app.use('/api/lists', wordRoutes);
   app.use('/api/preferences', preferencesRoutes);
+  app.use('/api/learn', learnRoutes);
   app.use('/api/quiz', quizRoutes);
 
   beforeAll(async () => {
@@ -118,5 +120,39 @@ describe('repository learning snapshot integration', () => {
 
     const restoredPreferences = await UserPreferences.findOne({ userId: 'snapshot-user' }).lean();
     expect(restoredPreferences?.targetLanguage).toBe('en');
+  });
+
+  it('persists repository snapshot after learning session point settlement', async () => {
+    const listResponse = await request(app)
+      .post('/api/lists')
+      .send({
+        name: '学习结算词树',
+        description: '验证学习模式经验结算',
+        context: 'Learning settlement'
+      });
+
+    expect(listResponse.status).toBe(201);
+    const listId = listResponse.body.id as string;
+
+    const addWordResponse = await request(app)
+      .post(`/api/lists/${listId}/words`)
+      .send({
+        word: 'aprender',
+        meaning: '学习'
+      });
+
+    expect(addWordResponse.status).toBe(201);
+    const wordId = addWordResponse.body.id as string;
+
+    const updatePointsResponse = await request(app)
+      .put(`/api/learn/${listId}/learned-points`)
+      .send({
+        results: [{ wordId, correct: true }]
+      });
+
+    expect(updatePointsResponse.status).toBe(200);
+
+    const persistedSnapshot = JSON.parse(await fs.promises.readFile(snapshotPath, 'utf-8'));
+    expect(persistedSnapshot.data.words[0].ownedByLists[0].learnedPoint).toBe(10);
   });
 });
