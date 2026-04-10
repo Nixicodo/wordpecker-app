@@ -95,8 +95,8 @@ export const ImageDescription: React.FC = () => {
         const randomContext = suggestions.suggestions[0];
         setContext(randomContext);
         toast({
-          title: 'Random Context Generated!',
-          description: `Generated context: "${randomContext}"`,
+          title: '已生成随机场景',
+          description: `生成场景：「${randomContext}」`,
           status: 'success',
           duration: 3000,
           isClosable: true,
@@ -105,8 +105,8 @@ export const ImageDescription: React.FC = () => {
     } catch (error) {
       console.error('Failed to generate random context:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to generate random context',
+        title: '出错了',
+        description: '生成随机场景失败',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -134,8 +134,8 @@ export const ImageDescription: React.FC = () => {
       setState('describing');
       
       toast({
-        title: useSessionContext ? 'New Image Generated!' : (exerciseContext ? 'Custom Image Generated!' : 'Random Image Generated!'),
-        description: useSessionContext ? `Continuing with context: ${sessionContext}` : 'Now describe what you see in this image.',
+        title: useSessionContext ? '已生成新图片' : (exerciseContext ? '已生成自定义图片' : '已生成随机图片'),
+        description: useSessionContext ? `继续当前场景：${sessionContext}` : '请描述你在图片中看到的内容。',
         status: 'success',
         duration: 3000,
         isClosable: true,
@@ -143,8 +143,8 @@ export const ImageDescription: React.FC = () => {
     } catch (error) {
       console.error('Failed to start exercise:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to load image. Please try again.',
+        title: '出错了',
+        description: '加载图片失败，请稍后重试。',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -157,8 +157,8 @@ export const ImageDescription: React.FC = () => {
   const submitDescription = async () => {
     if (!userDescription.trim() || userDescription.trim().length < 10) {
       toast({
-        title: 'Description Too Short',
-        description: 'Please write at least 10 characters describing the image.',
+        title: '描述过短',
+        description: '请至少输入 10 个字符来描述图片。',
         status: 'warning',
         duration: 3000,
         isClosable: true,
@@ -182,8 +182,8 @@ export const ImageDescription: React.FC = () => {
       setState('results');
       
       toast({
-        title: 'Analysis Complete!',
-        description: 'Check out your personalized feedback and vocabulary recommendations.',
+        title: '分析完成',
+        description: '请查看你的个性化反馈和词汇推荐。',
         status: 'success',
         duration: 4000,
         isClosable: true,
@@ -191,8 +191,8 @@ export const ImageDescription: React.FC = () => {
     } catch (error) {
       console.error('Failed to analyze description:', error);
       toast({
-        title: 'Analysis Failed',
-        description: 'Failed to analyze your description. Please try again.',
+        title: '分析失败',
+        description: '分析你的描述失败，请稍后重试。',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -205,8 +205,8 @@ export const ImageDescription: React.FC = () => {
   const addWordsToList = async () => {
     if (!analysis || selectedWords.length === 0) {
       toast({
-        title: 'No Words Selected',
-        description: 'Please select at least one word to add to your list.',
+        title: '未选择单词',
+        description: '请至少选择 1 个单词添加到词树。',
         status: 'warning',
         duration: 3000,
         isClosable: true,
@@ -216,8 +216,8 @@ export const ImageDescription: React.FC = () => {
 
     if (!createNewList && !selectedListId) {
       toast({
-        title: 'No List Selected',
-        description: 'Please select a word list or choose to create a new one.',
+        title: '未选择词树',
+        description: '请选择一个词树，或勾选创建新词树。',
         status: 'warning',
         duration: 3000,
         isClosable: true,
@@ -238,7 +238,7 @@ export const ImageDescription: React.FC = () => {
       });
 
       toast({
-        title: createNewList ? 'New List Created!' : 'Words Added!',
+        title: createNewList ? '已创建新词树' : '添加成功',
         description: data.message,
         status: 'success',
         duration: 4000,
@@ -256,8 +256,8 @@ export const ImageDescription: React.FC = () => {
     } catch (error) {
       console.error('Failed to add words:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to add words to your list. Please try again.',
+        title: '出错了',
+        description: '添加单词失败，请稍后重试。',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -308,10 +308,10 @@ export const ImageDescription: React.FC = () => {
                   <Text fontSize="4xl">🌳</Text>
                   <Text fontSize="3xl">🐦</Text>
                 </Flex>
-                Vision Garden
+                视觉花园
               </Heading>
               <Text mt={2} color="gray.400" fontSize="lg">
-                Grow your vocabulary by exploring images! Describe what you see, and let our wordpecker guide help you discover new words.
+                通过图片探索来扩展词汇量。描述你所看到的内容，让 WordPecker 帮你发现新词。
               </Text>
             </Box>
           </Flex>
@@ -322,23 +322,23 @@ export const ImageDescription: React.FC = () => {
             <CardHeader bg={accentBg} borderTopRadius="xl">
               <HStack spacing={2}>
                 <Text fontSize="xl">🌱</Text>
-                <Heading size="md" color={useColorModeValue('green.600', '#38A169')}>Plant Your Learning Seed</Heading>
+                <Heading size="md" color={useColorModeValue('green.600', '#38A169')}>种下你的学习种子</Heading>
               </HStack>
               <Text fontSize="sm" color={useColorModeValue('gray.600', '#94A3B8')} mt={2} fontWeight="medium">
-                Choose a vocabulary context to explore, or let our wordpecker guide you to a random adventure!
+                选择一个词汇场景开始探索，或让 WordPecker 带你进入随机冒险！
               </Text>
             </CardHeader>
             <CardBody>
               <VStack spacing={4} align="stretch">
                 <FormControl>
                   <FormLabel color="green.400" fontSize="lg" fontWeight="semibold">
-                    ✍️ Create Custom Context
+                    ✍️ 创建自定义场景
                   </FormLabel>
                   <HStack spacing={3}>
                     <Input
                       value={context}
                       onChange={(e) => setContext(e.target.value)}
-                      placeholder="e.g., Business English vocabulary (or leave empty for random)"
+                      placeholder="例如：商务英语词汇（留空可随机）"
                       size="lg"
                       borderColor={context ? "green.400" : borderColor}
                       borderWidth="2px"
@@ -354,7 +354,7 @@ export const ImageDescription: React.FC = () => {
                       variant="outline"
                       size="lg"
                       isLoading={generatingContext}
-                      loadingText="Generating..."
+                      loadingText="生成中..."
                       flexShrink={0}
                       _hover={{
                         transform: 'translateY(-2px)',
@@ -363,16 +363,16 @@ export const ImageDescription: React.FC = () => {
                       }}
                       transition="all 0.2s"
                     >
-                      AI Generate
+                      AI 生成
                     </Button>
                   </HStack>
                   <Text fontSize="xs" color="gray.500" mt={1}>
-                    Leave empty to get a surprise random context!
+                    留空即可获得一个惊喜随机场景。
                   </Text>
                 </FormControl>
 
                 <FormControl>
-                  <FormLabel fontWeight="semibold">Image Source</FormLabel>
+                  <FormLabel fontWeight="semibold">图片来源</FormLabel>
                   <RadioGroup 
                     value={imageSource} 
                     onChange={(value) => setImageSource(value as 'ai' | 'stock')}
@@ -381,17 +381,17 @@ export const ImageDescription: React.FC = () => {
                     <VStack align="start" spacing={3}>
                       <Radio value="ai" size="lg">
                         <VStack align="start" spacing={1}>
-                          <Text fontWeight="medium">🤖 AI Generated Images</Text>
+                          <Text fontWeight="medium">🤖 AI 生成图片</Text>
                           <Text fontSize="sm" color="gray.500">
-                            Create unique, custom images using DALL-E AI
+                            使用 DALL-E 生成独特且可定制的图片
                           </Text>
                         </VStack>
                       </Radio>
                       <Radio value="stock" size="lg">
                         <VStack align="start" spacing={1}>
-                          <Text fontWeight="medium">📷 Stock Images</Text>
+                          <Text fontWeight="medium">📷 图库图片</Text>
                           <Text fontSize="sm" color="gray.500">
-                            Use real-world photographs from Pexels
+                            使用来自 Pexels 的真实照片
                           </Text>
                         </VStack>
                       </Radio>
@@ -404,7 +404,7 @@ export const ImageDescription: React.FC = () => {
                     <Divider />
                     <Box>
                       <Text fontSize="lg" fontWeight="semibold" color="blue.400" mb={4}>
-                        📚 Your Existing Contexts
+                        📚 你的已有场景
                       </Text>
                       <Wrap spacing={3}>
                         {wordLists
@@ -443,7 +443,7 @@ export const ImageDescription: React.FC = () => {
                     size="lg"
                     onClick={() => startExercise()}
                     isLoading={loading}
-                    loadingText={context.trim() ? "🌱 Growing your image..." : "🎲 Finding random adventure..."}
+                    loadingText={context.trim() ? "🌱 正在生成图片..." : "🎲 正在寻找随机冒险..."}
                     flex={1}
                     borderRadius="lg"
                     leftIcon={context.trim() ? <Text>🌿</Text> : <Text>🎲</Text>}
@@ -453,7 +453,7 @@ export const ImageDescription: React.FC = () => {
                     }}
                     transition="all 0.2s"
                   >
-                    {context.trim() ? "Grow My Garden" : "Random Adventure"}
+                    {context.trim() ? "开始我的花园" : "随机冒险"}
                   </Button>
                   {context.trim() && (
                     <Button
@@ -465,7 +465,7 @@ export const ImageDescription: React.FC = () => {
                         startExercise();
                       }}
                       isLoading={loading}
-                      loadingText="🎲 Finding random adventure..."
+                      loadingText="🎲 正在寻找随机冒险..."
                       borderRadius="lg"
                       leftIcon={<Text>🎲</Text>}
                       _hover={{
@@ -475,7 +475,7 @@ export const ImageDescription: React.FC = () => {
                       }}
                       transition="all 0.2s"
                     >
-                      Random Instead
+                      改为随机
                     </Button>
                   )}
                 </HStack>
@@ -492,11 +492,11 @@ export const ImageDescription: React.FC = () => {
                 <VStack align="start" spacing={2}>
                   <HStack spacing={2}>
                     <Text fontSize="xl">🔍</Text>
-                    <Heading size="md" color="green.700">Explore Your Visual Garden</Heading>
+                    <Heading size="md" color="green.700">探索你的视觉花园</Heading>
                   </HStack>
                   <HStack spacing={2}>
                     <Text fontSize="sm" color="green.600" fontWeight="medium">
-                      Growing in:
+                      当前场景：
                     </Text>
                     <Badge colorScheme="green" variant="solid" borderRadius="full" px={3}>
                       🌿 {sessionContext}
@@ -521,12 +521,12 @@ export const ImageDescription: React.FC = () => {
 
                   <FormControl>
                     <FormLabel color="green.700" fontWeight="semibold" fontSize="md">
-                      🌱 Plant Your Words Here
+                      🌱 在这里写下你的描述
                     </FormLabel>
                     <Textarea
                       value={userDescription}
                       onChange={(e) => setUserDescription(e.target.value)}
-                      placeholder="Describe everything you see: objects, people, colors, emotions, atmosphere..."
+                      placeholder="请描述你看到的一切：物体、人物、颜色、情绪、氛围……"
                       minH="150px"
                       size="lg"
                       borderColor="green.200"
@@ -540,7 +540,7 @@ export const ImageDescription: React.FC = () => {
                       _placeholder={{ color: useColorModeValue('gray.500', '#94A3B8') }}
                     />
                     <Text fontSize="sm" color={useColorModeValue('gray.600', '#94A3B8')} mt={2} fontWeight="medium">
-                      🌿 {userDescription.length} words planted (minimum 10 characters to grow)
+                    🌿 已输入 {userDescription.length} 个字符（至少 10 个字符）
                     </Text>
                   </FormControl>
 
@@ -550,7 +550,7 @@ export const ImageDescription: React.FC = () => {
                       size="lg"
                       onClick={submitDescription}
                       isLoading={analyzing}
-                      loadingText="🔍 Our wordpecker is analyzing..."
+                    loadingText="🔍 WordPecker 正在分析中..."
                       isDisabled={userDescription.trim().length < 10}
                       borderRadius="lg"
                       leftIcon={<Text>🐦</Text>}
@@ -561,7 +561,7 @@ export const ImageDescription: React.FC = () => {
                       }}
                       transition="all 0.2s"
                     >
-                      Get Wordpecker's Analysis
+                    获取 WordPecker 分析
                     </Button>
                     <Button 
                       variant="outline" 
@@ -594,11 +594,11 @@ export const ImageDescription: React.FC = () => {
                 <VStack align="start" spacing={2}>
                   <HStack spacing={2}>
                     <Text fontSize="xl">📸</Text>
-                    <Heading size="md" color="green.700">Your Visual Garden</Heading>
+                    <Heading size="md" color="green.700">你的视觉花园</Heading>
                   </HStack>
                   <HStack spacing={2}>
                     <Text fontSize="sm" color="green.600" fontWeight="medium">
-                      Grown in:
+                      场景：
                     </Text>
                     <Badge colorScheme="green" variant="solid" borderRadius="full" px={3}>
                       🌿 {sessionContext}
@@ -624,7 +624,7 @@ export const ImageDescription: React.FC = () => {
               <CardHeader bg={feedbackBg} borderTopRadius="xl">
                 <HStack spacing={2}>
                   <Text fontSize="xl">🐦</Text>
-                  <Heading size="md" color="emerald.700">Wordpecker's Garden Report</Heading>
+                  <Heading size="md" color="emerald.700">WordPecker 花园报告</Heading>
                 </HStack>
               </CardHeader>
               <CardBody>
@@ -634,7 +634,7 @@ export const ImageDescription: React.FC = () => {
                   <Box>
                     <HStack spacing={2} mb={3}>
                       <Text fontSize="xl">💭</Text>
-                      <Heading size="sm" color={useColorModeValue('green.600', '#38A169')}>Wordpecker's Thoughts</Heading>
+                      <Heading size="sm" color={useColorModeValue('green.600', '#38A169')}>WordPecker 点评</Heading>
                     </HStack>
                     <Box p={5} bg={useColorModeValue('gray.50', '#1E293B')} borderRadius="xl" border="1px solid" borderColor={borderColor} shadow="sm">
                       <Text fontSize="md" lineHeight="tall" color={useColorModeValue('gray.700', '#F8FAFC')} fontWeight="medium">
@@ -648,7 +648,7 @@ export const ImageDescription: React.FC = () => {
                     <Box>
                       <HStack spacing={2} mb={3}>
                         <Text fontSize="xl">🌟</Text>
-                        <Heading size="sm" color={useColorModeValue('green.600', '#38A169')}>Seeds Well Planted</Heading>
+                        <Heading size="sm" color={useColorModeValue('green.600', '#38A169')}>你已掌握的亮点</Heading>
                       </HStack>
                       <Wrap spacing={3}>
                         {analysis.user_strengths.map((strength, index) => (
@@ -674,7 +674,7 @@ export const ImageDescription: React.FC = () => {
                     <Box>
                       <HStack spacing={2} mb={3}>
                         <Text fontSize="xl">🔍</Text>
-                        <Heading size="sm" color={useColorModeValue('orange.600', '#FB923C')}>Areas to Explore</Heading>
+                        <Heading size="sm" color={useColorModeValue('orange.600', '#FB923C')}>可进一步提升的点</Heading>
                       </HStack>
                       <Box p={4} bg={useColorModeValue('orange.50', '#1E293B')} borderRadius="lg" border="1px solid" borderColor={useColorModeValue('orange.200', '#FB923C')}>
                         <VStack align="start" spacing={2}>
@@ -689,7 +689,7 @@ export const ImageDescription: React.FC = () => {
                         </VStack>
                       </Box>
                       <Text fontSize="xs" color={useColorModeValue('gray.500', '#94A3B8')} mt={2} fontStyle="italic">
-                        💡 These details could make your descriptions even richer!
+                        💡 这些细节会让你的描述更丰富。
                       </Text>
                     </Box>
                   )}
@@ -698,7 +698,7 @@ export const ImageDescription: React.FC = () => {
                   <Box>
                     <HStack spacing={2} mb={4}>
                       <Text fontSize="xl">🌱</Text>
-                      <Heading size="sm" color={useColorModeValue('green.600', '#38A169')}>New Words to Grow</Heading>
+                      <Heading size="sm" color={useColorModeValue('green.600', '#38A169')}>推荐学习新词</Heading>
                     </HStack>
                     <VStack spacing={4} align="stretch">
                       {analysis.recommendations.map((rec, index) => (
@@ -726,7 +726,7 @@ export const ImageDescription: React.FC = () => {
                                   language="en"
                                   size="sm"
                                   colorScheme="green"
-                                  tooltipText="Listen to word pronunciation"
+                                  tooltipText="收听单词发音"
                                 />
                                 {rec.difficulty_level && (
                                   <Badge
@@ -739,8 +739,8 @@ export const ImageDescription: React.FC = () => {
                                     px={3}
                                     py={1}
                                   >
-                                    {rec.difficulty_level === 'basic' ? '🌱 Basic' :
-                                     rec.difficulty_level === 'intermediate' ? '🌳 Intermediate' : '🦅 Advanced'}
+                                    {rec.difficulty_level === 'basic' ? '🌱 基础' :
+                                     rec.difficulty_level === 'intermediate' ? '🌳 进阶' : '🦅 高阶'}
                                   </Badge>
                                 )}
                               </HStack>
@@ -753,7 +753,7 @@ export const ImageDescription: React.FC = () => {
                             <Box bg={useColorModeValue('blue.50', '#1E293B')} p={3} borderRadius="lg" border="1px solid" borderColor={borderColor}>
                               <HStack justify="space-between" align="start">
                                 <Text fontSize="sm" color={useColorModeValue('gray.600', '#94A3B8')} fontWeight="medium" flex="1">
-                                  💡 Example: <Text as="span" fontStyle="italic">{rec.example}</Text>
+                                  💡 例句：<Text as="span" fontStyle="italic">{rec.example}</Text>
                                 </Text>
                                 <PronunciationButton
                                   text={rec.example}
@@ -761,7 +761,7 @@ export const ImageDescription: React.FC = () => {
                                   language="en"
                                   size="sm"
                                   colorScheme="blue"
-                                  tooltipText="Listen to example sentence"
+                                  tooltipText="收听例句发音"
                                 />
                               </HStack>
                             </Box>
@@ -798,7 +798,7 @@ export const ImageDescription: React.FC = () => {
                         w={{ base: "full", md: "auto" }}
                         minW="280px"
                       >
-                        🌿 Plant Words in My Garden 🌿
+                        🌿 把单词种进我的词树 🌿
                       </Button>
                     </Box>
                     
@@ -809,7 +809,7 @@ export const ImageDescription: React.FC = () => {
                         colorScheme="green"
                         onClick={() => continueSession()}
                         isLoading={loading}
-                        loadingText="🌱 Growing new garden..."
+                        loadingText="🌱 正在生成新花园..."
                         borderRadius="lg"
                         leftIcon={<Text>🔄</Text>}
                         size="md"
@@ -819,7 +819,7 @@ export const ImageDescription: React.FC = () => {
                         }}
                         transition="all 0.2s"
                       >
-                        New Garden (Same Context)
+                        新花园（同一场景）
                       </Button>
                       <Button
                         variant="outline"
@@ -835,7 +835,7 @@ export const ImageDescription: React.FC = () => {
                         }}
                         transition="all 0.2s"
                       >
-                        New Context
+                        新场景
                       </Button>
                     </HStack>
                   </VStack>
@@ -854,7 +854,7 @@ export const ImageDescription: React.FC = () => {
             <HStack spacing={3}>
               <Text fontSize="2xl">🌱</Text>
               <Text color={useColorModeValue('green.700', 'green.200')} fontWeight="bold" fontSize="xl">
-                Plant Words in Your Garden
+                将单词种入你的词树
               </Text>
             </HStack>
           </ModalHeader>
@@ -871,7 +871,7 @@ export const ImageDescription: React.FC = () => {
                     size="lg"
                   >
                     <Text fontSize="md" fontWeight="medium">
-                      Create new list for this context
+                      为该场景创建新词树
                     </Text>
                   </Checkbox>
                 </FormControl>
@@ -886,7 +886,7 @@ export const ImageDescription: React.FC = () => {
                 ) : (
                   <FormControl>
                     <FormLabel fontWeight="medium" color={useColorModeValue('gray.700', 'gray.200')}>
-                      Add to existing list
+                      添加到已有词树
                     </FormLabel>
                     <Select
                       value={selectedListId}
@@ -908,7 +908,7 @@ export const ImageDescription: React.FC = () => {
               {analysis && (
                 <Box>
                   <Text fontSize="md" fontWeight="semibold" mb={4} color={useColorModeValue('gray.700', 'gray.200')}>
-                    Select words to add ({selectedWords.length} selected)
+                    选择要添加的单词（已选 {selectedWords.length} 个）
                   </Text>
                   <VStack align="stretch" spacing={3} maxH="400px" overflowY="auto">
                     {analysis.recommendations.map((rec) => (
@@ -963,7 +963,7 @@ export const ImageDescription: React.FC = () => {
                                 size="sm"
                                 colorScheme="green"
                                 variant="ghost"
-                                tooltipText="Listen to word pronunciation"
+                                tooltipText="收听单词发音"
                               />
                             </HStack>
                             <Text color={useColorModeValue('gray.600', 'gray.400')} fontSize="sm" lineHeight="1.4">
@@ -986,7 +986,7 @@ export const ImageDescription: React.FC = () => {
                 onClick={onClose} 
                 size="lg"
               >
-                Cancel
+                取消
               </Button>
               <Button 
                 colorScheme="green" 

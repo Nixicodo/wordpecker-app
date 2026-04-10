@@ -43,6 +43,27 @@ const item = {
   show: { opacity: 1, y: 0 }
 };
 
+const listNameZhMap: Record<string, string> = {
+  'Spanish Travel Basics': '西班牙语旅行基础',
+  'Spanish Starter': '西班牙语起步',
+};
+
+const listDescriptionZhMap: Record<string, string> = {
+  'Starter Spanish travel list with AI-generated support': '面向旅行场景的西班牙语入门词表（含 AI 生成支持）',
+  'Local deployment smoke test list': '本地部署冒烟测试词表',
+};
+
+const getDisplayListName = (name: string, isZh: boolean): string => {
+  if (!isZh) return name;
+  return listNameZhMap[name] ?? name;
+};
+
+const getDisplayListDescription = (description: string | undefined, isZh: boolean): string => {
+  if (!description) return isZh ? '暂无描述' : 'No description yet';
+  if (!isZh) return description;
+  return listDescriptionZhMap[description] ?? description;
+};
+
 export const Lists = () => {
   const isZh = detectUiLocale() === 'zh-CN';
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -214,7 +235,7 @@ export const Lists = () => {
                               noOfLines={1}
                               lineHeight="1.2"
                             >
-                              {list.name}
+                              {getDisplayListName(list.name, isZh)}
                             </Text>
                             <Text 
                               color="gray.400" 
@@ -265,7 +286,7 @@ export const Lists = () => {
                         lineHeight="1.4"
                         mb={3}
                       >
-                        {list.description}
+                        {getDisplayListDescription(list.description, isZh)}
                       </Text>
                     </Box>
 

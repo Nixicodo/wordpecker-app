@@ -55,8 +55,8 @@ export const GetNewWords: React.FC = () => {
     } catch (error) {
       console.error('Failed to load word lists:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to load your word lists',
+        title: '出错了',
+        description: '加载你的词树失败',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -75,8 +75,8 @@ export const GetNewWords: React.FC = () => {
         setSelectedContext(randomContext);
         setCustomContext(randomContext);
         toast({
-          title: 'Random Context Generated!',
-          description: `Generated context: "${randomContext}"`,
+          title: '已生成随机场景',
+          description: `生成场景：「${randomContext}」`,
           status: 'success',
           duration: 3000,
           isClosable: true,
@@ -85,8 +85,8 @@ export const GetNewWords: React.FC = () => {
     } catch (error) {
       console.error('Failed to generate random context:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to generate random context',
+        title: '出错了',
+        description: '生成随机场景失败',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -101,8 +101,8 @@ export const GetNewWords: React.FC = () => {
     
     if (!contextToUse) {
       toast({
-        title: 'No Context Selected',
-        description: 'Please select a context or enter a custom one',
+        title: '未选择场景',
+        description: '请选择一个场景或输入自定义场景',
         status: 'warning',
         duration: 3000,
         isClosable: true,
@@ -122,8 +122,8 @@ export const GetNewWords: React.FC = () => {
     } catch (error) {
       console.error('Failed to start learning session:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to start learning session',
+        title: '出错了',
+        description: '启动学习会话失败',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -172,10 +172,10 @@ export const GetNewWords: React.FC = () => {
                   <Text fontSize="4xl">📚</Text>
                   <Text fontSize="3xl">🎓</Text>
                 </Flex>
-                Get New Words
+                发现新词
               </Heading>
               <Text mt={2} color="gray.400" fontSize="lg">
-                Discover and learn new vocabulary words in your preferred context. Choose from existing contexts or create your own!
+                在你偏好的场景中发现并学习新词。可选择已有场景，或创建自己的场景。
               </Text>
             </Box>
           </Flex>
@@ -189,7 +189,7 @@ export const GetNewWords: React.FC = () => {
                 {wordLists.filter(list => list.context).length > 0 && (
                   <Box>
                     <Text fontSize="lg" fontWeight="semibold" color="blue.400" mb={4}>
-                      📚 Your Existing Contexts
+                      📚 你的已有场景
                     </Text>
                     <Wrap spacing={3}>
                       {wordLists
@@ -224,7 +224,7 @@ export const GetNewWords: React.FC = () => {
                 <Box>
                   <FormControl>
                     <FormLabel color="green.400" fontSize="lg" fontWeight="semibold">
-                      ✍️ Create Custom Context
+                      ✍️ 创建自定义场景
                     </FormLabel>
                     <HStack spacing={3}>
                       <Input
@@ -233,7 +233,7 @@ export const GetNewWords: React.FC = () => {
                           setCustomContext(e.target.value);
                           setSelectedContext(e.target.value);
                         }}
-                        placeholder="e.g., Space exploration, Medieval history, Cooking techniques..."
+                        placeholder="例如：太空探索、中世纪历史、烹饪技巧……"
                         size="lg"
                         borderColor={selectedContext === customContext ? "green.400" : borderColor}
                         borderWidth="2px"
@@ -249,7 +249,7 @@ export const GetNewWords: React.FC = () => {
                         variant="outline"
                         size="lg"
                         isLoading={generatingContext}
-                        loadingText="Generating..."
+                        loadingText="生成中..."
                         flexShrink={0}
                         _hover={{
                           transform: 'translateY(-2px)',
@@ -258,11 +258,11 @@ export const GetNewWords: React.FC = () => {
                         }}
                         transition="all 0.2s"
                       >
-                        AI Generate
+                        AI 生成
                       </Button>
                     </HStack>
                     <Text fontSize="sm" color="gray.500" mt={2}>
-                      Enter any learning context or topic you're interested in exploring
+                      输入你感兴趣的任意学习场景或主题
                     </Text>
                   </FormControl>
                 </Box>
@@ -273,7 +273,7 @@ export const GetNewWords: React.FC = () => {
                 <Box>
                   <FormControl>
                     <FormLabel color="purple.400" fontSize="lg" fontWeight="semibold">
-                      🎯 Choose Difficulty Level
+                      🎯 选择难度
                     </FormLabel>
                     <RadioGroup 
                       value={selectedDifficulty} 
@@ -284,40 +284,40 @@ export const GetNewWords: React.FC = () => {
                         <Radio value="basic" size="lg">
                           <VStack align="start" spacing={1}>
                             <HStack>
-                              <Text fontWeight="medium">🌱 Basic</Text>
-                              <Badge colorScheme="green" variant="subtle">Beginner</Badge>
+                              <Text fontWeight="medium">🌱 基础</Text>
+                              <Badge colorScheme="green" variant="subtle">入门</Badge>
                             </HStack>
                             <Text fontSize="sm" color="gray.500">
-                              Common, everyday words that beginners should know
+                              适合初学者的高频日常词汇
                             </Text>
                           </VStack>
                         </Radio>
                         <Radio value="intermediate" size="lg">
                           <VStack align="start" spacing={1}>
                             <HStack>
-                              <Text fontWeight="medium">🌳 Intermediate</Text>
-                              <Badge colorScheme="orange" variant="subtle">Developing</Badge>
+                              <Text fontWeight="medium">🌳 进阶</Text>
+                              <Badge colorScheme="orange" variant="subtle">提升</Badge>
                             </HStack>
                             <Text fontSize="sm" color="gray.500">
-                              More sophisticated words for developing learners
+                              适合提升阶段学习者的中高阶词汇
                             </Text>
                           </VStack>
                         </Radio>
                         <Radio value="advanced" size="lg">
                           <VStack align="start" spacing={1}>
                             <HStack>
-                              <Text fontWeight="medium">🦅 Advanced</Text>
-                              <Badge colorScheme="red" variant="subtle">Proficient</Badge>
+                              <Text fontWeight="medium">🦅 高阶</Text>
+                              <Badge colorScheme="red" variant="subtle">熟练</Badge>
                             </HStack>
                             <Text fontSize="sm" color="gray.500">
-                              Complex, nuanced words for proficient learners
+                              适合熟练学习者的复杂、细腻词汇
                             </Text>
                           </VStack>
                         </Radio>
                       </VStack>
                     </RadioGroup>
                     <Text fontSize="sm" color="gray.500" mt={3}>
-                      AI will generate words you don't already have in similar contexts
+                      AI 会在相近场景中生成你尚未掌握的新词
                     </Text>
                   </FormControl>
                 </Box>
@@ -329,10 +329,10 @@ export const GetNewWords: React.FC = () => {
                   <Text fontSize="md" color="gray.400" mb={4}>
                     {selectedContext ? (
                       <>
-                        Ready to learn new words in: <Text as="span" fontWeight="bold" color="blue.400">"{selectedContext}"</Text>
+                        准备在此场景学习新词：<Text as="span" fontWeight="bold" color="blue.400">「{selectedContext}」</Text>
                       </>
                     ) : (
-                      'Select or enter a context to start learning'
+                      '请选择或输入一个场景后开始学习'
                     )}
                   </Text>
                   
@@ -343,7 +343,7 @@ export const GetNewWords: React.FC = () => {
                     size="xl"
                     isDisabled={!selectedContext && !customContext.trim()}
                     isLoading={startingSession}
-                    loadingText="Starting Session..."
+                    loadingText="启动中..."
                     borderRadius="xl"
                     px={12}
                     py={6}
@@ -359,7 +359,7 @@ export const GetNewWords: React.FC = () => {
                     }}
                     transition="all 0.3s"
                   >
-                    Start Learning New Words
+                    开始学习新词
                   </Button>
                 </Box>
               </VStack>
