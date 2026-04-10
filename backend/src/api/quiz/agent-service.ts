@@ -1,15 +1,45 @@
 import { ExerciseResult, ExerciseResultType, ExerciseWithId } from '../../agents/exercise-agent/schemas';
 import { generateStructuredResult } from '../../services/structuredChat';
+import { generationCache } from '../../services/generationCache';
+import { generateLocalExercises } from '../../services/localExerciseGenerator';
 import * as fs from 'fs';
 import * as path from 'path';
 
 const exercisePrompt = fs.readFileSync(path.join(__dirname, '../../agents/exercise-agent/prompt.md'), 'utf-8');
+const GENERATION_TIMEOUT_MS = 12000;
+const CACHE_TTL_MS = 15 * 60 * 1000;
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) => {
+      setTimeout(() => reject(new Error(message)), timeoutMs);
+    }),
+  ]);
+}
 
 export class QuizAgentService {
-  async generateQuestions(
-    words: Array<{id: string, value: string, meaning: string}>, 
-    context: string, 
-    questionTypes: string[]
+  private buildCacheKey(
+    words: Array<{id: string, value: string, meaning: string}>,
+    context: string,
+    questionTypes: string[],
+  ): string {
+    return JSON.stringify({
+      kind: 'quiz',
+      context,
+      questionTypes: [...questionTypes].sort(),
+      words: words.map((word) => ({
+        id: word.id,
+        value: word.value,
+        meaning: word.meaning,
+      })),
+    });
+  }
+
+  private async generateQuestionsWithAi(
+    words: Array<{id: string, value: string, meaning: string}>,
+    context: string,
+    questionTypes: string[],
   ): Promise<ExerciseWithId[]> {
     const wordsContext = words.map(w => `${w.value}: ${w.meaning}`).join('\n');
     const prompt = `Create quiz questions for these vocabulary words:
@@ -20,12 +50,13 @@ Learning Context: "${context}"
 
 Use these question types: ${questionTypes.join(', ')}
 Create exactly ${words.length} questions (one per word).`;
-    
-    const result = await generateStructuredResult<ExerciseResultType>({
-      systemPrompt: exercisePrompt,
-      userPrompt: prompt,
-      schema: ExerciseResult,
-      schemaHint: `{
+
+    const result = await withTimeout(
+      generateStructuredResult<ExerciseResultType>({
+        systemPrompt: exercisePrompt,
+        userPrompt: prompt,
+        schema: ExerciseResult,
+        schemaHint: `{
   "exercises": Array<{
     "type": "multiple_choice" | "fill_blank" | "true_false" | "sentence_completion" | "matching",
     "word": string,
@@ -39,20 +70,37 @@ Create exactly ${words.length} questions (one per word).`;
     "pairs": Array<{ "word": string, "definition": string }> | null
   }>
 }`,
-      temperature: 0.7,
-      maxTokens: 2400,
-    });
-    
-    // Map the returned exercises back to include word IDs
-    const questionsWithIds = result.exercises.map(exercise => {
+        temperature: 0.7,
+        maxTokens: 2400,
+      }),
+      GENERATION_TIMEOUT_MS,
+      'Quiz generation timed out',
+    );
+
+    return result.exercises.map(exercise => {
       const matchingWord = words.find(w => w.value === exercise.word);
       return {
         ...exercise,
         wordId: matchingWord?.id || null
       };
     });
-    
-    return questionsWithIds;
+  }
+
+  async generateQuestions(
+    words: Array<{id: string, value: string, meaning: string}>, 
+    context: string, 
+    questionTypes: string[]
+  ): Promise<ExerciseWithId[]> {
+    const cacheKey = this.buildCacheKey(words, context, questionTypes);
+
+    return generationCache.getOrCreate(cacheKey, async () => {
+      try {
+        return await this.generateQuestionsWithAi(words, context, questionTypes);
+      } catch (error) {
+        console.error('Quiz generation fell back to local generator:', error);
+        return generateLocalExercises(words, context, questionTypes);
+      }
+    }, CACHE_TTL_MS);
   }
 }
 
