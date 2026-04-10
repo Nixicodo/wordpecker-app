@@ -6,6 +6,9 @@ $frontendDir = Join-Path $projectRoot "frontend"
 $logsDir = Join-Path $projectRoot "logs"
 $runtimeDir = Join-Path $projectRoot ".runtime"
 $nodeExe = (Get-Command node).Source
+$codexDir = Join-Path $env:USERPROFILE ".codex"
+$codexAuthFile = Join-Path $codexDir "auth.json"
+$codexConfigFile = Join-Path $codexDir "config.toml"
 
 New-Item -ItemType Directory -Force -Path $logsDir | Out-Null
 New-Item -ItemType Directory -Force -Path $runtimeDir | Out-Null
@@ -13,9 +16,40 @@ New-Item -ItemType Directory -Force -Path $runtimeDir | Out-Null
 $backendEnv = Join-Path $backendDir ".env"
 $frontendEnv = Join-Path $frontendDir ".env"
 
+$openAiApiKey = "local-placeholder-key"
+$openAiBaseUrl = "https://api.openai.com/v1"
+
+if (Test-Path $codexAuthFile) {
+    try {
+        $authConfig = Get-Content $codexAuthFile -Raw | ConvertFrom-Json
+        if ($authConfig.OPENAI_API_KEY) {
+            $openAiApiKey = $authConfig.OPENAI_API_KEY
+        }
+    } catch {
+        Write-Warning "Failed to parse $codexAuthFile, falling back to placeholder OPENAI_API_KEY."
+    }
+}
+
+if (Test-Path $codexConfigFile) {
+    try {
+        $configContent = Get-Content $codexConfigFile -Raw
+        $providerMatch = [regex]::Match($configContent, '(?m)^model_provider\s*=\s*"([^"]+)"')
+        if ($providerMatch.Success) {
+            $providerName = [regex]::Escape($providerMatch.Groups[1].Value)
+            $baseUrlPattern = "(?ms)^\[model_providers\.$providerName\].*?^base_url\s*=\s*""([^""]+)"""
+            $baseUrlMatch = [regex]::Match($configContent, $baseUrlPattern)
+            if ($baseUrlMatch.Success) {
+                $openAiBaseUrl = $baseUrlMatch.Groups[1].Value
+            }
+        }
+    } catch {
+        Write-Warning "Failed to parse $codexConfigFile, falling back to default OPENAI_BASE_URL."
+    }
+}
+
 @"
-OPENAI_API_KEY=local-placeholder-key
-OPENAI_BASE_URL=https://api.openai.com/v1
+OPENAI_API_KEY=$openAiApiKey
+OPENAI_BASE_URL=$openAiBaseUrl
 ELEVENLABS_API_KEY=local-placeholder-key
 PEXELS_API_KEY=
 MONGODB_URL=mongodb://127.0.0.1:27017/wordpecker
