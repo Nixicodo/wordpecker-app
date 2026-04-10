@@ -5,6 +5,7 @@ $backendDir = Join-Path $projectRoot "backend"
 $frontendDir = Join-Path $projectRoot "frontend"
 $logsDir = Join-Path $projectRoot "logs"
 $runtimeDir = Join-Path $projectRoot ".runtime"
+$nodeExe = (Get-Command node).Source
 
 New-Item -ItemType Directory -Force -Path $logsDir | Out-Null
 New-Item -ItemType Directory -Force -Path $runtimeDir | Out-Null
@@ -37,7 +38,7 @@ foreach ($name in @("backend", "frontend")) {
     if (Test-Path $pidFile) {
         $processId = Get-Content $pidFile -Raw
         if ($processId) {
-            Stop-Process -Id ([int]$processId) -Force -ErrorAction SilentlyContinue
+            taskkill /PID $processId /T /F | Out-Null
         }
         Remove-Item $pidFile -Force -ErrorAction SilentlyContinue
     }
@@ -60,20 +61,22 @@ if (-not (Test-Path (Join-Path $frontendDir "node_modules"))) {
 $backendLog = Join-Path $logsDir "backend.log"
 $frontendLog = Join-Path $logsDir "frontend.log"
 
-$backendProcess = Start-Process powershell -WorkingDirectory $backendDir -WindowStyle Hidden -ArgumentList @(
-    "-NoProfile",
-    "-ExecutionPolicy", "Bypass",
-    "-Command", "npx nodemon src/app.ts *> '$backendLog'"
-) -PassThru
+if (Test-Path $backendLog) { Remove-Item $backendLog -Force }
+if (Test-Path $frontendLog) { Remove-Item $frontendLog -Force }
+
+$backendProcess = Start-Process -FilePath $nodeExe -WorkingDirectory $backendDir -ArgumentList @(
+    ".\node_modules\nodemon\bin\nodemon.js",
+    "src/app.ts"
+) -RedirectStandardOutput $backendLog -RedirectStandardError $backendLog -WindowStyle Hidden -PassThru
 $backendProcess.Id | Set-Content -Path (Join-Path $runtimeDir "backend.pid") -NoNewline
 
 Start-Sleep -Seconds 8
 
-$frontendProcess = Start-Process powershell -WorkingDirectory $frontendDir -WindowStyle Hidden -ArgumentList @(
-    "-NoProfile",
-    "-ExecutionPolicy", "Bypass",
-    "-Command", "npx vite --host 0.0.0.0 *> '$frontendLog'"
-) -PassThru
+$frontendProcess = Start-Process -FilePath $nodeExe -WorkingDirectory $frontendDir -ArgumentList @(
+    ".\node_modules\vite\bin\vite.js",
+    "--host",
+    "0.0.0.0"
+) -RedirectStandardOutput $frontendLog -RedirectStandardError $frontendLog -WindowStyle Hidden -PassThru
 $frontendProcess.Id | Set-Content -Path (Join-Path $runtimeDir "frontend.pid") -NoNewline
 
 Write-Host ""
