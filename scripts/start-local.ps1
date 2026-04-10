@@ -32,6 +32,17 @@ if ((Get-Service MongoDB -ErrorAction SilentlyContinue).Status -ne "Running") {
     Start-Sleep -Seconds 5
 }
 
+foreach ($name in @("backend", "frontend")) {
+    $pidFile = Join-Path $runtimeDir "$name.pid"
+    if (Test-Path $pidFile) {
+        $processId = Get-Content $pidFile -Raw
+        if ($processId) {
+            Stop-Process -Id ([int]$processId) -Force -ErrorAction SilentlyContinue
+        }
+        Remove-Item $pidFile -Force -ErrorAction SilentlyContinue
+    }
+}
+
 if (-not (Test-Path (Join-Path $backendDir "node_modules"))) {
     Write-Host "Installing backend dependencies..."
     Push-Location $backendDir
@@ -52,7 +63,7 @@ $frontendLog = Join-Path $logsDir "frontend.log"
 $backendProcess = Start-Process powershell -WorkingDirectory $backendDir -WindowStyle Hidden -ArgumentList @(
     "-NoProfile",
     "-ExecutionPolicy", "Bypass",
-    "-Command", "npm run dev *> '$backendLog'"
+    "-Command", "npx nodemon src/app.ts *> '$backendLog'"
 ) -PassThru
 $backendProcess.Id | Set-Content -Path (Join-Path $runtimeDir "backend.pid") -NoNewline
 
@@ -61,7 +72,7 @@ Start-Sleep -Seconds 8
 $frontendProcess = Start-Process powershell -WorkingDirectory $frontendDir -WindowStyle Hidden -ArgumentList @(
     "-NoProfile",
     "-ExecutionPolicy", "Bypass",
-    "-Command", "npm run dev -- --host=0.0.0.0 *> '$frontendLog'"
+    "-Command", "npx vite --host 0.0.0.0 *> '$frontendLog'"
 ) -PassThru
 $frontendProcess.Id | Set-Content -Path (Join-Path $runtimeDir "frontend.pid") -NoNewline
 

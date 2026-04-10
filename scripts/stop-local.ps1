@@ -8,9 +8,9 @@ Write-Host "Stopping WordPecker services..."
 foreach ($name in @("backend", "frontend")) {
     $pidFile = Join-Path $runtimeDir "$name.pid"
     if (Test-Path $pidFile) {
-        $pid = Get-Content $pidFile -Raw
-        if ($pid) {
-            Stop-Process -Id ([int]$pid) -Force -ErrorAction SilentlyContinue
+        $processId = Get-Content $pidFile -Raw
+        if ($processId) {
+            Stop-Process -Id ([int]$processId) -Force -ErrorAction SilentlyContinue
         }
         Remove-Item $pidFile -Force -ErrorAction SilentlyContinue
     }
