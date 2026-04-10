@@ -25,21 +25,34 @@ import {
 } from '@chakra-ui/react';
 import { apiService } from '../services/api';
 import { ExerciseTypePreferences, UserPreferences } from '../types';
+import { setUiLocaleFromBaseLanguage } from '../i18n/ui';
 
 const exerciseTypeLabels = {
-  multiple_choice: 'Multiple Choice',
-  fill_blank: 'Fill in the Blank',
-  matching: 'Matching',
-  true_false: 'True/False',
-  sentence_completion: 'Sentence Completion'
+  multiple_choice: '选择题',
+  fill_blank: '填空题',
+  matching: '配对题',
+  true_false: '判断题',
+  sentence_completion: '句子补全'
 };
 
 const exerciseTypeDescriptions = {
-  multiple_choice: 'Choose the correct definition from multiple options',
-  fill_blank: 'Fill in the missing word in a sentence',
-  matching: 'Match words with their definitions',
-  true_false: 'Determine if statements about words are true or false',
-  sentence_completion: 'Complete sentences with the correct word'
+  multiple_choice: '从多个选项中选出正确释义',
+  fill_blank: '在句子中填入缺失单词',
+  matching: '将单词与释义正确配对',
+  true_false: '判断关于单词的陈述是否正确',
+  sentence_completion: '用正确单词补完整个句子'
+};
+
+type LanguageValidationState = {
+  isValid: boolean;
+  languageCode: string | null;
+  standardizedName: string | null;
+  parameters: Array<{
+    type: 'script' | 'dialect' | 'formality' | 'region' | 'learning_focus';
+    value: string;
+    description: string;
+  }> | null;
+  explanation: string | null;
 };
 
 export const Settings: React.FC = () => {
@@ -51,35 +64,15 @@ export const Settings: React.FC = () => {
       true_false: true,
       sentence_completion: true
     },
-    baseLanguage: 'en',
-    targetLanguage: 'en'
+    baseLanguage: 'Simplified Chinese',
+    targetLanguage: 'Latin American Spanish'
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [baseLanguageInput, setBaseLanguageInput] = useState('English');
-  const [targetLanguageInput, setTargetLanguageInput] = useState('English');
-  const [baseLanguageValidation, setBaseLanguageValidation] = useState<{
-    isValid: boolean;
-    languageCode: string | null;
-    standardizedName: string | null;
-    parameters: Array<{
-      type: 'script' | 'dialect' | 'formality' | 'region' | 'learning_focus';
-      value: string;
-      description: string;
-    }> | null;
-    explanation: string | null;
-  } | null>(null);
-  const [targetLanguageValidation, setTargetLanguageValidation] = useState<{
-    isValid: boolean;
-    languageCode: string | null;
-    standardizedName: string | null;
-    parameters: Array<{
-      type: 'script' | 'dialect' | 'formality' | 'region' | 'learning_focus';
-      value: string;
-      description: string;
-    }> | null;
-    explanation: string | null;
-  } | null>(null);
+  const [baseLanguageInput, setBaseLanguageInput] = useState('Simplified Chinese');
+  const [targetLanguageInput, setTargetLanguageInput] = useState('Latin American Spanish');
+  const [baseLanguageValidation, setBaseLanguageValidation] = useState<LanguageValidationState | null>(null);
+  const [targetLanguageValidation, setTargetLanguageValidation] = useState<LanguageValidationState | null>(null);
   const [validatingBaseLanguage, setValidatingBaseLanguage] = useState(false);
   const [validatingTargetLanguage, setValidatingTargetLanguage] = useState(false);
   const toast = useToast();
@@ -88,20 +81,74 @@ export const Settings: React.FC = () => {
   const borderColor = useColorModeValue('gray.200', 'gray.600');
 
   useEffect(() => {
-    loadPreferences();
+    void loadPreferences();
   }, []);
+
+  const getLanguageDisplayName = (value: string): string => {
+    const normalized = value.trim().toLowerCase();
+    const commonLanguages: Record<string, string> = {
+      en: '英语',
+      tr: '土耳其语',
+      es: '西班牙语',
+      de: '德语',
+      fr: '法语',
+      it: '意大利语',
+      pt: '葡萄牙语',
+      ru: '俄语',
+      ja: '日语',
+      ko: '韩语',
+      zh: '中文',
+      chinese: '中文',
+      spanish: '西班牙语',
+      'simplified chinese': '简体中文',
+      'latin american spanish': '拉丁美洲西班牙语'
+    };
+
+    if (commonLanguages[normalized]) {
+      return commonLanguages[normalized];
+    }
+
+    if (value.length <= 5 && /^[a-z-]+$/i.test(value)) {
+      return value.toUpperCase();
+    }
+
+    return value;
+  };
+
+  const formatStoredLanguageName = (validation: LanguageValidationState): string => {
+    if (!validation.standardizedName) {
+      return validation.languageCode || '';
+    }
+
+    const parameters = validation.parameters || [];
+
+    if (
+      validation.standardizedName === 'Chinese' &&
+      parameters.some((param) => param.value === 'simplified')
+    ) {
+      return 'Simplified Chinese';
+    }
+
+    if (
+      validation.standardizedName === 'Spanish' &&
+      parameters.some((param) => param.value === 'latin_america')
+    ) {
+      return 'Latin American Spanish';
+    }
+
+    return validation.standardizedName;
+  };
 
   const loadPreferences = async () => {
     try {
       const data = await apiService.getPreferences();
       setPreferences(data);
-      // Initialize input fields with current language names
+
       const baseLangName = getLanguageDisplayName(data.baseLanguage);
       const targetLangName = getLanguageDisplayName(data.targetLanguage);
       setBaseLanguageInput(baseLangName);
       setTargetLanguageInput(targetLangName);
-      
-      // Set validation states as valid for existing saved languages
+
       setBaseLanguageValidation({
         isValid: true,
         languageCode: data.baseLanguage,
@@ -116,11 +163,13 @@ export const Settings: React.FC = () => {
         parameters: null,
         explanation: null
       });
+
+      setUiLocaleFromBaseLanguage(data.baseLanguage);
     } catch (error) {
       console.error('Failed to load preferences:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to load preferences. Using default settings.',
+        title: '加载失败',
+        description: '读取偏好失败，已使用默认设置。',
         status: 'warning',
         duration: 3000,
         isClosable: true,
@@ -130,77 +179,23 @@ export const Settings: React.FC = () => {
     }
   };
 
-  const getLanguageDisplayName = (code: string): string => {
-    // Common language mappings for display
-    const commonLanguages: Record<string, string> = {
-      'en': 'English',
-      'tr': 'Turkish',
-      'es': 'Spanish',
-      'de': 'German',
-      'fr': 'French',
-      'it': 'Italian',
-      'pt': 'Portuguese',
-      'ru': 'Russian',
-      'ja': 'Japanese',
-      'ko': 'Korean',
-      'zh': 'Chinese',
-      'ar': 'Arabic',
-      'hi': 'Hindi',
-      'nl': 'Dutch',
-      'pl': 'Polish',
-      'sv': 'Swedish',
-      'sw': 'Swahili',
-      'th': 'Thai',
-      'vi': 'Vietnamese',
-      'he': 'Hebrew',
-      'ur': 'Urdu',
-      'bn': 'Bengali',
-      'ta': 'Tamil',
-      'te': 'Telugu',
-      'mr': 'Marathi',
-      'gu': 'Gujarati',
-      'kn': 'Kannada',
-      'ml': 'Malayalam',
-      'pa': 'Punjabi',
-      'ne': 'Nepali',
-      'si': 'Sinhala',
-      'my': 'Myanmar',
-      'km': 'Khmer',
-      'lo': 'Lao',
-      'ka': 'Georgian',
-      'am': 'Amharic',
-      'is': 'Icelandic',
-      'mt': 'Maltese',
-      'eu': 'Basque',
-      'cy': 'Welsh',
-      'ga': 'Irish',
-      'gd': 'Scottish Gaelic',
-      'br': 'Breton',
-      'co': 'Corsican',
-      'eo': 'Esperanto',
-      'la': 'Latin',
-      'sa': 'Sanskrit'
-    };
-    return commonLanguages[code] || code.toUpperCase();
-  };
-
   const validateLanguage = async (language: string, type: 'base' | 'target') => {
     if (!language.trim()) return;
-    
+
     const setValidating = type === 'base' ? setValidatingBaseLanguage : setValidatingTargetLanguage;
     const setValidation = type === 'base' ? setBaseLanguageValidation : setTargetLanguageValidation;
-    
+
     setValidating(true);
     try {
       const result = await apiService.validateLanguage(language.trim());
       setValidation(result);
-      
-      // If valid, update the preference
-      if (result.isValid && result.languageCode) {
+
+      if (result.isValid) {
+        const storedLanguage = formatStoredLanguageName(result);
         if (type === 'base') {
-          setPreferences(prev => ({ ...prev, baseLanguage: result.languageCode! }));
+          setPreferences((prev) => ({ ...prev, baseLanguage: storedLanguage }));
         } else {
-          setPreferences(prev => ({ ...prev, targetLanguage: result.languageCode! }));
+          setPreferences((prev) => ({ ...prev, targetLanguage: storedLanguage }));
         }
       }
     } catch (error) {
@@ -210,7 +205,7 @@ export const Settings: React.FC = () => {
         languageCode: null,
         standardizedName: null,
         parameters: null,
-        explanation: 'Failed to validate language. Please try again.'
+        explanation: '语言校验失败，请稍后重试。'
       });
     } finally {
       setValidating(false);
@@ -227,27 +222,14 @@ export const Settings: React.FC = () => {
     setTargetLanguageValidation(null);
   };
 
-  const handleValidateBaseLanguage = () => {
-    if (baseLanguageInput.trim()) {
-      validateLanguage(baseLanguageInput, 'base');
-    }
-  };
-
-  const handleValidateTargetLanguage = () => {
-    if (targetLanguageInput.trim()) {
-      validateLanguage(targetLanguageInput, 'target');
-    }
-  };
-
   const handleToggle = (type: keyof ExerciseTypePreferences) => {
     const newExerciseTypes = { ...preferences.exerciseTypes, [type]: !preferences.exerciseTypes[type] };
-    
-    // Ensure at least one exercise type is enabled
     const enabledCount = Object.values(newExerciseTypes).filter(Boolean).length;
+
     if (enabledCount === 0) {
       toast({
-        title: 'Warning',
-        description: 'At least one exercise type must be enabled.',
+        title: '提示',
+        description: '至少需要启用一种练习类型。',
         status: 'warning',
         duration: 3000,
         isClosable: true,
@@ -258,43 +240,53 @@ export const Settings: React.FC = () => {
     setPreferences({ ...preferences, exerciseTypes: newExerciseTypes });
   };
 
-
   const savePreferences = async () => {
-    // Check if languages are valid before saving
-    const isBaseLanguageValid = baseLanguageValidation?.isValid ?? false;
-    const isTargetLanguageValid = targetLanguageValidation?.isValid ?? false;
-    
-    if (!isBaseLanguageValid || !isTargetLanguageValid) {
-      // Try to validate current inputs if validation state is missing
-      if (!baseLanguageValidation && baseLanguageInput.trim()) {
-        await validateLanguage(baseLanguageInput, 'base');
-      }
-      if (!targetLanguageValidation && targetLanguageInput.trim()) {
-        await validateLanguage(targetLanguageInput, 'target');
-      }
-      
-      // Check again after validation
-      const finalBaseValid = baseLanguageValidation?.isValid ?? false;
-      const finalTargetValid = targetLanguageValidation?.isValid ?? false;
-      
-      if (!finalBaseValid || !finalTargetValid) {
-        toast({
-          title: 'Invalid Languages',
-          description: 'Please ensure both languages are valid before saving.',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        });
-        return;
+    let latestBaseValidation = baseLanguageValidation;
+    let latestTargetValidation = targetLanguageValidation;
+
+    if (!latestBaseValidation && baseLanguageInput.trim()) {
+      const result = await apiService.validateLanguage(baseLanguageInput.trim());
+      setBaseLanguageValidation(result);
+      latestBaseValidation = result;
+      if (result.isValid) {
+        setPreferences((prev) => ({ ...prev, baseLanguage: formatStoredLanguageName(result) }));
       }
     }
-    
+
+    if (!latestTargetValidation && targetLanguageInput.trim()) {
+      const result = await apiService.validateLanguage(targetLanguageInput.trim());
+      setTargetLanguageValidation(result);
+      latestTargetValidation = result;
+      if (result.isValid) {
+        setPreferences((prev) => ({ ...prev, targetLanguage: formatStoredLanguageName(result) }));
+      }
+    }
+
+    if (!latestBaseValidation?.isValid || !latestTargetValidation?.isValid) {
+      toast({
+        title: '语言无效',
+        description: '请先确认母语和目标语言都校验通过。',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
     setSaving(true);
     try {
-      await apiService.updatePreferences(preferences);
+      const nextPreferences = {
+        ...preferences,
+        baseLanguage: formatStoredLanguageName(latestBaseValidation),
+        targetLanguage: formatStoredLanguageName(latestTargetValidation)
+      };
+      setPreferences(nextPreferences);
+      await apiService.updatePreferences(nextPreferences);
+      setUiLocaleFromBaseLanguage(nextPreferences.baseLanguage);
+
       toast({
-        title: 'Success',
-        description: 'Preferences saved successfully!',
+        title: '保存成功',
+        description: '偏好设置已保存。',
         status: 'success',
         duration: 3000,
         isClosable: true,
@@ -302,8 +294,8 @@ export const Settings: React.FC = () => {
     } catch (error) {
       console.error('Failed to save preferences:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to save preferences. Please try again.',
+        title: '保存失败',
+        description: '保存偏好失败，请稍后重试。',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -332,33 +324,32 @@ export const Settings: React.FC = () => {
           <HStack spacing={3} mb={2}>
             <Text fontSize="2xl">⚙️</Text>
             <Heading size="xl" color="blue.500">
-              Settings
+              设置
             </Heading>
           </HStack>
           <Text color="gray.600" fontSize="lg">
-            Customize your learning experience
+            自定义你的学习体验
           </Text>
         </Box>
 
-        {/* Language Settings */}
         <Card bg={cardBg} borderColor={borderColor} borderWidth="1px" shadow="2xl">
           <CardHeader pb={4}>
             <VStack align="start" spacing={3}>
               <HStack spacing={3}>
-                <Text fontSize="2xl">🌍</Text>
-                <Heading size="md" color="blue.500">Language Settings</Heading>
+                <Text fontSize="2xl">🌐</Text>
+                <Heading size="md" color="blue.500">语言设置</Heading>
               </HStack>
               <Text color={useColorModeValue('gray.700', 'gray.300')} fontSize="md" lineHeight="1.6">
-                Choose your native language and the language you want to learn. This affects how vocabulary definitions and explanations are presented.
+                设置你的母语和目标语言。它会影响词义解释、例句说明以及 AI 生成内容的展示语言。
               </Text>
               <Alert status="info" borderRadius="md" py={3}>
                 <AlertIcon />
                 <VStack align="start" spacing={2}>
                   <Text fontSize="sm" fontWeight="medium" color={useColorModeValue('blue.800', 'blue.200')}>
-                    Changes will apply immediately to new vocabulary words and exercises.
+                    修改后会立即应用到新生成的单词、例句和练习中。
                   </Text>
                   <Text fontSize="sm" color={useColorModeValue('gray.700', 'gray.300')}>
-                    💡 You can specify variants like "Japanese with Hiragana", "Simplified Chinese", "Brazilian Portuguese", "American English", etc.
+                    你可以填写带变体的语言，例如 “Simplified Chinese”“Latin American Spanish”“Brazilian Portuguese”。
                   </Text>
                 </VStack>
               </Alert>
@@ -369,13 +360,13 @@ export const Settings: React.FC = () => {
               <Box p={4} bg={useColorModeValue('blue.50', 'blue.900')} borderRadius="lg" borderWidth="1px" borderColor={useColorModeValue('blue.200', 'blue.700')}>
                 <FormControl isInvalid={baseLanguageValidation?.isValid === false}>
                   <FormLabel fontWeight="semibold" fontSize="md" color={useColorModeValue('blue.700', 'blue.200')}>
-                    🏠 Your Native Language (Base Language)
+                    你的母语（解释语言）
                   </FormLabel>
                   <HStack spacing={3}>
                     <Input
                       value={baseLanguageInput}
                       onChange={(e) => handleBaseLanguageChange(e.target.value)}
-                      placeholder="e.g., English, American English, Turkish, etc."
+                      placeholder="例如：Simplified Chinese"
                       bg={useColorModeValue('white', 'gray.800')}
                       flex={1}
                       borderColor={useColorModeValue('blue.300', 'blue.600')}
@@ -383,23 +374,23 @@ export const Settings: React.FC = () => {
                       _focus={{ borderColor: 'blue.500', boxShadow: '0 0 0 1px blue.500' }}
                     />
                     <Button
-                      onClick={handleValidateBaseLanguage}
+                      onClick={() => void validateLanguage(baseLanguageInput, 'base')}
                       isLoading={validatingBaseLanguage}
-                      loadingText="Validating"
+                      loadingText="校验中"
                       colorScheme="cyan"
                       variant="solid"
                       size="md"
                       isDisabled={!baseLanguageInput.trim()}
                       minW="100px"
                     >
-                      Validate
+                      校验
                     </Button>
                   </HStack>
                   {baseLanguageValidation?.isValid && (
                     <Box mt={3} p={3} bg={useColorModeValue('blue.100', 'blue.800')} borderRadius="md" borderWidth="1px" borderColor={useColorModeValue('blue.300', 'blue.600')}>
                       <HStack spacing={2}>
                         <Text color={useColorModeValue('blue.800', 'blue.100')} fontWeight="semibold" fontSize="sm">
-                          ✓ {baseLanguageValidation.standardizedName}
+                          ✓ {getLanguageDisplayName(formatStoredLanguageName(baseLanguageValidation))}
                         </Text>
                       </HStack>
                       {baseLanguageValidation.parameters && baseLanguageValidation.parameters.length > 0 && (
@@ -421,7 +412,7 @@ export const Settings: React.FC = () => {
                     </Box>
                   )}
                   <FormHelperText mt={3} color={useColorModeValue('gray.600', 'gray.400')}>
-                    Definitions and explanations will be provided in this language
+                    单词释义与解释会优先用这个语言展示
                   </FormHelperText>
                 </FormControl>
               </Box>
@@ -429,13 +420,13 @@ export const Settings: React.FC = () => {
               <Box p={4} bg={useColorModeValue('green.50', 'green.900')} borderRadius="lg" borderWidth="1px" borderColor={useColorModeValue('green.200', 'green.700')}>
                 <FormControl isInvalid={targetLanguageValidation?.isValid === false}>
                   <FormLabel fontWeight="semibold" fontSize="md" color={useColorModeValue('green.700', 'green.200')}>
-                    🎯 Language You're Learning (Target Language)
+                    你正在学习的语言（目标语言）
                   </FormLabel>
                   <HStack spacing={3}>
                     <Input
                       value={targetLanguageInput}
                       onChange={(e) => handleTargetLanguageChange(e.target.value)}
-                      placeholder="e.g., Japanese with Hiragana, Simplified Chinese, Brazilian Portuguese, etc."
+                      placeholder="例如：Latin American Spanish"
                       bg={useColorModeValue('white', 'gray.800')}
                       flex={1}
                       borderColor={useColorModeValue('green.300', 'green.600')}
@@ -443,23 +434,23 @@ export const Settings: React.FC = () => {
                       _focus={{ borderColor: 'green.500', boxShadow: '0 0 0 1px green.500' }}
                     />
                     <Button
-                      onClick={handleValidateTargetLanguage}
+                      onClick={() => void validateLanguage(targetLanguageInput, 'target')}
                       isLoading={validatingTargetLanguage}
-                      loadingText="Validating"
+                      loadingText="校验中"
                       colorScheme="green"
                       variant="solid"
                       size="md"
                       isDisabled={!targetLanguageInput.trim()}
                       minW="100px"
                     >
-                      Validate
+                      校验
                     </Button>
                   </HStack>
                   {targetLanguageValidation?.isValid && (
                     <Box mt={3} p={3} bg={useColorModeValue('green.100', 'green.800')} borderRadius="md" borderWidth="1px" borderColor={useColorModeValue('green.300', 'green.600')}>
                       <HStack spacing={2}>
                         <Text color={useColorModeValue('green.800', 'green.100')} fontWeight="semibold" fontSize="sm">
-                          ✓ {targetLanguageValidation.standardizedName}
+                          ✓ {getLanguageDisplayName(formatStoredLanguageName(targetLanguageValidation))}
                         </Text>
                       </HStack>
                       {targetLanguageValidation.parameters && targetLanguageValidation.parameters.length > 0 && (
@@ -481,7 +472,7 @@ export const Settings: React.FC = () => {
                     </Box>
                   )}
                   <FormHelperText mt={3} color={useColorModeValue('gray.600', 'gray.400')}>
-                    Vocabulary words and example sentences will be in this language
+                    单词本体、例句与练习会以这个语言为目标语言生成
                   </FormHelperText>
                 </FormControl>
               </Box>
@@ -490,7 +481,7 @@ export const Settings: React.FC = () => {
                 <Alert status="warning" borderRadius="md" py={3}>
                   <AlertIcon />
                   <Text fontSize="sm">
-                    You've selected the same language for both base and target. This is fine for monolingual practice!
+                    你把母语和目标语言设成了同一种语言，这更适合做单语练习。
                   </Text>
                 </Alert>
               )}
@@ -498,21 +489,20 @@ export const Settings: React.FC = () => {
           </CardBody>
         </Card>
 
-        {/* Exercise Types */}
         <Card bg={cardBg} borderColor={borderColor} borderWidth="1px" shadow="2xl">
           <CardHeader pb={4}>
             <VStack align="start" spacing={3}>
               <HStack spacing={3}>
                 <Text fontSize="2xl">🎯</Text>
-                <Heading size="md" color="blue.500">Exercise Types</Heading>
+                <Heading size="md" color="blue.500">练习类型</Heading>
               </HStack>
               <Text color={useColorModeValue('gray.700', 'gray.300')} fontSize="md" lineHeight="1.6">
-                Choose which types of exercises you want to practice. You can enable or disable specific question formats.
+                选择你希望启用的练习题型。你可以按自己的偏好开启或关闭特定题型。
               </Text>
               <Alert status="info" borderRadius="md" py={3}>
                 <AlertIcon />
                 <Text fontSize="sm" fontWeight="medium" color={useColorModeValue('blue.800', 'blue.200')}>
-                  Changes will apply to new learning sessions and quizzes.
+                  修改后会应用到新的学习会话和测验中。
                 </Text>
               </Alert>
             </VStack>
@@ -520,17 +510,17 @@ export const Settings: React.FC = () => {
           <CardBody pt={2} px={{ base: 4, md: 8 }} py={6}>
             <VStack spacing={4} align="stretch">
               {Object.entries(exerciseTypeLabels).map(([type, label]) => (
-                <Box 
-                  key={type} 
-                  p={4} 
-                  borderWidth="1px" 
-                  borderRadius="lg" 
+                <Box
+                  key={type}
+                  p={4}
+                  borderWidth="1px"
+                  borderRadius="lg"
                   borderColor={borderColor}
-                  bg={preferences.exerciseTypes[type as keyof ExerciseTypePreferences] 
-                    ? useColorModeValue('purple.50', 'purple.900') 
+                  bg={preferences.exerciseTypes[type as keyof ExerciseTypePreferences]
+                    ? useColorModeValue('purple.50', 'purple.900')
                     : useColorModeValue('gray.50', 'gray.800')}
                   transition="all 0.2s"
-                  _hover={{ 
+                  _hover={{
                     borderColor: useColorModeValue('purple.300', 'purple.600'),
                     transform: 'translateY(-2px)',
                     shadow: 'md'
@@ -540,7 +530,7 @@ export const Settings: React.FC = () => {
                     <VStack align="start" spacing={2} flex={1}>
                       <HStack spacing={2}>
                         <Text fontSize="lg">
-                          {type === 'multiple_choice' && '🔤'}
+                          {type === 'multiple_choice' && '🧠'}
                           {type === 'fill_blank' && '📝'}
                           {type === 'matching' && '🔗'}
                           {type === 'true_false' && '✅'}
@@ -564,11 +554,11 @@ export const Settings: React.FC = () => {
                   </HStack>
                 </Box>
               ))}
-              
-              <Box 
-                mt={6} 
-                p={4} 
-                bg={useColorModeValue('gray.50', 'gray.700')} 
+
+              <Box
+                mt={6}
+                p={4}
+                bg={useColorModeValue('gray.50', 'gray.700')}
                 borderRadius="lg"
                 borderWidth="1px"
                 borderColor={useColorModeValue('gray.200', 'gray.600')}
@@ -576,10 +566,10 @@ export const Settings: React.FC = () => {
                 <HStack justify="space-between" align="center">
                   <VStack align="start" spacing={1}>
                     <Text fontSize="sm" fontWeight="semibold" color={useColorModeValue('gray.700', 'gray.200')}>
-                      Active Exercise Types
+                      当前启用题型
                     </Text>
                     <Text fontSize="xs" color={useColorModeValue('gray.600', 'gray.400')}>
-                      {enabledCount} of {Object.keys(exerciseTypeLabels).length} types enabled
+                      已启用 {enabledCount} / {Object.keys(exerciseTypeLabels).length} 种题型
                     </Text>
                   </VStack>
                   <Box>
@@ -592,9 +582,9 @@ export const Settings: React.FC = () => {
 
               <Button
                 colorScheme="blue"
-                onClick={savePreferences}
+                onClick={() => void savePreferences()}
                 isLoading={saving}
-                loadingText="Saving..."
+                loadingText="保存中…"
                 size="lg"
                 w="full"
                 py={6}
@@ -606,7 +596,7 @@ export const Settings: React.FC = () => {
                 }}
                 transition="all 0.2s"
               >
-                💾 Save Preferences
+                保存设置
               </Button>
             </VStack>
           </CardBody>

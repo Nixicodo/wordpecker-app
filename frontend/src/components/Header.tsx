@@ -2,8 +2,11 @@ import { Box, Container, Flex, Button, Icon, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { GiTreeBranch, GiBookshelf } from 'react-icons/gi';
 import { FaFeatherAlt, FaCog, FaCamera, FaGraduationCap } from 'react-icons/fa';
+import { detectUiLocale } from '../i18n/ui';
 
 export const Header = () => {
+  const isZh = detectUiLocale() === 'zh-CN';
+
   return (
     <Box as="nav" w="100%" bg="slate.800" boxShadow="lg" position="sticky" top={0} zIndex={10}>
       <Container maxW="container.xl">
@@ -20,7 +23,7 @@ export const Header = () => {
                 transition="all 0.2s"
               >
                 <Flex align="center" gap={1}>
-                  <Text>My Trees</Text>
+                  <Text>{isZh ? '我的词树' : 'My Trees'}</Text>
                   <Icon 
                     as={FaFeatherAlt} 
                     color="#FA8C16" 
@@ -42,7 +45,7 @@ export const Header = () => {
                 }}
                 transition="all 0.2s"
               >
-                Templates
+                {isZh ? '模板库' : 'Templates'}
               </Button>
             </Link>
             <Link to="/describe">
@@ -55,7 +58,7 @@ export const Header = () => {
                 }}
                 transition="all 0.2s"
               >
-                Vision Garden
+                {isZh ? '视觉花园' : 'Vision Garden'}
               </Button>
             </Link>
             <Link to="/learn-new-words">
@@ -68,7 +71,7 @@ export const Header = () => {
                 }}
                 transition="all 0.2s"
               >
-                Get New Words
+                {isZh ? '发现新词' : 'Get New Words'}
               </Button>
             </Link>
             <Link to="/settings">
@@ -81,13 +84,13 @@ export const Header = () => {
                 }}
                 transition="all 0.2s"
               >
-                Settings
+                {isZh ? '设置' : 'Settings'}
               </Button>
             </Link>
           </Flex>
           <Box>
             <Text color="green.500" fontWeight="bold">
-              WordPecker App
+              {isZh ? 'WordPecker 西语学习' : 'WordPecker App'}
             </Text>
           </Box>
         </Flex>

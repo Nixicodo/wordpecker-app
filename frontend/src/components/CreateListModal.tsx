@@ -23,7 +23,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { InfoIcon } from '@chakra-ui/icons';
 import { GiTreeBranch, GiTreeRoots } from 'react-icons/gi';
-
+import { detectUiLocale } from '../i18n/ui';
 
 const MotionBox = motion(Box);
 
@@ -34,6 +34,7 @@ interface CreateListModalProps {
 }
 
 export const CreateListModal = ({ isOpen, onClose, onCreateList }: CreateListModalProps) => {
+  const isZh = detectUiLocale() === 'zh-CN';
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [context, setContext] = useState('');
@@ -43,7 +44,7 @@ export const CreateListModal = ({ isOpen, onClose, onCreateList }: CreateListMod
   const handleSubmit = async () => {
     if (!name.trim()) {
       toast({
-        title: 'Name is required',
+        title: isZh ? '请输入词表名称' : 'Name is required',
         status: 'error',
         duration: 2000,
         isClosable: true,
@@ -55,7 +56,7 @@ export const CreateListModal = ({ isOpen, onClose, onCreateList }: CreateListMod
     try {
       await onCreateList(name, description, context);
       toast({
-        title: '✨ List created successfully!',
+        title: isZh ? '词表创建成功' : 'List created successfully!',
         status: 'success',
         duration: 2000,
         isClosable: true,
@@ -66,8 +67,8 @@ export const CreateListModal = ({ isOpen, onClose, onCreateList }: CreateListMod
       setContext('');
     } catch (error) {
       toast({
-        title: 'Failed to create list',
-        description: error instanceof Error ? error.message : 'Unknown error occurred',
+        title: isZh ? '创建词表失败' : 'Failed to create list',
+        description: error instanceof Error ? error.message : (isZh ? '发生未知错误' : 'Unknown error occurred'),
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -96,12 +97,12 @@ export const CreateListModal = ({ isOpen, onClose, onCreateList }: CreateListMod
           <ModalHeader color="white">
             <Flex align="center" gap={2}>
               <Icon as={GiTreeBranch} boxSize={6} color="green.400" />
-              <Text 
+              <Text
                 bgGradient="linear(to-r, green.400, brand.400)"
                 bgClip="text"
                 fontSize="2xl"
               >
-                Plant New Word Tree ✨
+                {isZh ? '新建词树' : 'Plant New Word Tree'}
               </Text>
             </Flex>
           </ModalHeader>
@@ -109,9 +110,9 @@ export const CreateListModal = ({ isOpen, onClose, onCreateList }: CreateListMod
           <ModalBody>
             <VStack spacing={4}>
               <FormControl isRequired>
-                <FormLabel color="gray.300">Tree Name</FormLabel>
+                <FormLabel color="gray.300">{isZh ? '词表名称' : 'Tree Name'}</FormLabel>
                 <Input
-                  placeholder="Name your word tree..."
+                  placeholder={isZh ? '给你的词树起个名字…' : 'Name your word tree...'}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   onKeyPress={handleKeyPress}
@@ -125,9 +126,9 @@ export const CreateListModal = ({ isOpen, onClose, onCreateList }: CreateListMod
                 />
               </FormControl>
               <FormControl>
-                <FormLabel color="gray.300">Description</FormLabel>
+                <FormLabel color="gray.300">{isZh ? '说明' : 'Description'}</FormLabel>
                 <Textarea
-                  placeholder="What kind of words will grow on this tree?"
+                  placeholder={isZh ? '这棵词树准备学习什么内容？' : 'What kind of words will grow on this tree?'}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   bg="slate.700"
@@ -141,9 +142,9 @@ export const CreateListModal = ({ isOpen, onClose, onCreateList }: CreateListMod
               <FormControl>
                 <FormLabel color="gray.300">
                   <Flex align="center" gap={2}>
-                    <Text>Tree Roots</Text>
-                    <Tooltip 
-                      label="What's the foundation of this word tree? (e.g., Medical Terms, Computer Science, Literature)"
+                    <Text>{isZh ? '词树语境' : 'Tree Roots'}</Text>
+                    <Tooltip
+                      label={isZh ? '这棵词树的主题或语境是什么？例如：西语旅行、餐厅点餐、拉美日常口语。' : "What's the foundation of this word tree? (e.g., Medical Terms, Computer Science, Literature)"}
                       placement="top"
                       hasArrow
                     >
@@ -152,7 +153,7 @@ export const CreateListModal = ({ isOpen, onClose, onCreateList }: CreateListMod
                   </Flex>
                 </FormLabel>
                 <Textarea
-                  placeholder="e.g., Medical Terms, Computer Science, Harry Potter Series..."
+                  placeholder={isZh ? '例如：西语旅行、餐厅点餐、拉美日常口语…' : 'e.g., Medical Terms, Computer Science, Harry Potter Series...'}
                   value={context}
                   onChange={(e) => setContext(e.target.value)}
                   bg="slate.700"
@@ -168,14 +169,14 @@ export const CreateListModal = ({ isOpen, onClose, onCreateList }: CreateListMod
 
           <ModalFooter gap={2}>
             <Button variant="ghost" onClick={onClose} color="gray.300">
-              Cancel
+              {isZh ? '取消' : 'Cancel'}
             </Button>
             <Button
               variant="solid"
               colorScheme="green"
               onClick={handleSubmit}
               isLoading={isLoading}
-              loadingText="Planting tree ✨"
+              loadingText={isZh ? '正在创建…' : 'Planting tree'}
               leftIcon={<Icon as={GiTreeRoots} boxSize={5} />}
               _hover={{
                 transform: 'translateY(-2px)',
@@ -183,11 +184,11 @@ export const CreateListModal = ({ isOpen, onClose, onCreateList }: CreateListMod
               }}
               transition="all 0.2s"
             >
-              Plant Tree
+              {isZh ? '创建词树' : 'Plant Tree'}
             </Button>
           </ModalFooter>
         </MotionBox>
       </ModalContent>
     </Modal>
   );
-}; 
+};

@@ -24,6 +24,7 @@ import { useState, useEffect } from 'react';
 import { WordList } from '../types';
 import { apiService } from '../services/api';
 import { designTokens } from '../theme/design-system';
+import { detectUiLocale } from '../i18n/ui';
 
 // Animation keyframes removed for build compatibility
 
@@ -43,6 +44,7 @@ const item = {
 };
 
 export const Lists = () => {
+  const isZh = detectUiLocale() === 'zh-CN';
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const [lists, setLists] = useState<WordList[]>([]);
@@ -58,8 +60,8 @@ export const Lists = () => {
       } catch (error) {
         console.error('Error fetching lists:', error);
         toast({
-          title: 'Error fetching lists',
-          description: 'Please try again later',
+          title: isZh ? '获取词表失败' : 'Error fetching lists',
+          description: isZh ? '请稍后再试' : 'Please try again later',
           status: 'error',
           duration: 5000,
           isClosable: true,
@@ -78,7 +80,7 @@ export const Lists = () => {
       setLists(prevLists => [newList, ...prevLists]);
       // Word count and progress are now included in the API response
       toast({
-        title: 'List created successfully',
+        title: isZh ? '词表创建成功' : 'List created successfully',
         status: 'success',
         duration: 3000,
         isClosable: true,
@@ -87,8 +89,8 @@ export const Lists = () => {
     } catch (error) {
       console.error('Error creating list:', error);
       toast({
-        title: 'Error creating list',
-        description: 'Please try again later',
+        title: isZh ? '创建词表失败' : 'Error creating list',
+        description: isZh ? '请稍后再试' : 'Please try again later',
         status: 'error',
         duration: 5000,
         isClosable: true,
@@ -139,10 +141,10 @@ export const Lists = () => {
                   mt={-4}
                 />
               </Flex>
-              My Word Trees
+              {isZh ? '我的词树' : 'My Word Trees'}
             </Heading>
             <Text mt={2} color="gray.400" fontSize="lg">
-              Plant and grow your vocabulary with WordPecker! 🌱
+              {isZh ? '用 WordPecker 种下并培育你的词汇树。' : 'Plant and grow your vocabulary with WordPecker!'}
             </Text>
           </Box>
           <Button
@@ -157,7 +159,7 @@ export const Lists = () => {
             transition="all 0.2s"
             w={{ base: 'full', md: 'auto' }}
           >
-            Plant New Tree
+            {isZh ? '新建词树' : 'Plant New Tree'}
           </Button>
         </Flex>
 
@@ -219,7 +221,7 @@ export const Lists = () => {
                               fontSize="xs"
                               noOfLines={1}
                             >
-                              My Word Tree
+                              {isZh ? '我的词树' : 'My Word Tree'}
                             </Text>
                           </VStack>
                         </Flex>
@@ -236,7 +238,7 @@ export const Lists = () => {
                             w="full"
                             textAlign="center"
                           >
-                            {wordCount} words
+                            {isZh ? `${wordCount} 个词` : `${wordCount} words`}
                           </Badge>
                           {wordCount > 0 && list.masteredWords && list.masteredWords > 0 && (
                             <Badge 
@@ -299,7 +301,7 @@ export const Lists = () => {
                           isDisabled={wordCount === 0}
                           size="md"
                         >
-                          Learn
+                          {isZh ? '学习' : 'Learn'}
                         </Button>
                       </Link>
                       <Link to={`/quiz/${list.id}`} style={{ flex: 1 }}>
@@ -316,7 +318,7 @@ export const Lists = () => {
                           isDisabled={wordCount === 0}
                           size="md"
                         >
-                          Quiz
+                          {isZh ? '测验' : 'Quiz'}
                         </Button>
                       </Link>
                       <Link to={`/lists/${list.id}`} style={{ flex: 1 }}>
@@ -332,7 +334,7 @@ export const Lists = () => {
                           transition="all 0.2s"
                           size="md"
                         >
-                          View
+                          {isZh ? '查看' : 'View'}
                         </Button>
                         </Link>
                       </Flex>

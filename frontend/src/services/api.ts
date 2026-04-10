@@ -3,11 +3,8 @@ import { WordList, Word, Exercise, Question, Template, WordDetail, SentenceExamp
 
 // Generate or retrieve user ID
 const getUserId = () => {
-  let userId = localStorage.getItem('wordpecker-user-id');
-  if (!userId) {
-    userId = 'user_' + Math.random().toString(36).substr(2, 9);
-    localStorage.setItem('wordpecker-user-id', userId);
-  }
+  const userId = 'local-ai-test-user';
+  localStorage.setItem('wordpecker-user-id', userId);
   return userId;
 };
 
