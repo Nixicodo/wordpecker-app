@@ -21,8 +21,21 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaSearch } from 'react-icons/fa';
 
-
 const MotionBox = motion(Box);
+
+const UI = {
+  required: '\u8bf7\u8f93\u5165\u8981\u6dfb\u52a0\u7684\u5355\u8bcd',
+  found: '\u5df2\u627e\u5230\u5355\u8bcd',
+  findingMeaning: '\u6b63\u5728\u4e3a\u8fd9\u4e2a\u8bcd\u751f\u6210\u5408\u9002\u7684\u91ca\u4e49\u2026\u2026',
+  addFailed: '\u6dfb\u52a0\u5355\u8bcd\u5931\u8d25',
+  unknownError: '\u53d1\u751f\u672a\u77e5\u9519\u8bef',
+  title: '\u6dfb\u52a0\u65b0\u5355\u8bcd',
+  fieldLabel: '\u8981\u67e5\u627e\u7684\u5355\u8bcd',
+  placeholder: '\u8f93\u5165\u8981\u52a0\u5165\u8bcd\u8868\u7684\u5355\u8bcd\u2026\u2026',
+  cancel: '\u53d6\u6d88',
+  loading: '\u6b63\u5728\u67e5\u627e\u2026\u2026',
+  submit: '\u6dfb\u52a0\u5355\u8bcd',
+};
 
 interface AddWordModalProps {
   isOpen: boolean;
@@ -39,7 +52,7 @@ export const AddWordModal = ({ isOpen, onClose, onAddWord }: AddWordModalProps) 
   const handleSubmit = async () => {
     if (!word.trim()) {
       toast({
-        title: 'Word is required',
+        title: UI.required,
         status: 'error',
         duration: 2000,
         isClosable: true,
@@ -51,8 +64,8 @@ export const AddWordModal = ({ isOpen, onClose, onAddWord }: AddWordModalProps) 
     try {
       await onAddWord(word.trim());
       toast({
-        title: '🪵 Word found!',
-        description: 'Finding the perfect meaning for your word...',
+        title: UI.found,
+        description: UI.findingMeaning,
         status: 'success',
         duration: 2000,
         isClosable: true,
@@ -61,8 +74,8 @@ export const AddWordModal = ({ isOpen, onClose, onAddWord }: AddWordModalProps) 
       onClose();
     } catch (error) {
       toast({
-        title: 'Failed to add word',
-        description: error instanceof Error ? error.message : 'Unknown error occurred',
+        title: UI.addFailed,
+        description: error instanceof Error ? error.message : UI.unknownError,
         status: 'error',
         duration: 2000,
         isClosable: true,
@@ -90,18 +103,18 @@ export const AddWordModal = ({ isOpen, onClose, onAddWord }: AddWordModalProps) 
         >
           <ModalHeader color="white">
             <Flex align="center" gap={2}>
-              <Icon 
-                as={FaSearch} 
-                boxSize={6} 
+              <Icon
+                as={FaSearch}
+                boxSize={6}
                 color="orange.400"
                 style={{ animation: 'sparkle 2s ease infinite' }}
               />
-              <Text 
+              <Text
                 bgGradient="linear(to-r, orange.400, brand.400)"
                 bgClip="text"
                 fontSize="2xl"
               >
-                Find a New Word 🪵
+                {UI.title}
               </Text>
             </Flex>
           </ModalHeader>
@@ -109,9 +122,9 @@ export const AddWordModal = ({ isOpen, onClose, onAddWord }: AddWordModalProps) 
           <ModalBody>
             <VStack spacing={4}>
               <FormControl isRequired>
-                <FormLabel color="gray.300">Word to Find</FormLabel>
+                <FormLabel color="gray.300">{UI.fieldLabel}</FormLabel>
                 <Input
-                  placeholder="Type a word to add to your tree..."
+                  placeholder={UI.placeholder}
                   value={word}
                   onChange={(e) => setWord(e.target.value)}
                   onKeyPress={handleKeyPress}
@@ -129,14 +142,14 @@ export const AddWordModal = ({ isOpen, onClose, onAddWord }: AddWordModalProps) 
 
           <ModalFooter gap={2}>
             <Button variant="ghost" onClick={onClose} color="gray.300">
-              Cancel
+              {UI.cancel}
             </Button>
             <Button
               variant="solid"
               colorScheme="orange"
               onClick={handleSubmit}
               isLoading={isLoading}
-              loadingText="Finding word 🪵"
+              loadingText={UI.loading}
               leftIcon={<Icon as={FaSearch} boxSize={5} />}
               _hover={{
                 transform: 'translateY(-2px)',
@@ -144,11 +157,11 @@ export const AddWordModal = ({ isOpen, onClose, onAddWord }: AddWordModalProps) 
               }}
               transition="all 0.2s"
             >
-              Find Word
+              {UI.submit}
             </Button>
           </ModalFooter>
         </MotionBox>
       </ModalContent>
     </Modal>
   );
-}; 
+};

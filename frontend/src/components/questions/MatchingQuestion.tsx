@@ -1,7 +1,7 @@
-import { 
-  Text, 
-  Button, 
-  VStack, 
+import {
+  Text,
+  Button,
+  VStack,
   Box,
   Stack,
   Grid,
@@ -9,6 +9,19 @@ import {
 } from '@chakra-ui/react';
 import { useState, useEffect, useMemo } from 'react';
 import { Exercise, Question } from '../../types';
+
+const UI = {
+  empty: '\u5f53\u524d\u6ca1\u6709\u53ef\u5339\u914d\u7684\u5185\u5bb9',
+  title: '\u5c06\u6bcf\u4e2a\u5355\u8bcd\u4e0e\u5bf9\u5e94\u91ca\u4e49\u914d\u5bf9\uff1a',
+  help: '\u7b2c\u4e00\u6b65\uff1a\u5148\u70b9\u4e00\u4e2a\u5355\u8bcd\u3002\u7b2c\u4e8c\u6b65\uff1a\u518d\u70b9\u5bf9\u5e94\u7684\u91ca\u4e49\u3002',
+  words: '\u5355\u8bcd\uff1a',
+  definitions: '\u91ca\u4e49\uff1a',
+  matched: '\u5df2\u914d\u5bf9',
+  matchedWith: '\u5df2\u914d\u5bf9\uff1a',
+  selectedPrefix: '\u5df2\u9009\u4e2d\uff1a',
+  selectedSuffix: '\uff0c\u73b0\u5728\u70b9\u51fb\u5b83\u5bf9\u5e94\u7684\u91ca\u4e49',
+  correctMatches: '\u6b63\u786e\u914d\u5bf9\uff1a',
+};
 
 interface MatchingQuestionProps {
   question: Exercise | Question;
@@ -27,7 +40,6 @@ export const MatchingQuestion: React.FC<MatchingQuestionProps> = ({
   const [matchingAnswers, setMatchingAnswers] = useState<Record<string, string>>({});
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
 
-  // Shuffle function for randomizing arrays
   const shuffleArray = <T,>(array: T[]): T[] => {
     const shuffled = [...array];
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -37,36 +49,33 @@ export const MatchingQuestion: React.FC<MatchingQuestionProps> = ({
     return shuffled;
   };
 
-  // Clean function to remove labels like A., B., 1., 2., etc. from text
   const cleanText = (text: string): string => {
     return text
-      .replace(/^[A-Za-z]\.\s*/, '') // Remove A., B., C., etc. at the beginning
-      .replace(/^[0-9]+\.\s*/, '') // Remove 1., 2., 3., etc. at the beginning
-      .replace(/^\([A-Za-z]\)\s*/, '') // Remove (A), (B), (C), etc. at the beginning
-      .replace(/^\([0-9]+\)\s*/, '') // Remove (1), (2), (3), etc. at the beginning
-      .replace(/^[A-Za-z]\)\s*/, '') // Remove A), B), C), etc. at the beginning
-      .replace(/^[0-9]+\)\s*/, '') // Remove 1), 2), 3), etc. at the beginning
+      .replace(/^[A-Za-z]\.\s*/, '')
+      .replace(/^[0-9]+\.\s*/, '')
+      .replace(/^\([A-Za-z]\)\s*/, '')
+      .replace(/^\([0-9]+\)\s*/, '')
+      .replace(/^[A-Za-z]\)\s*/, '')
+      .replace(/^[0-9]+\)\s*/, '')
       .trim();
   };
 
-  // Memoize shuffled arrays to prevent re-shuffling on every render
   const { shuffledWords, shuffledDefinitions } = useMemo(() => {
     if (!question.pairs || question.pairs.length === 0) {
       return { shuffledWords: [], shuffledDefinitions: [] };
     }
-    
+
     const words = question.pairs.map(p => cleanText(p.word));
     const definitions = question.pairs.map(p => cleanText(p.definition));
-    
+
     return {
       shuffledWords: shuffleArray(words),
       shuffledDefinitions: shuffleArray(definitions)
     };
   }, [question.pairs]);
 
-  // Reset local state when selectedAnswer changes (new question)
   useEffect(() => {
-    setSelectedWord(null); // Reset selected word
+    setSelectedWord(null);
     if (!selectedAnswer) {
       setMatchingAnswers({});
     } else {
@@ -81,19 +90,16 @@ export const MatchingQuestion: React.FC<MatchingQuestionProps> = ({
 
   const handleMatchingChange = (word: string, definition: string) => {
     const newAnswers = { ...matchingAnswers };
-    
-    // Remove any existing mapping for this definition
+
     Object.keys(newAnswers).forEach(key => {
       if (newAnswers[key] === definition) {
         delete newAnswers[key];
       }
     });
-    
-    // Add new mapping
+
     newAnswers[word] = definition;
     setMatchingAnswers(newAnswers);
-    
-    // Convert to string format for parent component
+
     const answerString = Object.entries(newAnswers)
       .map(([w, d]) => `${w}:${d}`)
       .join('|');
@@ -101,21 +107,21 @@ export const MatchingQuestion: React.FC<MatchingQuestionProps> = ({
   };
 
   if (!question.pairs || question.pairs.length === 0) {
-    return <Text>No matching pairs available</Text>;
+    return <Text>{UI.empty}</Text>;
   }
 
   return (
     <VStack spacing={4} align="stretch">
       <Text fontSize="lg" textAlign="center" mb={4}>
-        Match each word with its definition:
+        {UI.title}
       </Text>
       <Text fontSize="sm" color="gray.400" textAlign="center">
-        Step 1: Click a word. Step 2: Click its matching definition.
+        {UI.help}
       </Text>
-      
+
       <Grid templateColumns="1fr 1fr" gap={6}>
         <GridItem>
-          <Text fontWeight="bold" mb={3} color="blue.300">Words:</Text>
+          <Text fontWeight="bold" mb={3} color="blue.300">{UI.words}</Text>
           <Stack spacing={2}>
             {shuffledWords.map((word) => {
               const isSelected = selectedWord === word;
@@ -123,7 +129,7 @@ export const MatchingQuestion: React.FC<MatchingQuestionProps> = ({
               return (
                 <Button
                   key={word}
-                  variant={isSelected ? "solid" : "outline"}
+                  variant={isSelected ? 'solid' : 'outline'}
                   size="md"
                   p={3}
                   bg={isMatched ? 'green.600' : isSelected ? 'blue.600' : 'slate.700'}
@@ -138,25 +144,25 @@ export const MatchingQuestion: React.FC<MatchingQuestionProps> = ({
                   }}
                   isDisabled={isAnswered || !!isMatched}
                   _hover={{
-                    bg: isAnswered || isMatched ? undefined : isSelected ? "blue.500" : "slate.600"
+                    bg: isAnswered || isMatched ? undefined : isSelected ? 'blue.500' : 'slate.600'
                   }}
-                  cursor={isAnswered || isMatched ? "default" : "pointer"}
+                  cursor={isAnswered || isMatched ? 'default' : 'pointer'}
                 >
                   {word}
-                  {isMatched && " ✓"}
+                  {isMatched && ` ${UI.matched}`}
                 </Button>
               );
             })}
           </Stack>
         </GridItem>
-        
+
         <GridItem>
-          <Text fontWeight="bold" mb={3} color="green.300">Definitions:</Text>
+          <Text fontWeight="bold" mb={3} color="green.300">{UI.definitions}</Text>
           <Stack spacing={2}>
             {shuffledDefinitions.map((definition) => {
               const isMatched = Object.values(matchingAnswers).includes(definition);
               const matchedWord = Object.keys(matchingAnswers).find(key => matchingAnswers[key] === definition);
-              
+
               return (
                 <Button
                   key={definition}
@@ -176,15 +182,15 @@ export const MatchingQuestion: React.FC<MatchingQuestionProps> = ({
                   }}
                   isDisabled={isAnswered || isMatched || !selectedWord}
                   _hover={{
-                    bg: isAnswered || isMatched || !selectedWord ? undefined : "slate.600"
+                    bg: isAnswered || isMatched || !selectedWord ? undefined : 'slate.600'
                   }}
-                  cursor={isAnswered || isMatched || !selectedWord ? "default" : "pointer"}
+                  cursor={isAnswered || isMatched || !selectedWord ? 'default' : 'pointer'}
                 >
                   <VStack spacing={1} align="stretch">
                     <Text fontSize="sm">{definition}</Text>
                     {isMatched && matchedWord && (
                       <Text fontSize="xs" color="green.200">
-                        ✓ Matched with: {matchedWord}
+                        {`${UI.matchedWith}${matchedWord}`}
                       </Text>
                     )}
                   </VStack>
@@ -194,21 +200,23 @@ export const MatchingQuestion: React.FC<MatchingQuestionProps> = ({
           </Stack>
         </GridItem>
       </Grid>
-      
+
       {selectedWord && (
         <Box p={3} bg="blue.800" borderRadius="md" textAlign="center">
           <Text color="blue.200">
-            Selected: <strong>{selectedWord}</strong> - Now click its definition →
+            {UI.selectedPrefix}
+            <strong>{selectedWord}</strong>
+            {UI.selectedSuffix}
           </Text>
         </Box>
       )}
-      
+
       {isAnswered && (
         <Box mt={4} p={4} bg="slate.800" borderRadius="md">
-          <Text fontWeight="bold" mb={2}>Correct matches:</Text>
+          <Text fontWeight="bold" mb={2}>{UI.correctMatches}</Text>
           {question.pairs?.map((pair, idx) => (
             <Text key={idx} fontSize="sm" color="green.300">
-              {pair.word} → {pair.definition}
+              {pair.word} {'->'} {pair.definition}
             </Text>
           ))}
         </Box>

@@ -41,7 +41,7 @@ export const FillBlankQuestion: React.FC<FillBlankQuestionProps> = ({
       <Input
         value={fillBlankAnswer}
         onChange={(e) => handleFillBlankChange(e.target.value)}
-        placeholder="Type your answer here..."
+        placeholder="在这里输入答案……"
         size="lg"
         textAlign="center"
         bg="slate.700"
@@ -53,7 +53,7 @@ export const FillBlankQuestion: React.FC<FillBlankQuestionProps> = ({
       />
       {isAnswered && !isCorrect && (
         <Text color="green.400" textAlign="center" fontSize="md">
-          Correct answer: {question.correctAnswer}
+          正确答案：{question.correctAnswer}
         </Text>
       )}
     </VStack>

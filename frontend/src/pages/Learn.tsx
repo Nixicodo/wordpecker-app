@@ -1,10 +1,10 @@
-import { 
-  Box, 
-  Button, 
-  Text, 
-  Flex, 
-  Progress, 
-  Badge, 
+import {
+  Box,
+  Button,
+  Text,
+  Flex,
+  Progress,
+  Badge,
   IconButton,
   useToast,
   Spinner,
@@ -33,11 +33,48 @@ import { QuestionRenderer } from '../components/QuestionRenderer';
 import { SessionService } from '../services/sessionService';
 import { validateAnswer } from '../utils/answerValidation';
 
+const UI = {
+  startErrorTitle: '\u542f\u52a8\u5b66\u4e60\u5931\u8d25',
+  startErrorDescription: '\u65e0\u6cd5\u5f00\u59cb\u5b66\u4e60\u6d41\u7a0b',
+  loadMoreErrorTitle: '\u52a0\u8f7d\u66f4\u591a\u7ec3\u4e60\u5931\u8d25',
+  loadMoreErrorDescription: '\u65e0\u6cd5\u52a0\u8f7d\u66f4\u591a\u7ec3\u4e60',
+  noExercises: '\u5f53\u524d\u6ca1\u6709\u53ef\u7528\u7ec3\u4e60',
+  backToLists: '\u8fd4\u56de\u8bcd\u8868\u5217\u8868',
+  back: '\u8fd4\u56de',
+  exit: '\u9000\u51fa',
+  learningPrefix: '\u5b66\u4e60\u4e2d\uff1a',
+  streakPrefix: '\u8fde\u5bf9\uff1a',
+  progressPrefix: '\u8fdb\u5ea6\uff1a',
+  scorePrefix: '\u5f97\u5206\uff1a',
+  correct: '\u56de\u7b54\u6b63\u786e',
+  incorrect: '\u7ee7\u7eed\u52a0\u6cb9',
+  streakMessage: '\u4f60\u5df2\u7ecf\u8fde\u7eed\u7b54\u5bf9',
+  streakSuffix: '\u9898\u4e86\u3002',
+  goodJob: '\u7b54\u5f97\u4e0d\u9519\u3002',
+  checkAbove: '\u8bf7\u67e5\u770b\u4e0a\u65b9\u7ed9\u51fa\u7684\u6b63\u786e\u7b54\u6848\u3002',
+  correctAnswerPrefix: '\u6b63\u786e\u7b54\u6848\uff1a',
+  sessionComplete: '\u672c\u8f6e\u5b66\u4e60\u5b8c\u6210',
+  statCorrect: '\u7b54\u5bf9',
+  statIncorrect: '\u7b54\u9519',
+  statBestStreak: '\u6700\u4f73\u8fde\u5bf9',
+  wellDone: '\u8868\u73b0\u4e0d\u9519',
+  keepPracticing: '\u7ee7\u7eed\u5de9\u56fa',
+  feelingGood: '\u72b6\u6001\u5f88\u597d',
+  summary: '\u5b66\u4e60\u603b\u7ed3',
+  finalScore: '\u6700\u7ec8\u5f97\u5206\uff1a',
+  points: '\u5206',
+  validating: '\u6b63\u5728\u6821\u9a8c\u2026\u2026',
+  submitAnswer: '\u63d0\u4ea4\u7b54\u6848',
+  complete: '\u5b8c\u6210',
+  continueLearning: '\u7ee7\u7eed\u5b66\u4e60',
+  finishSession: '\u5b8c\u6210\u672c\u8f6e\u5b66\u4e60',
+  nextExercise: '\u4e0b\u4e00\u9898',
+};
+
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 }
 };
-
 
 const MotionBox = motion(Box);
 
@@ -48,7 +85,7 @@ export const Learn = () => {
   const toast = useToast();
   const hasInitializedRef = useRef(false);
   const isMountedRef = useRef(false);
-  
+
   const [list] = useState<WordList | null>(state?.list || null);
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [currentExercise, setCurrentExercise] = useState(0);
@@ -67,11 +104,10 @@ export const Learn = () => {
 
     const initLearn = async () => {
       if (!id || !list || hasInitializedRef.current) return;
-      
+
       try {
         setIsLoading(true);
-        
-        // Start learning session
+
         const response = await apiService.startLearning(id);
         if (response && response.exercises) {
           setExercises(response.exercises);
@@ -85,8 +121,8 @@ export const Learn = () => {
       } catch (error: any) {
         console.error('Error initializing learning session:', error);
         toast({
-          title: 'Error',
-          description: error.response?.data?.message || 'Failed to start learning session',
+          title: UI.startErrorTitle,
+          description: error.response?.data?.message || UI.startErrorDescription,
           status: 'error',
           duration: 5000,
           isClosable: true,
@@ -98,22 +134,21 @@ export const Learn = () => {
     };
 
     initLearn();
-  }, [id, navigate, toast]);
+  }, [id, list, navigate, toast]);
 
   const loadMoreExercises = async () => {
     if (!id || !exercises.length) return false;
-    
+
     try {
       setIsLoading(true);
       const response = await apiService.getExercises(id);
-      
+
       if (response && response.exercises && response.exercises.length > 0) {
         const newExercises = [...exercises, ...response.exercises];
         setExercises(newExercises);
-        // Create new session service with all exercises
         const service = new SessionService(newExercises);
         setSessionService(service);
-        setCurrentExercise(exercises.length); // Start from the first new exercise
+        setCurrentExercise(exercises.length);
         setSelectedAnswer('');
         setIsAnswered(false);
         setIsCompleted(false);
@@ -123,8 +158,8 @@ export const Learn = () => {
     } catch (error: any) {
       console.error('Error loading more exercises:', error);
       toast({
-        title: 'Error',
-        description: error.response?.data?.message || 'Failed to load more exercises',
+        title: UI.loadMoreErrorTitle,
+        description: error.response?.data?.message || UI.loadMoreErrorDescription,
         status: 'error',
         duration: 5000,
         isClosable: true,
@@ -136,33 +171,27 @@ export const Learn = () => {
   };
 
   const handleAnswer = async () => {
-    if (isValidating) return; // Prevent multiple submissions
-    
+    if (isValidating) return;
+
     setIsValidating(true);
     const exercise = exercises[currentExercise];
-    
+
     try {
-      let isValid = false;
-      
-      // Use async validation for all question types for consistency
-      isValid = await validateAnswer(selectedAnswer, exercise, list?.context);
-      
-      // Store the actual correctness for UI display
+      const isValid = await validateAnswer(selectedAnswer, exercise, list?.context);
+
       setActualCorrectness(isValid);
       setIsAnswered(true);
-      
+
       if (sessionService) {
-        // Use the actual validation result
         sessionService.answerQuestion(selectedAnswer, exercise, isValid);
         setSessionProgress(sessionService.getCurrentProgress());
       }
     } catch (error) {
       console.error('Error validating answer:', error);
-      // Fallback to normal validation
       const fallbackCorrect = selectedAnswer === exercise.correctAnswer;
       setActualCorrectness(fallbackCorrect);
       setIsAnswered(true);
-      
+
       if (sessionService) {
         sessionService.answerQuestion(selectedAnswer, exercise, fallbackCorrect);
         setSessionProgress(sessionService.getCurrentProgress());
@@ -174,7 +203,7 @@ export const Learn = () => {
 
   const handleNext = async () => {
     const isLastExercise = currentExercise === exercises.length - 1;
-    
+
     if (isLastExercise) {
       setIsCompleted(true);
       if (sessionService) {
@@ -182,16 +211,16 @@ export const Learn = () => {
       }
       return;
     }
-    
+
     if (sessionService) {
       sessionService.nextQuestion();
       setSessionProgress(sessionService.getCurrentProgress());
     }
-    
+
     setCurrentExercise(prev => prev + 1);
     setSelectedAnswer('');
     setIsAnswered(false);
-    setActualCorrectness(null); // Reset validation result
+    setActualCorrectness(null);
   };
 
   if (isLoading) {
@@ -205,9 +234,9 @@ export const Learn = () => {
   if (!list || !exercises.length) {
     return (
       <Box textAlign="center" py={10}>
-        <Text mb={4}>No exercises available</Text>
+        <Text mb={4}>{UI.noExercises}</Text>
         <Link to="/lists">
-          <Button variant="solid">Back to Lists</Button>
+          <Button variant="solid">{UI.backToLists}</Button>
         </Link>
       </Box>
     );
@@ -228,7 +257,7 @@ export const Learn = () => {
     >
       <Flex mb={4}>
         <IconButton
-          aria-label="Go back"
+          aria-label={UI.back}
           icon={<ArrowBackIcon />}
           variant="ghost"
           onClick={() => navigate(-1)}
@@ -236,46 +265,46 @@ export const Learn = () => {
         />
       </Flex>
 
-      <Flex 
-        justify="space-between" 
-        align="center" 
+      <Flex
+        justify="space-between"
+        align="center"
         mb={6}
         direction={{ base: 'column', md: 'row' }}
         gap={4}
       >
         <Box>
-          <Text 
+          <Text
             textStyle="h1"
             color="white"
             fontSize={{ base: '3xl', md: '4xl' }}
           >
-            Learning: {list.name}
+            {`${UI.learningPrefix}${list.name}`}
           </Text>
-          <Flex 
-            gap={4} 
-            mt={2} 
-            flexWrap="wrap" 
+          <Flex
+            gap={4}
+            mt={2}
+            flexWrap="wrap"
             justify={{ base: 'center', md: 'flex-start' }}
           >
-            <Badge 
-              colorScheme="green" 
-              p={2} 
+            <Badge
+              colorScheme="green"
+              p={2}
               borderRadius="full"
               style={streak > 0 ? { animation: 'pulse 1s ease infinite' } : undefined}
             >
-              🔥 Streak: {streak}
+              {`${UI.streakPrefix}${streak}`}
             </Badge>
             <Badge colorScheme="blue" p={2} borderRadius="full">
-              ✨ Progress: {Math.round(progress)}%
+              {`${UI.progressPrefix}${Math.round(progress)}%`}
             </Badge>
             <Badge colorScheme="purple" p={2} borderRadius="full">
-              ⭐ Score: {score}
+              {`${UI.scorePrefix}${score}`}
             </Badge>
           </Flex>
         </Box>
         <Link to={`/lists/${id}`}>
           <IconButton
-            aria-label="Exit"
+            aria-label={UI.exit}
             icon={<CloseIcon />}
             variant="ghost"
             size="lg"
@@ -283,10 +312,10 @@ export const Learn = () => {
         </Link>
       </Flex>
 
-      <Progress 
-        value={progress} 
-        mb={8} 
-        rounded="full" 
+      <Progress
+        value={progress}
+        mb={8}
+        rounded="full"
         size="sm"
         colorScheme="green"
         hasStripe
@@ -325,27 +354,27 @@ export const Learn = () => {
             textAlign="center"
           >
             <Text color="white" fontSize={{ base: 'lg', md: 'xl' }} fontWeight="bold">
-              {actualCorrectness ? '🎉 Excellent!' : '💡 Keep Learning!'}
+              {actualCorrectness ? UI.correct : UI.incorrect}
             </Text>
             <Text color="white" mt={2} fontSize={{ base: 'sm', md: 'md' }}>
-              {actualCorrectness 
-                ? sessionProgress?.stats?.streak > 1 ? `You're on fire! ${sessionProgress.stats.streak} correct in a row!` : 'Great job!'
-                : exercise.type === 'fill_blank' || exercise.type === 'matching' 
-                  ? 'Check the correct answer above'
-                  : `The correct answer is: ${exercise.correctAnswer}`}
+              {actualCorrectness
+                ? sessionProgress?.stats?.streak > 1
+                  ? `${UI.streakMessage} ${sessionProgress.stats.streak} ${UI.streakSuffix}`
+                  : UI.goodJob
+                : exercise.type === 'fill_blank' || exercise.type === 'matching'
+                  ? UI.checkAbove
+                  : `${UI.correctAnswerPrefix}${exercise.correctAnswer}`}
             </Text>
-            
           </MotionBox>
         )}
 
-        {/* Session Completion Card */}
         {isCompleted && sessionService && (
           <MotionBox
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             mt={6}
           >
-            <Card 
+            <Card
               bg={useColorModeValue('white', 'gray.800')}
               borderColor={useColorModeValue('green.200', 'green.600')}
               borderWidth="2px"
@@ -355,7 +384,7 @@ export const Learn = () => {
                 <HStack spacing={3} justify="center">
                   <Icon as={CheckCircleIcon} color="green.500" boxSize={8} />
                   <Text fontSize="2xl" fontWeight="bold" color={useColorModeValue('gray.800', 'white')}>
-                    🎉 Session Complete!
+                    {UI.sessionComplete}
                   </Text>
                 </HStack>
               </CardHeader>
@@ -365,53 +394,53 @@ export const Learn = () => {
                     <StatLabel color={useColorModeValue('gray.600', 'gray.400')}>
                       <HStack justify="center" spacing={1}>
                         <CheckCircleIcon color="green.500" />
-                        <Text>Correct</Text>
+                        <Text>{UI.statCorrect}</Text>
                       </HStack>
                     </StatLabel>
                     <StatNumber color="green.500" fontSize="3xl">
                       {sessionProgress?.stats.correct}
                     </StatNumber>
                     <StatHelpText color={useColorModeValue('gray.500', 'gray.400')}>
-                      Great job!
+                      {UI.wellDone}
                     </StatHelpText>
                   </Stat>
-                  
+
                   <Stat textAlign="center">
                     <StatLabel color={useColorModeValue('gray.600', 'gray.400')}>
                       <HStack justify="center" spacing={1}>
                         <InfoIcon color="orange.500" />
-                        <Text>Incorrect</Text>
+                        <Text>{UI.statIncorrect}</Text>
                       </HStack>
                     </StatLabel>
                     <StatNumber color="orange.500" fontSize="3xl">
                       {sessionProgress?.stats.incorrect}
                     </StatNumber>
                     <StatHelpText color={useColorModeValue('gray.500', 'gray.400')}>
-                      Learning opportunity
+                      {UI.keepPracticing}
                     </StatHelpText>
                   </Stat>
-                  
+
                   <Stat textAlign="center">
                     <StatLabel color={useColorModeValue('gray.600', 'gray.400')}>
                       <HStack justify="center" spacing={1}>
                         <StarIcon color="purple.500" />
-                        <Text>Best Streak</Text>
+                        <Text>{UI.statBestStreak}</Text>
                       </HStack>
                     </StatLabel>
                     <StatNumber color="purple.500" fontSize="3xl">
                       {sessionProgress?.stats.maxStreak}
                     </StatNumber>
                     <StatHelpText color={useColorModeValue('gray.500', 'gray.400')}>
-                      On fire! 🔥
+                      {UI.feelingGood}
                     </StatHelpText>
                   </Stat>
                 </SimpleGrid>
-                
+
                 <Divider mb={4} />
-                
+
                 <VStack spacing={2}>
                   <Text fontSize="lg" fontWeight="semibold" color={useColorModeValue('gray.700', 'gray.200')}>
-                    Performance Insights
+                    {UI.summary}
                   </Text>
                   <HStack spacing={2} wrap="wrap" justify="center">
                     {sessionService.getInsights().map((insight, index) => (
@@ -420,9 +449,12 @@ export const Learn = () => {
                       </Badge>
                     ))}
                   </HStack>
-                  
+
                   <Text fontSize="sm" color={useColorModeValue('gray.600', 'gray.400')} textAlign="center" mt={2}>
-                    Final Score: <Text as="span" fontWeight="bold" color="blue.500">{sessionProgress?.stats.score} points</Text>
+                    {UI.finalScore}
+                    <Text as="span" fontWeight="bold" color="blue.500">
+                      {`${sessionProgress?.stats.score} ${UI.points}`}
+                    </Text>
                   </Text>
                 </VStack>
               </CardBody>
@@ -439,14 +471,14 @@ export const Learn = () => {
               onClick={handleAnswer}
               isDisabled={!selectedAnswer || isValidating}
               isLoading={isValidating}
-              loadingText="Validating..."
+              loadingText={UI.validating}
               _hover={{
                 transform: 'translateY(-2px)',
                 shadow: 'lg'
               }}
               transition="all 0.2s"
             >
-              Check Answer
+              {UI.submitAnswer}
             </Button>
           ) : isCompleted ? (
             <>
@@ -461,7 +493,7 @@ export const Learn = () => {
                 }}
                 transition="all 0.2s"
               >
-                Complete
+                {UI.complete}
               </Button>
               <Button
                 variant="solid"
@@ -475,7 +507,7 @@ export const Learn = () => {
                 }}
                 transition="all 0.2s"
               >
-                Continue Learning
+                {UI.continueLearning}
               </Button>
             </>
           ) : (
@@ -490,11 +522,11 @@ export const Learn = () => {
               }}
               transition="all 0.2s"
             >
-              {currentExercise === exercises.length - 1 ? 'Finish Session' : 'Next Exercise'}
+              {currentExercise === exercises.length - 1 ? UI.finishSession : UI.nextExercise}
             </Button>
           )}
         </Flex>
       </MotionBox>
     </MotionBox>
   );
-}; 
+};

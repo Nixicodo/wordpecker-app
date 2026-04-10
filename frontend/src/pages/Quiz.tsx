@@ -1,11 +1,11 @@
-import { 
-  Box, 
-  Button, 
-  Text, 
-  Flex, 
-  Progress, 
-  HStack, 
-  Badge, 
+import {
+  Box,
+  Button,
+  Text,
+  Flex,
+  Progress,
+  HStack,
+  Badge,
   IconButton,
   useToast,
   Spinner,
@@ -33,11 +33,52 @@ import { QuestionRenderer } from '../components/QuestionRenderer';
 import { SessionService } from '../services/sessionService';
 import { validateAnswer } from '../utils/answerValidation';
 
+const UI = {
+  startErrorTitle: '\u542f\u52a8\u6d4b\u9a8c\u5931\u8d25',
+  startErrorDescription: '\u65e0\u6cd5\u5f00\u59cb\u6d4b\u9a8c',
+  progressSaved: '\u8fdb\u5ea6\u5df2\u4fdd\u5b58',
+  progressSavedDescription: '\u5df2\u66f4\u65b0',
+  wordUnit: '\u4e2a\u5355\u8bcd\u7684\u5b66\u4e60\u8fdb\u5ea6',
+  progressSaveFailed: '\u4fdd\u5b58\u8fdb\u5ea6\u5931\u8d25',
+  progressSaveFailedDescription: '\u6d4b\u9a8c\u7ed3\u679c\u5df2\u8bb0\u5f55\uff0c\u4f46\u5b66\u4e60\u8fdb\u5ea6\u66f4\u65b0\u5931\u8d25',
+  loadMoreErrorTitle: '\u52a0\u8f7d\u66f4\u591a\u9898\u76ee\u5931\u8d25',
+  loadMoreErrorDescription: '\u65e0\u6cd5\u52a0\u8f7d\u66f4\u591a\u9898\u76ee',
+  noQuestions: '\u5f53\u524d\u6ca1\u6709\u53ef\u7528\u9898\u76ee',
+  backToLists: '\u8fd4\u56de\u8bcd\u8868\u5217\u8868',
+  back: '\u8fd4\u56de',
+  exit: '\u9000\u51fa',
+  quizPrefix: '\u6d4b\u9a8c\uff1a',
+  comboPrefix: '\u8fde\u51fb x',
+  scorePrefix: '\u5f97\u5206\uff1a',
+  correctMessage: '\u56de\u7b54\u6b63\u786e',
+  comboExcellent: '\uff0c\u8fde\u51fb\u8868\u73b0\u5f88\u68d2',
+  comboNice: '\uff0c\u7ee7\u7eed\u4fdd\u6301\u8fde\u51fb',
+  wrongMessage: '\u56de\u7b54\u9519\u8bef\uff0c\u7ee7\u7eed\u5c1d\u8bd5',
+  gameOver: '\u672c\u8f6e\u6d4b\u9a8c\u7ed3\u675f',
+  quizComplete: '\u6d4b\u9a8c\u5b8c\u6210',
+  statCorrect: '\u7b54\u5bf9',
+  statIncorrect: '\u7b54\u9519',
+  statBestStreak: '\u6700\u4f73\u8fde\u51fb',
+  wellDone: '\u8868\u73b0\u4e0d\u9519',
+  keepPracticing: '\u7ee7\u7eed\u5de9\u56fa',
+  feelingGood: '\u72b6\u6001\u5f88\u597d',
+  summary: '\u6d4b\u9a8c\u603b\u7ed3',
+  finalScore: '\u6700\u7ec8\u5f97\u5206\uff1a',
+  points: '\u5206',
+  validating: '\u6b63\u5728\u6821\u9a8c\u2026\u2026',
+  submitAnswer: '\u63d0\u4ea4\u7b54\u6848',
+  saving: '\u6b63\u5728\u4fdd\u5b58\u2026\u2026',
+  saveAndFinish: '\u4fdd\u5b58\u5e76\u5b8c\u6210',
+  loading: '\u6b63\u5728\u52a0\u8f7d\u2026\u2026',
+  continueQuiz: '\u7ee7\u7eed\u6d4b\u9a8c',
+  finishQuiz: '\u5b8c\u6210\u6d4b\u9a8c',
+  nextQuestion: '\u4e0b\u4e00\u9898',
+};
+
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 }
 };
-
 
 const MotionBox = motion(Box);
 
@@ -48,7 +89,7 @@ export const Quiz = () => {
   const toast = useToast();
   const hasInitializedRef = useRef(false);
   const isMountedRef = useRef(false);
-  
+
   const [list] = useState<WordList | null>(state?.list || null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -72,11 +113,10 @@ export const Quiz = () => {
 
     const initQuiz = async () => {
       if (!id || !list || hasInitializedRef.current) return;
-      
+
       try {
         setIsLoading(true);
-        
-        // Start quiz session
+
         const response = await apiService.startQuiz(id);
         if (response && response.questions && response.total_questions) {
           setQuestions(response.questions);
@@ -91,8 +131,8 @@ export const Quiz = () => {
       } catch (error: any) {
         console.error('Error initializing quiz:', error);
         toast({
-          title: 'Error',
-          description: error.response?.data?.message || 'Failed to start quiz',
+          title: UI.startErrorTitle,
+          description: error.response?.data?.message || UI.startErrorDescription,
           status: 'error',
           duration: 5000,
           isClosable: true,
@@ -104,20 +144,20 @@ export const Quiz = () => {
     };
 
     initQuiz();
-  }, [id, navigate, toast]);
-  
+  }, [id, list, navigate, toast]);
+
   const updateLearnedPoints = async () => {
     if (!id || quizResults.length === 0) {
       navigate(`/lists/${id}`);
       return;
     }
-    
+
     setIsUpdatingPoints(true);
     try {
       await apiService.updateLearnedPoints(id, quizResults);
       toast({
-        title: 'Progress Saved!',
-        description: `Updated learning progress for ${quizResults.length} words`,
+        title: UI.progressSaved,
+        description: `${UI.progressSavedDescription} ${quizResults.length} ${UI.wordUnit}`,
         status: 'success',
         duration: 2000,
         isClosable: true,
@@ -125,8 +165,8 @@ export const Quiz = () => {
     } catch (error: any) {
       console.error('Error updating learned points:', error);
       toast({
-        title: 'Progress Save Failed',
-        description: 'Your quiz results were recorded but progress update failed',
+        title: UI.progressSaveFailed,
+        description: UI.progressSaveFailedDescription,
         status: 'warning',
         duration: 3000,
         isClosable: true,
@@ -139,11 +179,11 @@ export const Quiz = () => {
 
   const loadMoreQuestions = async () => {
     if (!id || !questions.length) return false;
-    
+
     setIsLoading(true);
     try {
       const response = await apiService.getQuestions(id);
-      
+
       if (response && response.questions && response.questions.length > 0) {
         setQuestions(prev => [...prev, ...response.questions]);
         setIsCompleted(false);
@@ -157,8 +197,8 @@ export const Quiz = () => {
     } catch (error: any) {
       console.error('Error loading more questions:', error);
       toast({
-        title: 'Error',
-        description: error.response?.data?.message || 'Failed to load more questions',
+        title: UI.loadMoreErrorTitle,
+        description: error.response?.data?.message || UI.loadMoreErrorDescription,
         status: 'error',
         duration: 5000,
         isClosable: true,
@@ -170,32 +210,26 @@ export const Quiz = () => {
   };
 
   const handleAnswer = async () => {
-    if (isValidating) return; // Prevent multiple submissions
-    
+    if (isValidating) return;
+
     setIsValidating(true);
     const question = questions[currentQuestion];
-    
+
     try {
-      let isValid = false;
-      
-      // Use async validation for all question types for consistency
-      isValid = await validateAnswer(selectedAnswer, question, list?.context);
-      
-      // Store the actual correctness for UI display
+      const isValid = await validateAnswer(selectedAnswer, question, list?.context);
+
       setActualCorrectness(isValid);
       setIsAnswered(true);
-      
+
       if (sessionService) {
-        // Use the actual validation result
         sessionService.answerQuestion(selectedAnswer, question, isValid);
         setSessionProgress(sessionService.getCurrentProgress());
-        
-        // Track quiz results for learnedPoint updates
+
         setQuizResults(prev => [...prev, {
           wordId: question.wordId || question.word,
           correct: isValid
         }]);
-        
+
         if (!isValid) {
           setLives(prev => {
             const newLives = prev - 1;
@@ -208,19 +242,17 @@ export const Quiz = () => {
       }
     } catch (error) {
       console.error('Error validating answer:', error);
-      // Fallback to session service validation
       if (sessionService) {
         const fallbackCorrect = sessionService.answerQuestion(selectedAnswer, question);
         setActualCorrectness(fallbackCorrect);
         setIsAnswered(true);
         setSessionProgress(sessionService.getCurrentProgress());
-        
-        // Track quiz results for learnedPoint updates
+
         setQuizResults(prev => [...prev, {
           wordId: question.wordId || question.word,
           correct: fallbackCorrect
         }]);
-        
+
         if (!fallbackCorrect) {
           setLives(prev => {
             const newLives = prev - 1;
@@ -244,10 +276,9 @@ export const Quiz = () => {
       }
       return;
     }
-    
+
     const isLastQuestion = currentQuestion === questions.length - 1;
     if (isLastQuestion && currentQuestion + 1 < totalQuestions) {
-      // Load more questions before proceeding
       setIsLoading(true);
       const hasMoreQuestions = await loadMoreQuestions();
       if (!hasMoreQuestions && currentQuestion + 1 >= questions.length) {
@@ -258,7 +289,7 @@ export const Quiz = () => {
         return;
       }
     }
-    
+
     if (currentQuestion + 1 >= totalQuestions) {
       setIsCompleted(true);
       if (sessionService) {
@@ -266,16 +297,16 @@ export const Quiz = () => {
       }
       return;
     }
-    
+
     if (sessionService) {
       sessionService.nextQuestion();
       setSessionProgress(sessionService.getCurrentProgress());
     }
-    
+
     setCurrentQuestion(prev => prev + 1);
     setSelectedAnswer('');
     setIsAnswered(false);
-    setActualCorrectness(null); // Reset validation result
+    setActualCorrectness(null);
   };
 
   if (isLoading) {
@@ -289,9 +320,9 @@ export const Quiz = () => {
   if (!list || !questions.length) {
     return (
       <Box textAlign="center" py={10}>
-        <Text mb={4}>No questions available</Text>
+        <Text mb={4}>{UI.noQuestions}</Text>
         <Link to="/lists">
-          <Button variant="solid">Back to Lists</Button>
+          <Button variant="solid">{UI.backToLists}</Button>
         </Link>
       </Box>
     );
@@ -312,7 +343,7 @@ export const Quiz = () => {
     >
       <Flex mb={4}>
         <IconButton
-          aria-label="Go back"
+          aria-label={UI.back}
           icon={<ArrowBackIcon />}
           variant="ghost"
           onClick={() => navigate(-1)}
@@ -320,50 +351,50 @@ export const Quiz = () => {
         />
       </Flex>
 
-      <Flex 
-        justify="space-between" 
-        align="center" 
+      <Flex
+        justify="space-between"
+        align="center"
         mb={6}
         direction={{ base: 'column', md: 'row' }}
         gap={4}
       >
         <Box>
-          <Text 
+          <Text
             textStyle="h1"
             color="white"
             fontSize={{ base: '3xl', md: '4xl' }}
           >
-            Quiz: {list.name}
+            {`${UI.quizPrefix}${list.name}`}
           </Text>
           <HStack spacing={4} mt={2} flexWrap="wrap" justify={{ base: 'center', md: 'flex-start' }}>
-            <Badge 
-              colorScheme="purple" 
-              p={2} 
+            <Badge
+              colorScheme="purple"
+              p={2}
               borderRadius="full"
               style={combo > 2 ? { animation: 'sparkle 1s ease infinite' } : undefined}
             >
-              ⚡ Combo x{combo}
+              {`${UI.comboPrefix}${combo}`}
             </Badge>
-            <Badge 
-              colorScheme="yellow" 
-              p={2} 
+            <Badge
+              colorScheme="yellow"
+              p={2}
               borderRadius="full"
               style={score > 0 ? { animation: 'bounce 1s ease infinite' } : undefined}
             >
-              🏆 Score: {score}
+              {`${UI.scorePrefix}${score}`}
             </Badge>
-            <Badge 
-              colorScheme="red" 
-              p={2} 
+            <Badge
+              colorScheme="red"
+              p={2}
               borderRadius="full"
             >
-              {"❤️".repeat(Math.max(0, lives))}
+              {'\u2764'.repeat(Math.max(0, lives))}
             </Badge>
           </HStack>
         </Box>
         <Link to={`/lists/${id}`}>
           <IconButton
-            aria-label="Exit"
+            aria-label={UI.exit}
             icon={<CloseIcon />}
             variant="ghost"
             size="lg"
@@ -371,10 +402,10 @@ export const Quiz = () => {
         </Link>
       </Flex>
 
-      <Progress 
-        value={progress} 
-        mb={8} 
-        rounded="full" 
+      <Progress
+        value={progress}
+        mb={8}
+        rounded="full"
         size="sm"
         colorScheme="purple"
         hasStripe
@@ -414,20 +445,20 @@ export const Quiz = () => {
           >
             <Text color="white" fontSize={{ base: 'lg', md: 'xl' }} fontWeight="bold">
               {actualCorrectness
-                ? `🎉 Correct! ${combo > 2 ? '⚡ Perfect combo!' : combo > 1 ? '⚡ Great combo!' : ''}`
-                : '❌ Incorrect. Try again!'}
+                ? `${UI.correctMessage}${combo > 2 ? UI.comboExcellent : combo > 1 ? UI.comboNice : ''}`
+                : UI.wrongMessage}
             </Text>
-            
+
             {(gameOver || currentQuestion + 1 >= totalQuestions) && sessionService && (
               <VStack mt={4} spacing={2}>
                 <Divider />
                 <Text color="white" fontSize="lg" fontWeight="bold">
-                  {gameOver ? '💀 Game Over!' : '🎊 Quiz Complete!'}
+                  {gameOver ? UI.gameOver : UI.quizComplete}
                 </Text>
                 <HStack spacing={4}>
-                  <Text color="green.500">✅ Correct: {sessionProgress?.stats.correct}</Text>
-                  <Text color="red.300">❌ Incorrect: {sessionProgress?.stats.incorrect}</Text>
-                  <Text color="purple.300">🔥 Best Streak: {sessionProgress?.stats.maxStreak}</Text>
+                  <Text color="green.500">{`${UI.statCorrect}\uff1a${sessionProgress?.stats.correct}`}</Text>
+                  <Text color="red.300">{`${UI.statIncorrect}\uff1a${sessionProgress?.stats.incorrect}`}</Text>
+                  <Text color="purple.300">{`${UI.statBestStreak}\uff1a${sessionProgress?.stats.maxStreak}`}</Text>
                 </HStack>
                 <Text color="yellow.300" fontSize="sm">
                   {sessionService.getInsights().join(' ')}
@@ -437,14 +468,13 @@ export const Quiz = () => {
           </MotionBox>
         )}
 
-        {/* Quiz Completion Card */}
         {isCompleted && sessionService && (
           <MotionBox
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             mt={6}
           >
-            <Card 
+            <Card
               bg={useColorModeValue('white', 'gray.800')}
               borderColor={useColorModeValue('purple.200', 'purple.600')}
               borderWidth="2px"
@@ -454,7 +484,7 @@ export const Quiz = () => {
                 <HStack spacing={3} justify="center">
                   <Icon as={CheckCircleIcon} color="purple.500" boxSize={8} />
                   <Text fontSize="2xl" fontWeight="bold" color={useColorModeValue('gray.800', 'white')}>
-                    🎉 Quiz Complete!
+                    {UI.quizComplete}
                   </Text>
                 </HStack>
               </CardHeader>
@@ -464,53 +494,53 @@ export const Quiz = () => {
                     <StatLabel color={useColorModeValue('gray.600', 'gray.400')}>
                       <HStack justify="center" spacing={1}>
                         <CheckCircleIcon color="green.500" />
-                        <Text>Correct</Text>
+                        <Text>{UI.statCorrect}</Text>
                       </HStack>
                     </StatLabel>
                     <StatNumber color="green.500" fontSize="3xl">
                       {sessionProgress?.stats.correct}
                     </StatNumber>
                     <StatHelpText color={useColorModeValue('gray.500', 'gray.400')}>
-                      Well done!
+                      {UI.wellDone}
                     </StatHelpText>
                   </Stat>
-                  
+
                   <Stat textAlign="center">
                     <StatLabel color={useColorModeValue('gray.600', 'gray.400')}>
                       <HStack justify="center" spacing={1}>
                         <InfoIcon color="orange.500" />
-                        <Text>Incorrect</Text>
+                        <Text>{UI.statIncorrect}</Text>
                       </HStack>
                     </StatLabel>
                     <StatNumber color="orange.500" fontSize="3xl">
                       {sessionProgress?.stats.incorrect}
                     </StatNumber>
                     <StatHelpText color={useColorModeValue('gray.500', 'gray.400')}>
-                      Learning opportunity
+                      {UI.keepPracticing}
                     </StatHelpText>
                   </Stat>
-                  
+
                   <Stat textAlign="center">
                     <StatLabel color={useColorModeValue('gray.600', 'gray.400')}>
                       <HStack justify="center" spacing={1}>
                         <StarIcon color="purple.500" />
-                        <Text>Best Streak</Text>
+                        <Text>{UI.statBestStreak}</Text>
                       </HStack>
                     </StatLabel>
                     <StatNumber color="purple.500" fontSize="3xl">
                       {sessionProgress?.stats.maxStreak}
                     </StatNumber>
                     <StatHelpText color={useColorModeValue('gray.500', 'gray.400')}>
-                      Amazing! 🔥
+                      {UI.feelingGood}
                     </StatHelpText>
                   </Stat>
                 </SimpleGrid>
-                
+
                 <Divider mb={4} />
-                
+
                 <VStack spacing={2}>
                   <Text fontSize="lg" fontWeight="semibold" color={useColorModeValue('gray.700', 'gray.200')}>
-                    Performance Insights
+                    {UI.summary}
                   </Text>
                   <HStack spacing={2} wrap="wrap" justify="center">
                     {sessionService.getInsights().map((insight, index) => (
@@ -519,9 +549,12 @@ export const Quiz = () => {
                       </Badge>
                     ))}
                   </HStack>
-                  
+
                   <Text fontSize="sm" color={useColorModeValue('gray.600', 'gray.400')} textAlign="center" mt={2}>
-                    Final Score: <Text as="span" fontWeight="bold" color="purple.500">{sessionProgress?.stats.score} points</Text>
+                    {UI.finalScore}
+                    <Text as="span" fontWeight="bold" color="purple.500">
+                      {`${sessionProgress?.stats.score} ${UI.points}`}
+                    </Text>
                   </Text>
                 </VStack>
               </CardBody>
@@ -538,14 +571,14 @@ export const Quiz = () => {
               onClick={handleAnswer}
               isDisabled={!selectedAnswer || isValidating}
               isLoading={isValidating}
-              loadingText="Validating..."
+              loadingText={UI.validating}
               _hover={{
                 transform: 'translateY(-2px)',
                 shadow: 'lg'
               }}
               transition="all 0.2s"
             >
-              Check Answer
+              {UI.submitAnswer}
             </Button>
           ) : isCompleted ? (
             <>
@@ -555,14 +588,14 @@ export const Quiz = () => {
                 size="lg"
                 onClick={updateLearnedPoints}
                 isLoading={isUpdatingPoints}
-                loadingText="Saving Progress..."
+                loadingText={UI.saving}
                 _hover={{
                   transform: 'translateY(-2px)',
                   shadow: 'lg'
                 }}
                 transition="all 0.2s"
               >
-                Save & Finish
+                {UI.saveAndFinish}
               </Button>
               <Button
                 variant="solid"
@@ -570,14 +603,14 @@ export const Quiz = () => {
                 size="lg"
                 onClick={loadMoreQuestions}
                 isLoading={isLoading}
-                loadingText="Loading Questions..."
+                loadingText={UI.loading}
                 _hover={{
                   transform: 'translateY(-2px)',
                   shadow: 'lg'
                 }}
                 transition="all 0.2s"
               >
-                Continue Quiz
+                {UI.continueQuiz}
               </Button>
             </>
           ) : (
@@ -587,18 +620,18 @@ export const Quiz = () => {
               size="lg"
               onClick={handleNext}
               isLoading={isLoading}
-              loadingText="Loading..."
+              loadingText={UI.loading}
               _hover={{
                 transform: 'translateY(-2px)',
                 shadow: 'lg'
               }}
               transition="all 0.2s"
             >
-              {currentQuestion + 1 >= totalQuestions ? 'Finish Quiz' : 'Next Question'}
+              {currentQuestion + 1 >= totalQuestions ? UI.finishQuiz : UI.nextQuestion}
             </Button>
           )}
         </Flex>
       </MotionBox>
     </MotionBox>
   );
-}; 
+};

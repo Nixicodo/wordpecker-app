@@ -59,8 +59,8 @@ export const TrueFalseQuestion: React.FC<TrueFalseQuestionProps> = ({
         text: option
       }))
     : [
-        { label: 'A', text: 'True' },
-        { label: 'B', text: 'False' }
+        { label: 'A', text: '正确' },
+        { label: 'B', text: '错误' }
       ];
 
   return (
@@ -92,7 +92,7 @@ export const TrueFalseQuestion: React.FC<TrueFalseQuestionProps> = ({
             >
               <Text ml={2} fontSize={{ base: 'lg', md: 'xl' }} fontWeight="bold">
                 <Text as="span" fontWeight="bold" mr={2}>{option.label}.</Text>
-                {option.text.toUpperCase()}
+                  {option.text}
               </Text>
             </Radio>
           </MotionFlex>

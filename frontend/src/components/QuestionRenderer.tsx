@@ -135,7 +135,7 @@ export const QuestionRenderer: React.FC<QuestionRendererProps> = ({
               size="sm"
               onClick={() => setShowHint(!showHint)}
             >
-              {showHint ? 'Hide Hint' : 'Show Hint'}
+              {showHint ? '隐藏提示' : '显示提示'}
             </Button>
           </HStack>
         )}
