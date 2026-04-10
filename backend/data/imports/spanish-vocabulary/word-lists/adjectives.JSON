@@ -1,0 +1,3144 @@
+[
+  {
+    "region": "MX",
+    "partOfSpeech": "adjectives",
+    "level": 1,
+    "words": [
+      {
+        "id": 1,
+        "spanish": "bueno",
+        "english": "good",
+        "masculine": "bueno",
+        "feminine": "buena",
+        "pluralMasculine": "buenos",
+        "pluralFeminine": "buenas",
+        "chinese": "好的/良好的"
+      },
+      {
+        "id": 2,
+        "spanish": "malo",
+        "english": "bad",
+        "masculine": "malo",
+        "feminine": "mala",
+        "pluralMasculine": "malos",
+        "pluralFeminine": "malas",
+        "chinese": "坏的/糟糕的"
+      },
+      {
+        "id": 3,
+        "spanish": "grande",
+        "english": "big",
+        "masculine": "grande",
+        "feminine": "grande",
+        "pluralMasculine": "grandes",
+        "pluralFeminine": "grandes",
+        "chinese": "大"
+      },
+      {
+        "id": 4,
+        "spanish": "chico",
+        "english": "small (MX preference)",
+        "masculine": "chico",
+        "feminine": "chica",
+        "pluralMasculine": "chicos",
+        "pluralFeminine": "chicas",
+        "chinese": "小的（墨西哥更常用）"
+      },
+      {
+        "id": 5,
+        "spanish": "mismo",
+        "english": "same",
+        "masculine": "mismo",
+        "feminine": "misma",
+        "pluralMasculine": "mismos",
+        "pluralFeminine": "mismas",
+        "chinese": "相同的/一样的"
+      },
+      {
+        "id": 6,
+        "spanish": "otro",
+        "english": "other",
+        "masculine": "otro",
+        "feminine": "otra",
+        "pluralMasculine": "otros",
+        "pluralFeminine": "otras",
+        "chinese": "其他的/别的"
+      },
+      {
+        "id": 7,
+        "spanish": "nuevo",
+        "english": "new",
+        "masculine": "nuevo",
+        "feminine": "nueva",
+        "pluralMasculine": "nuevos",
+        "pluralFeminine": "nuevas",
+        "chinese": "新的"
+      },
+      {
+        "id": 8,
+        "spanish": "viejo",
+        "english": "old",
+        "masculine": "viejo",
+        "feminine": "vieja",
+        "pluralMasculine": "viejos",
+        "pluralFeminine": "viejas",
+        "chinese": "老的/旧的"
+      },
+      {
+        "id": 9,
+        "spanish": "poco",
+        "english": "few / little",
+        "masculine": "poco",
+        "feminine": "poca",
+        "pluralMasculine": "pocos",
+        "pluralFeminine": "pocas",
+        "chinese": "少量的/一点点"
+      },
+      {
+        "id": 10,
+        "spanish": "mucho",
+        "english": "many / much",
+        "masculine": "mucho",
+        "feminine": "mucha",
+        "pluralMasculine": "muchos",
+        "pluralFeminine": "muchas",
+        "chinese": "许多/很多"
+      },
+      {
+        "id": 11,
+        "spanish": "todo",
+        "english": "all / every",
+        "masculine": "todo",
+        "feminine": "toda",
+        "pluralMasculine": "todos",
+        "pluralFeminine": "todas",
+        "chinese": "所有/每个"
+      },
+      {
+        "id": 12,
+        "spanish": "primer",
+        "english": "first (pre-noun)",
+        "masculine": "primer",
+        "feminine": "primera",
+        "pluralMasculine": "primeros",
+        "pluralFeminine": "primeras",
+        "chinese": "第一（置于名词前）"
+      },
+      {
+        "id": 13,
+        "spanish": "mejor",
+        "english": "better / best",
+        "masculine": "mejor",
+        "feminine": "mejor",
+        "pluralMasculine": "mejores",
+        "pluralFeminine": "mejores",
+        "chinese": "更好/最好"
+      },
+      {
+        "id": 14,
+        "spanish": "peor",
+        "english": "worse / worst",
+        "masculine": "peor",
+        "feminine": "peor",
+        "pluralMasculine": "peores",
+        "pluralFeminine": "peores",
+        "chinese": "更糟的/最糟的"
+      },
+      {
+        "id": 15,
+        "spanish": "mayor",
+        "english": "older / greater",
+        "masculine": "mayor",
+        "feminine": "mayor",
+        "pluralMasculine": "mayores",
+        "pluralFeminine": "mayores",
+        "chinese": "更老的/更大的"
+      },
+      {
+        "id": 16,
+        "spanish": "menor",
+        "english": "younger / lesser",
+        "masculine": "menor",
+        "feminine": "menor",
+        "pluralMasculine": "menores",
+        "pluralFeminine": "menores",
+        "chinese": "更年轻的/较少的"
+      },
+      {
+        "id": 17,
+        "spanish": "alto",
+        "english": "tall / high",
+        "masculine": "alto",
+        "feminine": "alta",
+        "pluralMasculine": "altos",
+        "pluralFeminine": "altas",
+        "chinese": "高的"
+      },
+      {
+        "id": 18,
+        "spanish": "bajo",
+        "english": "short / low",
+        "masculine": "bajo",
+        "feminine": "baja",
+        "pluralMasculine": "bajos",
+        "pluralFeminine": "bajas",
+        "chinese": "矮的/低的"
+      },
+      {
+        "id": 19,
+        "spanish": "bonito",
+        "english": "pretty",
+        "masculine": "bonito",
+        "feminine": "bonita",
+        "pluralMasculine": "bonitos",
+        "pluralFeminine": "bonitas",
+        "chinese": "漂亮的/相当地"
+      },
+      {
+        "id": 20,
+        "spanish": "feo",
+        "english": "ugly",
+        "masculine": "feo",
+        "feminine": "fea",
+        "pluralMasculine": "feos",
+        "pluralFeminine": "feas",
+        "chinese": "丑的/难看的"
+      },
+      {
+        "id": 21,
+        "spanish": "fácil",
+        "english": "easy",
+        "masculine": "fácil",
+        "feminine": "fácil",
+        "pluralMasculine": "fáciles",
+        "pluralFeminine": "fáciles",
+        "chinese": "容易的"
+      },
+      {
+        "id": 22,
+        "spanish": "difícil",
+        "english": "difficult",
+        "masculine": "difícil",
+        "feminine": "difícil",
+        "pluralMasculine": "difíciles",
+        "pluralFeminine": "difíciles",
+        "chinese": "困难的"
+      },
+      {
+        "id": 23,
+        "spanish": "importante",
+        "english": "important",
+        "masculine": "importante",
+        "feminine": "importante",
+        "pluralMasculine": "importantes",
+        "pluralFeminine": "importantes",
+        "chinese": "重要的"
+      },
+      {
+        "id": 24,
+        "spanish": "posible",
+        "english": "possible",
+        "masculine": "posible",
+        "feminine": "posible",
+        "pluralMasculine": "posibles",
+        "pluralFeminine": "posibles",
+        "chinese": "可能的"
+      },
+      {
+        "id": 25,
+        "spanish": "imposible",
+        "english": "impossible",
+        "masculine": "imposible",
+        "feminine": "imposible",
+        "pluralMasculine": "imposibles",
+        "pluralFeminine": "imposibles",
+        "chinese": "不可能的"
+      },
+      {
+        "id": 26,
+        "spanish": "cierto",
+        "english": "true / certain",
+        "masculine": "cierto",
+        "feminine": "cierta",
+        "pluralMasculine": "ciertos",
+        "pluralFeminine": "ciertas",
+        "chinese": "真实的/确定的"
+      },
+      {
+        "id": 27,
+        "spanish": "falso",
+        "english": "false",
+        "masculine": "falso",
+        "feminine": "falsa",
+        "pluralMasculine": "falsos",
+        "pluralFeminine": "falsas",
+        "chinese": "错误的/假的"
+      },
+      {
+        "id": 28,
+        "spanish": "pobre",
+        "english": "poor",
+        "masculine": "pobre",
+        "feminine": "pobre",
+        "pluralMasculine": "pobres",
+        "pluralFeminine": "pobres",
+        "chinese": "贫穷的/差的/可怜的"
+      },
+      {
+        "id": 29,
+        "spanish": "rico",
+        "english": "rich / tasty",
+        "masculine": "rico",
+        "feminine": "rica",
+        "pluralMasculine": "ricos",
+        "pluralFeminine": "ricas",
+        "chinese": "浓郁的/美味的"
+      },
+      {
+        "id": 30,
+        "spanish": "largo",
+        "english": "long",
+        "masculine": "largo",
+        "feminine": "larga",
+        "pluralMasculine": "largos",
+        "pluralFeminine": "largas",
+        "chinese": "长的"
+      },
+      {
+        "id": 31,
+        "spanish": "corto",
+        "english": "short (length)",
+        "masculine": "corto",
+        "feminine": "corta",
+        "pluralMasculine": "cortos",
+        "pluralFeminine": "cortas",
+        "chinese": "短的"
+      },
+      {
+        "id": 32,
+        "spanish": "rápido",
+        "english": "fast",
+        "masculine": "rápido",
+        "feminine": "rápida",
+        "pluralMasculine": "rápidos",
+        "pluralFeminine": "rápidas",
+        "chinese": "快的/迅速的"
+      },
+      {
+        "id": 33,
+        "spanish": "lento",
+        "english": "slow",
+        "masculine": "lento",
+        "feminine": "lenta",
+        "pluralMasculine": "lentos",
+        "pluralFeminine": "lentas",
+        "chinese": "慢的"
+      },
+      {
+        "id": 34,
+        "spanish": "caliente",
+        "english": "hot",
+        "masculine": "caliente",
+        "feminine": "caliente",
+        "pluralMasculine": "calientes",
+        "pluralFeminine": "calientes",
+        "chinese": "热的"
+      },
+      {
+        "id": 35,
+        "spanish": "frío",
+        "english": "cold",
+        "masculine": "frío",
+        "feminine": "fría",
+        "pluralMasculine": "fríos",
+        "pluralFeminine": "frías",
+        "chinese": "冷的"
+      },
+      {
+        "id": 36,
+        "spanish": "feliz",
+        "english": "happy",
+        "masculine": "feliz",
+        "feminine": "feliz",
+        "pluralMasculine": "felices",
+        "pluralFeminine": "felices",
+        "chinese": "高兴的/快乐的"
+      },
+      {
+        "id": 37,
+        "spanish": "triste",
+        "english": "sad",
+        "masculine": "triste",
+        "feminine": "triste",
+        "pluralMasculine": "tristes",
+        "pluralFeminine": "tristes",
+        "chinese": "难过的/悲伤的"
+      },
+      {
+        "id": 38,
+        "spanish": "fuerte",
+        "english": "strong",
+        "masculine": "fuerte",
+        "feminine": "fuerte",
+        "pluralMasculine": "fuertes",
+        "pluralFeminine": "fuertes",
+        "chinese": "强壮的/强的"
+      },
+      {
+        "id": 39,
+        "spanish": "débil",
+        "english": "weak",
+        "masculine": "débil",
+        "feminine": "débil",
+        "pluralMasculine": "débiles",
+        "pluralFeminine": "débiles",
+        "chinese": "虚弱的/弱的"
+      },
+      {
+        "id": 40,
+        "spanish": "libre",
+        "english": "free",
+        "masculine": "libre",
+        "feminine": "libre",
+        "pluralMasculine": "libres",
+        "pluralFeminine": "libres",
+        "chinese": "自由的/空闲的/免费的"
+      },
+      {
+        "id": 41,
+        "spanish": "ocupado",
+        "english": "busy",
+        "masculine": "ocupado",
+        "feminine": "ocupada",
+        "pluralMasculine": "ocupados",
+        "pluralFeminine": "ocupadas",
+        "chinese": "忙的"
+      },
+      {
+        "id": 42,
+        "spanish": "lleno",
+        "english": "full",
+        "masculine": "lleno",
+        "feminine": "llena",
+        "pluralMasculine": "llenos",
+        "pluralFeminine": "llenas",
+        "chinese": "满的/完整的"
+      },
+      {
+        "id": 43,
+        "spanish": "vacío",
+        "english": "empty",
+        "masculine": "vacío",
+        "feminine": "vacía",
+        "pluralMasculine": "vacíos",
+        "pluralFeminine": "vacías",
+        "chinese": "空的"
+      },
+      {
+        "id": 44,
+        "spanish": "listo",
+        "english": "ready / smart",
+        "masculine": "listo",
+        "feminine": "lista",
+        "pluralMasculine": "listos",
+        "pluralFeminine": "listas",
+        "chinese": "准备好的/聪明的"
+      },
+      {
+        "id": 45,
+        "spanish": "seguro",
+        "english": "safe / sure",
+        "masculine": "seguro",
+        "feminine": "segura",
+        "pluralMasculine": "seguros",
+        "pluralFeminine": "seguras",
+        "chinese": "安全的/确定的"
+      },
+      {
+        "id": 46,
+        "spanish": "claro",
+        "english": "clear / light",
+        "masculine": "claro",
+        "feminine": "clara",
+        "pluralMasculine": "claros",
+        "pluralFeminine": "claras",
+        "chinese": "清澈的/浅色的"
+      },
+      {
+        "id": 47,
+        "spanish": "oscuro",
+        "english": "dark",
+        "masculine": "oscuro",
+        "feminine": "oscura",
+        "pluralMasculine": "oscuros",
+        "pluralFeminine": "oscuras",
+        "chinese": "黑暗的/深色的"
+      },
+      {
+        "id": 48,
+        "spanish": "único",
+        "english": "only / unique",
+        "masculine": "único",
+        "feminine": "única",
+        "pluralMasculine": "únicos",
+        "pluralFeminine": "únicas",
+        "chinese": "唯一的/独特的"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "adjectives",
+    "level": 2,
+    "words": [
+      {
+        "id": 49,
+        "spanish": "humano",
+        "english": "human",
+        "chinese": "人类的/人"
+      },
+      {
+        "id": 50,
+        "spanish": "general",
+        "english": "general",
+        "chinese": "一般的/总体的"
+      },
+      {
+        "id": 51,
+        "spanish": "social",
+        "english": "social",
+        "chinese": "社交的/社会的"
+      },
+      {
+        "id": 52,
+        "spanish": "político",
+        "english": "political",
+        "chinese": "政治的"
+      },
+      {
+        "id": 53,
+        "spanish": "público",
+        "english": "public",
+        "chinese": "公共的/公开的"
+      },
+      {
+        "id": 54,
+        "spanish": "privado",
+        "english": "private",
+        "chinese": "私人的"
+      },
+      {
+        "id": 55,
+        "spanish": "nacional",
+        "english": "national",
+        "chinese": "国家的/全国的"
+      },
+      {
+        "id": 56,
+        "spanish": "internacional",
+        "english": "international",
+        "chinese": "国际的"
+      },
+      {
+        "id": 57,
+        "spanish": "económico",
+        "english": "economic",
+        "chinese": "经济的/实惠的"
+      },
+      {
+        "id": 58,
+        "spanish": "necesario",
+        "english": "necessary",
+        "chinese": "必要的"
+      },
+      {
+        "id": 59,
+        "spanish": "real",
+        "english": "real / royal",
+        "chinese": "真实的/王室的"
+      },
+      {
+        "id": 60,
+        "spanish": "próximo",
+        "english": "next",
+        "chinese": "下一个的/接下来的"
+      },
+      {
+        "id": 61,
+        "spanish": "anterior",
+        "english": "previous",
+        "chinese": "先前的"
+      },
+      {
+        "id": 62,
+        "spanish": "final",
+        "english": "final",
+        "chinese": "最后的/最终的"
+      },
+      {
+        "id": 63,
+        "spanish": "duro",
+        "english": "hard",
+        "chinese": "硬的/难的"
+      },
+      {
+        "id": 64,
+        "spanish": "blando",
+        "english": "soft",
+        "chinese": "柔软的"
+      },
+      {
+        "id": 65,
+        "spanish": "simple",
+        "english": "simple",
+        "chinese": "简单的"
+      },
+      {
+        "id": 66,
+        "spanish": "complejo",
+        "english": "complex",
+        "chinese": "复杂的"
+      },
+      {
+        "id": 67,
+        "spanish": "raro",
+        "english": "strange / rare",
+        "chinese": "奇怪的/罕见的"
+      },
+      {
+        "id": 68,
+        "spanish": "común",
+        "english": "common",
+        "chinese": "常见的/共同的"
+      },
+      {
+        "id": 69,
+        "spanish": "limpio",
+        "english": "clean",
+        "chinese": "干净的/清理"
+      },
+      {
+        "id": 70,
+        "spanish": "sucio",
+        "english": "dirty",
+        "chinese": "脏的"
+      },
+      {
+        "id": 71,
+        "spanish": "seco",
+        "english": "dry",
+        "chinese": "干的"
+      },
+      {
+        "id": 72,
+        "spanish": "mojado",
+        "english": "wet",
+        "chinese": "湿的"
+      },
+      {
+        "id": 73,
+        "spanish": "barato",
+        "english": "cheap",
+        "chinese": "便宜的"
+      },
+      {
+        "id": 74,
+        "spanish": "caro",
+        "english": "expensive",
+        "chinese": "昂贵的"
+      },
+      {
+        "id": 75,
+        "spanish": "interesante",
+        "english": "interesting",
+        "chinese": "有趣的"
+      },
+      {
+        "id": 76,
+        "spanish": "aburrido",
+        "english": "bored / boring",
+        "chinese": "无聊的/令人厌烦的"
+      },
+      {
+        "id": 77,
+        "spanish": "cansado",
+        "english": "tired",
+        "chinese": "累的/疲倦的"
+      },
+      {
+        "id": 78,
+        "spanish": "enfermo",
+        "english": "sick",
+        "chinese": "生病的/恶心的"
+      },
+      {
+        "id": 79,
+        "spanish": "sano",
+        "english": "healthy",
+        "chinese": "健康的"
+      },
+      {
+        "id": 80,
+        "spanish": "joven",
+        "english": "young",
+        "chinese": "年轻的"
+      },
+      {
+        "id": 81,
+        "spanish": "gordo",
+        "english": "fat",
+        "chinese": "胖的/脂肪"
+      },
+      {
+        "id": 82,
+        "spanish": "flaco",
+        "english": "skinny (MX common)",
+        "chinese": "瘦的（墨西哥常用）"
+      },
+      {
+        "id": 83,
+        "spanish": "delgado",
+        "english": "thin (formal)",
+        "chinese": "瘦的（正式）"
+      },
+      {
+        "id": 84,
+        "spanish": "loco",
+        "english": "crazy",
+        "chinese": "疯狂的/疯的"
+      },
+      {
+        "id": 85,
+        "spanish": "cuerdo",
+        "english": "sane",
+        "chinese": "神志正常的/理智的"
+      },
+      {
+        "id": 86,
+        "spanish": "tonto",
+        "english": "silly / dumb",
+        "chinese": "傻的/笨的"
+      },
+      {
+        "id": 87,
+        "spanish": "inteligente",
+        "english": "intelligent",
+        "chinese": "聪明的"
+      },
+      {
+        "id": 88,
+        "spanish": "guapo",
+        "english": "handsome / good looking",
+        "chinese": "英俊/好看"
+      },
+      {
+        "id": 89,
+        "spanish": "amable",
+        "english": "kind",
+        "chinese": "善良的/亲切的"
+      },
+      {
+        "id": 90,
+        "spanish": "grosero",
+        "english": "rude",
+        "chinese": "粗鲁的/无礼的"
+      },
+      {
+        "id": 91,
+        "spanish": "suave",
+        "english": "soft / smooth",
+        "chinese": "柔软的/光滑的"
+      },
+      {
+        "id": 92,
+        "spanish": "áspero",
+        "english": "rough",
+        "chinese": "粗糙的/崎岖的"
+      },
+      {
+        "id": 93,
+        "spanish": "abierto",
+        "english": "open",
+        "chinese": "打开的/开放的"
+      },
+      {
+        "id": 94,
+        "spanish": "cerrado",
+        "english": "closed",
+        "chinese": "关闭的"
+      },
+      {
+        "id": 95,
+        "spanish": "popular",
+        "english": "popular",
+        "chinese": "受欢迎的/流行的"
+      },
+      {
+        "id": 96,
+        "spanish": "famoso",
+        "english": "famous",
+        "chinese": "著名的/有名的"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "adjectives",
+    "level": 3,
+    "words": [
+      {
+        "id": 97,
+        "spanish": "cercano",
+        "english": "nearby / close",
+        "chinese": "附近的/近的"
+      },
+      {
+        "id": 98,
+        "spanish": "lejano",
+        "english": "distant",
+        "chinese": "遥远的/疏远的"
+      },
+      {
+        "id": 99,
+        "spanish": "actual",
+        "english": "current",
+        "chinese": "当前的/现行的"
+      },
+      {
+        "id": 100,
+        "spanish": "pasado",
+        "english": "past",
+        "chinese": "过去的/经过"
+      },
+      {
+        "id": 101,
+        "spanish": "futuro",
+        "english": "future",
+        "chinese": "未来的/将来的"
+      },
+      {
+        "id": 102,
+        "spanish": "personal",
+        "english": "personal",
+        "chinese": "个人的/私人的"
+      },
+      {
+        "id": 103,
+        "spanish": "central",
+        "english": "central",
+        "chinese": "中心的"
+      },
+      {
+        "id": 104,
+        "spanish": "natural",
+        "english": "natural",
+        "chinese": "自然的/天然的"
+      },
+      {
+        "id": 105,
+        "spanish": "oficial",
+        "english": "official",
+        "chinese": "官方的/官员"
+      },
+      {
+        "id": 106,
+        "spanish": "especial",
+        "english": "special",
+        "chinese": "特别的"
+      },
+      {
+        "id": 107,
+        "spanish": "total",
+        "english": "total",
+        "chinese": "总的/全部的"
+      },
+      {
+        "id": 108,
+        "spanish": "completo",
+        "english": "complete",
+        "chinese": "完整的/完成"
+      },
+      {
+        "id": 109,
+        "spanish": "absoluto",
+        "english": "absolute",
+        "chinese": "绝对的"
+      },
+      {
+        "id": 110,
+        "spanish": "familiar",
+        "english": "familiar / family-related",
+        "chinese": "熟悉的/家庭的"
+      },
+      {
+        "id": 111,
+        "spanish": "local",
+        "english": "local",
+        "chinese": "当地的"
+      },
+      {
+        "id": 112,
+        "spanish": "principal",
+        "english": "main",
+        "chinese": "主要的"
+      },
+      {
+        "id": 113,
+        "spanish": "igual",
+        "english": "equal",
+        "chinese": "相等的/平等的"
+      },
+      {
+        "id": 114,
+        "spanish": "diferente",
+        "english": "different",
+        "chinese": "不同的"
+      },
+      {
+        "id": 115,
+        "spanish": "diverso",
+        "english": "diverse",
+        "chinese": "多样的"
+      },
+      {
+        "id": 116,
+        "spanish": "similar",
+        "english": "similar",
+        "chinese": "相似的"
+      },
+      {
+        "id": 117,
+        "spanish": "distinto",
+        "english": "distinct",
+        "chinese": "不同的/明显的"
+      },
+      {
+        "id": 118,
+        "spanish": "exacto",
+        "english": "exact",
+        "chinese": "精确的/确切的"
+      },
+      {
+        "id": 119,
+        "spanish": "correcto",
+        "english": "correct",
+        "chinese": "正确的"
+      },
+      {
+        "id": 120,
+        "spanish": "incorrecto",
+        "english": "incorrect",
+        "chinese": "不正确的/错误的"
+      },
+      {
+        "id": 121,
+        "spanish": "perfecto",
+        "english": "perfect",
+        "chinese": "完美的"
+      },
+      {
+        "id": 122,
+        "spanish": "extraño",
+        "english": "strange",
+        "chinese": "奇怪的"
+      },
+      {
+        "id": 123,
+        "spanish": "curioso",
+        "english": "curious",
+        "chinese": "好奇的"
+      },
+      {
+        "id": 124,
+        "spanish": "grave",
+        "english": "serious / grave",
+        "chinese": "严重的/危急的"
+      },
+      {
+        "id": 125,
+        "spanish": "serio",
+        "english": "serious",
+        "chinese": "严肃的/认真的"
+      },
+      {
+        "id": 126,
+        "spanish": "gracioso",
+        "english": "funny",
+        "chinese": "有趣的/好笑的"
+      },
+      {
+        "id": 127,
+        "spanish": "chistoso",
+        "english": "funny (MX)",
+        "chinese": "好笑的/有意思的（墨西哥）"
+      },
+      {
+        "id": 128,
+        "spanish": "padre",
+        "english": "cool (MX common)",
+        "chinese": "很棒的/很酷的"
+      },
+      {
+        "id": 129,
+        "spanish": "profundo",
+        "english": "deep",
+        "chinese": "深的"
+      },
+      {
+        "id": 130,
+        "spanish": "superficial",
+        "english": "superficial",
+        "chinese": "表面的/肤浅的"
+      },
+      {
+        "id": 131,
+        "spanish": "ancho",
+        "english": "wide",
+        "chinese": "宽的"
+      },
+      {
+        "id": 132,
+        "spanish": "angosto",
+        "english": "narrow",
+        "chinese": "狭窄的"
+      },
+      {
+        "id": 133,
+        "spanish": "estrecho",
+        "english": "tight / narrow",
+        "chinese": "紧的/窄的"
+      },
+      {
+        "id": 134,
+        "spanish": "grueso",
+        "english": "thick",
+        "chinese": "厚的/粗的"
+      },
+      {
+        "id": 135,
+        "spanish": "fino",
+        "english": "thin / fine",
+        "chinese": "薄的/细的"
+      },
+      {
+        "id": 136,
+        "spanish": "pesado",
+        "english": "heavy",
+        "chinese": "重的"
+      },
+      {
+        "id": 137,
+        "spanish": "ligero",
+        "english": "light (weight)",
+        "chinese": "轻的"
+      },
+      {
+        "id": 138,
+        "spanish": "lujoso",
+        "english": "luxurious",
+        "chinese": "豪华的"
+      },
+      {
+        "id": 139,
+        "spanish": "sencillo",
+        "english": "simple / plain",
+        "chinese": "简单的/朴素的"
+      },
+      {
+        "id": 140,
+        "spanish": "básico",
+        "english": "basic",
+        "chinese": "基本的"
+      },
+      {
+        "id": 141,
+        "spanish": "moderno",
+        "english": "modern",
+        "chinese": "现代的"
+      },
+      {
+        "id": 142,
+        "spanish": "antiguo",
+        "english": "ancient / antique",
+        "chinese": "古老的/古董的"
+      },
+      {
+        "id": 143,
+        "spanish": "útil",
+        "english": "useful",
+        "chinese": "有用的"
+      },
+      {
+        "id": 144,
+        "spanish": "inútil",
+        "english": "useless",
+        "chinese": "没用的/无用的"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "adjectives",
+    "level": 4,
+    "words": [
+      {
+        "id": 145,
+        "spanish": "diario",
+        "english": "daily",
+        "chinese": "每日的/日常的"
+      },
+      {
+        "id": 146,
+        "spanish": "semanal",
+        "english": "weekly",
+        "chinese": "每周的/每周一次"
+      },
+      {
+        "id": 147,
+        "spanish": "mensual",
+        "english": "monthly",
+        "chinese": "每月的/每月地"
+      },
+      {
+        "id": 148,
+        "spanish": "anual",
+        "english": "yearly",
+        "chinese": "每年的/一年一次的"
+      },
+      {
+        "id": 149,
+        "spanish": "breve",
+        "english": "brief",
+        "chinese": "简短的"
+      },
+      {
+        "id": 150,
+        "spanish": "inmediato",
+        "english": "immediate",
+        "chinese": "立即的/直接的"
+      },
+      {
+        "id": 151,
+        "spanish": "urgente",
+        "english": "urgent",
+        "chinese": "紧急的"
+      },
+      {
+        "id": 152,
+        "spanish": "lento",
+        "english": "slow",
+        "chinese": "慢的"
+      },
+      {
+        "id": 153,
+        "spanish": "veloz",
+        "english": "speedy",
+        "chinese": "快速的"
+      },
+      {
+        "id": 154,
+        "spanish": "tranquilo",
+        "english": "calm",
+        "chinese": "平静的/冷静的"
+      },
+      {
+        "id": 155,
+        "spanish": "nervioso",
+        "english": "nervous",
+        "chinese": "紧张的/焦虑的"
+      },
+      {
+        "id": 156,
+        "spanish": "ansioso",
+        "english": "anxious",
+        "chinese": "焦虑的/急切的"
+      },
+      {
+        "id": 157,
+        "spanish": "emocionado",
+        "english": "excited",
+        "chinese": "兴奋的/激动的"
+      },
+      {
+        "id": 158,
+        "spanish": "preocupado",
+        "english": "worried",
+        "chinese": "担心的/忧虑的"
+      },
+      {
+        "id": 159,
+        "spanish": "orgulloso",
+        "english": "proud",
+        "chinese": "自豪的/骄傲的"
+      },
+      {
+        "id": 160,
+        "spanish": "avergonzado",
+        "english": "embarrassed",
+        "chinese": "尴尬的/难为情的"
+      },
+      {
+        "id": 161,
+        "spanish": "confundido",
+        "english": "confused",
+        "chinese": "困惑的"
+      },
+      {
+        "id": 162,
+        "spanish": "sorprendido",
+        "english": "surprised",
+        "chinese": "惊讶的/吃惊的"
+      },
+      {
+        "id": 163,
+        "spanish": "enojado",
+        "english": "angry (MX)",
+        "chinese": "生气的（墨西哥）"
+      },
+      {
+        "id": 164,
+        "spanish": "molesto",
+        "english": "annoyed",
+        "chinese": "恼火的/烦躁的"
+      },
+      {
+        "id": 165,
+        "spanish": "furioso",
+        "english": "furious",
+        "chinese": "愤怒的/暴怒的"
+      },
+      {
+        "id": 166,
+        "spanish": "harto",
+        "english": "fed up",
+        "chinese": "受够了/厌烦的"
+      },
+      {
+        "id": 167,
+        "spanish": "celoso",
+        "english": "jealous",
+        "chinese": "嫉妒的/吃醋的"
+      },
+      {
+        "id": 168,
+        "spanish": "tímido",
+        "english": "shy",
+        "chinese": "害羞的"
+      },
+      {
+        "id": 169,
+        "spanish": "valiente",
+        "english": "brave",
+        "chinese": "勇敢的"
+      },
+      {
+        "id": 170,
+        "spanish": "cobarde",
+        "english": "cowardly",
+        "chinese": "胆小的/懦弱的"
+      },
+      {
+        "id": 171,
+        "spanish": "generoso",
+        "english": "generous",
+        "chinese": "慷慨的/大方的"
+      },
+      {
+        "id": 172,
+        "spanish": "codo",
+        "english": "stingy (MX common)",
+        "chinese": "小气的（墨西哥常用）"
+      },
+      {
+        "id": 173,
+        "spanish": "egoísta",
+        "english": "selfish",
+        "chinese": "自私的"
+      },
+      {
+        "id": 174,
+        "spanish": "sincero",
+        "english": "sincere",
+        "chinese": "真诚的"
+      },
+      {
+        "id": 175,
+        "spanish": "honesto",
+        "english": "honest",
+        "chinese": "诚实的"
+      },
+      {
+        "id": 176,
+        "spanish": "mentiroso",
+        "english": "lying",
+        "chinese": "躺着的/撒谎的"
+      },
+      {
+        "id": 177,
+        "spanish": "fiel",
+        "english": "faithful",
+        "chinese": "忠实的/忠诚的"
+      },
+      {
+        "id": 178,
+        "spanish": "infiel",
+        "english": "unfaithful",
+        "chinese": "不忠的"
+      },
+      {
+        "id": 179,
+        "spanish": "justo",
+        "english": "just / fair",
+        "chinese": "公正的/公平的"
+      },
+      {
+        "id": 180,
+        "spanish": "injusto",
+        "english": "unfair",
+        "chinese": "不公平的"
+      },
+      {
+        "id": 181,
+        "spanish": "legal",
+        "english": "legal",
+        "chinese": "合法的"
+      },
+      {
+        "id": 182,
+        "spanish": "ilegal",
+        "english": "illegal",
+        "chinese": "非法的"
+      },
+      {
+        "id": 183,
+        "spanish": "responsable",
+        "english": "responsible",
+        "chinese": "负责的/有责任的"
+      },
+      {
+        "id": 184,
+        "spanish": "irresponsable",
+        "english": "irresponsible",
+        "chinese": "不负责任的"
+      },
+      {
+        "id": 185,
+        "spanish": "capaz",
+        "english": "capable",
+        "chinese": "有能力的/能干的"
+      },
+      {
+        "id": 186,
+        "spanish": "incapaz",
+        "english": "incapable",
+        "chinese": "无能力的/不能的"
+      },
+      {
+        "id": 187,
+        "spanish": "hábil",
+        "english": "skillful",
+        "chinese": "熟练的/有技巧的"
+      },
+      {
+        "id": 188,
+        "spanish": "torpe",
+        "english": "clumsy",
+        "chinese": "笨拙的"
+      },
+      {
+        "id": 189,
+        "spanish": "rudo",
+        "english": "rough / tough",
+        "chinese": "粗糙的/难对付的"
+      },
+      {
+        "id": 190,
+        "spanish": "delicado",
+        "english": "delicate",
+        "chinese": "脆弱的/精致的"
+      },
+      {
+        "id": 191,
+        "spanish": "firme",
+        "english": "firm",
+        "chinese": "坚定的/牢固的/公司"
+      },
+      {
+        "id": 192,
+        "spanish": "bello",
+        "english": "beautiful (formal)",
+        "chinese": "美丽的/优美的"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "adjectives",
+    "level": 5,
+    "words": [
+      {
+        "id": 193,
+        "spanish": "comercial",
+        "english": "commercial",
+        "chinese": "商业的"
+      },
+      {
+        "id": 194,
+        "spanish": "industrial",
+        "english": "industrial",
+        "chinese": "工业的"
+      },
+      {
+        "id": 195,
+        "spanish": "agrícola",
+        "english": "agricultural",
+        "chinese": "农业的"
+      },
+      {
+        "id": 196,
+        "spanish": "técnico",
+        "english": "technical",
+        "chinese": "技术的/专业的"
+      },
+      {
+        "id": 197,
+        "spanish": "profesional",
+        "english": "professional",
+        "chinese": "专业的/职业的"
+      },
+      {
+        "id": 198,
+        "spanish": "laboral",
+        "english": "work-related",
+        "chinese": "与工作有关的"
+      },
+      {
+        "id": 199,
+        "spanish": "manual",
+        "english": "manual",
+        "chinese": "手工的/手册"
+      },
+      {
+        "id": 200,
+        "spanish": "digital",
+        "english": "digital",
+        "chinese": "数字的"
+      },
+      {
+        "id": 201,
+        "spanish": "eléctrico",
+        "english": "electric",
+        "chinese": "电的"
+      },
+      {
+        "id": 202,
+        "spanish": "electrónico",
+        "english": "electronic",
+        "chinese": "电子的"
+      },
+      {
+        "id": 203,
+        "spanish": "solar",
+        "english": "solar",
+        "chinese": "太阳的/太阳能的"
+      },
+      {
+        "id": 204,
+        "spanish": "urbano",
+        "english": "urban",
+        "chinese": "城市的"
+      },
+      {
+        "id": 205,
+        "spanish": "rural",
+        "english": "rural",
+        "chinese": "农村的/乡村的"
+      },
+      {
+        "id": 206,
+        "spanish": "mundial",
+        "english": "worldwide",
+        "chinese": "全世界的/全球范围内"
+      },
+      {
+        "id": 207,
+        "spanish": "extranjero",
+        "english": "foreign",
+        "chinese": "外国的/外来的"
+      },
+      {
+        "id": 208,
+        "spanish": "ajeno",
+        "english": "someone else's / alien",
+        "chinese": "别人的/外来的"
+      },
+      {
+        "id": 209,
+        "spanish": "propio",
+        "english": "own",
+        "chinese": "自己的"
+      },
+      {
+        "id": 210,
+        "spanish": "individual",
+        "english": "individual",
+        "chinese": "个人的/个体"
+      },
+      {
+        "id": 211,
+        "spanish": "colectivo",
+        "english": "collective",
+        "chinese": "集体的"
+      },
+      {
+        "id": 212,
+        "spanish": "múltiple",
+        "english": "multiple",
+        "chinese": "多个的/多重的"
+      },
+      {
+        "id": 213,
+        "spanish": "numeroso",
+        "english": "numerous",
+        "chinese": "众多的"
+      },
+      {
+        "id": 214,
+        "spanish": "escaso",
+        "english": "scarce",
+        "chinese": "稀少的/缺乏的"
+      },
+      {
+        "id": 215,
+        "spanish": "suficiente",
+        "english": "sufficient",
+        "chinese": "足够的"
+      },
+      {
+        "id": 216,
+        "spanish": "insuficiente",
+        "english": "insufficient",
+        "chinese": "不足的"
+      },
+      {
+        "id": 217,
+        "spanish": "bastante",
+        "english": "enough / quite a lot",
+        "chinese": "够/相当多"
+      },
+      {
+        "id": 218,
+        "spanish": "demasiado",
+        "english": "too much",
+        "chinese": "太多"
+      },
+      {
+        "id": 219,
+        "spanish": "excesivo",
+        "english": "excessive",
+        "chinese": "过度的/过多的"
+      },
+      {
+        "id": 220,
+        "spanish": "adicional",
+        "english": "additional",
+        "chinese": "额外的/附加的"
+      },
+      {
+        "id": 221,
+        "spanish": "extra",
+        "english": "extra",
+        "chinese": "额外的/附加的"
+      },
+      {
+        "id": 222,
+        "spanish": "restante",
+        "english": "remaining",
+        "chinese": "剩余的/其余的"
+      },
+      {
+        "id": 223,
+        "spanish": "pendiente",
+        "english": "pending",
+        "chinese": "待处理的/未决的"
+      },
+      {
+        "id": 224,
+        "spanish": "previo",
+        "english": "prior",
+        "chinese": "先前的/优先的"
+      },
+      {
+        "id": 225,
+        "spanish": "posterior",
+        "english": "subsequent",
+        "chinese": "随后的"
+      },
+      {
+        "id": 226,
+        "spanish": "siguiente",
+        "english": "following",
+        "chinese": "接下来的/下列的"
+      },
+      {
+        "id": 227,
+        "spanish": "habitual",
+        "english": "habitual",
+        "chinese": "惯常的/习惯性的"
+      },
+      {
+        "id": 228,
+        "spanish": "usual",
+        "english": "usual",
+        "chinese": "通常的/平常的"
+      },
+      {
+        "id": 229,
+        "spanish": "frecuente",
+        "english": "frequent",
+        "chinese": "频繁的/常见的"
+      },
+      {
+        "id": 230,
+        "spanish": "constante",
+        "english": "constant",
+        "chinese": "持续的/恒定的"
+      },
+      {
+        "id": 231,
+        "spanish": "permanente",
+        "english": "permanent",
+        "chinese": "永久的/固定的"
+      },
+      {
+        "id": 232,
+        "spanish": "temporal",
+        "english": "temporary",
+        "chinese": "临时的/暂时的"
+      },
+      {
+        "id": 233,
+        "spanish": "efectivo",
+        "english": "effective / cash",
+        "chinese": "有效的/现金的"
+      },
+      {
+        "id": 234,
+        "spanish": "eficaz",
+        "english": "efficient",
+        "chinese": "高效的"
+      },
+      {
+        "id": 235,
+        "spanish": "práctico",
+        "english": "practical",
+        "chinese": "实用的/实际的"
+      },
+      {
+        "id": 236,
+        "spanish": "teórico",
+        "english": "theoretical",
+        "chinese": "理论的"
+      },
+      {
+        "id": 237,
+        "spanish": "lógico",
+        "english": "logical",
+        "chinese": "合乎逻辑的"
+      },
+      {
+        "id": 238,
+        "spanish": "ilógico",
+        "english": "illogical",
+        "chinese": "不合逻辑的"
+      },
+      {
+        "id": 239,
+        "spanish": "obvio",
+        "english": "obvious",
+        "chinese": "明显的"
+      },
+      {
+        "id": 240,
+        "spanish": "evidente",
+        "english": "evident",
+        "chinese": "明显的"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "adjectives",
+    "level": 6,
+    "words": [
+      {
+        "id": 241,
+        "spanish": "genial",
+        "english": "great / genius",
+        "chinese": "了不起/天才"
+      },
+      {
+        "id": 242,
+        "spanish": "chido",
+        "english": "cool (MX)",
+        "chinese": "很酷的/棒的"
+      },
+      {
+        "id": 243,
+        "spanish": "gacho",
+        "english": "mean / ugly (MX)",
+        "chinese": "刻薄的/丑的（墨西哥）"
+      },
+      {
+        "id": 244,
+        "spanish": "grueso",
+        "english": "intense (slang) / thick",
+        "chinese": "强烈的（俚语）/浓的"
+      },
+      {
+        "id": 245,
+        "spanish": "cañón",
+        "english": "difficult / hard (MX slang)",
+        "chinese": "难的/麻烦的"
+      },
+      {
+        "id": 246,
+        "spanish": "hueva",
+        "english": "lazy (adj use as 'de hueva')",
+        "chinese": "很懒的/让人犯懒的"
+      },
+      {
+        "id": 247,
+        "spanish": "huevón",
+        "english": "lazy (MX - mild vulgarity but high freq)",
+        "chinese": "懒鬼的/很懒的（墨，轻微粗俗）"
+      },
+      {
+        "id": 248,
+        "spanish": "flojo",
+        "english": "lazy",
+        "chinese": "懒的"
+      },
+      {
+        "id": 249,
+        "spanish": "trabajador",
+        "english": "hard-working",
+        "chinese": "勤奋的"
+      },
+      {
+        "id": 250,
+        "spanish": "latoso",
+        "english": "annoying (like a fly)",
+        "chinese": "烦人的/招人烦的"
+      },
+      {
+        "id": 251,
+        "spanish": "mamon",
+        "english": "stuck up / arrogant (MX - vulgar)",
+        "chinese": "傲慢的/自大的（墨西哥，粗俗）"
+      },
+      {
+        "id": 252,
+        "spanish": "sangrón",
+        "english": "stuck up (MX - softer than mamon)",
+        "chinese": "自以为是的（墨西哥，语气较轻）"
+      },
+      {
+        "id": 253,
+        "spanish": "fresa",
+        "english": "preppy / posh (MX)",
+        "chinese": "精致时髦的/上流气的"
+      },
+      {
+        "id": 254,
+        "spanish": "naco",
+        "english": "tacky / low-class (MX - derogatory)",
+        "chinese": "俗气的/低俗的（墨西哥，贬义）"
+      },
+      {
+        "id": 255,
+        "spanish": "chueco",
+        "english": "crooked (MX common)",
+        "chinese": "弯的/歪的"
+      },
+      {
+        "id": 256,
+        "spanish": "derecho",
+        "english": "straight",
+        "chinese": "直的/笔直的"
+      },
+      {
+        "id": 257,
+        "spanish": "parejo",
+        "english": "even / flat",
+        "chinese": "平的/平坦的"
+      },
+      {
+        "id": 258,
+        "spanish": "disparejo",
+        "english": "uneven",
+        "chinese": "不平的/不均匀的"
+      },
+      {
+        "id": 259,
+        "spanish": "crudo",
+        "english": "raw / hungover (MX)",
+        "chinese": "生的/宿醉的（墨西哥）"
+      },
+      {
+        "id": 260,
+        "spanish": "cocido",
+        "english": "cooked",
+        "chinese": "熟的"
+      },
+      {
+        "id": 261,
+        "spanish": "quemado",
+        "english": "burnt",
+        "chinese": "烧焦的"
+      },
+      {
+        "id": 262,
+        "spanish": "congelado",
+        "english": "frozen",
+        "chinese": "冰冻的/冷冻的"
+      },
+      {
+        "id": 263,
+        "spanish": "fresco",
+        "english": "fresh",
+        "chinese": "新鲜的"
+      },
+      {
+        "id": 264,
+        "spanish": "podrido",
+        "english": "rotten",
+        "chinese": "腐烂的/糟糕的"
+      },
+      {
+        "id": 265,
+        "spanish": "maduro",
+        "english": "ripe / mature",
+        "chinese": "成熟的"
+      },
+      {
+        "id": 266,
+        "spanish": "inmaduro",
+        "english": "immature",
+        "chinese": "不成熟的"
+      },
+      {
+        "id": 267,
+        "spanish": "dulce",
+        "english": "sweet",
+        "chinese": "甜的/可爱的"
+      },
+      {
+        "id": 268,
+        "spanish": "salado",
+        "english": "salty / unlucky (MX)",
+        "chinese": "咸的/倒霉的（墨西哥）"
+      },
+      {
+        "id": 269,
+        "spanish": "amargo",
+        "english": "bitter",
+        "chinese": "苦的"
+      },
+      {
+        "id": 270,
+        "spanish": "ácido",
+        "english": "sour / acid",
+        "chinese": "酸的/酸性"
+      },
+      {
+        "id": 271,
+        "spanish": "picante",
+        "english": "spicy",
+        "chinese": "辣的"
+      },
+      {
+        "id": 272,
+        "spanish": "picoso",
+        "english": "spicy (MX common)",
+        "chinese": "辣的（墨西哥常用）"
+      },
+      {
+        "id": 273,
+        "spanish": "enchilado",
+        "english": "suffering from heat of chili (MX)",
+        "chinese": "被辣到了（墨西哥）"
+      },
+      {
+        "id": 274,
+        "spanish": "borracho",
+        "english": "drunk",
+        "chinese": "醉的"
+      },
+      {
+        "id": 275,
+        "spanish": "sobrio",
+        "english": "sober",
+        "chinese": "清醒的"
+      },
+      {
+        "id": 276,
+        "spanish": "guacala",
+        "english": "gross (interj/adj)",
+        "chinese": "恶心/真恶心"
+      },
+      {
+        "id": 277,
+        "spanish": "asqueroso",
+        "english": "disgusting",
+        "chinese": "恶心的/令人厌恶的"
+      },
+      {
+        "id": 278,
+        "spanish": "delicioso",
+        "english": "delicious",
+        "chinese": "美味的"
+      },
+      {
+        "id": 279,
+        "spanish": "exquisito",
+        "english": "exquisite",
+        "chinese": "精致的/绝妙的"
+      },
+      {
+        "id": 280,
+        "spanish": "maravilloso",
+        "english": "wonderful",
+        "chinese": "极好的/精彩的"
+      },
+      {
+        "id": 281,
+        "spanish": "increíble",
+        "english": "incredible",
+        "chinese": "难以置信的/惊人的"
+      },
+      {
+        "id": 282,
+        "spanish": "horrible",
+        "english": "horrible",
+        "chinese": "可怕的/糟糕的"
+      },
+      {
+        "id": 283,
+        "spanish": "terrible",
+        "english": "terrible",
+        "chinese": "糟糕的/可怕的"
+      },
+      {
+        "id": 284,
+        "spanish": "estupendo",
+        "english": "stupendous",
+        "chinese": "了不起的/惊人的"
+      },
+      {
+        "id": 285,
+        "spanish": "violento",
+        "english": "violent",
+        "chinese": "暴力的/激烈的"
+      },
+      {
+        "id": 286,
+        "spanish": "pacífico",
+        "english": "peaceful",
+        "chinese": "平静的/和平的"
+      },
+      {
+        "id": 287,
+        "spanish": "peligroso",
+        "english": "dangerous",
+        "chinese": "危险的"
+      },
+      {
+        "id": 288,
+        "spanish": "seguro",
+        "english": "secure",
+        "chinese": "安全的/稳固的"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "adjectives",
+    "level": 7,
+    "words": [
+      {
+        "id": 289,
+        "spanish": "mental",
+        "english": "mental",
+        "chinese": "精神的/心理的"
+      },
+      {
+        "id": 290,
+        "spanish": "físico",
+        "english": "physical",
+        "chinese": "身体的/物理的"
+      },
+      {
+        "id": 291,
+        "spanish": "espiritual",
+        "english": "spiritual",
+        "chinese": "精神的/心灵的"
+      },
+      {
+        "id": 292,
+        "spanish": "religioso",
+        "english": "religious",
+        "chinese": "宗教的/虔诚的"
+      },
+      {
+        "id": 293,
+        "spanish": "católico",
+        "english": "Catholic",
+        "chinese": "天主教的/天主教徒"
+      },
+      {
+        "id": 294,
+        "spanish": "cristiano",
+        "english": "Christian",
+        "chinese": "基督教的/基督徒"
+      },
+      {
+        "id": 295,
+        "spanish": "moral",
+        "english": "moral",
+        "chinese": "道德的/寓意"
+      },
+      {
+        "id": 296,
+        "spanish": "ético",
+        "english": "ethical",
+        "chinese": "伦理的/道德的"
+      },
+      {
+        "id": 297,
+        "spanish": "cultural",
+        "english": "cultural",
+        "chinese": "文化的"
+      },
+      {
+        "id": 298,
+        "spanish": "tradicional",
+        "english": "traditional",
+        "chinese": "传统的"
+      },
+      {
+        "id": 299,
+        "spanish": "histórico",
+        "english": "historical",
+        "chinese": "历史的"
+      },
+      {
+        "id": 300,
+        "spanish": "moderno",
+        "english": "modern",
+        "chinese": "现代的"
+      },
+      {
+        "id": 301,
+        "spanish": "contemporáneo",
+        "english": "contemporary",
+        "chinese": "当代的"
+      },
+      {
+        "id": 302,
+        "spanish": "artístico",
+        "english": "artistic",
+        "chinese": "艺术的"
+      },
+      {
+        "id": 303,
+        "spanish": "literario",
+        "english": "literary",
+        "chinese": "文学的"
+      },
+      {
+        "id": 304,
+        "spanish": "científico",
+        "english": "scientific",
+        "chinese": "科学的"
+      },
+      {
+        "id": 305,
+        "spanish": "médico",
+        "english": "medical",
+        "chinese": "医学的/医疗的"
+      },
+      {
+        "id": 306,
+        "spanish": "quirúrgico",
+        "english": "surgical",
+        "chinese": "外科的/手术的"
+      },
+      {
+        "id": 307,
+        "spanish": "químico",
+        "english": "chemical",
+        "chinese": "化学的/化学品"
+      },
+      {
+        "id": 308,
+        "spanish": "biológico",
+        "english": "biological",
+        "chinese": "生物的"
+      },
+      {
+        "id": 309,
+        "spanish": "nuclear",
+        "english": "nuclear",
+        "chinese": "核的"
+      },
+      {
+        "id": 310,
+        "spanish": "atómico",
+        "english": "atomic",
+        "chinese": "原子的"
+      },
+      {
+        "id": 311,
+        "spanish": "superior",
+        "english": "superior / upper",
+        "chinese": "上面的/较高的"
+      },
+      {
+        "id": 312,
+        "spanish": "inferior",
+        "english": "inferior / lower",
+        "chinese": "较低的/下等的"
+      },
+      {
+        "id": 313,
+        "spanish": "interno",
+        "english": "internal",
+        "chinese": "内部的"
+      },
+      {
+        "id": 314,
+        "spanish": "externo",
+        "english": "external",
+        "chinese": "外部的/外来的"
+      },
+      {
+        "id": 315,
+        "spanish": "interior",
+        "english": "interior",
+        "chinese": "内部的/室内的"
+      },
+      {
+        "id": 316,
+        "spanish": "exterior",
+        "english": "exterior",
+        "chinese": "外部的/外面"
+      },
+      {
+        "id": 317,
+        "spanish": "medio",
+        "english": "middle / half",
+        "chinese": "中间/一半"
+      },
+      {
+        "id": 318,
+        "spanish": "promedio",
+        "english": "average",
+        "chinese": "平均的/平均数"
+      },
+      {
+        "id": 319,
+        "spanish": "máximo",
+        "english": "maximum",
+        "chinese": "最大的/最大值"
+      },
+      {
+        "id": 320,
+        "spanish": "mínimo",
+        "english": "minimum",
+        "chinese": "最小的/最低限度"
+      },
+      {
+        "id": 321,
+        "spanish": "extremo",
+        "english": "extreme",
+        "chinese": "极端的/极度的"
+      },
+      {
+        "id": 322,
+        "spanish": "supremo",
+        "english": "supreme",
+        "chinese": "最高的/至高的"
+      },
+      {
+        "id": 323,
+        "spanish": "vasto",
+        "english": "vast",
+        "chinese": "广阔的/巨大的"
+      },
+      {
+        "id": 324,
+        "spanish": "inmenso",
+        "english": "immense",
+        "chinese": "巨大的/广大的"
+      },
+      {
+        "id": 325,
+        "spanish": "enorme",
+        "english": "enormous",
+        "chinese": "巨大的"
+      },
+      {
+        "id": 326,
+        "spanish": "gigante",
+        "english": "giant",
+        "chinese": "巨大的/巨人"
+      },
+      {
+        "id": 327,
+        "spanish": "diminuto",
+        "english": "tiny",
+        "chinese": "极小的/微小的"
+      },
+      {
+        "id": 328,
+        "spanish": "microscópico",
+        "english": "microscopic",
+        "chinese": "显微镜的/极小的"
+      },
+      {
+        "id": 329,
+        "spanish": "invisible",
+        "english": "invisible",
+        "chinese": "看不见的/隐形的"
+      },
+      {
+        "id": 330,
+        "spanish": "visible",
+        "english": "visible",
+        "chinese": "看得见的/可见的"
+      },
+      {
+        "id": 331,
+        "spanish": "visual",
+        "english": "visual",
+        "chinese": "视觉的/直观的"
+      },
+      {
+        "id": 332,
+        "spanish": "auditivo",
+        "english": "auditory",
+        "chinese": "听觉的"
+      },
+      {
+        "id": 333,
+        "spanish": "oral",
+        "english": "oral",
+        "chinese": "口头的/口腔的"
+      },
+      {
+        "id": 334,
+        "spanish": "escrito",
+        "english": "written",
+        "chinese": "书面的/写成的"
+      },
+      {
+        "id": 335,
+        "spanish": "formal",
+        "english": "formal",
+        "chinese": "正式的"
+      },
+      {
+        "id": 336,
+        "spanish": "informal",
+        "english": "informal",
+        "chinese": "非正式的"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "adjectives",
+    "level": 8,
+    "words": [
+      {
+        "id": 337,
+        "spanish": "relativo",
+        "english": "relative",
+        "chinese": "相对的/亲属"
+      },
+      {
+        "id": 338,
+        "spanish": "respectivo",
+        "english": "respective",
+        "chinese": "各自的/分别的"
+      },
+      {
+        "id": 339,
+        "spanish": "específico",
+        "english": "specific",
+        "chinese": "具体的/特定的"
+      },
+      {
+        "id": 340,
+        "spanish": "concreto",
+        "english": "concrete",
+        "chinese": "具体的/混凝土的"
+      },
+      {
+        "id": 341,
+        "spanish": "abstracto",
+        "english": "abstract",
+        "chinese": "抽象的"
+      },
+      {
+        "id": 342,
+        "spanish": "preciso",
+        "english": "precise",
+        "chinese": "精确的"
+      },
+      {
+        "id": 343,
+        "spanish": "impreciso",
+        "english": "imprecise",
+        "chinese": "不精确的"
+      },
+      {
+        "id": 344,
+        "spanish": "vago",
+        "english": "vague",
+        "chinese": "模糊的"
+      },
+      {
+        "id": 345,
+        "spanish": "confuso",
+        "english": "confusing",
+        "chinese": "令人困惑的"
+      },
+      {
+        "id": 346,
+        "spanish": "claro",
+        "english": "clear (figurative)",
+        "chinese": "明确的/清楚的"
+      },
+      {
+        "id": 347,
+        "spanish": "oscuro",
+        "english": "dark (figurative)",
+        "chinese": "阴暗的/晦涩的"
+      },
+      {
+        "id": 348,
+        "spanish": "transparente",
+        "english": "transparent",
+        "chinese": "透明的"
+      },
+      {
+        "id": 349,
+        "spanish": "opaco",
+        "english": "opaque",
+        "chinese": "不透明的"
+      },
+      {
+        "id": 350,
+        "spanish": "denso",
+        "english": "dense",
+        "chinese": "稠密的/浓密的"
+      },
+      {
+        "id": 351,
+        "spanish": "ligero",
+        "english": "light (density)",
+        "chinese": "稀薄的/不浓的"
+      },
+      {
+        "id": 352,
+        "spanish": "flexible",
+        "english": "flexible",
+        "chinese": "灵活的/有弹性的"
+      },
+      {
+        "id": 353,
+        "spanish": "rígido",
+        "english": "rigid",
+        "chinese": "僵硬的/死板的"
+      },
+      {
+        "id": 354,
+        "spanish": "fuerte",
+        "english": "strong (material)",
+        "chinese": "结实的/坚固的"
+      },
+      {
+        "id": 355,
+        "spanish": "frágil",
+        "english": "fragile",
+        "chinese": "易碎的/脆弱的"
+      },
+      {
+        "id": 356,
+        "spanish": "resistente",
+        "english": "resistant",
+        "chinese": "有抵抗力的/耐受的"
+      },
+      {
+        "id": 357,
+        "spanish": "estable",
+        "english": "stable",
+        "chinese": "稳定的"
+      },
+      {
+        "id": 358,
+        "spanish": "inestable",
+        "english": "unstable",
+        "chinese": "不稳定的"
+      },
+      {
+        "id": 359,
+        "spanish": "fijo",
+        "english": "fixed",
+        "chinese": "固定的/确定的"
+      },
+      {
+        "id": 360,
+        "spanish": "móvil",
+        "english": "mobile",
+        "chinese": "移动的/流动的"
+      },
+      {
+        "id": 361,
+        "spanish": "constante",
+        "english": "constant",
+        "chinese": "持续的/恒定的"
+      },
+      {
+        "id": 362,
+        "spanish": "variable",
+        "english": "variable",
+        "chinese": "可变的/变量的"
+      },
+      {
+        "id": 363,
+        "spanish": "continuo",
+        "english": "continuous",
+        "chinese": "连续的"
+      },
+      {
+        "id": 364,
+        "spanish": "discontinuo",
+        "english": "discontinuous",
+        "chinese": "不连续的"
+      },
+      {
+        "id": 365,
+        "spanish": "eterno",
+        "english": "eternal",
+        "chinese": "永恒的"
+      },
+      {
+        "id": 366,
+        "spanish": "efímero",
+        "english": "ephemeral",
+        "chinese": "短暂的"
+      },
+      {
+        "id": 367,
+        "spanish": "mortal",
+        "english": "mortal",
+        "chinese": "凡人的/会死的"
+      },
+      {
+        "id": 368,
+        "spanish": "inmortal",
+        "english": "immortal",
+        "chinese": "不朽的/永生的"
+      },
+      {
+        "id": 369,
+        "spanish": "vital",
+        "english": "vital",
+        "chinese": "至关重要的/有生命力的"
+      },
+      {
+        "id": 370,
+        "spanish": "esencial",
+        "english": "essential",
+        "chinese": "必要的/本质的"
+      },
+      {
+        "id": 371,
+        "spanish": "fundamental",
+        "english": "fundamental",
+        "chinese": "基本的/根本的"
+      },
+      {
+        "id": 372,
+        "spanish": "secundario",
+        "english": "secondary",
+        "chinese": "次要的/中等教育的"
+      },
+      {
+        "id": 373,
+        "spanish": "primario",
+        "english": "primary",
+        "chinese": "主要的/初级的"
+      },
+      {
+        "id": 374,
+        "spanish": "terciario",
+        "english": "tertiary",
+        "chinese": "第三的/第三级的"
+      },
+      {
+        "id": 375,
+        "spanish": "significativo",
+        "english": "significant",
+        "chinese": "重要的/显著的"
+      },
+      {
+        "id": 376,
+        "spanish": "insignificante",
+        "english": "insignificant",
+        "chinese": "微不足道的/不重要的"
+      },
+      {
+        "id": 377,
+        "spanish": "relevante",
+        "english": "relevant",
+        "chinese": "相关的/切题的"
+      },
+      {
+        "id": 378,
+        "spanish": "irrelevante",
+        "english": "irrelevant",
+        "chinese": "无关的"
+      },
+      {
+        "id": 379,
+        "spanish": "adecuado",
+        "english": "suitable",
+        "chinese": "合适的"
+      },
+      {
+        "id": 380,
+        "spanish": "inadecuado",
+        "english": "unsuitable",
+        "chinese": "不合适的"
+      },
+      {
+        "id": 381,
+        "spanish": "apropiado",
+        "english": "appropriate",
+        "chinese": "合适的/恰当的"
+      },
+      {
+        "id": 382,
+        "spanish": "inapropiado",
+        "english": "inappropriate",
+        "chinese": "不合适的/不恰当的"
+      },
+      {
+        "id": 383,
+        "spanish": "conveniente",
+        "english": "convenient",
+        "chinese": "方便的"
+      },
+      {
+        "id": 384,
+        "spanish": "inconveniente",
+        "english": "inconvenient",
+        "chinese": "不方便的"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "adjectives",
+    "level": 9,
+    "words": [
+      {
+        "id": 385,
+        "spanish": "constitucional",
+        "english": "constitutional",
+        "chinese": "宪法的"
+      },
+      {
+        "id": 386,
+        "spanish": "democrático",
+        "english": "democratic",
+        "chinese": "民主的"
+      },
+      {
+        "id": 387,
+        "spanish": "republicano",
+        "english": "republican",
+        "chinese": "共和的/共和主义者的"
+      },
+      {
+        "id": 388,
+        "spanish": "federal",
+        "english": "federal",
+        "chinese": "联邦的"
+      },
+      {
+        "id": 389,
+        "spanish": "estatal",
+        "english": "state (govt)",
+        "chinese": "国家/政府"
+      },
+      {
+        "id": 390,
+        "spanish": "municipal",
+        "english": "municipal",
+        "chinese": "市政的"
+      },
+      {
+        "id": 391,
+        "spanish": "legislativo",
+        "english": "legislative",
+        "chinese": "立法的"
+      },
+      {
+        "id": 392,
+        "spanish": "ejecutivo",
+        "english": "executive",
+        "chinese": "执行的/高管"
+      },
+      {
+        "id": 393,
+        "spanish": "judicial",
+        "english": "judicial",
+        "chinese": "司法的"
+      },
+      {
+        "id": 394,
+        "spanish": "penal",
+        "english": "penal",
+        "chinese": "刑事的/处罚的"
+      },
+      {
+        "id": 395,
+        "spanish": "civil",
+        "english": "civil",
+        "chinese": "公民的/民用的/礼貌的"
+      },
+      {
+        "id": 396,
+        "spanish": "mercantil",
+        "english": "mercantile",
+        "chinese": "商业的/贸易的"
+      },
+      {
+        "id": 397,
+        "spanish": "fiscal",
+        "english": "fiscal",
+        "chinese": "财政的/会计的"
+      },
+      {
+        "id": 398,
+        "spanish": "tributario",
+        "english": "tax-related",
+        "chinese": "税务的/与税有关的"
+      },
+      {
+        "id": 399,
+        "spanish": "financiero",
+        "english": "financial",
+        "chinese": "金融的/财政的"
+      },
+      {
+        "id": 400,
+        "spanish": "bancario",
+        "english": "banking",
+        "chinese": "银行业/银行事务"
+      },
+      {
+        "id": 401,
+        "spanish": "monetario",
+        "english": "monetary",
+        "chinese": "货币的/金钱的"
+      },
+      {
+        "id": 402,
+        "spanish": "comercial",
+        "english": "commercial",
+        "chinese": "商业的"
+      },
+      {
+        "id": 403,
+        "spanish": "laboral",
+        "english": "labor-related",
+        "chinese": "劳动的/劳工相关的"
+      },
+      {
+        "id": 404,
+        "spanish": "sindical",
+        "english": "union-related",
+        "chinese": "工会的/与工会有关的"
+      },
+      {
+        "id": 405,
+        "spanish": "socialista",
+        "english": "socialist",
+        "chinese": "社会主义者的/社会主义的"
+      },
+      {
+        "id": 406,
+        "spanish": "capitalista",
+        "english": "capitalist",
+        "chinese": "资本主义的/资本家"
+      },
+      {
+        "id": 407,
+        "spanish": "comunista",
+        "english": "communist",
+        "chinese": "共产主义的/共产党员"
+      },
+      {
+        "id": 408,
+        "spanish": "liberal",
+        "english": "liberal",
+        "chinese": "自由派的/开明的"
+      },
+      {
+        "id": 409,
+        "spanish": "conservador",
+        "english": "conservative",
+        "chinese": "保守的"
+      },
+      {
+        "id": 410,
+        "spanish": "revolucionario",
+        "english": "revolutionary",
+        "chinese": "革命的/革命性的"
+      },
+      {
+        "id": 411,
+        "spanish": "radical",
+        "english": "radical",
+        "chinese": "激进的/根本的"
+      },
+      {
+        "id": 412,
+        "spanish": "moderado",
+        "english": "moderate",
+        "chinese": "适度的/温和的"
+      },
+      {
+        "id": 413,
+        "spanish": "extremista",
+        "english": "extremist",
+        "chinese": "极端分子/极端主义者"
+      },
+      {
+        "id": 414,
+        "spanish": "terrorista",
+        "english": "terrorist",
+        "chinese": "恐怖分子/恐怖主义的"
+      },
+      {
+        "id": 415,
+        "spanish": "bélico",
+        "english": "warlike",
+        "chinese": "好战的/尚武的"
+      },
+      {
+        "id": 416,
+        "spanish": "militar",
+        "english": "military",
+        "chinese": "军事的"
+      },
+      {
+        "id": 417,
+        "spanish": "naval",
+        "english": "naval",
+        "chinese": "海军的"
+      },
+      {
+        "id": 418,
+        "spanish": "aéreo",
+        "english": "aerial",
+        "chinese": "空中的/航空的"
+      },
+      {
+        "id": 419,
+        "spanish": "terrestre",
+        "english": "terrestrial",
+        "chinese": "地球的/陆地的"
+      },
+      {
+        "id": 420,
+        "spanish": "marítimo",
+        "english": "maritime",
+        "chinese": "海上的/航海的"
+      },
+      {
+        "id": 421,
+        "spanish": "espacial",
+        "english": "spatial / space",
+        "chinese": "空间的/太空的"
+      },
+      {
+        "id": 422,
+        "spanish": "cibernético",
+        "english": "cybernetic",
+        "chinese": "控制论的/网络的"
+      },
+      {
+        "id": 423,
+        "spanish": "virtual",
+        "english": "virtual",
+        "chinese": "虚拟的"
+      },
+      {
+        "id": 424,
+        "spanish": "informático",
+        "english": "computer-related",
+        "chinese": "计算机的"
+      },
+      {
+        "id": 425,
+        "spanish": "tecnológico",
+        "english": "technological",
+        "chinese": "科技的/技术上的"
+      },
+      {
+        "id": 426,
+        "spanish": "mecánico",
+        "english": "mechanical",
+        "chinese": "机械的"
+      },
+      {
+        "id": 427,
+        "spanish": "automático",
+        "english": "automatic",
+        "chinese": "自动的"
+      },
+      {
+        "id": 428,
+        "spanish": "manual",
+        "english": "manual",
+        "chinese": "手工的/手册"
+      },
+      {
+        "id": 429,
+        "spanish": "analógico",
+        "english": "analog",
+        "chinese": "模拟的"
+      },
+      {
+        "id": 430,
+        "spanish": "híbrido",
+        "english": "hybrid",
+        "chinese": "混合的/杂交的"
+      },
+      {
+        "id": 431,
+        "spanish": "sostenible",
+        "english": "sustainable",
+        "chinese": "可持续的"
+      },
+      {
+        "id": 432,
+        "spanish": "ecológico",
+        "english": "ecological",
+        "chinese": "生态的/环保的"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "adjectives",
+    "level": 10,
+    "words": [
+      {
+        "id": 433,
+        "spanish": "subjetivo",
+        "english": "subjective",
+        "chinese": "主观的"
+      },
+      {
+        "id": 434,
+        "spanish": "objetivo",
+        "english": "objective",
+        "chinese": "客观的/目标"
+      },
+      {
+        "id": 435,
+        "spanish": "intrínseco",
+        "english": "intrinsic",
+        "chinese": "内在的/固有的"
+      },
+      {
+        "id": 436,
+        "spanish": "extrínseco",
+        "english": "extrinsic",
+        "chinese": "外在的/外部的"
+      },
+      {
+        "id": 437,
+        "spanish": "inherente",
+        "english": "inherent",
+        "chinese": "固有的/内在的"
+      },
+      {
+        "id": 438,
+        "spanish": "trascendental",
+        "english": "transcendental",
+        "chinese": "超越的/重大的"
+      },
+      {
+        "id": 439,
+        "spanish": "inminente",
+        "english": "imminent",
+        "chinese": "即将发生的/迫近的"
+      },
+      {
+        "id": 440,
+        "spanish": "inevitable",
+        "english": "inevitable",
+        "chinese": "不可避免的"
+      },
+      {
+        "id": 441,
+        "spanish": "inexorable",
+        "english": "inexorable",
+        "chinese": "无情的/不可阻挡的"
+      },
+      {
+        "id": 442,
+        "spanish": "implacable",
+        "english": "implacable",
+        "chinese": "难以平息的/不肯让步的"
+      },
+      {
+        "id": 443,
+        "spanish": "efímero",
+        "english": "short-lived",
+        "chinese": "短暂的"
+      },
+      {
+        "id": 444,
+        "spanish": "perenne",
+        "english": "perennial",
+        "chinese": "常年的/多年生的"
+      },
+      {
+        "id": 445,
+        "spanish": "perpetuo",
+        "english": "perpetual",
+        "chinese": "持续不断的/永久的"
+      },
+      {
+        "id": 446,
+        "spanish": "infinito",
+        "english": "infinite",
+        "chinese": "无限的"
+      },
+      {
+        "id": 447,
+        "spanish": "finito",
+        "english": "finite",
+        "chinese": "有限的"
+      },
+      {
+        "id": 448,
+        "spanish": "ilimitado",
+        "english": "unlimited",
+        "chinese": "无限的"
+      },
+      {
+        "id": 449,
+        "spanish": "limitado",
+        "english": "limited",
+        "chinese": "有限的"
+      },
+      {
+        "id": 450,
+        "spanish": "restringido",
+        "english": "restricted",
+        "chinese": "受限制的/有限的"
+      },
+      {
+        "id": 451,
+        "spanish": "amplio",
+        "english": "ample / broad",
+        "chinese": "宽敞的/广泛的"
+      },
+      {
+        "id": 452,
+        "spanish": "extenso",
+        "english": "extensive",
+        "chinese": "广泛的/大范围的"
+      },
+      {
+        "id": 453,
+        "spanish": "intensivo",
+        "english": "intensive",
+        "chinese": "密集的/强化的"
+      },
+      {
+        "id": 454,
+        "spanish": "exhaustivo",
+        "english": "exhaustive",
+        "chinese": "详尽的/全面的"
+      },
+      {
+        "id": 455,
+        "spanish": "completo",
+        "english": "thorough",
+        "chinese": "彻底的/详尽的"
+      },
+      {
+        "id": 456,
+        "spanish": "parcial",
+        "english": "partial",
+        "chinese": "部分的/不完全的"
+      },
+      {
+        "id": 457,
+        "spanish": "imparcial",
+        "english": "impartial",
+        "chinese": "公正的/中立的"
+      },
+      {
+        "id": 458,
+        "spanish": "neutral",
+        "english": "neutral",
+        "chinese": "中立的"
+      },
+      {
+        "id": 459,
+        "spanish": "sesgado",
+        "english": "biased",
+        "chinese": "有偏见的/偏袒的"
+      },
+      {
+        "id": 460,
+        "spanish": "arbitrario",
+        "english": "arbitrary",
+        "chinese": "任意的/武断的"
+      },
+      {
+        "id": 461,
+        "spanish": "aleatorio",
+        "english": "random",
+        "chinese": "随机的/随便的"
+      },
+      {
+        "id": 462,
+        "spanish": "caótico",
+        "english": "chaotic",
+        "chinese": "混乱的"
+      },
+      {
+        "id": 463,
+        "spanish": "ordenado",
+        "english": "orderly",
+        "chinese": "有序的/整齐的"
+      },
+      {
+        "id": 464,
+        "spanish": "sistemático",
+        "english": "systematic",
+        "chinese": "系统的/有条理的"
+      },
+      {
+        "id": 465,
+        "spanish": "metódico",
+        "english": "methodical",
+        "chinese": "有条理的"
+      },
+      {
+        "id": 466,
+        "spanish": "espontáneo",
+        "english": "spontaneous",
+        "chinese": "自发的/自然的"
+      },
+      {
+        "id": 467,
+        "spanish": "impulsivo",
+        "english": "impulsive",
+        "chinese": "冲动的"
+      },
+      {
+        "id": 468,
+        "spanish": "reflexivo",
+        "english": "reflective",
+        "chinese": "反光的/善于反思的"
+      },
+      {
+        "id": 469,
+        "spanish": "introspectivo",
+        "english": "introspective",
+        "chinese": "内省的"
+      },
+      {
+        "id": 470,
+        "spanish": "extrovertido",
+        "english": "extroverted",
+        "chinese": "外向的"
+      },
+      {
+        "id": 471,
+        "spanish": "introvertido",
+        "english": "introverted",
+        "chinese": "内向的"
+      },
+      {
+        "id": 472,
+        "spanish": "optimista",
+        "english": "optimistic",
+        "chinese": "乐观的"
+      },
+      {
+        "id": 473,
+        "spanish": "pesimista",
+        "english": "pessimistic",
+        "chinese": "悲观的"
+      },
+      {
+        "id": 474,
+        "spanish": "realista",
+        "english": "realistic",
+        "chinese": "现实的/现实主义的"
+      },
+      {
+        "id": 475,
+        "spanish": "idealista",
+        "english": "idealistic",
+        "chinese": "理想主义的"
+      },
+      {
+        "id": 476,
+        "spanish": "pragmático",
+        "english": "pragmatic",
+        "chinese": "务实的"
+      },
+      {
+        "id": 477,
+        "spanish": "utópico",
+        "english": "utopian",
+        "chinese": "乌托邦的/理想化的"
+      },
+      {
+        "id": 478,
+        "spanish": "escéptico",
+        "english": "skeptical",
+        "chinese": "怀疑的"
+      },
+      {
+        "id": 479,
+        "spanish": "crédulo",
+        "english": "gullible",
+        "chinese": "轻信的/好骗的"
+      },
+      {
+        "id": 480,
+        "spanish": "místico",
+        "english": "mystical",
+        "chinese": "神秘的/玄妙的"
+      }
+    ]
+  }
+]

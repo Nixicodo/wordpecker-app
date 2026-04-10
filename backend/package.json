@@ -8,6 +8,7 @@
     "build": "npx tsc",
     "lint": "eslint . --ext .ts",
     "test": "jest",
+    "import:spanish-vocabulary": "ts-node src/scripts/importSpanishVocabulary.ts",
     "seed:templates": "ts-node src/scripts/seedTemplatesFromFiles.ts",
     "seed:templates:legacy": "ts-node src/scripts/seedTemplates.ts"
   },

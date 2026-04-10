@@ -1,0 +1,4422 @@
+[
+  {
+    "region": "MX",
+    "partOfSpeech": "verbs",
+    "level": 1,
+    "words": [
+      {
+        "id": 1,
+        "spanish": "ser",
+        "english": "to be (permanent)",
+        "conjugations": {
+          "present": {
+            "yo": "soy",
+            "tú": "eres",
+            "él": "es",
+            "nosotros": "somos",
+            "ustedes": "son"
+          },
+          "preterite": {
+            "yo": "fui",
+            "tú": "fuiste",
+            "él": "fue",
+            "nosotros": "fuimos",
+            "ustedes": "fueron"
+          }
+        },
+        "chinese": "是（永久性质）"
+      },
+      {
+        "id": 2,
+        "spanish": "estar",
+        "english": "to be (location/state)",
+        "conjugations": {
+          "present": {
+            "yo": "estoy",
+            "tú": "estás",
+            "él": "está",
+            "nosotros": "estamos",
+            "ustedes": "están"
+          },
+          "preterite": {
+            "yo": "estuve",
+            "tú": "estuviste",
+            "él": "estuvo",
+            "nosotros": "estuvimos",
+            "ustedes": "estuvieron"
+          }
+        },
+        "chinese": "在/处于（位置/状态）"
+      },
+      {
+        "id": 3,
+        "spanish": "tener",
+        "english": "to have",
+        "conjugations": {
+          "present": {
+            "yo": "tengo",
+            "tú": "tienes",
+            "él": "tiene",
+            "nosotros": "tenemos",
+            "ustedes": "tienen"
+          },
+          "preterite": {
+            "yo": "tuve",
+            "tú": "tuviste",
+            "él": "tuvo",
+            "nosotros": "tuvimos",
+            "ustedes": "tuvieron"
+          }
+        },
+        "chinese": "有"
+      },
+      {
+        "id": 4,
+        "spanish": "haber",
+        "english": "to have (auxiliary) / there is",
+        "conjugations": {
+          "present": {
+            "yo": "he",
+            "tú": "has",
+            "él": "ha/hay",
+            "nosotros": "hemos",
+            "ustedes": "han"
+          },
+          "preterite": {
+            "yo": "hube",
+            "tú": "hubiste",
+            "él": "hubo",
+            "nosotros": "hubimos",
+            "ustedes": "hubieron"
+          }
+        },
+        "chinese": "有（助动）/存在"
+      },
+      {
+        "id": 5,
+        "spanish": "hacer",
+        "english": "to do / to make",
+        "conjugations": {
+          "present": {
+            "yo": "hago",
+            "tú": "haces",
+            "él": "hace",
+            "nosotros": "hacemos",
+            "ustedes": "hacen"
+          },
+          "preterite": {
+            "yo": "hice",
+            "tú": "hiciste",
+            "él": "hizo",
+            "nosotros": "hicimos",
+            "ustedes": "hicieron"
+          }
+        },
+        "chinese": "做/制作"
+      },
+      {
+        "id": 6,
+        "spanish": "ir",
+        "english": "to go",
+        "conjugations": {
+          "present": {
+            "yo": "voy",
+            "tú": "vas",
+            "él": "va",
+            "nosotros": "vamos",
+            "ustedes": "van"
+          },
+          "preterite": {
+            "yo": "fui",
+            "tú": "fuiste",
+            "él": "fue",
+            "nosotros": "fuimos",
+            "ustedes": "fueron"
+          }
+        },
+        "chinese": "去/走"
+      },
+      {
+        "id": 7,
+        "spanish": "poder",
+        "english": "to be able to",
+        "conjugations": {
+          "present": {
+            "yo": "puedo",
+            "tú": "puedes",
+            "él": "puede",
+            "nosotros": "podemos",
+            "ustedes": "pueden"
+          },
+          "preterite": {
+            "yo": "pude",
+            "tú": "pudiste",
+            "él": "pudo",
+            "nosotros": "pudimos",
+            "ustedes": "pudieron"
+          }
+        },
+        "chinese": "能够/可以"
+      },
+      {
+        "id": 8,
+        "spanish": "decir",
+        "english": "to say",
+        "conjugations": {
+          "present": {
+            "yo": "digo",
+            "tú": "dices",
+            "él": "dice",
+            "nosotros": "decimos",
+            "ustedes": "dicen"
+          },
+          "preterite": {
+            "yo": "dije",
+            "tú": "dijiste",
+            "él": "dijo",
+            "nosotros": "dijimos",
+            "ustedes": "dijeron"
+          }
+        },
+        "chinese": "说"
+      },
+      {
+        "id": 9,
+        "spanish": "ver",
+        "english": "to see",
+        "conjugations": {
+          "present": {
+            "yo": "veo",
+            "tú": "ves",
+            "él": "ve",
+            "nosotros": "vemos",
+            "ustedes": "ven"
+          },
+          "preterite": {
+            "yo": "vi",
+            "tú": "viste",
+            "él": "vio",
+            "nosotros": "vimos",
+            "ustedes": "vieron"
+          }
+        },
+        "chinese": "看见/看"
+      },
+      {
+        "id": 10,
+        "spanish": "querer",
+        "english": "to want",
+        "conjugations": {
+          "present": {
+            "yo": "quiero",
+            "tú": "quieres",
+            "él": "quiere",
+            "nosotros": "queremos",
+            "ustedes": "quieren"
+          },
+          "preterite": {
+            "yo": "quise",
+            "tú": "quisiste",
+            "él": "quiso",
+            "nosotros": "quisimos",
+            "ustedes": "quisieron"
+          }
+        },
+        "chinese": "想要"
+      },
+      {
+        "id": 11,
+        "spanish": "dar",
+        "english": "to give",
+        "conjugations": {},
+        "chinese": "给"
+      },
+      {
+        "id": 12,
+        "spanish": "saber",
+        "english": "to know (facts)",
+        "conjugations": {},
+        "chinese": "知道/了解"
+      },
+      {
+        "id": 13,
+        "spanish": "pasar",
+        "english": "to pass / happen",
+        "conjugations": {},
+        "chinese": "经过/发生"
+      },
+      {
+        "id": 14,
+        "spanish": "deber",
+        "english": "to owe / must",
+        "conjugations": {},
+        "chinese": "欠/必须"
+      },
+      {
+        "id": 15,
+        "spanish": "llegar",
+        "english": "to arrive",
+        "conjugations": {},
+        "chinese": "到达"
+      },
+      {
+        "id": 16,
+        "spanish": "creer",
+        "english": "to believe",
+        "conjugations": {},
+        "chinese": "相信/认为"
+      },
+      {
+        "id": 17,
+        "spanish": "dejar",
+        "english": "to leave / let",
+        "conjugations": {},
+        "chinese": "离开/让"
+      },
+      {
+        "id": 18,
+        "spanish": "parecer",
+        "english": "to seem",
+        "conjugations": {},
+        "chinese": "似乎/看起来"
+      },
+      {
+        "id": 19,
+        "spanish": "hablar",
+        "english": "to speak",
+        "conjugations": {},
+        "chinese": "说话/讲"
+      },
+      {
+        "id": 20,
+        "spanish": "poner",
+        "english": "to put",
+        "conjugations": {},
+        "chinese": "放"
+      },
+      {
+        "id": 21,
+        "spanish": "seguir",
+        "english": "to follow / continue",
+        "conjugations": {},
+        "chinese": "跟随/继续"
+      },
+      {
+        "id": 22,
+        "spanish": "encontrar",
+        "english": "to find",
+        "conjugations": {},
+        "chinese": "找到/发现"
+      },
+      {
+        "id": 23,
+        "spanish": "llamar",
+        "english": "to call",
+        "conjugations": {},
+        "chinese": "打电话/叫"
+      },
+      {
+        "id": 24,
+        "spanish": "venir",
+        "english": "to come",
+        "conjugations": {},
+        "chinese": "来"
+      },
+      {
+        "id": 25,
+        "spanish": "pensar",
+        "english": "to think",
+        "conjugations": {},
+        "chinese": "想/认为"
+      },
+      {
+        "id": 26,
+        "spanish": "salir",
+        "english": "to go out / exit",
+        "conjugations": {},
+        "chinese": "出去/离开"
+      },
+      {
+        "id": 27,
+        "spanish": "volver",
+        "english": "to return",
+        "conjugations": {},
+        "chinese": "返回"
+      },
+      {
+        "id": 28,
+        "spanish": "tomar",
+        "english": "to take / drink",
+        "conjugations": {},
+        "chinese": "喝/服用"
+      },
+      {
+        "id": 29,
+        "spanish": "conocer",
+        "english": "to know (people/places)",
+        "conjugations": {},
+        "chinese": "认识/熟悉"
+      },
+      {
+        "id": 30,
+        "spanish": "vivir",
+        "english": "to live",
+        "conjugations": {},
+        "chinese": "居住/生活"
+      },
+      {
+        "id": 31,
+        "spanish": "sentir",
+        "english": "to feel",
+        "conjugations": {},
+        "chinese": "感觉/感受"
+      },
+      {
+        "id": 32,
+        "spanish": "tratar",
+        "english": "to try / treat",
+        "conjugations": {},
+        "chinese": "尝试/对待"
+      },
+      {
+        "id": 33,
+        "spanish": "mirar",
+        "english": "to look / watch",
+        "conjugations": {},
+        "chinese": "看/观看"
+      },
+      {
+        "id": 34,
+        "spanish": "contar",
+        "english": "to count / tell",
+        "conjugations": {},
+        "chinese": "数/讲述"
+      },
+      {
+        "id": 35,
+        "spanish": "empezar",
+        "english": "to start",
+        "conjugations": {},
+        "chinese": "开始/启动"
+      },
+      {
+        "id": 36,
+        "spanish": "esperar",
+        "english": "to wait / hope",
+        "conjugations": {},
+        "chinese": "等待/希望"
+      },
+      {
+        "id": 37,
+        "spanish": "buscar",
+        "english": "to search / look for",
+        "conjugations": {},
+        "chinese": "寻找/查找"
+      },
+      {
+        "id": 38,
+        "spanish": "existir",
+        "english": "to exist",
+        "conjugations": {},
+        "chinese": "存在"
+      },
+      {
+        "id": 39,
+        "spanish": "entrar",
+        "english": "to enter",
+        "conjugations": {},
+        "chinese": "进入"
+      },
+      {
+        "id": 40,
+        "spanish": "trabajar",
+        "english": "to work",
+        "conjugations": {},
+        "chinese": "工作"
+      },
+      {
+        "id": 41,
+        "spanish": "escribir",
+        "english": "to write",
+        "conjugations": {},
+        "chinese": "写"
+      },
+      {
+        "id": 42,
+        "spanish": "perder",
+        "english": "to lose",
+        "conjugations": {},
+        "chinese": "丢失/失去"
+      },
+      {
+        "id": 43,
+        "spanish": "producir",
+        "english": "to produce",
+        "conjugations": {},
+        "chinese": "生产/产生"
+      },
+      {
+        "id": 44,
+        "spanish": "ocurrir",
+        "english": "to occur",
+        "conjugations": {},
+        "chinese": "发生"
+      },
+      {
+        "id": 45,
+        "spanish": "entender",
+        "english": "to understand",
+        "conjugations": {},
+        "chinese": "理解/明白"
+      },
+      {
+        "id": 46,
+        "spanish": "pedir",
+        "english": "to ask for",
+        "conjugations": {},
+        "chinese": "请求/索要"
+      },
+      {
+        "id": 47,
+        "spanish": "recibir",
+        "english": "to receive",
+        "conjugations": {},
+        "chinese": "收到/接收"
+      },
+      {
+        "id": 48,
+        "spanish": "recordar",
+        "english": "to remember",
+        "conjugations": {},
+        "chinese": "记得/想起"
+      },
+      {
+        "id": 49,
+        "spanish": "terminar",
+        "english": "to finish",
+        "conjugations": {},
+        "chinese": "完成/结束"
+      },
+      {
+        "id": 50,
+        "spanish": "permitir",
+        "english": "to permit",
+        "conjugations": {},
+        "chinese": "允许"
+      },
+      {
+        "id": 51,
+        "spanish": "aparecer",
+        "english": "to appear",
+        "conjugations": {},
+        "chinese": "出现/显得"
+      },
+      {
+        "id": 52,
+        "spanish": "conseguir",
+        "english": "to get / achieve",
+        "conjugations": {},
+        "chinese": "得到/获得"
+      },
+      {
+        "id": 53,
+        "spanish": "comenzar",
+        "english": "to begin",
+        "conjugations": {},
+        "chinese": "开始"
+      },
+      {
+        "id": 54,
+        "spanish": "servir",
+        "english": "to serve",
+        "conjugations": {},
+        "chinese": "服务/供应"
+      },
+      {
+        "id": 55,
+        "spanish": "sacar",
+        "english": "to take out",
+        "conjugations": {},
+        "chinese": "拿出/带出去"
+      },
+      {
+        "id": 56,
+        "spanish": "necesitar",
+        "english": "to need",
+        "conjugations": {},
+        "chinese": "需要"
+      },
+      {
+        "id": 57,
+        "spanish": "mantener",
+        "english": "to maintain",
+        "conjugations": {},
+        "chinese": "维持/维护"
+      },
+      {
+        "id": 58,
+        "spanish": "resultar",
+        "english": "to result / turn out",
+        "conjugations": {},
+        "chinese": "结果是/原来是"
+      },
+      {
+        "id": 59,
+        "spanish": "leer",
+        "english": "to read",
+        "conjugations": {},
+        "chinese": "阅读"
+      },
+      {
+        "id": 60,
+        "spanish": "caer",
+        "english": "to fall",
+        "conjugations": {},
+        "chinese": "跌倒/落下"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "verbs",
+    "level": 2,
+    "words": [
+      {
+        "id": 61,
+        "spanish": "cambiar",
+        "english": "to change",
+        "conjugations": {},
+        "chinese": "改变/更换"
+      },
+      {
+        "id": 62,
+        "spanish": "presentar",
+        "english": "to introduce / present",
+        "conjugations": {},
+        "chinese": "介绍/提出"
+      },
+      {
+        "id": 63,
+        "spanish": "crear",
+        "english": "to create",
+        "conjugations": {},
+        "chinese": "创造"
+      },
+      {
+        "id": 64,
+        "spanish": "abrir",
+        "english": "to open",
+        "conjugations": {},
+        "chinese": "打开"
+      },
+      {
+        "id": 65,
+        "spanish": "considerar",
+        "english": "to consider",
+        "conjugations": {},
+        "chinese": "考虑"
+      },
+      {
+        "id": 66,
+        "spanish": "oír",
+        "english": "to hear",
+        "conjugations": {},
+        "chinese": "听见"
+      },
+      {
+        "id": 67,
+        "spanish": "acabar",
+        "english": "to finish / just do something",
+        "conjugations": {},
+        "chinese": "干脆做/直接做完"
+      },
+      {
+        "id": 68,
+        "spanish": "convertir",
+        "english": "to convert",
+        "conjugations": {},
+        "chinese": "转换/改造"
+      },
+      {
+        "id": 69,
+        "spanish": "ganar",
+        "english": "to win / earn",
+        "conjugations": {},
+        "chinese": "赢得/赚得"
+      },
+      {
+        "id": 70,
+        "spanish": "formar",
+        "english": "to form",
+        "conjugations": {},
+        "chinese": "形成/组成"
+      },
+      {
+        "id": 71,
+        "spanish": "traer",
+        "english": "to bring",
+        "conjugations": {},
+        "chinese": "带来"
+      },
+      {
+        "id": 72,
+        "spanish": "partir",
+        "english": "to divide / leave",
+        "conjugations": {},
+        "chinese": "分开/离开"
+      },
+      {
+        "id": 73,
+        "spanish": "morir",
+        "english": "to die",
+        "conjugations": {},
+        "chinese": "死"
+      },
+      {
+        "id": 74,
+        "spanish": "aceptar",
+        "english": "to accept",
+        "conjugations": {},
+        "chinese": "接受"
+      },
+      {
+        "id": 75,
+        "spanish": "realizar",
+        "english": "to realize / perform",
+        "conjugations": {},
+        "chinese": "实现/表演"
+      },
+      {
+        "id": 76,
+        "spanish": "suponer",
+        "english": "to suppose",
+        "conjugations": {},
+        "chinese": "假设/以为"
+      },
+      {
+        "id": 77,
+        "spanish": "comprender",
+        "english": "to comprehend",
+        "conjugations": {},
+        "chinese": "理解"
+      },
+      {
+        "id": 78,
+        "spanish": "lograr",
+        "english": "to achieve",
+        "conjugations": {},
+        "chinese": "实现/达到"
+      },
+      {
+        "id": 79,
+        "spanish": "explicar",
+        "english": "to explain",
+        "conjugations": {},
+        "chinese": "解释"
+      },
+      {
+        "id": 80,
+        "spanish": "preguntar",
+        "english": "to ask",
+        "conjugations": {},
+        "chinese": "问"
+      },
+      {
+        "id": 81,
+        "spanish": "tocar",
+        "english": "to touch / play instrument",
+        "conjugations": {},
+        "chinese": "触摸/演奏乐器"
+      },
+      {
+        "id": 82,
+        "spanish": "reconocer",
+        "english": "to recognize",
+        "conjugations": {},
+        "chinese": "认出/承认"
+      },
+      {
+        "id": 83,
+        "spanish": "estudiar",
+        "english": "to study",
+        "conjugations": {},
+        "chinese": "学习"
+      },
+      {
+        "id": 84,
+        "spanish": "alcanzar",
+        "english": "to reach",
+        "conjugations": {},
+        "chinese": "到达"
+      },
+      {
+        "id": 85,
+        "spanish": "nacer",
+        "english": "to be born",
+        "conjugations": {},
+        "chinese": "出生"
+      },
+      {
+        "id": 86,
+        "spanish": "dirigir",
+        "english": "to direct",
+        "conjugations": {},
+        "chinese": "指导/指挥"
+      },
+      {
+        "id": 87,
+        "spanish": "correr",
+        "english": "to run",
+        "conjugations": {},
+        "chinese": "跑/运行"
+      },
+      {
+        "id": 88,
+        "spanish": "utilizar",
+        "english": "to utilize",
+        "conjugations": {},
+        "chinese": "利用"
+      },
+      {
+        "id": 89,
+        "spanish": "pagar",
+        "english": "to pay",
+        "conjugations": {},
+        "chinese": "支付/付钱"
+      },
+      {
+        "id": 90,
+        "spanish": "ayudar",
+        "english": "to help",
+        "conjugations": {},
+        "chinese": "帮助"
+      },
+      {
+        "id": 91,
+        "spanish": "gustar",
+        "english": "to please (like)",
+        "conjugations": {},
+        "chinese": "喜欢"
+      },
+      {
+        "id": 92,
+        "spanish": "jugar",
+        "english": "to play (games)",
+        "conjugations": {},
+        "chinese": "玩（游戏）"
+      },
+      {
+        "id": 93,
+        "spanish": "escuchar",
+        "english": "to listen",
+        "conjugations": {},
+        "chinese": "听"
+      },
+      {
+        "id": 94,
+        "spanish": "cumplir",
+        "english": "to fulfill",
+        "conjugations": {},
+        "chinese": "履行/实现"
+      },
+      {
+        "id": 95,
+        "spanish": "ofrecer",
+        "english": "to offer",
+        "conjugations": {},
+        "chinese": "提供/主动给予"
+      },
+      {
+        "id": 96,
+        "spanish": "descubrir",
+        "english": "to discover",
+        "conjugations": {},
+        "chinese": "发现"
+      },
+      {
+        "id": 97,
+        "spanish": "levantar",
+        "english": "to lift / raise",
+        "conjugations": {},
+        "chinese": "举起/抬高"
+      },
+      {
+        "id": 98,
+        "spanish": "intentar",
+        "english": "to attempt",
+        "conjugations": {},
+        "chinese": "尝试/企图"
+      },
+      {
+        "id": 99,
+        "spanish": "usar",
+        "english": "to use",
+        "conjugations": {},
+        "chinese": "使用"
+      },
+      {
+        "id": 100,
+        "spanish": "comer",
+        "english": "to eat",
+        "conjugations": {},
+        "chinese": "吃"
+      },
+      {
+        "id": 101,
+        "spanish": "olvidar",
+        "english": "to forget",
+        "conjugations": {},
+        "chinese": "忘记"
+      },
+      {
+        "id": 102,
+        "spanish": "incluir",
+        "english": "to include",
+        "conjugations": {},
+        "chinese": "包括"
+      },
+      {
+        "id": 103,
+        "spanish": "continuar",
+        "english": "to continue",
+        "conjugations": {},
+        "chinese": "继续"
+      },
+      {
+        "id": 104,
+        "spanish": "establecer",
+        "english": "to establish",
+        "conjugations": {},
+        "chinese": "建立"
+      },
+      {
+        "id": 105,
+        "spanish": "bajar",
+        "english": "to go down / lower",
+        "conjugations": {},
+        "chinese": "下降/放低"
+      },
+      {
+        "id": 106,
+        "spanish": "aprender",
+        "english": "to learn",
+        "conjugations": {},
+        "chinese": "学习"
+      },
+      {
+        "id": 107,
+        "spanish": "comprar",
+        "english": "to buy",
+        "conjugations": {},
+        "chinese": "买"
+      },
+      {
+        "id": 108,
+        "spanish": "subir",
+        "english": "to go up",
+        "conjugations": {},
+        "chinese": "上升/上去"
+      },
+      {
+        "id": 109,
+        "spanish": "evitar",
+        "english": "to avoid",
+        "conjugations": {},
+        "chinese": "避免"
+      },
+      {
+        "id": 110,
+        "spanish": "cerrar",
+        "english": "to close",
+        "conjugations": {},
+        "chinese": "关闭"
+      },
+      {
+        "id": 111,
+        "spanish": "valer",
+        "english": "to be worth",
+        "conjugations": {},
+        "chinese": "值得"
+      },
+      {
+        "id": 112,
+        "spanish": "notar",
+        "english": "to note / notice",
+        "conjugations": {},
+        "chinese": "注意到/察觉"
+      },
+      {
+        "id": 113,
+        "spanish": "meter",
+        "english": "to put in",
+        "conjugations": {},
+        "chinese": "放入"
+      },
+      {
+        "id": 114,
+        "spanish": "vender",
+        "english": "to sell",
+        "conjugations": {},
+        "chinese": "卖"
+      },
+      {
+        "id": 115,
+        "spanish": "sufrir",
+        "english": "to suffer",
+        "conjugations": {},
+        "chinese": "遭受/受苦"
+      },
+      {
+        "id": 116,
+        "spanish": "agarrar",
+        "english": "to grab (MX freq replace coger)",
+        "conjugations": {},
+        "chinese": "拿/抓（墨西哥常替代coger）"
+      },
+      {
+        "id": 117,
+        "spanish": "importar",
+        "english": "to matter",
+        "conjugations": {},
+        "chinese": "要紧/有关系"
+      },
+      {
+        "id": 118,
+        "spanish": "dormir",
+        "english": "to sleep",
+        "conjugations": {},
+        "chinese": "睡觉"
+      },
+      {
+        "id": 119,
+        "spanish": "platicar",
+        "english": "to chat (MX)",
+        "conjugations": {},
+        "chinese": "聊天"
+      },
+      {
+        "id": 120,
+        "spanish": "mandar",
+        "english": "to send / order",
+        "conjugations": {},
+        "chinese": "派遣/命令"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "verbs",
+    "level": 3,
+    "words": [
+      {
+        "id": 121,
+        "spanish": "ocupar",
+        "english": "to need (MX colloquial) / to occupy",
+        "conjugations": {},
+        "chinese": "需要（墨口）/占用"
+      },
+      {
+        "id": 122,
+        "spanish": "preocupar",
+        "english": "to worry",
+        "conjugations": {},
+        "chinese": "担心"
+      },
+      {
+        "id": 123,
+        "spanish": "llorar",
+        "english": "to cry",
+        "conjugations": {},
+        "chinese": "哭"
+      },
+      {
+        "id": 124,
+        "spanish": "reír",
+        "english": "to laugh",
+        "conjugations": {},
+        "chinese": "笑"
+      },
+      {
+        "id": 125,
+        "spanish": "crecer",
+        "english": "to grow",
+        "conjugations": {},
+        "chinese": "生长/成长"
+      },
+      {
+        "id": 126,
+        "spanish": "romper",
+        "english": "to break",
+        "conjugations": {},
+        "chinese": "打破/弄坏"
+      },
+      {
+        "id": 127,
+        "spanish": "cortar",
+        "english": "to cut",
+        "conjugations": {},
+        "chinese": "切/割"
+      },
+      {
+        "id": 128,
+        "spanish": "quitar",
+        "english": "to remove",
+        "conjugations": {},
+        "chinese": "移开/去除"
+      },
+      {
+        "id": 129,
+        "spanish": "echar",
+        "english": "to throw / cast",
+        "conjugations": {},
+        "chinese": "扔/投掷"
+      },
+      {
+        "id": 130,
+        "spanish": "viajar",
+        "english": "to travel",
+        "conjugations": {},
+        "chinese": "旅行"
+      },
+      {
+        "id": 131,
+        "spanish": "volar",
+        "english": "to fly",
+        "conjugations": {},
+        "chinese": "飞/飞行"
+      },
+      {
+        "id": 132,
+        "spanish": "caminar",
+        "english": "to walk",
+        "conjugations": {},
+        "chinese": "走路"
+      },
+      {
+        "id": 133,
+        "spanish": "manejar",
+        "english": "to drive (MX)",
+        "conjugations": {},
+        "chinese": "开车（墨）"
+      },
+      {
+        "id": 134,
+        "spanish": "conducir",
+        "english": "to drive / conduct (formal)",
+        "conjugations": {},
+        "chinese": "驾驶/主持（正式）"
+      },
+      {
+        "id": 135,
+        "spanish": "llenar",
+        "english": "to fill",
+        "conjugations": {},
+        "chinese": "装满/填满"
+      },
+      {
+        "id": 136,
+        "spanish": "faltar",
+        "english": "to lack / be missing",
+        "conjugations": {},
+        "chinese": "缺少/缺失"
+      },
+      {
+        "id": 137,
+        "spanish": "sobrar",
+        "english": "to be left over",
+        "conjugations": {},
+        "chinese": "剩下/余下"
+      },
+      {
+        "id": 138,
+        "spanish": "bastar",
+        "english": "to be enough",
+        "conjugations": {},
+        "chinese": "足够"
+      },
+      {
+        "id": 139,
+        "spanish": "matar",
+        "english": "to kill",
+        "conjugations": {},
+        "chinese": "杀死"
+      },
+      {
+        "id": 140,
+        "spanish": "salvar",
+        "english": "to save (life)",
+        "conjugations": {},
+        "chinese": "救/挽救生命"
+      },
+      {
+        "id": 141,
+        "spanish": "guardar",
+        "english": "to keep / save (file)",
+        "conjugations": {},
+        "chinese": "保存/存储（文件）"
+      },
+      {
+        "id": 142,
+        "spanish": "ahorrar",
+        "english": "to save (money)",
+        "conjugations": {},
+        "chinese": "存钱/节省"
+      },
+      {
+        "id": 143,
+        "spanish": "gastar",
+        "english": "to spend (money)",
+        "conjugations": {},
+        "chinese": "花钱"
+      },
+      {
+        "id": 144,
+        "spanish": "cobrar",
+        "english": "to charge (money)",
+        "conjugations": {},
+        "chinese": "收费"
+      },
+      {
+        "id": 145,
+        "spanish": "deber",
+        "english": "to owe",
+        "conjugations": {},
+        "chinese": "欠"
+      },
+      {
+        "id": 146,
+        "spanish": "prometer",
+        "english": "to promise",
+        "conjugations": {},
+        "chinese": "承诺"
+      },
+      {
+        "id": 147,
+        "spanish": "jurar",
+        "english": "to swear",
+        "conjugations": {},
+        "chinese": "发誓/咒骂"
+      },
+      {
+        "id": 148,
+        "spanish": "mentir",
+        "english": "to lie",
+        "conjugations": {},
+        "chinese": "撒谎"
+      },
+      {
+        "id": 149,
+        "spanish": "esconder",
+        "english": "to hide",
+        "conjugations": {},
+        "chinese": "隐藏/躲藏"
+      },
+      {
+        "id": 150,
+        "spanish": "buscar",
+        "english": "to seek",
+        "conjugations": {},
+        "chinese": "寻找/寻求"
+      },
+      {
+        "id": 151,
+        "spanish": "enviar",
+        "english": "to send",
+        "conjugations": {},
+        "chinese": "发送/寄"
+      },
+      {
+        "id": 152,
+        "spanish": "checar",
+        "english": "to check (MX)",
+        "conjugations": {},
+        "chinese": "查看/检查"
+      },
+      {
+        "id": 153,
+        "spanish": "revisar",
+        "english": "to review",
+        "conjugations": {},
+        "chinese": "复习/审查"
+      },
+      {
+        "id": 154,
+        "spanish": "firmar",
+        "english": "to sign",
+        "conjugations": {},
+        "chinese": "签字/签署"
+      },
+      {
+        "id": 155,
+        "spanish": "llenar",
+        "english": "to fill out",
+        "conjugations": {},
+        "chinese": "填写"
+      },
+      {
+        "id": 156,
+        "spanish": "entregar",
+        "english": "to deliver / hand in",
+        "conjugations": {},
+        "chinese": "递送/提交"
+      },
+      {
+        "id": 157,
+        "spanish": "recoger",
+        "english": "to pick up",
+        "conjugations": {},
+        "chinese": "捡起/接"
+      },
+      {
+        "id": 158,
+        "spanish": "elegir",
+        "english": "to choose",
+        "conjugations": {},
+        "chinese": "选择"
+      },
+      {
+        "id": 159,
+        "spanish": "escoger",
+        "english": "to choose",
+        "conjugations": {},
+        "chinese": "选择"
+      },
+      {
+        "id": 160,
+        "spanish": "preferir",
+        "english": "to prefer",
+        "conjugations": {},
+        "chinese": "更喜欢/偏爱"
+      },
+      {
+        "id": 161,
+        "spanish": "desear",
+        "english": "to wish",
+        "conjugations": {},
+        "chinese": "希望/祝愿"
+      },
+      {
+        "id": 162,
+        "spanish": "odiar",
+        "english": "to hate",
+        "conjugations": {},
+        "chinese": "讨厌/憎恨"
+      },
+      {
+        "id": 163,
+        "spanish": "amar",
+        "english": "to love",
+        "conjugations": {},
+        "chinese": "爱/喜爱"
+      },
+      {
+        "id": 164,
+        "spanish": "besar",
+        "english": "to kiss",
+        "conjugations": {},
+        "chinese": "亲吻"
+      },
+      {
+        "id": 165,
+        "spanish": "abrazar",
+        "english": "to hug",
+        "conjugations": {},
+        "chinese": "拥抱"
+      },
+      {
+        "id": 166,
+        "spanish": "casar",
+        "english": "to marry",
+        "conjugations": {},
+        "chinese": "结婚"
+      },
+      {
+        "id": 167,
+        "spanish": "divorciar",
+        "english": "to divorce",
+        "conjugations": {},
+        "chinese": "离婚"
+      },
+      {
+        "id": 168,
+        "spanish": "nacer",
+        "english": "to be born",
+        "conjugations": {},
+        "chinese": "出生"
+      },
+      {
+        "id": 169,
+        "spanish": "cumplir",
+        "english": "to turn (age)",
+        "conjugations": {},
+        "chinese": "满……岁"
+      },
+      {
+        "id": 170,
+        "spanish": "celebrar",
+        "english": "to celebrate",
+        "conjugations": {},
+        "chinese": "庆祝"
+      },
+      {
+        "id": 171,
+        "spanish": "bailar",
+        "english": "to dance",
+        "conjugations": {},
+        "chinese": "跳舞"
+      },
+      {
+        "id": 172,
+        "spanish": "cantar",
+        "english": "to sing",
+        "conjugations": {},
+        "chinese": "唱歌"
+      },
+      {
+        "id": 173,
+        "spanish": "pintar",
+        "english": "to paint",
+        "conjugations": {},
+        "chinese": "绘画/涂漆"
+      },
+      {
+        "id": 174,
+        "spanish": "dibujar",
+        "english": "to draw",
+        "conjugations": {},
+        "chinese": "画/绘制"
+      },
+      {
+        "id": 175,
+        "spanish": "diseñar",
+        "english": "to design",
+        "conjugations": {},
+        "chinese": "设计"
+      },
+      {
+        "id": 176,
+        "spanish": "construir",
+        "english": "to build",
+        "conjugations": {},
+        "chinese": "建造"
+      },
+      {
+        "id": 177,
+        "spanish": "destruir",
+        "english": "to destroy",
+        "conjugations": {},
+        "chinese": "摧毁/毁坏"
+      },
+      {
+        "id": 178,
+        "spanish": "reparar",
+        "english": "to repair",
+        "conjugations": {},
+        "chinese": "修理"
+      },
+      {
+        "id": 179,
+        "spanish": "arreglar",
+        "english": "to fix / arrange",
+        "conjugations": {},
+        "chinese": "安排/整理"
+      },
+      {
+        "id": 180,
+        "spanish": "funcionar",
+        "english": "to work (machine)",
+        "conjugations": {},
+        "chinese": "运转"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "verbs",
+    "level": 4,
+    "words": [
+      {
+        "id": 181,
+        "spanish": "vestir",
+        "english": "to dress",
+        "conjugations": {},
+        "chinese": "穿衣/打扮"
+      },
+      {
+        "id": 182,
+        "spanish": "calzar",
+        "english": "to wear shoes",
+        "conjugations": {},
+        "chinese": "穿鞋"
+      },
+      {
+        "id": 183,
+        "spanish": "probar",
+        "english": "to try on / taste",
+        "conjugations": {},
+        "chinese": "试穿/品尝"
+      },
+      {
+        "id": 184,
+        "spanish": "quedar",
+        "english": "to stay / fit",
+        "conjugations": {},
+        "chinese": "停留/合身"
+      },
+      {
+        "id": 185,
+        "spanish": "lavar",
+        "english": "to wash",
+        "conjugations": {},
+        "chinese": "洗"
+      },
+      {
+        "id": 186,
+        "spanish": "limpiar",
+        "english": "to clean",
+        "conjugations": {},
+        "chinese": "清理/打扫"
+      },
+      {
+        "id": 187,
+        "spanish": "barrer",
+        "english": "to sweep",
+        "conjugations": {},
+        "chinese": "扫/打扫"
+      },
+      {
+        "id": 188,
+        "spanish": "cocinar",
+        "english": "to cook",
+        "conjugations": {},
+        "chinese": "做饭/烹饪"
+      },
+      {
+        "id": 189,
+        "spanish": "preparar",
+        "english": "to prepare",
+        "conjugations": {},
+        "chinese": "准备"
+      },
+      {
+        "id": 190,
+        "spanish": "desayunar",
+        "english": "to eat breakfast",
+        "conjugations": {},
+        "chinese": "吃早餐"
+      },
+      {
+        "id": 191,
+        "spanish": "cenar",
+        "english": "to eat dinner",
+        "conjugations": {},
+        "chinese": "吃晚饭"
+      },
+      {
+        "id": 192,
+        "spanish": "merendar",
+        "english": "to snack",
+        "conjugations": {},
+        "chinese": "吃零食"
+      },
+      {
+        "id": 193,
+        "spanish": "beber",
+        "english": "to drink (formal)",
+        "conjugations": {},
+        "chinese": "饮用（正式）"
+      },
+      {
+        "id": 194,
+        "spanish": "fumar",
+        "english": "to smoke",
+        "conjugations": {},
+        "chinese": "抽烟/冒烟"
+      },
+      {
+        "id": 195,
+        "spanish": "respirar",
+        "english": "to breathe",
+        "conjugations": {},
+        "chinese": "呼吸"
+      },
+      {
+        "id": 196,
+        "spanish": "toser",
+        "english": "to cough",
+        "conjugations": {},
+        "chinese": "咳嗽"
+      },
+      {
+        "id": 197,
+        "spanish": "estornudar",
+        "english": "to sneeze",
+        "conjugations": {},
+        "chinese": "打喷嚏"
+      },
+      {
+        "id": 198,
+        "spanish": "doler",
+        "english": "to hurt",
+        "conjugations": {},
+        "chinese": "伤害/使疼痛"
+      },
+      {
+        "id": 199,
+        "spanish": "curar",
+        "english": "to cure",
+        "conjugations": {},
+        "chinese": "治愈/治疗"
+      },
+      {
+        "id": 200,
+        "spanish": "cuidar",
+        "english": "to take care of",
+        "conjugations": {},
+        "chinese": "照顾/负责"
+      },
+      {
+        "id": 201,
+        "spanish": "atender",
+        "english": "to attend to",
+        "conjugations": {},
+        "chinese": "照料/处理"
+      },
+      {
+        "id": 202,
+        "spanish": "esperar",
+        "english": "to hope",
+        "conjugations": {},
+        "chinese": "希望"
+      },
+      {
+        "id": 203,
+        "spanish": "temer",
+        "english": "to fear",
+        "conjugations": {},
+        "chinese": "害怕/畏惧"
+      },
+      {
+        "id": 204,
+        "spanish": "asustar",
+        "english": "to frighten",
+        "conjugations": {},
+        "chinese": "使害怕/吓唬"
+      },
+      {
+        "id": 205,
+        "spanish": "sorprender",
+        "english": "to surprise",
+        "conjugations": {},
+        "chinese": "使惊讶"
+      },
+      {
+        "id": 206,
+        "spanish": "molestar",
+        "english": "to annoy",
+        "conjugations": {},
+        "chinese": "使烦恼/惹恼"
+      },
+      {
+        "id": 207,
+        "spanish": "enojar",
+        "english": "to anger (MX)",
+        "conjugations": {},
+        "chinese": "惹火（墨）/使生气"
+      },
+      {
+        "id": 208,
+        "spanish": "enfadar",
+        "english": "to anger",
+        "conjugations": {},
+        "chinese": "使生气/激怒"
+      },
+      {
+        "id": 209,
+        "spanish": "alegrar",
+        "english": "to gladden",
+        "conjugations": {},
+        "chinese": "使高兴/使喜悦"
+      },
+      {
+        "id": 210,
+        "spanish": "entristecer",
+        "english": "to sadden",
+        "conjugations": {},
+        "chinese": "使伤心/使难过"
+      },
+      {
+        "id": 211,
+        "spanish": "aburrir",
+        "english": "to bore",
+        "conjugations": {},
+        "chinese": "使厌烦/使无聊"
+      },
+      {
+        "id": 212,
+        "spanish": "divertir",
+        "english": "to amuse",
+        "conjugations": {},
+        "chinese": "逗乐/使开心"
+      },
+      {
+        "id": 213,
+        "spanish": "entretener",
+        "english": "to entertain",
+        "conjugations": {},
+        "chinese": "娱乐/招待"
+      },
+      {
+        "id": 214,
+        "spanish": "interesar",
+        "english": "to interest",
+        "conjugations": {},
+        "chinese": "使感兴趣"
+      },
+      {
+        "id": 215,
+        "spanish": "parecer",
+        "english": "to resemble",
+        "conjugations": {},
+        "chinese": "像/与…相似"
+      },
+      {
+        "id": 216,
+        "spanish": "soñar",
+        "english": "to dream",
+        "conjugations": {},
+        "chinese": "做梦/梦想"
+      },
+      {
+        "id": 217,
+        "spanish": "despertar",
+        "english": "to wake up",
+        "conjugations": {},
+        "chinese": "醒来/叫醒"
+      },
+      {
+        "id": 218,
+        "spanish": "levantar",
+        "english": "to get up",
+        "conjugations": {},
+        "chinese": "起床/起来"
+      },
+      {
+        "id": 219,
+        "spanish": "acostar",
+        "english": "to go to bed",
+        "conjugations": {},
+        "chinese": "上床睡觉"
+      },
+      {
+        "id": 220,
+        "spanish": "bañar",
+        "english": "to bathe",
+        "conjugations": {},
+        "chinese": "洗澡/沐浴"
+      },
+      {
+        "id": 221,
+        "spanish": "duchar",
+        "english": "to shower",
+        "conjugations": {},
+        "chinese": "淋浴/冲澡"
+      },
+      {
+        "id": 222,
+        "spanish": "peinar",
+        "english": "to comb",
+        "conjugations": {},
+        "chinese": "梳"
+      },
+      {
+        "id": 223,
+        "spanish": "maquillar",
+        "english": "to put on makeup",
+        "conjugations": {},
+        "chinese": "化妆"
+      },
+      {
+        "id": 224,
+        "spanish": "afeitar",
+        "english": "to shave",
+        "conjugations": {},
+        "chinese": "刮胡子/剃毛"
+      },
+      {
+        "id": 225,
+        "spanish": "rasurar",
+        "english": "to shave (MX)",
+        "conjugations": {},
+        "chinese": "刮胡子（墨）/剃毛"
+      },
+      {
+        "id": 226,
+        "spanish": "secar",
+        "english": "to dry",
+        "conjugations": {},
+        "chinese": "弄干/变干"
+      },
+      {
+        "id": 227,
+        "spanish": "mojar",
+        "english": "to wet",
+        "conjugations": {},
+        "chinese": "弄湿"
+      },
+      {
+        "id": 228,
+        "spanish": "manchar",
+        "english": "to stain",
+        "conjugations": {},
+        "chinese": "弄脏/染污"
+      },
+      {
+        "id": 229,
+        "spanish": "ensuciar",
+        "english": "to dirty",
+        "conjugations": {},
+        "chinese": "弄脏"
+      },
+      {
+        "id": 230,
+        "spanish": "romper",
+        "english": "to break up (relationship)",
+        "conjugations": {},
+        "chinese": "分手"
+      },
+      {
+        "id": 231,
+        "spanish": "regresar",
+        "english": "to return / go back (MX common)",
+        "conjugations": {},
+        "chinese": "回去/返回（墨西哥常用）"
+      },
+      {
+        "id": 232,
+        "spanish": "devolver",
+        "english": "to return (item)",
+        "conjugations": {},
+        "chinese": "归还"
+      },
+      {
+        "id": 233,
+        "spanish": "prestar",
+        "english": "to lend",
+        "conjugations": {},
+        "chinese": "借出"
+      },
+      {
+        "id": 234,
+        "spanish": "pedir prestado",
+        "english": "to borrow",
+        "conjugations": {},
+        "chinese": "借"
+      },
+      {
+        "id": 235,
+        "spanish": "regalar",
+        "english": "to give (gift)",
+        "conjugations": {},
+        "chinese": "赠送/送礼"
+      },
+      {
+        "id": 236,
+        "spanish": "recibir",
+        "english": "to receive",
+        "conjugations": {},
+        "chinese": "收到/接收"
+      },
+      {
+        "id": 237,
+        "spanish": "perder",
+        "english": "to miss (bus/train)",
+        "conjugations": {},
+        "chinese": "错过（公交/火车）"
+      },
+      {
+        "id": 238,
+        "spanish": "tomar",
+        "english": "to take (bus)",
+        "conjugations": {},
+        "chinese": "乘（公交车）"
+      },
+      {
+        "id": 239,
+        "spanish": "subir",
+        "english": "to get on",
+        "conjugations": {},
+        "chinese": "上车/登上"
+      },
+      {
+        "id": 240,
+        "spanish": "bajar",
+        "english": "to get off",
+        "conjugations": {},
+        "chinese": "下车/离开"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "verbs",
+    "level": 5,
+    "words": [
+      {
+        "id": 241,
+        "spanish": "rentar",
+        "english": "to rent (MX)",
+        "conjugations": {},
+        "chinese": "租（墨西哥）"
+      },
+      {
+        "id": 242,
+        "spanish": "alquilar",
+        "english": "to rent (formal)",
+        "conjugations": {},
+        "chinese": "租赁（正式）"
+      },
+      {
+        "id": 243,
+        "spanish": "vender",
+        "english": "to sell",
+        "conjugations": {},
+        "chinese": "卖"
+      },
+      {
+        "id": 244,
+        "spanish": "comprar",
+        "english": "to buy",
+        "conjugations": {},
+        "chinese": "买"
+      },
+      {
+        "id": 245,
+        "spanish": "negociar",
+        "english": "to negotiate",
+        "conjugations": {},
+        "chinese": "谈判/协商"
+      },
+      {
+        "id": 246,
+        "spanish": "acordar",
+        "english": "to agree upon",
+        "conjugations": {},
+        "chinese": "商定/达成一致"
+      },
+      {
+        "id": 247,
+        "spanish": "discutir",
+        "english": "to argue / discuss",
+        "conjugations": {},
+        "chinese": "争论/讨论"
+      },
+      {
+        "id": 248,
+        "spanish": "pelear",
+        "english": "to fight",
+        "conjugations": {},
+        "chinese": "打架/战斗"
+      },
+      {
+        "id": 249,
+        "spanish": "ganar",
+        "english": "to beat (game)",
+        "conjugations": {},
+        "chinese": "打败（游戏）/通关"
+      },
+      {
+        "id": 250,
+        "spanish": "perder",
+        "english": "to lose (game)",
+        "conjugations": {},
+        "chinese": "输（比赛）"
+      },
+      {
+        "id": 251,
+        "spanish": "empatar",
+        "english": "to tie (score)",
+        "conjugations": {},
+        "chinese": "打平/战平"
+      },
+      {
+        "id": 252,
+        "spanish": "apostar",
+        "english": "to bet",
+        "conjugations": {},
+        "chinese": "打赌"
+      },
+      {
+        "id": 253,
+        "spanish": "adivinar",
+        "english": "to guess",
+        "conjugations": {},
+        "chinese": "猜测"
+      },
+      {
+        "id": 254,
+        "spanish": "imaginar",
+        "english": "to imagine",
+        "conjugations": {},
+        "chinese": "想象"
+      },
+      {
+        "id": 255,
+        "spanish": "proponer",
+        "english": "to propose",
+        "conjugations": {},
+        "chinese": "提议/提出"
+      },
+      {
+        "id": 256,
+        "spanish": "sugerir",
+        "english": "to suggest",
+        "conjugations": {},
+        "chinese": "建议/暗示"
+      },
+      {
+        "id": 257,
+        "spanish": "recomendar",
+        "english": "to recommend",
+        "conjugations": {},
+        "chinese": "推荐"
+      },
+      {
+        "id": 258,
+        "spanish": "aconsejar",
+        "english": "to advise",
+        "conjugations": {},
+        "chinese": "建议/劝告"
+      },
+      {
+        "id": 259,
+        "spanish": "advertir",
+        "english": "to warn",
+        "conjugations": {},
+        "chinese": "警告"
+      },
+      {
+        "id": 260,
+        "spanish": "amenazar",
+        "english": "to threaten",
+        "conjugations": {},
+        "chinese": "威胁"
+      },
+      {
+        "id": 261,
+        "spanish": "atacar",
+        "english": "to attack",
+        "conjugations": {},
+        "chinese": "攻击/袭击"
+      },
+      {
+        "id": 262,
+        "spanish": "defender",
+        "english": "to defend",
+        "conjugations": {},
+        "chinese": "保护/辩护"
+      },
+      {
+        "id": 263,
+        "spanish": "proteger",
+        "english": "to protect",
+        "conjugations": {},
+        "chinese": "保护"
+      },
+      {
+        "id": 264,
+        "spanish": "disparar",
+        "english": "to shoot",
+        "conjugations": {},
+        "chinese": "射击/拍摄"
+      },
+      {
+        "id": 265,
+        "spanish": "herir",
+        "english": "to wound",
+        "conjugations": {},
+        "chinese": "使受伤"
+      },
+      {
+        "id": 266,
+        "spanish": "lastimar",
+        "english": "to hurt / injure",
+        "conjugations": {},
+        "chinese": "伤害/弄伤"
+      },
+      {
+        "id": 267,
+        "spanish": "sangrar",
+        "english": "to bleed",
+        "conjugations": {},
+        "chinese": "流血"
+      },
+      {
+        "id": 268,
+        "spanish": "operar",
+        "english": "to operate (medical/machine)",
+        "conjugations": {},
+        "chinese": "操作（机器）/动手术"
+      },
+      {
+        "id": 269,
+        "spanish": "recetar",
+        "english": "to prescribe",
+        "conjugations": {},
+        "chinese": "开处方"
+      },
+      {
+        "id": 270,
+        "spanish": "inyectar",
+        "english": "to inject",
+        "conjugations": {},
+        "chinese": "注射"
+      },
+      {
+        "id": 271,
+        "spanish": "tragar",
+        "english": "to swallow",
+        "conjugations": {},
+        "chinese": "吞下"
+      },
+      {
+        "id": 272,
+        "spanish": "morder",
+        "english": "to bite",
+        "conjugations": {},
+        "chinese": "咬"
+      },
+      {
+        "id": 273,
+        "spanish": "masticar",
+        "english": "to chew",
+        "conjugations": {},
+        "chinese": "咀嚼"
+      },
+      {
+        "id": 274,
+        "spanish": "chupar",
+        "english": "to suck",
+        "conjugations": {},
+        "chinese": "吸/吮"
+      },
+      {
+        "id": 275,
+        "spanish": "lamer",
+        "english": "to lick",
+        "conjugations": {},
+        "chinese": "舔"
+      },
+      {
+        "id": 276,
+        "spanish": "oler",
+        "english": "to smell",
+        "conjugations": {},
+        "chinese": "闻/有气味"
+      },
+      {
+        "id": 277,
+        "spanish": "tocar",
+        "english": "to knock (door)",
+        "conjugations": {},
+        "chinese": "敲（门）"
+      },
+      {
+        "id": 278,
+        "spanish": "sonar",
+        "english": "to sound / ring",
+        "conjugations": {},
+        "chinese": "听起来/响铃"
+      },
+      {
+        "id": 279,
+        "spanish": "gritar",
+        "english": "to shout",
+        "conjugations": {},
+        "chinese": "喊叫/大喊"
+      },
+      {
+        "id": 280,
+        "spanish": "susurrar",
+        "english": "to whisper",
+        "conjugations": {},
+        "chinese": "低声说/耳语"
+      },
+      {
+        "id": 281,
+        "spanish": "callar",
+        "english": "to silence",
+        "conjugations": {},
+        "chinese": "使安静/压制"
+      },
+      {
+        "id": 282,
+        "spanish": "apagar",
+        "english": "to turn off",
+        "conjugations": {},
+        "chinese": "关掉"
+      },
+      {
+        "id": 283,
+        "spanish": "encender",
+        "english": "to turn on",
+        "conjugations": {},
+        "chinese": "打开"
+      },
+      {
+        "id": 284,
+        "spanish": "prender",
+        "english": "to turn on (MX)",
+        "conjugations": {},
+        "chinese": "打开（墨西哥用法）"
+      },
+      {
+        "id": 285,
+        "spanish": "descomponer",
+        "english": "to break down (machine)",
+        "conjugations": {},
+        "chinese": "出故障/坏掉"
+      },
+      {
+        "id": 286,
+        "spanish": "componer",
+        "english": "to fix (MX)",
+        "conjugations": {},
+        "chinese": "修理/弄好"
+      },
+      {
+        "id": 287,
+        "spanish": "quemar",
+        "english": "to burn",
+        "conjugations": {},
+        "chinese": "燃烧/烧伤"
+      },
+      {
+        "id": 288,
+        "spanish": "congelar",
+        "english": "to freeze",
+        "conjugations": {},
+        "chinese": "冷冻/结冰"
+      },
+      {
+        "id": 289,
+        "spanish": "derretir",
+        "english": "to melt",
+        "conjugations": {},
+        "chinese": "融化"
+      },
+      {
+        "id": 290,
+        "spanish": "hervir",
+        "english": "to boil",
+        "conjugations": {},
+        "chinese": "煮沸/烧开"
+      },
+      {
+        "id": 291,
+        "spanish": "freír",
+        "english": "to fry",
+        "conjugations": {},
+        "chinese": "油炸/煎"
+      },
+      {
+        "id": 292,
+        "spanish": "asar",
+        "english": "to roast / grill",
+        "conjugations": {},
+        "chinese": "烤/烧烤"
+      },
+      {
+        "id": 293,
+        "spanish": "hornear",
+        "english": "to bake",
+        "conjugations": {},
+        "chinese": "烘烤"
+      },
+      {
+        "id": 294,
+        "spanish": "mezclar",
+        "english": "to mix",
+        "conjugations": {},
+        "chinese": "混合"
+      },
+      {
+        "id": 295,
+        "spanish": "batir",
+        "english": "to beat / whip",
+        "conjugations": {},
+        "chinese": "打/鞭打"
+      },
+      {
+        "id": 296,
+        "spanish": "picar",
+        "english": "to chop / sting",
+        "conjugations": {},
+        "chinese": "砍/蜇"
+      },
+      {
+        "id": 297,
+        "spanish": "pelar",
+        "english": "to peel",
+        "conjugations": {},
+        "chinese": "削皮/剥皮"
+      },
+      {
+        "id": 298,
+        "spanish": "pesar",
+        "english": "to weigh",
+        "conjugations": {},
+        "chinese": "称重/重达"
+      },
+      {
+        "id": 299,
+        "spanish": "medir",
+        "english": "to measure",
+        "conjugations": {},
+        "chinese": "测量"
+      },
+      {
+        "id": 300,
+        "spanish": "calcular",
+        "english": "to calculate",
+        "conjugations": {},
+        "chinese": "计算"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "verbs",
+    "level": 6,
+    "words": [
+      {
+        "id": 301,
+        "spanish": "chambear",
+        "english": "to work (MX slang)",
+        "conjugations": {},
+        "chinese": "管用（墨西哥俚语）"
+      },
+      {
+        "id": 302,
+        "spanish": "jalar",
+        "english": "to work/function (MX)",
+        "conjugations": {},
+        "chinese": "起作用/运作（墨西哥）"
+      },
+      {
+        "id": 303,
+        "spanish": "latir",
+        "english": "to beat (heart) / to have a hunch",
+        "conjugations": {},
+        "chinese": "跳动（心脏）/有预感"
+      },
+      {
+        "id": 304,
+        "spanish": "aguantar",
+        "english": "to endure / tolerate",
+        "conjugations": {},
+        "chinese": "忍受/容忍"
+      },
+      {
+        "id": 305,
+        "spanish": "soportar",
+        "english": "to tolerate (formal)",
+        "conjugations": {},
+        "chinese": "容许/容忍（正式）"
+      },
+      {
+        "id": 306,
+        "spanish": "caer bien",
+        "english": "to like (a person)",
+        "conjugations": {},
+        "chinese": "喜欢（某人）"
+      },
+      {
+        "id": 307,
+        "spanish": "caer mal",
+        "english": "to dislike (a person)",
+        "conjugations": {},
+        "chinese": "不喜欢（某人）"
+      },
+      {
+        "id": 308,
+        "spanish": "extrañar",
+        "english": "to miss (someone)",
+        "conjugations": {},
+        "chinese": "想念（某人）"
+      },
+      {
+        "id": 309,
+        "spanish": "echar de menos",
+        "english": "to miss (less common in MX)",
+        "conjugations": {},
+        "chinese": "想念（墨较少用）"
+      },
+      {
+        "id": 310,
+        "spanish": "burlarse",
+        "english": "to make fun of",
+        "conjugations": {},
+        "chinese": "取笑/嘲笑"
+      },
+      {
+        "id": 311,
+        "spanish": "bromear",
+        "english": "to joke",
+        "conjugations": {},
+        "chinese": "开玩笑"
+      },
+      {
+        "id": 312,
+        "spanish": "engañar",
+        "english": "to deceive / cheat",
+        "conjugations": {},
+        "chinese": "欺骗/作弊"
+      },
+      {
+        "id": 313,
+        "spanish": "traicionar",
+        "english": "to betray",
+        "conjugations": {},
+        "chinese": "背叛"
+      },
+      {
+        "id": 314,
+        "spanish": "confiar",
+        "english": "to trust",
+        "conjugations": {},
+        "chinese": "信任"
+      },
+      {
+        "id": 315,
+        "spanish": "desconfiar",
+        "english": "to mistrust",
+        "conjugations": {},
+        "chinese": "不信任/怀疑"
+      },
+      {
+        "id": 316,
+        "spanish": "juzgar",
+        "english": "to judge",
+        "conjugations": {},
+        "chinese": "判断/审判"
+      },
+      {
+        "id": 317,
+        "spanish": "criticar",
+        "english": "to criticize",
+        "conjugations": {},
+        "chinese": "批评"
+      },
+      {
+        "id": 318,
+        "spanish": "culpar",
+        "english": "to blame",
+        "conjugations": {},
+        "chinese": "责怪"
+      },
+      {
+        "id": 319,
+        "spanish": "disculpar",
+        "english": "to forgive / excuse",
+        "conjugations": {},
+        "chinese": "原谅/宽恕"
+      },
+      {
+        "id": 320,
+        "spanish": "perdonar",
+        "english": "to forgive",
+        "conjugations": {},
+        "chinese": "原谅"
+      },
+      {
+        "id": 321,
+        "spanish": "agradecer",
+        "english": "to thank",
+        "conjugations": {},
+        "chinese": "感谢"
+      },
+      {
+        "id": 322,
+        "spanish": "merecer",
+        "english": "to deserve",
+        "conjugations": {},
+        "chinese": "值得"
+      },
+      {
+        "id": 323,
+        "spanish": "pertenecer",
+        "english": "to belong",
+        "conjugations": {},
+        "chinese": "属于"
+      },
+      {
+        "id": 324,
+        "spanish": "poseer",
+        "english": "to possess",
+        "conjugations": {},
+        "chinese": "拥有"
+      },
+      {
+        "id": 325,
+        "spanish": "carecer",
+        "english": "to lack",
+        "conjugations": {},
+        "chinese": "缺乏"
+      },
+      {
+        "id": 326,
+        "spanish": "admirar",
+        "english": "to admire",
+        "conjugations": {},
+        "chinese": "钦佩/欣赏"
+      },
+      {
+        "id": 327,
+        "spanish": "envidiar",
+        "english": "to envy",
+        "conjugations": {},
+        "chinese": "嫉妒/羡慕"
+      },
+      {
+        "id": 328,
+        "spanish": "sospechar",
+        "english": "to suspect",
+        "conjugations": {},
+        "chinese": "怀疑"
+      },
+      {
+        "id": 329,
+        "spanish": "investigar",
+        "english": "to investigate",
+        "conjugations": {},
+        "chinese": "调查"
+      },
+      {
+        "id": 330,
+        "spanish": "analizar",
+        "english": "to analyze",
+        "conjugations": {},
+        "chinese": "分析"
+      },
+      {
+        "id": 331,
+        "spanish": "comparar",
+        "english": "to compare",
+        "conjugations": {},
+        "chinese": "比较"
+      },
+      {
+        "id": 332,
+        "spanish": "distinguir",
+        "english": "to distinguish",
+        "conjugations": {},
+        "chinese": "区分/辨别"
+      },
+      {
+        "id": 333,
+        "spanish": "confundir",
+        "english": "to confuse",
+        "conjugations": {},
+        "chinese": "使困惑/混淆"
+      },
+      {
+        "id": 334,
+        "spanish": "equivocarse",
+        "english": "to make a mistake",
+        "conjugations": {},
+        "chinese": "犯错"
+      },
+      {
+        "id": 335,
+        "spanish": "acertar",
+        "english": "to get right",
+        "conjugations": {},
+        "chinese": "做对/弄明白"
+      },
+      {
+        "id": 336,
+        "spanish": "aprobar",
+        "english": "to pass (exam) / approve",
+        "conjugations": {},
+        "chinese": "通过（考试）/批准"
+      },
+      {
+        "id": 337,
+        "spanish": "reprobar",
+        "english": "to fail (exam) (MX)",
+        "conjugations": {},
+        "chinese": "考试不及格（墨）"
+      },
+      {
+        "id": 338,
+        "spanish": "suspender",
+        "english": "to suspend / fail (exam)",
+        "conjugations": {},
+        "chinese": "暂停/挂科（考试）"
+      },
+      {
+        "id": 339,
+        "spanish": "inscribir",
+        "english": "to enroll",
+        "conjugations": {},
+        "chinese": "注册/入学"
+      },
+      {
+        "id": 340,
+        "spanish": "registrar",
+        "english": "to register",
+        "conjugations": {},
+        "chinese": "登记/注册"
+      },
+      {
+        "id": 341,
+        "spanish": "borrar",
+        "english": "to erase",
+        "conjugations": {},
+        "chinese": "擦掉/删除"
+      },
+      {
+        "id": 342,
+        "spanish": "tachar",
+        "english": "to cross out",
+        "conjugations": {},
+        "chinese": "划掉"
+      },
+      {
+        "id": 343,
+        "spanish": "subrayar",
+        "english": "to underline",
+        "conjugations": {},
+        "chinese": "在……下画线"
+      },
+      {
+        "id": 344,
+        "spanish": "imprimir",
+        "english": "to print",
+        "conjugations": {},
+        "chinese": "打印/印刷"
+      },
+      {
+        "id": 345,
+        "spanish": "publicar",
+        "english": "to publish",
+        "conjugations": {},
+        "chinese": "出版/发布"
+      },
+      {
+        "id": 346,
+        "spanish": "anunciar",
+        "english": "to announce",
+        "conjugations": {},
+        "chinese": "宣布/公告"
+      },
+      {
+        "id": 347,
+        "spanish": "declarar",
+        "english": "to declare",
+        "conjugations": {},
+        "chinese": "宣布/声明"
+      },
+      {
+        "id": 348,
+        "spanish": "manifestar",
+        "english": "to manifest / demonstrate",
+        "conjugations": {},
+        "chinese": "表现/展示"
+      },
+      {
+        "id": 349,
+        "spanish": "protestar",
+        "english": "to protest",
+        "conjugations": {},
+        "chinese": "抗议"
+      },
+      {
+        "id": 350,
+        "spanish": "votar",
+        "english": "to vote",
+        "conjugations": {},
+        "chinese": "投票"
+      },
+      {
+        "id": 351,
+        "spanish": "elegir",
+        "english": "to elect",
+        "conjugations": {},
+        "chinese": "选举/选出"
+      },
+      {
+        "id": 352,
+        "spanish": "gobernar",
+        "english": "to govern",
+        "conjugations": {},
+        "chinese": "治理/统治"
+      },
+      {
+        "id": 353,
+        "spanish": "obedecer",
+        "english": "to obey",
+        "conjugations": {},
+        "chinese": "服从/听从"
+      },
+      {
+        "id": 354,
+        "spanish": "desobedecer",
+        "english": "to disobey",
+        "conjugations": {},
+        "chinese": "不服从/违抗"
+      },
+      {
+        "id": 355,
+        "spanish": "castigar",
+        "english": "to punish",
+        "conjugations": {},
+        "chinese": "惩罚"
+      },
+      {
+        "id": 356,
+        "spanish": "premiar",
+        "english": "to reward",
+        "conjugations": {},
+        "chinese": "奖励"
+      },
+      {
+        "id": 357,
+        "spanish": "multar",
+        "english": "to fine",
+        "conjugations": {},
+        "chinese": "罚款"
+      },
+      {
+        "id": 358,
+        "spanish": "detener",
+        "english": "to detain / stop",
+        "conjugations": {},
+        "chinese": "扣留/阻止"
+      },
+      {
+        "id": 359,
+        "spanish": "arrestar",
+        "english": "to arrest",
+        "conjugations": {},
+        "chinese": "逮捕"
+      },
+      {
+        "id": 360,
+        "spanish": "liberar",
+        "english": "to free",
+        "conjugations": {},
+        "chinese": "释放/使自由"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "verbs",
+    "level": 7,
+    "words": [
+      {
+        "id": 361,
+        "spanish": "solicitar",
+        "english": "to request",
+        "conjugations": {},
+        "chinese": "请求"
+      },
+      {
+        "id": 362,
+        "spanish": "requerir",
+        "english": "to require",
+        "conjugations": {},
+        "chinese": "需要/要求"
+      },
+      {
+        "id": 363,
+        "spanish": "exigir",
+        "english": "to demand",
+        "conjugations": {},
+        "chinese": "要求"
+      },
+      {
+        "id": 364,
+        "spanish": "conceder",
+        "english": "to grant",
+        "conjugations": {},
+        "chinese": "授予/准予"
+      },
+      {
+        "id": 365,
+        "spanish": "negar",
+        "english": "to deny",
+        "conjugations": {},
+        "chinese": "否认"
+      },
+      {
+        "id": 366,
+        "spanish": "rechazar",
+        "english": "to reject",
+        "conjugations": {},
+        "chinese": "拒绝"
+      },
+      {
+        "id": 367,
+        "spanish": "admitir",
+        "english": "to admit",
+        "conjugations": {},
+        "chinese": "承认/准许进入"
+      },
+      {
+        "id": 368,
+        "spanish": "confesar",
+        "english": "to confess",
+        "conjugations": {},
+        "chinese": "承认/坦白"
+      },
+      {
+        "id": 369,
+        "spanish": "declarar",
+        "english": "to testify / declare",
+        "conjugations": {},
+        "chinese": "作证/声明"
+      },
+      {
+        "id": 370,
+        "spanish": "demostrar",
+        "english": "to demonstrate",
+        "conjugations": {},
+        "chinese": "展示/证明"
+      },
+      {
+        "id": 371,
+        "spanish": "probar",
+        "english": "to prove",
+        "conjugations": {},
+        "chinese": "证明"
+      },
+      {
+        "id": 372,
+        "spanish": "convencer",
+        "english": "to convince",
+        "conjugations": {},
+        "chinese": "说服"
+      },
+      {
+        "id": 373,
+        "spanish": "persuadir",
+        "english": "to persuade",
+        "conjugations": {},
+        "chinese": "说服"
+      },
+      {
+        "id": 374,
+        "spanish": "influir",
+        "english": "to influence",
+        "conjugations": {},
+        "chinese": "影响"
+      },
+      {
+        "id": 375,
+        "spanish": "inspirar",
+        "english": "to inspire",
+        "conjugations": {},
+        "chinese": "激励/启发"
+      },
+      {
+        "id": 376,
+        "spanish": "impresionar",
+        "english": "to impress",
+        "conjugations": {},
+        "chinese": "给人深刻印象/使佩服"
+      },
+      {
+        "id": 377,
+        "spanish": "decepcionar",
+        "english": "to disappoint",
+        "conjugations": {},
+        "chinese": "使失望"
+      },
+      {
+        "id": 378,
+        "spanish": "fracasar",
+        "english": "to fail (general)",
+        "conjugations": {},
+        "chinese": "失败"
+      },
+      {
+        "id": 379,
+        "spanish": "triunfar",
+        "english": "to triumph",
+        "conjugations": {},
+        "chinese": "获胜/成功"
+      },
+      {
+        "id": 380,
+        "spanish": "vencer",
+        "english": "to defeat / expire",
+        "conjugations": {},
+        "chinese": "击败/到期"
+      },
+      {
+        "id": 381,
+        "spanish": "competir",
+        "english": "to compete",
+        "conjugations": {},
+        "chinese": "竞争"
+      },
+      {
+        "id": 382,
+        "spanish": "colaborar",
+        "english": "to collaborate",
+        "conjugations": {},
+        "chinese": "合作"
+      },
+      {
+        "id": 383,
+        "spanish": "cooperar",
+        "english": "to cooperate",
+        "conjugations": {},
+        "chinese": "合作"
+      },
+      {
+        "id": 384,
+        "spanish": "participar",
+        "english": "to participate",
+        "conjugations": {},
+        "chinese": "参加/参与"
+      },
+      {
+        "id": 385,
+        "spanish": "asistir",
+        "english": "to attend / assist",
+        "conjugations": {},
+        "chinese": "出席/协助"
+      },
+      {
+        "id": 386,
+        "spanish": "organizar",
+        "english": "to organize",
+        "conjugations": {},
+        "chinese": "组织/安排"
+      },
+      {
+        "id": 387,
+        "spanish": "planear",
+        "english": "to plan",
+        "conjugations": {},
+        "chinese": "计划"
+      },
+      {
+        "id": 388,
+        "spanish": "programar",
+        "english": "to schedule / program",
+        "conjugations": {},
+        "chinese": "安排/编程"
+      },
+      {
+        "id": 389,
+        "spanish": "cancelar",
+        "english": "to cancel",
+        "conjugations": {},
+        "chinese": "取消"
+      },
+      {
+        "id": 390,
+        "spanish": "posponer",
+        "english": "to postpone",
+        "conjugations": {},
+        "chinese": "推迟/延期"
+      },
+      {
+        "id": 391,
+        "spanish": "reservar",
+        "english": "to reserve",
+        "conjugations": {},
+        "chinese": "预订/保留"
+      },
+      {
+        "id": 392,
+        "spanish": "confirmar",
+        "english": "to confirm",
+        "conjugations": {},
+        "chinese": "确认"
+      },
+      {
+        "id": 393,
+        "spanish": "asegurar",
+        "english": "to assure / insure",
+        "conjugations": {},
+        "chinese": "保证/投保"
+      },
+      {
+        "id": 394,
+        "spanish": "garantizar",
+        "english": "to guarantee",
+        "conjugations": {},
+        "chinese": "保证/担保"
+      },
+      {
+        "id": 395,
+        "spanish": "certificar",
+        "english": "to certify",
+        "conjugations": {},
+        "chinese": "证明/认证"
+      },
+      {
+        "id": 396,
+        "spanish": "autorizar",
+        "english": "to authorize",
+        "conjugations": {},
+        "chinese": "授权/批准"
+      },
+      {
+        "id": 397,
+        "spanish": "prohibir",
+        "english": "to prohibit",
+        "conjugations": {},
+        "chinese": "禁止"
+      },
+      {
+        "id": 398,
+        "spanish": "impedir",
+        "english": "to prevent / impede",
+        "conjugations": {},
+        "chinese": "阻止/妨碍"
+      },
+      {
+        "id": 399,
+        "spanish": "permitir",
+        "english": "to allow",
+        "conjugations": {},
+        "chinese": "允许"
+      },
+      {
+        "id": 400,
+        "spanish": "obligar",
+        "english": "to oblige / force",
+        "conjugations": {},
+        "chinese": "迫使/强迫"
+      },
+      {
+        "id": 401,
+        "spanish": "forzar",
+        "english": "to force",
+        "conjugations": {},
+        "chinese": "强迫"
+      },
+      {
+        "id": 402,
+        "spanish": "empujar",
+        "english": "to push",
+        "conjugations": {},
+        "chinese": "推"
+      },
+      {
+        "id": 403,
+        "spanish": "tirar",
+        "english": "to pull / drop",
+        "conjugations": {},
+        "chinese": "拉/拔下"
+      },
+      {
+        "id": 404,
+        "spanish": "arrastrar",
+        "english": "to drag",
+        "conjugations": {},
+        "chinese": "拖/拉"
+      },
+      {
+        "id": 405,
+        "spanish": "cargar",
+        "english": "to carry / charge",
+        "conjugations": {},
+        "chinese": "携带/装载"
+      },
+      {
+        "id": 406,
+        "spanish": "descargar",
+        "english": "to download / unload",
+        "conjugations": {},
+        "chinese": "下载/卸下"
+      },
+      {
+        "id": 407,
+        "spanish": "instalar",
+        "english": "to install",
+        "conjugations": {},
+        "chinese": "安装"
+      },
+      {
+        "id": 408,
+        "spanish": "configurar",
+        "english": "to configure",
+        "conjugations": {},
+        "chinese": "配置/设定"
+      },
+      {
+        "id": 409,
+        "spanish": "conectar",
+        "english": "to connect",
+        "conjugations": {},
+        "chinese": "连接"
+      },
+      {
+        "id": 410,
+        "spanish": "desconectar",
+        "english": "to disconnect",
+        "conjugations": {},
+        "chinese": "断开连接"
+      },
+      {
+        "id": 411,
+        "spanish": "enchufar",
+        "english": "to plug in",
+        "conjugations": {},
+        "chinese": "插上电源/插入"
+      },
+      {
+        "id": 412,
+        "spanish": "desenchufar",
+        "english": "to unplug",
+        "conjugations": {},
+        "chinese": "拔掉插头"
+      },
+      {
+        "id": 413,
+        "spanish": "grabar",
+        "english": "to record",
+        "conjugations": {},
+        "chinese": "记录/录制"
+      },
+      {
+        "id": 414,
+        "spanish": "filmar",
+        "english": "to film",
+        "conjugations": {},
+        "chinese": "拍摄/拍电影"
+      },
+      {
+        "id": 415,
+        "spanish": "editar",
+        "english": "to edit",
+        "conjugations": {},
+        "chinese": "编辑"
+      },
+      {
+        "id": 416,
+        "spanish": "publicar",
+        "english": "to post / publish",
+        "conjugations": {},
+        "chinese": "发布/刊登"
+      },
+      {
+        "id": 417,
+        "spanish": "compartir",
+        "english": "to share",
+        "conjugations": {},
+        "chinese": "分享/分担"
+      },
+      {
+        "id": 418,
+        "spanish": "seguir",
+        "english": "to follow (social media)",
+        "conjugations": {},
+        "chinese": "关注"
+      },
+      {
+        "id": 419,
+        "spanish": "bloquear",
+        "english": "to block",
+        "conjugations": {},
+        "chinese": "阻挡/堵住"
+      },
+      {
+        "id": 420,
+        "spanish": "eliminar",
+        "english": "to delete",
+        "conjugations": {},
+        "chinese": "删除"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "verbs",
+    "level": 8,
+    "words": [
+      {
+        "id": 421,
+        "spanish": "aventar",
+        "english": "to throw (MX colloquial)",
+        "conjugations": {},
+        "chinese": "扔（墨西哥口语）"
+      },
+      {
+        "id": 422,
+        "spanish": "lanzar",
+        "english": "to launch / throw",
+        "conjugations": {},
+        "chinese": "发射/扔"
+      },
+      {
+        "id": 423,
+        "spanish": "arrojar",
+        "english": "to fling / throw up",
+        "conjugations": {},
+        "chinese": "扔出/呕吐"
+      },
+      {
+        "id": 424,
+        "spanish": "brincar",
+        "english": "to jump (MX)",
+        "conjugations": {},
+        "chinese": "跳/蹦（墨）"
+      },
+      {
+        "id": 425,
+        "spanish": "saltar",
+        "english": "to jump",
+        "conjugations": {},
+        "chinese": "跳/跳跃"
+      },
+      {
+        "id": 426,
+        "spanish": "trepar",
+        "english": "to climb",
+        "conjugations": {},
+        "chinese": "攀爬"
+      },
+      {
+        "id": 427,
+        "spanish": "escalar",
+        "english": "to climb (mountain)",
+        "conjugations": {},
+        "chinese": "爬山"
+      },
+      {
+        "id": 428,
+        "spanish": "nadar",
+        "english": "to swim",
+        "conjugations": {},
+        "chinese": "游泳"
+      },
+      {
+        "id": 429,
+        "spanish": "bucear",
+        "english": "to dive",
+        "conjugations": {},
+        "chinese": "跳水/潜水"
+      },
+      {
+        "id": 430,
+        "spanish": "navegar",
+        "english": "to sail / browse web",
+        "conjugations": {},
+        "chinese": "航行/上网浏览"
+      },
+      {
+        "id": 431,
+        "spanish": "pescar",
+        "english": "to fish",
+        "conjugations": {},
+        "chinese": "钓鱼"
+      },
+      {
+        "id": 432,
+        "spanish": "cazar",
+        "english": "to hunt",
+        "conjugations": {},
+        "chinese": "打猎/猎捕"
+      },
+      {
+        "id": 433,
+        "spanish": "explorar",
+        "english": "to explore",
+        "conjugations": {},
+        "chinese": "探索"
+      },
+      {
+        "id": 434,
+        "spanish": "acampar",
+        "english": "to camp",
+        "conjugations": {},
+        "chinese": "露营"
+      },
+      {
+        "id": 435,
+        "spanish": "pasear",
+        "english": "to go for a walk",
+        "conjugations": {},
+        "chinese": "散步/去走走"
+      },
+      {
+        "id": 436,
+        "spanish": "recorrer",
+        "english": "to tour / travel through",
+        "conjugations": {},
+        "chinese": "游历/游览"
+      },
+      {
+        "id": 437,
+        "spanish": "atravesar",
+        "english": "to cross / go through",
+        "conjugations": {},
+        "chinese": "穿过/经过"
+      },
+      {
+        "id": 438,
+        "spanish": "cruzar",
+        "english": "to cross",
+        "conjugations": {},
+        "chinese": "穿过/越过"
+      },
+      {
+        "id": 439,
+        "spanish": "girar",
+        "english": "to turn / spin",
+        "conjugations": {},
+        "chinese": "转动/旋转"
+      },
+      {
+        "id": 440,
+        "spanish": "doblar",
+        "english": "to turn / fold",
+        "conjugations": {},
+        "chinese": "转动/折叠"
+      },
+      {
+        "id": 441,
+        "spanish": "rodear",
+        "english": "to surround",
+        "conjugations": {},
+        "chinese": "包围/围绕"
+      },
+      {
+        "id": 442,
+        "spanish": "acercar",
+        "english": "to bring closer",
+        "conjugations": {},
+        "chinese": "拉近/使更接近"
+      },
+      {
+        "id": 443,
+        "spanish": "alejar",
+        "english": "to move away",
+        "conjugations": {},
+        "chinese": "搬走/迁走"
+      },
+      {
+        "id": 444,
+        "spanish": "moverse",
+        "english": "to move oneself",
+        "conjugations": {},
+        "chinese": "移动身体/挪动"
+      },
+      {
+        "id": 445,
+        "spanish": "mudarse",
+        "english": "to move house",
+        "conjugations": {},
+        "chinese": "搬家"
+      },
+      {
+        "id": 446,
+        "spanish": "trasladar",
+        "english": "to transfer",
+        "conjugations": {},
+        "chinese": "转移/转乘"
+      },
+      {
+        "id": 447,
+        "spanish": "transportar",
+        "english": "to transport",
+        "conjugations": {},
+        "chinese": "运输/运送"
+      },
+      {
+        "id": 448,
+        "spanish": "importar",
+        "english": "to import",
+        "conjugations": {},
+        "chinese": "进口"
+      },
+      {
+        "id": 449,
+        "spanish": "exportar",
+        "english": "to export",
+        "conjugations": {},
+        "chinese": "出口"
+      },
+      {
+        "id": 450,
+        "spanish": "fabricar",
+        "english": "to manufacture",
+        "conjugations": {},
+        "chinese": "制造/生产"
+      },
+      {
+        "id": 451,
+        "spanish": "elaborar",
+        "english": "to produce / elaborate",
+        "conjugations": {},
+        "chinese": "生产/制作"
+      },
+      {
+        "id": 452,
+        "spanish": "desarrollar",
+        "english": "to develop",
+        "conjugations": {},
+        "chinese": "发展/开发"
+      },
+      {
+        "id": 453,
+        "spanish": "inventar",
+        "english": "to invent",
+        "conjugations": {},
+        "chinese": "发明"
+      },
+      {
+        "id": 454,
+        "spanish": "patentar",
+        "english": "to patent",
+        "conjugations": {},
+        "chinese": "取得专利/申请专利"
+      },
+      {
+        "id": 455,
+        "spanish": "registrar",
+        "english": "to register",
+        "conjugations": {},
+        "chinese": "登记/注册"
+      },
+      {
+        "id": 456,
+        "spanish": "archivar",
+        "english": "to file / archive",
+        "conjugations": {},
+        "chinese": "归档/存档"
+      },
+      {
+        "id": 457,
+        "spanish": "clasificar",
+        "english": "to classify",
+        "conjugations": {},
+        "chinese": "分类"
+      },
+      {
+        "id": 458,
+        "spanish": "ordenar",
+        "english": "to order / tidy",
+        "conjugations": {},
+        "chinese": "整理/收拾"
+      },
+      {
+        "id": 459,
+        "spanish": "organizar",
+        "english": "to organize",
+        "conjugations": {},
+        "chinese": "组织/安排"
+      },
+      {
+        "id": 460,
+        "spanish": "administrar",
+        "english": "to manage / administer",
+        "conjugations": {},
+        "chinese": "管理/经营"
+      },
+      {
+        "id": 461,
+        "spanish": "dirigir",
+        "english": "to manage / direct",
+        "conjugations": {},
+        "chinese": "管理/领导"
+      },
+      {
+        "id": 462,
+        "spanish": "controlar",
+        "english": "to control",
+        "conjugations": {},
+        "chinese": "控制"
+      },
+      {
+        "id": 463,
+        "spanish": "supervisar",
+        "english": "to supervise",
+        "conjugations": {},
+        "chinese": "监督/管理"
+      },
+      {
+        "id": 464,
+        "spanish": "coordinar",
+        "english": "to coordinate",
+        "conjugations": {},
+        "chinese": "协调"
+      },
+      {
+        "id": 465,
+        "spanish": "liderar",
+        "english": "to lead",
+        "conjugations": {},
+        "chinese": "领导/带领"
+      },
+      {
+        "id": 466,
+        "spanish": "encabezar",
+        "english": "to head / lead",
+        "conjugations": {},
+        "chinese": "带领/领导"
+      },
+      {
+        "id": 467,
+        "spanish": "representar",
+        "english": "to represent",
+        "conjugations": {},
+        "chinese": "代表"
+      },
+      {
+        "id": 468,
+        "spanish": "sustituir",
+        "english": "to substitute",
+        "conjugations": {},
+        "chinese": "代替/替换"
+      },
+      {
+        "id": 469,
+        "spanish": "reemplazar",
+        "english": "to replace",
+        "conjugations": {},
+        "chinese": "替换/取代"
+      },
+      {
+        "id": 470,
+        "spanish": "intercambiar",
+        "english": "to exchange",
+        "conjugations": {},
+        "chinese": "交换/兑换"
+      },
+      {
+        "id": 471,
+        "spanish": "devolver",
+        "english": "to give back",
+        "conjugations": {},
+        "chinese": "归还/还回去"
+      },
+      {
+        "id": 472,
+        "spanish": "recuperar",
+        "english": "to recover",
+        "conjugations": {},
+        "chinese": "恢复/康复"
+      },
+      {
+        "id": 473,
+        "spanish": "rescatar",
+        "english": "to rescue",
+        "conjugations": {},
+        "chinese": "救援/营救"
+      },
+      {
+        "id": 474,
+        "spanish": "proteger",
+        "english": "to protect",
+        "conjugations": {},
+        "chinese": "保护"
+      },
+      {
+        "id": 475,
+        "spanish": "vigilar",
+        "english": "to watch / guard",
+        "conjugations": {},
+        "chinese": "看守/守卫"
+      },
+      {
+        "id": 476,
+        "spanish": "observar",
+        "english": "to observe",
+        "conjugations": {},
+        "chinese": "观察"
+      },
+      {
+        "id": 477,
+        "spanish": "examinar",
+        "english": "to examine",
+        "conjugations": {},
+        "chinese": "检查/审查"
+      },
+      {
+        "id": 478,
+        "spanish": "evaluar",
+        "english": "to evaluate",
+        "conjugations": {},
+        "chinese": "评估"
+      },
+      {
+        "id": 479,
+        "spanish": "valorar",
+        "english": "to value / assess",
+        "conjugations": {},
+        "chinese": "重视/评估"
+      },
+      {
+        "id": 480,
+        "spanish": "apreciar",
+        "english": "to appreciate",
+        "conjugations": {},
+        "chinese": "欣赏/感激"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "verbs",
+    "level": 9,
+    "words": [
+      {
+        "id": 481,
+        "spanish": "definir",
+        "english": "to define",
+        "conjugations": {},
+        "chinese": "定义"
+      },
+      {
+        "id": 482,
+        "spanish": "significar",
+        "english": "to mean",
+        "conjugations": {},
+        "chinese": "意思是/意味着"
+      },
+      {
+        "id": 483,
+        "spanish": "traducir",
+        "english": "to translate",
+        "conjugations": {},
+        "chinese": "翻译"
+      },
+      {
+        "id": 484,
+        "spanish": "interpretar",
+        "english": "to interpret",
+        "conjugations": {},
+        "chinese": "解释/口译"
+      },
+      {
+        "id": 485,
+        "spanish": "pronunciar",
+        "english": "to pronounce",
+        "conjugations": {},
+        "chinese": "发音"
+      },
+      {
+        "id": 486,
+        "spanish": "deletrear",
+        "english": "to spell",
+        "conjugations": {},
+        "chinese": "拼写"
+      },
+      {
+        "id": 487,
+        "spanish": "resumir",
+        "english": "to summarize",
+        "conjugations": {},
+        "chinese": "总结/概括"
+      },
+      {
+        "id": 488,
+        "spanish": "concluir",
+        "english": "to conclude",
+        "conjugations": {},
+        "chinese": "得出结论/结束"
+      },
+      {
+        "id": 489,
+        "spanish": "deducir",
+        "english": "to deduce",
+        "conjugations": {},
+        "chinese": "推断"
+      },
+      {
+        "id": 490,
+        "spanish": "inferir",
+        "english": "to infer",
+        "conjugations": {},
+        "chinese": "推断"
+      },
+      {
+        "id": 491,
+        "spanish": "implicar",
+        "english": "to imply",
+        "conjugations": {},
+        "chinese": "暗示/意味着"
+      },
+      {
+        "id": 492,
+        "spanish": "suponer",
+        "english": "to assume",
+        "conjugations": {},
+        "chinese": "假定/承担"
+      },
+      {
+        "id": 493,
+        "spanish": "presumir",
+        "english": "to show off / presume",
+        "conjugations": {},
+        "chinese": "炫耀/自以为是"
+      },
+      {
+        "id": 494,
+        "spanish": "fingir",
+        "english": "to pretend",
+        "conjugations": {},
+        "chinese": "假装"
+      },
+      {
+        "id": 495,
+        "spanish": "simular",
+        "english": "to simulate",
+        "conjugations": {},
+        "chinese": "模拟/假装"
+      },
+      {
+        "id": 496,
+        "spanish": "actuar",
+        "english": "to act",
+        "conjugations": {},
+        "chinese": "行动/表演"
+      },
+      {
+        "id": 497,
+        "spanish": "imitar",
+        "english": "to imitate",
+        "conjugations": {},
+        "chinese": "模仿"
+      },
+      {
+        "id": 498,
+        "spanish": "copiar",
+        "english": "to copy",
+        "conjugations": {},
+        "chinese": "复制/抄写"
+      },
+      {
+        "id": 499,
+        "spanish": "pegar",
+        "english": "to paste / hit",
+        "conjugations": {},
+        "chinese": "粘贴/击打"
+      },
+      {
+        "id": 500,
+        "spanish": "cortar",
+        "english": "to cut",
+        "conjugations": {},
+        "chinese": "切/割"
+      },
+      {
+        "id": 501,
+        "spanish": "adjuntar",
+        "english": "to attach",
+        "conjugations": {},
+        "chinese": "附上/连接"
+      },
+      {
+        "id": 502,
+        "spanish": "vincular",
+        "english": "to link",
+        "conjugations": {},
+        "chinese": "连接/关联"
+      },
+      {
+        "id": 503,
+        "spanish": "relacionar",
+        "english": "to relate",
+        "conjugations": {},
+        "chinese": "涉及/讲述"
+      },
+      {
+        "id": 504,
+        "spanish": "asociar",
+        "english": "to associate",
+        "conjugations": {},
+        "chinese": "联系/交往"
+      },
+      {
+        "id": 505,
+        "spanish": "combinar",
+        "english": "to combine",
+        "conjugations": {},
+        "chinese": "结合/组合"
+      },
+      {
+        "id": 506,
+        "spanish": "unir",
+        "english": "to unite / join",
+        "conjugations": {},
+        "chinese": "联合/加入"
+      },
+      {
+        "id": 507,
+        "spanish": "separar",
+        "english": "to separate",
+        "conjugations": {},
+        "chinese": "分开/分离"
+      },
+      {
+        "id": 508,
+        "spanish": "dividir",
+        "english": "to divide",
+        "conjugations": {},
+        "chinese": "分开/划分"
+      },
+      {
+        "id": 509,
+        "spanish": "repartir",
+        "english": "to distribute",
+        "conjugations": {},
+        "chinese": "分发/分配"
+      },
+      {
+        "id": 510,
+        "spanish": "compartir",
+        "english": "to share",
+        "conjugations": {},
+        "chinese": "分享/分担"
+      },
+      {
+        "id": 511,
+        "spanish": "consumir",
+        "english": "to consume",
+        "conjugations": {},
+        "chinese": "消耗/消费"
+      },
+      {
+        "id": 512,
+        "spanish": "agotar",
+        "english": "to exhaust / use up",
+        "conjugations": {},
+        "chinese": "耗尽/用完"
+      },
+      {
+        "id": 513,
+        "spanish": "renovar",
+        "english": "to renew",
+        "conjugations": {},
+        "chinese": "更新/续期"
+      },
+      {
+        "id": 514,
+        "spanish": "reciclar",
+        "english": "to recycle",
+        "conjugations": {},
+        "chinese": "回收利用"
+      },
+      {
+        "id": 515,
+        "spanish": "contaminar",
+        "english": "to pollute",
+        "conjugations": {},
+        "chinese": "污染"
+      },
+      {
+        "id": 516,
+        "spanish": "conservar",
+        "english": "to conserve",
+        "conjugations": {},
+        "chinese": "保存/保护"
+      },
+      {
+        "id": 517,
+        "spanish": "preservar",
+        "english": "to preserve",
+        "conjugations": {},
+        "chinese": "保存/保护"
+      },
+      {
+        "id": 518,
+        "spanish": "destacar",
+        "english": "to highlight / stand out",
+        "conjugations": {},
+        "chinese": "突出/显眼"
+      },
+      {
+        "id": 519,
+        "spanish": "resaltar",
+        "english": "to highlight",
+        "conjugations": {},
+        "chinese": "强调/突出"
+      },
+      {
+        "id": 520,
+        "spanish": "enfatizar",
+        "english": "to emphasize",
+        "conjugations": {},
+        "chinese": "强调"
+      },
+      {
+        "id": 521,
+        "spanish": "exagerar",
+        "english": "to exaggerate",
+        "conjugations": {},
+        "chinese": "夸张/夸大"
+      },
+      {
+        "id": 522,
+        "spanish": "minimizar",
+        "english": "to minimize",
+        "conjugations": {},
+        "chinese": "最小化/尽量减少"
+      },
+      {
+        "id": 523,
+        "spanish": "aumentar",
+        "english": "to increase",
+        "conjugations": {},
+        "chinese": "增加/提高"
+      },
+      {
+        "id": 524,
+        "spanish": "incrementar",
+        "english": "to increment",
+        "conjugations": {},
+        "chinese": "递增/增加"
+      },
+      {
+        "id": 525,
+        "spanish": "disminuir",
+        "english": "to decrease",
+        "conjugations": {},
+        "chinese": "减少/降低"
+      },
+      {
+        "id": 526,
+        "spanish": "reducir",
+        "english": "to reduce",
+        "conjugations": {},
+        "chinese": "减少"
+      },
+      {
+        "id": 527,
+        "spanish": "bajar",
+        "english": "to download / go down",
+        "conjugations": {},
+        "chinese": "下载/下降"
+      },
+      {
+        "id": 528,
+        "spanish": "subir",
+        "english": "to upload / go up",
+        "conjugations": {},
+        "chinese": "上传/上升"
+      },
+      {
+        "id": 529,
+        "spanish": "actualizar",
+        "english": "to update",
+        "conjugations": {},
+        "chinese": "更新"
+      },
+      {
+        "id": 530,
+        "spanish": "mejorar",
+        "english": "to improve",
+        "conjugations": {},
+        "chinese": "改善/提高"
+      },
+      {
+        "id": 531,
+        "spanish": "empeorar",
+        "english": "to worsen",
+        "conjugations": {},
+        "chinese": "恶化"
+      },
+      {
+        "id": 532,
+        "spanish": "optimizar",
+        "english": "to optimize",
+        "conjugations": {},
+        "chinese": "优化"
+      },
+      {
+        "id": 533,
+        "spanish": "adaptar",
+        "english": "to adapt",
+        "conjugations": {},
+        "chinese": "适应/改编"
+      },
+      {
+        "id": 534,
+        "spanish": "ajustar",
+        "english": "to adjust",
+        "conjugations": {},
+        "chinese": "调整/适应"
+      },
+      {
+        "id": 535,
+        "spanish": "modificar",
+        "english": "to modify",
+        "conjugations": {},
+        "chinese": "修改"
+      },
+      {
+        "id": 536,
+        "spanish": "transformar",
+        "english": "to transform",
+        "conjugations": {},
+        "chinese": "改变/转变"
+      },
+      {
+        "id": 537,
+        "spanish": "evolucionar",
+        "english": "to evolve",
+        "conjugations": {},
+        "chinese": "进化/发展"
+      },
+      {
+        "id": 538,
+        "spanish": "variar",
+        "english": "to vary",
+        "conjugations": {},
+        "chinese": "变化"
+      },
+      {
+        "id": 539,
+        "spanish": "alternar",
+        "english": "to alternate",
+        "conjugations": {},
+        "chinese": "交替/轮流"
+      },
+      {
+        "id": 540,
+        "spanish": "sustituir",
+        "english": "to substitute",
+        "conjugations": {},
+        "chinese": "代替/替换"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "verbs",
+    "level": 10,
+    "words": [
+      {
+        "id": 541,
+        "spanish": "anticipar",
+        "english": "to anticipate",
+        "conjugations": {},
+        "chinese": "预料/期待"
+      },
+      {
+        "id": 542,
+        "spanish": "prever",
+        "english": "to foresee",
+        "conjugations": {},
+        "chinese": "预见"
+      },
+      {
+        "id": 543,
+        "spanish": "predecir",
+        "english": "to predict",
+        "conjugations": {},
+        "chinese": "预测"
+      },
+      {
+        "id": 544,
+        "spanish": "adivinar",
+        "english": "to guess",
+        "conjugations": {},
+        "chinese": "猜测"
+      },
+      {
+        "id": 545,
+        "spanish": "estimar",
+        "english": "to estimate / esteem",
+        "conjugations": {},
+        "chinese": "估计/尊重"
+      },
+      {
+        "id": 546,
+        "spanish": "apreciar",
+        "english": "to appreciate",
+        "conjugations": {},
+        "chinese": "欣赏/感激"
+      },
+      {
+        "id": 547,
+        "spanish": "despreciar",
+        "english": "to despise",
+        "conjugations": {},
+        "chinese": "鄙视"
+      },
+      {
+        "id": 548,
+        "spanish": "ignorar",
+        "english": "to ignore",
+        "conjugations": {},
+        "chinese": "忽视/不理"
+      },
+      {
+        "id": 549,
+        "spanish": "omitir",
+        "english": "to omit",
+        "conjugations": {},
+        "chinese": "省略/遗漏"
+      },
+      {
+        "id": 550,
+        "spanish": "excluir",
+        "english": "to exclude",
+        "conjugations": {},
+        "chinese": "排除"
+      },
+      {
+        "id": 551,
+        "spanish": "integrar",
+        "english": "to integrate",
+        "conjugations": {},
+        "chinese": "整合/融入"
+      },
+      {
+        "id": 552,
+        "spanish": "incorporar",
+        "english": "to incorporate",
+        "conjugations": {},
+        "chinese": "纳入/合并"
+      },
+      {
+        "id": 553,
+        "spanish": "involucrar",
+        "english": "to involve",
+        "conjugations": {},
+        "chinese": "涉及/使参与"
+      },
+      {
+        "id": 554,
+        "spanish": "implicar",
+        "english": "to implicate",
+        "conjugations": {},
+        "chinese": "牵连/暗示有牵涉"
+      },
+      {
+        "id": 555,
+        "spanish": "comprometer",
+        "english": "to compromise / commit",
+        "conjugations": {},
+        "chinese": "妥协/承诺"
+      },
+      {
+        "id": 556,
+        "spanish": "arriesgar",
+        "english": "to risk",
+        "conjugations": {},
+        "chinese": "冒险/冒…的风险"
+      },
+      {
+        "id": 557,
+        "spanish": "atreverse",
+        "english": "to dare",
+        "conjugations": {},
+        "chinese": "敢"
+      },
+      {
+        "id": 558,
+        "spanish": "desafiar",
+        "english": "to challenge",
+        "conjugations": {},
+        "chinese": "挑战"
+      },
+      {
+        "id": 559,
+        "spanish": "provocar",
+        "english": "to provoke",
+        "conjugations": {},
+        "chinese": "挑衅/激怒"
+      },
+      {
+        "id": 560,
+        "spanish": "causar",
+        "english": "to cause",
+        "conjugations": {},
+        "chinese": "导致/引起"
+      },
+      {
+        "id": 561,
+        "spanish": "originar",
+        "english": "to originate",
+        "conjugations": {},
+        "chinese": "起源于/发源"
+      },
+      {
+        "id": 562,
+        "spanish": "generar",
+        "english": "to generate",
+        "conjugations": {},
+        "chinese": "产生/生成"
+      },
+      {
+        "id": 563,
+        "spanish": "fomentar",
+        "english": "to foment / encourage",
+        "conjugations": {},
+        "chinese": "煽动/鼓励"
+      },
+      {
+        "id": 564,
+        "spanish": "promover",
+        "english": "to promote",
+        "conjugations": {},
+        "chinese": "促进/推广"
+      },
+      {
+        "id": 565,
+        "spanish": "impulsar",
+        "english": "to propel / boost",
+        "conjugations": {},
+        "chinese": "推动/促进"
+      },
+      {
+        "id": 566,
+        "spanish": "estimular",
+        "english": "to stimulate",
+        "conjugations": {},
+        "chinese": "刺激/激发"
+      },
+      {
+        "id": 567,
+        "spanish": "motivar",
+        "english": "to motivate",
+        "conjugations": {},
+        "chinese": "激励/促使"
+      },
+      {
+        "id": 568,
+        "spanish": "animar",
+        "english": "to cheer up",
+        "conjugations": {},
+        "chinese": "振作起来/使高兴"
+      },
+      {
+        "id": 569,
+        "spanish": "desanimar",
+        "english": "to discourage",
+        "conjugations": {},
+        "chinese": "使气馁/劝阻"
+      },
+      {
+        "id": 570,
+        "spanish": "frustrar",
+        "english": "to frustrate",
+        "conjugations": {},
+        "chinese": "使沮丧/挫败"
+      },
+      {
+        "id": 571,
+        "spanish": "satisfacer",
+        "english": "to satisfy",
+        "conjugations": {},
+        "chinese": "满足/使满意"
+      },
+      {
+        "id": 572,
+        "spanish": "complacer",
+        "english": "to please",
+        "conjugations": {},
+        "chinese": "使高兴/取悦"
+      },
+      {
+        "id": 573,
+        "spanish": "agradar",
+        "english": "to please",
+        "conjugations": {},
+        "chinese": "使高兴/取悦"
+      },
+      {
+        "id": 574,
+        "spanish": "encantar",
+        "english": "to enchant / love",
+        "conjugations": {},
+        "chinese": "使着迷/喜爱"
+      },
+      {
+        "id": 575,
+        "spanish": "fascinar",
+        "english": "to fascinate",
+        "conjugations": {},
+        "chinese": "使着迷/迷住"
+      },
+      {
+        "id": 576,
+        "spanish": "atraer",
+        "english": "to attract",
+        "conjugations": {},
+        "chinese": "吸引"
+      },
+      {
+        "id": 577,
+        "spanish": "seducir",
+        "english": "to seduce",
+        "conjugations": {},
+        "chinese": "勾引/引诱"
+      },
+      {
+        "id": 578,
+        "spanish": "conquistar",
+        "english": "to conquer",
+        "conjugations": {},
+        "chinese": "征服"
+      },
+      {
+        "id": 579,
+        "spanish": "dominar",
+        "english": "to dominate",
+        "conjugations": {},
+        "chinese": "支配/主导"
+      },
+      {
+        "id": 580,
+        "spanish": "someter",
+        "english": "to submit / subdue",
+        "conjugations": {},
+        "chinese": "提交/制服"
+      },
+      {
+        "id": 581,
+        "spanish": "rendirse",
+        "english": "to give up / surrender",
+        "conjugations": {},
+        "chinese": "放弃/投降"
+      },
+      {
+        "id": 582,
+        "spanish": "ceder",
+        "english": "to yield",
+        "conjugations": {},
+        "chinese": "产生/屈服"
+      },
+      {
+        "id": 583,
+        "spanish": "aguantar",
+        "english": "to put up with (MX)",
+        "conjugations": {},
+        "chinese": "忍受（墨西哥）"
+      },
+      {
+        "id": 584,
+        "spanish": "tolerar",
+        "english": "to tolerate",
+        "conjugations": {},
+        "chinese": "容忍/忍受"
+      },
+      {
+        "id": 585,
+        "spanish": "respetar",
+        "english": "to respect",
+        "conjugations": {},
+        "chinese": "尊重"
+      },
+      {
+        "id": 586,
+        "spanish": "honrar",
+        "english": "to honor",
+        "conjugations": {},
+        "chinese": "尊敬/纪念"
+      },
+      {
+        "id": 587,
+        "spanish": "humillar",
+        "english": "to humiliate",
+        "conjugations": {},
+        "chinese": "羞辱"
+      },
+      {
+        "id": 588,
+        "spanish": "insultar",
+        "english": "to insult",
+        "conjugations": {},
+        "chinese": "侮辱"
+      },
+      {
+        "id": 589,
+        "spanish": "ofender",
+        "english": "to offend",
+        "conjugations": {},
+        "chinese": "冒犯/得罪"
+      },
+      {
+        "id": 590,
+        "spanish": "agredir",
+        "english": "to assault",
+        "conjugations": {},
+        "chinese": "袭击/侵犯"
+      },
+      {
+        "id": 591,
+        "spanish": "abusar",
+        "english": "to abuse",
+        "conjugations": {},
+        "chinese": "虐待/滥用"
+      },
+      {
+        "id": 592,
+        "spanish": "maltratar",
+        "english": "to mistreat",
+        "conjugations": {},
+        "chinese": "虐待/亏待"
+      },
+      {
+        "id": 593,
+        "spanish": "violar",
+        "english": "to violate",
+        "conjugations": {},
+        "chinese": "违反"
+      },
+      {
+        "id": 594,
+        "spanish": "infringir",
+        "english": "to infringe",
+        "conjugations": {},
+        "chinese": "侵犯/违犯"
+      },
+      {
+        "id": 595,
+        "spanish": "cumplir",
+        "english": "to comply",
+        "conjugations": {},
+        "chinese": "遵守/照做"
+      },
+      {
+        "id": 596,
+        "spanish": "ejecutar",
+        "english": "to execute",
+        "conjugations": {},
+        "chinese": "执行/处决"
+      },
+      {
+        "id": 597,
+        "spanish": "implementar",
+        "english": "to implement",
+        "conjugations": {},
+        "chinese": "实施/执行"
+      },
+      {
+        "id": 598,
+        "spanish": "aplicar",
+        "english": "to apply",
+        "conjugations": {},
+        "chinese": "申请/应用"
+      },
+      {
+        "id": 599,
+        "spanish": "ejercer",
+        "english": "to exercise (rights)",
+        "conjugations": {},
+        "chinese": "行使（权利）"
+      },
+      {
+        "id": 600,
+        "spanish": "practicar",
+        "english": "to practice",
+        "conjugations": {},
+        "chinese": "练习"
+      }
+    ]
+  }
+]

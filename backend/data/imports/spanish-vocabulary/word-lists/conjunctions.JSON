@@ -1,0 +1,792 @@
+[
+  {
+    "region": "MX",
+    "partOfSpeech": "conjunctions",
+    "level": 1,
+    "words": [
+      {
+        "id": 1,
+        "spanish": "y",
+        "english": "and",
+        "chinese": "和/并且"
+      },
+      {
+        "id": 2,
+        "spanish": "que",
+        "english": "that",
+        "chinese": "那/那个"
+      },
+      {
+        "id": 3,
+        "spanish": "o",
+        "english": "or",
+        "chinese": "或/或者"
+      },
+      {
+        "id": 4,
+        "spanish": "pero",
+        "english": "but",
+        "chinese": "但是/可是"
+      },
+      {
+        "id": 5,
+        "spanish": "si",
+        "english": "if",
+        "chinese": "如果"
+      },
+      {
+        "id": 6,
+        "spanish": "como",
+        "english": "like / as",
+        "chinese": "像/作为"
+      },
+      {
+        "id": 7,
+        "spanish": "cuando",
+        "english": "when",
+        "chinese": "什么时候"
+      },
+      {
+        "id": 8,
+        "spanish": "porque",
+        "english": "because",
+        "chinese": "因为"
+      },
+      {
+        "id": 9,
+        "spanish": "ni",
+        "english": "nor / neither",
+        "chinese": "也不/也没有"
+      },
+      {
+        "id": 10,
+        "spanish": "donde",
+        "english": "where",
+        "chinese": "哪里"
+      },
+      {
+        "id": 11,
+        "spanish": "así",
+        "english": "so / thus",
+        "chinese": "所以/因此"
+      },
+      {
+        "id": 12,
+        "spanish": "también",
+        "english": "also",
+        "chinese": "也"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "conjunctions",
+    "level": 2,
+    "words": [
+      {
+        "id": 13,
+        "spanish": "sino",
+        "english": "but rather",
+        "chinese": "而是"
+      },
+      {
+        "id": 14,
+        "spanish": "entonces",
+        "english": "then / so",
+        "chinese": "那么/所以"
+      },
+      {
+        "id": 15,
+        "spanish": "aunque",
+        "english": "although / even though",
+        "chinese": "虽然/尽管"
+      },
+      {
+        "id": 16,
+        "spanish": "pues",
+        "english": "well / since",
+        "chinese": "那么/既然"
+      },
+      {
+        "id": 17,
+        "spanish": "mientras",
+        "english": "while",
+        "chinese": "当……时/而"
+      },
+      {
+        "id": 18,
+        "spanish": "para",
+        "english": "in order to / for",
+        "chinese": "为了/以便"
+      },
+      {
+        "id": 19,
+        "spanish": "además",
+        "english": "besides / furthermore",
+        "chinese": "此外/而且"
+      },
+      {
+        "id": 20,
+        "spanish": "luego",
+        "english": "then / later",
+        "chinese": "然后/之后"
+      },
+      {
+        "id": 21,
+        "spanish": "así que",
+        "english": "so that / therefore",
+        "chinese": "以便/因此"
+      },
+      {
+        "id": 22,
+        "spanish": "o sea",
+        "english": "in other words / I mean",
+        "chinese": "换句话说/我是说"
+      },
+      {
+        "id": 23,
+        "spanish": "ya que",
+        "english": "since / seeing that",
+        "chinese": "既然/由于"
+      },
+      {
+        "id": 24,
+        "spanish": "antes",
+        "english": "before",
+        "chinese": "在…之前"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "conjunctions",
+    "level": 3,
+    "words": [
+      {
+        "id": 25,
+        "spanish": "sin embargo",
+        "english": "however / nevertheless",
+        "chinese": "然而/尽管如此"
+      },
+      {
+        "id": 26,
+        "spanish": "después",
+        "english": "after",
+        "chinese": "在……之后"
+      },
+      {
+        "id": 27,
+        "spanish": "incluso",
+        "english": "even",
+        "chinese": "甚至"
+      },
+      {
+        "id": 28,
+        "spanish": "tal vez",
+        "english": "maybe",
+        "chinese": "也许"
+      },
+      {
+        "id": 29,
+        "spanish": "es decir",
+        "english": "that is to say",
+        "chinese": "也就是说/换言之"
+      },
+      {
+        "id": 30,
+        "spanish": "por eso",
+        "english": "that's why / therefore",
+        "chinese": "因此/所以"
+      },
+      {
+        "id": 31,
+        "spanish": "ni siquiera",
+        "english": "not even",
+        "chinese": "甚至不"
+      },
+      {
+        "id": 32,
+        "spanish": "siquiera",
+        "english": "at least / even",
+        "chinese": "至少/甚至"
+      },
+      {
+        "id": 33,
+        "spanish": "apenas",
+        "english": "barely / as soon as",
+        "chinese": "刚一…就…/几乎不"
+      },
+      {
+        "id": 34,
+        "spanish": "en cambio",
+        "english": "on the other hand",
+        "chinese": "另一方面"
+      },
+      {
+        "id": 35,
+        "spanish": "por lo tanto",
+        "english": "therefore",
+        "chinese": "因此/所以"
+      },
+      {
+        "id": 36,
+        "spanish": "hasta",
+        "english": "until / even",
+        "chinese": "直到/甚至"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "conjunctions",
+    "level": 4,
+    "words": [
+      {
+        "id": 37,
+        "spanish": "mientras que",
+        "english": "whereas / while",
+        "chinese": "然而/而"
+      },
+      {
+        "id": 38,
+        "spanish": "puesto que",
+        "english": "since / given that",
+        "chinese": "既然/鉴于"
+      },
+      {
+        "id": 39,
+        "spanish": "si bien",
+        "english": "although / even though",
+        "chinese": "虽然/尽管"
+      },
+      {
+        "id": 40,
+        "spanish": "salvo",
+        "english": "except",
+        "chinese": "除了"
+      },
+      {
+        "id": 41,
+        "spanish": "excepto",
+        "english": "except",
+        "chinese": "除了"
+      },
+      {
+        "id": 42,
+        "spanish": "con tal de",
+        "english": "provided that / as long as",
+        "chinese": "只要/在…条件下"
+      },
+      {
+        "id": 43,
+        "spanish": "debido a",
+        "english": "due to",
+        "chinese": "由于"
+      },
+      {
+        "id": 44,
+        "spanish": "a pesar de",
+        "english": "in spite of",
+        "chinese": "尽管/虽然"
+      },
+      {
+        "id": 45,
+        "spanish": "por ejemplo",
+        "english": "for example",
+        "chinese": "例如"
+      },
+      {
+        "id": 46,
+        "spanish": "tampoco",
+        "english": "neither",
+        "chinese": "两者都不"
+      },
+      {
+        "id": 47,
+        "spanish": "aún",
+        "english": "still / yet",
+        "chinese": "还/仍然"
+      },
+      {
+        "id": 48,
+        "spanish": "aun",
+        "english": "even",
+        "chinese": "甚至"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "conjunctions",
+    "level": 5,
+    "words": [
+      {
+        "id": 49,
+        "spanish": "en cuanto",
+        "english": "as soon as",
+        "chinese": "一…就…"
+      },
+      {
+        "id": 50,
+        "spanish": "por si",
+        "english": "in case",
+        "chinese": "以防/万一"
+      },
+      {
+        "id": 51,
+        "spanish": "tan pronto como",
+        "english": "as soon as",
+        "chinese": "一…就…"
+      },
+      {
+        "id": 52,
+        "spanish": "siempre que",
+        "english": "provided that / whenever",
+        "chinese": "如果/每当"
+      },
+      {
+        "id": 53,
+        "spanish": "a menos que",
+        "english": "unless",
+        "chinese": "除非"
+      },
+      {
+        "id": 54,
+        "spanish": "para que",
+        "english": "so that (subjunctive trigger)",
+        "chinese": "以便（触发虚拟式）/为了"
+      },
+      {
+        "id": 55,
+        "spanish": "antes de que",
+        "english": "before (subjunctive trigger)",
+        "chinese": "在…之前（虚拟式）"
+      },
+      {
+        "id": 56,
+        "spanish": "después de que",
+        "english": "after (subjunctive trigger)",
+        "chinese": "在……之后（触发虚拟式）"
+      },
+      {
+        "id": 57,
+        "spanish": "conque",
+        "english": "so / so then",
+        "chinese": "所以/那么"
+      },
+      {
+        "id": 58,
+        "spanish": "ora",
+        "english": "now / whether",
+        "chinese": "现在/是否"
+      },
+      {
+        "id": 59,
+        "spanish": "sea",
+        "english": "whether / be it",
+        "chinese": "是否/不论是"
+      },
+      {
+        "id": 60,
+        "spanish": "por lo que",
+        "english": "so / which is why",
+        "chinese": "所以/这就是为什么"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "conjunctions",
+    "level": 6,
+    "words": [
+      {
+        "id": 61,
+        "spanish": "de modo que",
+        "english": "so that / in such a way",
+        "chinese": "以便/以这种方式"
+      },
+      {
+        "id": 62,
+        "spanish": "de manera que",
+        "english": "so that",
+        "chinese": "以便/为了"
+      },
+      {
+        "id": 63,
+        "spanish": "una vez que",
+        "english": "once",
+        "chinese": "一次/曾经"
+      },
+      {
+        "id": 64,
+        "spanish": "dado que",
+        "english": "given that",
+        "chinese": "鉴于/考虑到"
+      },
+      {
+        "id": 65,
+        "spanish": "visto que",
+        "english": "seeing that",
+        "chinese": "鉴于/既然"
+      },
+      {
+        "id": 66,
+        "spanish": "a fin de que",
+        "english": "in order that",
+        "chinese": "为了使/以便"
+      },
+      {
+        "id": 67,
+        "spanish": "a no ser que",
+        "english": "unless",
+        "chinese": "除非"
+      },
+      {
+        "id": 68,
+        "spanish": "por más que",
+        "english": "no matter how much",
+        "chinese": "无论多少"
+      },
+      {
+        "id": 69,
+        "spanish": "en caso de que",
+        "english": "in case",
+        "chinese": "以防/万一"
+      },
+      {
+        "id": 70,
+        "spanish": "como si",
+        "english": "as if",
+        "chinese": "仿佛/好像"
+      },
+      {
+        "id": 71,
+        "spanish": "no obstante",
+        "english": "however / notwithstanding",
+        "chinese": "然而/虽然如此"
+      },
+      {
+        "id": 72,
+        "spanish": "por el contrario",
+        "english": "on the contrary",
+        "chinese": "相反"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "conjunctions",
+    "level": 7,
+    "words": [
+      {
+        "id": 73,
+        "spanish": "al contrario",
+        "english": "on the contrary",
+        "chinese": "相反"
+      },
+      {
+        "id": 74,
+        "spanish": "más bien",
+        "english": "rather",
+        "chinese": "相当/宁可"
+      },
+      {
+        "id": 75,
+        "spanish": "e",
+        "english": "and (before 'i' sound)",
+        "chinese": "和（用于i音前）"
+      },
+      {
+        "id": 76,
+        "spanish": "u",
+        "english": "or (before 'o' sound)",
+        "chinese": "或（用于'o'音前）"
+      },
+      {
+        "id": 77,
+        "spanish": "siquiera",
+        "english": "even if / at least",
+        "chinese": "即使/至少"
+      },
+      {
+        "id": 78,
+        "spanish": "bien... bien...",
+        "english": "either... or...",
+        "chinese": "要么……要么……"
+      },
+      {
+        "id": 79,
+        "spanish": "ya... ya...",
+        "english": "now... now...",
+        "chinese": "一会儿……一会儿……"
+      },
+      {
+        "id": 80,
+        "spanish": "sea... sea...",
+        "english": "whether... or...",
+        "chinese": "是……还是……"
+      },
+      {
+        "id": 81,
+        "spanish": "sino que",
+        "english": "but rather (introduces clause)",
+        "chinese": "而是说/而是"
+      },
+      {
+        "id": 82,
+        "spanish": "a saber",
+        "english": "namely",
+        "chinese": "即/也就是"
+      },
+      {
+        "id": 83,
+        "spanish": "esto es",
+        "english": "that is",
+        "chinese": "也就是说/即"
+      },
+      {
+        "id": 84,
+        "spanish": "mejor dicho",
+        "english": "or rather / better said",
+        "chinese": "或者更确切地说"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "conjunctions",
+    "level": 8,
+    "words": [
+      {
+        "id": 85,
+        "spanish": "ahora bien",
+        "english": "however / having said that",
+        "chinese": "不过/话虽如此"
+      },
+      {
+        "id": 86,
+        "spanish": "con todo",
+        "english": "nevertheless / even so",
+        "chinese": "然而/即便如此"
+      },
+      {
+        "id": 87,
+        "spanish": "de todos modos",
+        "english": "anyway",
+        "chinese": "不管怎样/反正"
+      },
+      {
+        "id": 88,
+        "spanish": "de todas formas",
+        "english": "in any case",
+        "chinese": "无论如何/反正"
+      },
+      {
+        "id": 89,
+        "spanish": "en cualquier caso",
+        "english": "in any case",
+        "chinese": "无论如何/反正"
+      },
+      {
+        "id": 90,
+        "spanish": "por consiguiente",
+        "english": "consequently",
+        "chinese": "因此"
+      },
+      {
+        "id": 91,
+        "spanish": "asimismo",
+        "english": "likewise",
+        "chinese": "同样地/也"
+      },
+      {
+        "id": 92,
+        "spanish": "igualmente",
+        "english": "equally / likewise",
+        "chinese": "同样地/也"
+      },
+      {
+        "id": 93,
+        "spanish": "encima",
+        "english": "on top of that / to boot",
+        "chinese": "此外/而且"
+      },
+      {
+        "id": 94,
+        "spanish": "aparte",
+        "english": "apart from / besides",
+        "chinese": "除……之外/此外"
+      },
+      {
+        "id": 95,
+        "spanish": "siquiera",
+        "english": "even",
+        "chinese": "甚至"
+      },
+      {
+        "id": 96,
+        "spanish": "luego que",
+        "english": "as soon as",
+        "chinese": "一…就…"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "conjunctions",
+    "level": 9,
+    "words": [
+      {
+        "id": 97,
+        "spanish": "a condición de que",
+        "english": "on condition that",
+        "chinese": "条件是/只要"
+      },
+      {
+        "id": 98,
+        "spanish": "en el supuesto de que",
+        "english": "assuming that",
+        "chinese": "假如/假设"
+      },
+      {
+        "id": 99,
+        "spanish": "con tal de que",
+        "english": "provided that",
+        "chinese": "如果/只要"
+      },
+      {
+        "id": 100,
+        "spanish": "siempre y cuando",
+        "english": "provided that / as long as",
+        "chinese": "只要/在…条件下"
+      },
+      {
+        "id": 101,
+        "spanish": "aun cuando",
+        "english": "even when",
+        "chinese": "即使在……的时候"
+      },
+      {
+        "id": 102,
+        "spanish": "así como",
+        "english": "just as / as well as",
+        "chinese": "正如/以及"
+      },
+      {
+        "id": 103,
+        "spanish": "por mucho que",
+        "english": "no matter how much",
+        "chinese": "无论多少"
+      },
+      {
+        "id": 104,
+        "spanish": "por muy... que...",
+        "english": "no matter how...",
+        "chinese": "无论如何…"
+      },
+      {
+        "id": 105,
+        "spanish": "con objeto de que",
+        "english": "with the purpose of",
+        "chinese": "为了/以……为目的"
+      },
+      {
+        "id": 106,
+        "spanish": "de suerte que",
+        "english": "so that",
+        "chinese": "以便/为了"
+      },
+      {
+        "id": 107,
+        "spanish": "de forma que",
+        "english": "so that",
+        "chinese": "以便/为了"
+      },
+      {
+        "id": 108,
+        "spanish": "cuanto más... más...",
+        "english": "the more... the more...",
+        "chinese": "越…越…"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "conjunctions",
+    "level": 10,
+    "words": [
+      {
+        "id": 109,
+        "spanish": "a medida que",
+        "english": "as / to the extent that",
+        "chinese": "像/就……而言"
+      },
+      {
+        "id": 110,
+        "spanish": "conforme",
+        "english": "as / according to",
+        "chinese": "按照/根据"
+      },
+      {
+        "id": 111,
+        "spanish": "según",
+        "english": "as / according to",
+        "chinese": "按照/根据"
+      },
+      {
+        "id": 112,
+        "spanish": "a fuerza de",
+        "english": "by dint of",
+        "chinese": "凭借/靠"
+      },
+      {
+        "id": 113,
+        "spanish": "de ahí que",
+        "english": "hence / that's why",
+        "chinese": "因此/所以"
+      },
+      {
+        "id": 114,
+        "spanish": "mal que",
+        "english": "although / even if",
+        "chinese": "虽然/即使"
+      },
+      {
+        "id": 115,
+        "spanish": "ya que",
+        "english": "since",
+        "chinese": "自从/因为"
+      },
+      {
+        "id": 116,
+        "spanish": "bien que",
+        "english": "although (literary)",
+        "chinese": "虽然/尽管（书面）"
+      },
+      {
+        "id": 117,
+        "spanish": "máxime",
+        "english": "especially since",
+        "chinese": "尤其因为"
+      },
+      {
+        "id": 118,
+        "spanish": "amen de",
+        "english": "besides / in addition to",
+        "chinese": "除了……之外/加上"
+      },
+      {
+        "id": 119,
+        "spanish": "so pena de",
+        "english": "under penalty of",
+        "chinese": "以……为处罚/违者受……处罚"
+      },
+      {
+        "id": 120,
+        "spanish": "quiera... o no...",
+        "english": "whether... or not",
+        "chinese": "是否……/不管……与否"
+      }
+    ]
+  }
+]

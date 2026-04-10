@@ -1,0 +1,1395 @@
+[
+  {
+    "region": "MX",
+    "partOfSpeech": "survival",
+    "level": 0,
+    "words": [
+      {
+        "id": 1,
+        "spanish": "hola",
+        "english": "hello",
+        "category": "greeting",
+        "chinese": "你好"
+      },
+      {
+        "id": 2,
+        "spanish": "buenos días",
+        "english": "good morning",
+        "category": "greeting",
+        "chinese": "早上好"
+      },
+      {
+        "id": 3,
+        "spanish": "buenas tardes",
+        "english": "good afternoon",
+        "category": "greeting",
+        "chinese": "下午好"
+      },
+      {
+        "id": 4,
+        "spanish": "buenas noches",
+        "english": "good evening / good night",
+        "category": "greeting",
+        "chinese": "晚上好/晚安"
+      },
+      {
+        "id": 5,
+        "spanish": "¿qué onda?",
+        "english": "what's up? (casual MX)",
+        "category": "greeting",
+        "chinese": "怎么了/近来怎样（墨西哥口语）"
+      },
+      {
+        "id": 6,
+        "spanish": "¿cómo estás?",
+        "english": "how are you? (informal)",
+        "category": "greeting",
+        "chinese": "你好吗？"
+      },
+      {
+        "id": 7,
+        "spanish": "¿cómo está?",
+        "english": "how are you? (formal)",
+        "category": "greeting",
+        "chinese": "您好吗？"
+      },
+      {
+        "id": 8,
+        "spanish": "mande",
+        "english": "what? / tell me (polite MX)",
+        "category": "greeting",
+        "chinese": "什么？/请说（墨西哥敬语）"
+      },
+      {
+        "id": 9,
+        "spanish": "adiós",
+        "english": "goodbye",
+        "category": "farewell",
+        "chinese": "再见"
+      },
+      {
+        "id": 10,
+        "spanish": "hasta luego",
+        "english": "see you later",
+        "category": "farewell",
+        "chinese": "回头见/待会儿见"
+      },
+      {
+        "id": 11,
+        "spanish": "hasta mañana",
+        "english": "see you tomorrow",
+        "category": "farewell",
+        "chinese": "明天见"
+      },
+      {
+        "id": 12,
+        "spanish": " chau",
+        "english": "bye (casual)",
+        "category": "farewell",
+        "chinese": "拜拜"
+      },
+      {
+        "id": 13,
+        "spanish": "por favor",
+        "english": "please",
+        "category": "survival_phrase",
+        "chinese": "请"
+      },
+      {
+        "id": 14,
+        "spanish": "gracias",
+        "english": "thank you",
+        "category": "survival_phrase",
+        "chinese": "谢谢"
+      },
+      {
+        "id": 15,
+        "spanish": "muchas gracias",
+        "english": "thank you very much",
+        "category": "survival_phrase",
+        "chinese": "非常感谢/多谢"
+      },
+      {
+        "id": 16,
+        "spanish": "de nada",
+        "english": "you're welcome",
+        "category": "survival_phrase",
+        "chinese": "不客气"
+      },
+      {
+        "id": 17,
+        "spanish": "disculpe",
+        "english": "excuse me (formal)",
+        "category": "survival_phrase",
+        "chinese": "劳驾/对不起"
+      },
+      {
+        "id": 18,
+        "spanish": "disculpa",
+        "english": "excuse me (informal)",
+        "category": "survival_phrase",
+        "chinese": "不好意思"
+      },
+      {
+        "id": 19,
+        "spanish": "perdón",
+        "english": "sorry",
+        "category": "survival_phrase",
+        "chinese": "对不起/抱歉"
+      },
+      {
+        "id": 20,
+        "spanish": "no hablo español",
+        "english": "I don't speak Spanish",
+        "category": "survival_phrase",
+        "chinese": "我不会说西班牙语"
+      },
+      {
+        "id": 21,
+        "spanish": "¿hablas inglés?",
+        "english": "do you speak English?",
+        "category": "survival_phrase",
+        "chinese": "你会说英语吗？"
+      },
+      {
+        "id": 22,
+        "spanish": "no entiendo",
+        "english": "I don't understand",
+        "category": "survival_phrase",
+        "chinese": "我不明白/我听不懂"
+      },
+      {
+        "id": 23,
+        "spanish": "más despacio, por favor",
+        "english": "slower, please",
+        "category": "survival_phrase",
+        "chinese": "请慢一点"
+      },
+      {
+        "id": 24,
+        "spanish": "¿qué significa?",
+        "english": "what does it mean?",
+        "category": "survival_phrase",
+        "chinese": "这是什么意思？"
+      },
+      {
+        "id": 25,
+        "spanish": "dónde está el baño?",
+        "english": "where is the bathroom?",
+        "category": "survival_phrase",
+        "chinese": "洗手间在哪里？"
+      },
+      {
+        "id": 26,
+        "spanish": "la cuenta, por favor",
+        "english": "the check, please",
+        "category": "survival_phrase",
+        "chinese": "请买单"
+      },
+      {
+        "id": 27,
+        "spanish": "ayuda",
+        "english": "help",
+        "category": "survival_phrase",
+        "chinese": "帮助"
+      },
+      {
+        "id": 28,
+        "spanish": "ayúdame",
+        "english": "help me",
+        "category": "survival_phrase",
+        "chinese": "帮帮我"
+      },
+      {
+        "id": 29,
+        "spanish": "cuánto cuesta?",
+        "english": "how much is it?",
+        "category": "survival_phrase",
+        "chinese": "这个多少钱？"
+      },
+      {
+        "id": 30,
+        "spanish": "es muy caro",
+        "english": "it's very expensive",
+        "category": "survival_phrase",
+        "chinese": "非常贵"
+      },
+      {
+        "id": 31,
+        "spanish": "cuánto es?",
+        "english": "how much is it?",
+        "category": "survival_phrase",
+        "chinese": "这个多少钱？"
+      },
+      {
+        "id": 32,
+        "spanish": "dónde está...?",
+        "english": "where is...?",
+        "category": "survival_phrase",
+        "chinese": "……在哪里？"
+      },
+      {
+        "id": 33,
+        "spanish": "estoy perdido",
+        "english": "I'm lost",
+        "category": "survival_phrase",
+        "chinese": "我迷路了"
+      },
+      {
+        "id": 34,
+        "spanish": "estoy perdida",
+        "english": "I'm lost (feminine)",
+        "category": "survival_phrase",
+        "chinese": "我迷路了（阴性）"
+      },
+      {
+        "id": 35,
+        "spanish": "soy estadounidense",
+        "english": "I'm American",
+        "category": "survival_phrase",
+        "chinese": "我是美国人"
+      },
+      {
+        "id": 36,
+        "spanish": "soy de...",
+        "english": "I'm from...",
+        "category": "survival_phrase",
+        "chinese": "我来自……"
+      },
+      {
+        "id": 37,
+        "spanish": "hoy",
+        "english": "today",
+        "category": "time",
+        "chinese": "今天"
+      },
+      {
+        "id": 38,
+        "spanish": "mañana",
+        "english": "tomorrow",
+        "category": "time",
+        "chinese": "明天"
+      },
+      {
+        "id": 39,
+        "spanish": "ayer",
+        "english": "yesterday",
+        "category": "time",
+        "chinese": "昨天"
+      },
+      {
+        "id": 40,
+        "spanish": "ahora",
+        "english": "now",
+        "category": "time",
+        "chinese": "现在"
+      },
+      {
+        "id": 41,
+        "spanish": "después",
+        "english": "later / after",
+        "category": "time",
+        "chinese": "后来/之后"
+      },
+      {
+        "id": 42,
+        "spanish": "antes",
+        "english": "before",
+        "category": "time",
+        "chinese": "在…之前"
+      },
+      {
+        "id": 43,
+        "spanish": "lunes",
+        "english": "Monday",
+        "category": "days",
+        "chinese": "星期一"
+      },
+      {
+        "id": 44,
+        "spanish": "martes",
+        "english": "Tuesday",
+        "category": "days",
+        "chinese": "星期二"
+      },
+      {
+        "id": 45,
+        "spanish": "miércoles",
+        "english": "Wednesday",
+        "category": "days",
+        "chinese": "星期三"
+      },
+      {
+        "id": 46,
+        "spanish": "jueves",
+        "english": "Thursday",
+        "category": "days",
+        "chinese": "星期四"
+      },
+      {
+        "id": 47,
+        "spanish": "viernes",
+        "english": "Friday",
+        "category": "days",
+        "chinese": "星期五"
+      },
+      {
+        "id": 48,
+        "spanish": "sábado",
+        "english": "Saturday",
+        "category": "days",
+        "chinese": "星期六"
+      },
+      {
+        "id": 49,
+        "spanish": "domingo",
+        "english": "Sunday",
+        "category": "days",
+        "chinese": "星期日/星期天"
+      },
+      {
+        "id": 50,
+        "spanish": "enero",
+        "english": "January",
+        "category": "months",
+        "chinese": "一月"
+      },
+      {
+        "id": 51,
+        "spanish": "febrero",
+        "english": "February",
+        "category": "months",
+        "chinese": "二月"
+      },
+      {
+        "id": 52,
+        "spanish": "marzo",
+        "english": "March",
+        "category": "months",
+        "chinese": "三月"
+      },
+      {
+        "id": 53,
+        "spanish": "abril",
+        "english": "April",
+        "category": "months",
+        "chinese": "四月"
+      },
+      {
+        "id": 54,
+        "spanish": "mayo",
+        "english": "May",
+        "category": "months",
+        "chinese": "五月"
+      },
+      {
+        "id": 55,
+        "spanish": "junio",
+        "english": "June",
+        "category": "months",
+        "chinese": "六月"
+      },
+      {
+        "id": 56,
+        "spanish": "julio",
+        "english": "July",
+        "category": "months",
+        "chinese": "七月"
+      },
+      {
+        "id": 57,
+        "spanish": "agosto",
+        "english": "August",
+        "category": "months",
+        "chinese": "八月"
+      },
+      {
+        "id": 58,
+        "spanish": "septiembre",
+        "english": "September",
+        "category": "months",
+        "chinese": "九月"
+      },
+      {
+        "id": 59,
+        "spanish": "octubre",
+        "english": "October",
+        "category": "months",
+        "chinese": "十月"
+      },
+      {
+        "id": 60,
+        "spanish": "noviembre",
+        "english": "November",
+        "category": "months",
+        "chinese": "十一月"
+      },
+      {
+        "id": 61,
+        "spanish": "diciembre",
+        "english": "December",
+        "category": "months",
+        "chinese": "十二月"
+      },
+      {
+        "id": 62,
+        "spanish": "uno",
+        "english": "one",
+        "category": "numbers",
+        "chinese": "一/一个"
+      },
+      {
+        "id": 63,
+        "spanish": "dos",
+        "english": "two",
+        "category": "numbers",
+        "chinese": "二"
+      },
+      {
+        "id": 64,
+        "spanish": "tres",
+        "english": "three",
+        "category": "numbers",
+        "chinese": "三"
+      },
+      {
+        "id": 65,
+        "spanish": "cuatro",
+        "english": "four",
+        "category": "numbers",
+        "chinese": "四"
+      },
+      {
+        "id": 66,
+        "spanish": "cinco",
+        "english": "five",
+        "category": "numbers",
+        "chinese": "五"
+      },
+      {
+        "id": 67,
+        "spanish": "seis",
+        "english": "six",
+        "category": "numbers",
+        "chinese": "六"
+      },
+      {
+        "id": 68,
+        "spanish": "siete",
+        "english": "seven",
+        "category": "numbers",
+        "chinese": "七"
+      },
+      {
+        "id": 69,
+        "spanish": "ocho",
+        "english": "eight",
+        "category": "numbers",
+        "chinese": "八"
+      },
+      {
+        "id": 70,
+        "spanish": "nueve",
+        "english": "nine",
+        "category": "numbers",
+        "chinese": "九"
+      },
+      {
+        "id": 71,
+        "spanish": "diez",
+        "english": "ten",
+        "category": "numbers",
+        "chinese": "十"
+      },
+      {
+        "id": 72,
+        "spanish": "once",
+        "english": "eleven",
+        "category": "numbers",
+        "chinese": "十一"
+      },
+      {
+        "id": 73,
+        "spanish": "doce",
+        "english": "twelve",
+        "category": "numbers",
+        "chinese": "十二"
+      },
+      {
+        "id": 74,
+        "spanish": "trece",
+        "english": "thirteen",
+        "category": "numbers",
+        "chinese": "十三"
+      },
+      {
+        "id": 75,
+        "spanish": "catorce",
+        "english": "fourteen",
+        "category": "numbers",
+        "chinese": "十四"
+      },
+      {
+        "id": 76,
+        "spanish": "quince",
+        "english": "fifteen",
+        "category": "numbers",
+        "chinese": "十五"
+      },
+      {
+        "id": 77,
+        "spanish": "dieciséis",
+        "english": "sixteen",
+        "category": "numbers",
+        "chinese": "十六"
+      },
+      {
+        "id": 78,
+        "spanish": "diecisiete",
+        "english": "seventeen",
+        "category": "numbers",
+        "chinese": "十七"
+      },
+      {
+        "id": 79,
+        "spanish": "dieciocho",
+        "english": "eighteen",
+        "category": "numbers",
+        "chinese": "十八"
+      },
+      {
+        "id": 80,
+        "spanish": "diecinueve",
+        "english": "nineteen",
+        "category": "numbers",
+        "chinese": "十九"
+      },
+      {
+        "id": 81,
+        "spanish": "veinte",
+        "english": "twenty",
+        "category": "numbers",
+        "chinese": "二十"
+      },
+      {
+        "id": 82,
+        "spanish": "veintiuno",
+        "english": "twenty-one",
+        "category": "numbers",
+        "chinese": "二十一"
+      },
+      {
+        "id": 83,
+        "spanish": "veintidós",
+        "english": "twenty-two",
+        "category": "numbers",
+        "chinese": "二十二"
+      },
+      {
+        "id": 84,
+        "spanish": "veintitrés",
+        "english": "twenty-three",
+        "category": "numbers",
+        "chinese": "二十三"
+      },
+      {
+        "id": 85,
+        "spanish": "veinticuatro",
+        "english": "twenty-four",
+        "category": "numbers",
+        "chinese": "二十四"
+      },
+      {
+        "id": 86,
+        "spanish": "veinticinco",
+        "english": "twenty-five",
+        "category": "numbers",
+        "chinese": "二十五"
+      },
+      {
+        "id": 87,
+        "spanish": "treinta",
+        "english": "thirty",
+        "category": "numbers",
+        "chinese": "三十"
+      },
+      {
+        "id": 88,
+        "spanish": "cuarenta",
+        "english": "forty",
+        "category": "numbers",
+        "chinese": "四十"
+      },
+      {
+        "id": 89,
+        "spanish": "cincuenta",
+        "english": "fifty",
+        "category": "numbers",
+        "chinese": "五十"
+      },
+      {
+        "id": 90,
+        "spanish": "sesenta",
+        "english": "sixty",
+        "category": "numbers",
+        "chinese": "六十"
+      },
+      {
+        "id": 91,
+        "spanish": "setenta",
+        "english": "seventy",
+        "category": "numbers",
+        "chinese": "七十"
+      },
+      {
+        "id": 92,
+        "spanish": "ochenta",
+        "english": "eighty",
+        "category": "numbers",
+        "chinese": "八十"
+      },
+      {
+        "id": 93,
+        "spanish": "noventa",
+        "english": "ninety",
+        "category": "numbers",
+        "chinese": "九十"
+      },
+      {
+        "id": 94,
+        "spanish": "cien",
+        "english": "one hundred",
+        "category": "numbers",
+        "chinese": "一百"
+      },
+      {
+        "id": 95,
+        "spanish": "mil",
+        "english": "one thousand",
+        "category": "numbers",
+        "chinese": "一千"
+      },
+      {
+        "id": 96,
+        "spanish": "rojo",
+        "english": "red",
+        "category": "colors",
+        "chinese": "红色的"
+      },
+      {
+        "id": 97,
+        "spanish": "azul",
+        "english": "blue",
+        "category": "colors",
+        "chinese": "蓝色/蓝的"
+      },
+      {
+        "id": 98,
+        "spanish": "amarillo",
+        "english": "yellow",
+        "category": "colors",
+        "chinese": "黄色的"
+      },
+      {
+        "id": 99,
+        "spanish": "verde",
+        "english": "green",
+        "category": "colors",
+        "chinese": "绿色"
+      },
+      {
+        "id": 100,
+        "spanish": "naranja",
+        "english": "orange",
+        "category": "colors",
+        "chinese": "橙色的/橙子"
+      },
+      {
+        "id": 101,
+        "spanish": "morado",
+        "english": "purple",
+        "category": "colors",
+        "chinese": "紫色的"
+      },
+      {
+        "id": 102,
+        "spanish": "violeta",
+        "english": "violet",
+        "category": "colors",
+        "chinese": "紫罗兰色的/紫色的"
+      },
+      {
+        "id": 103,
+        "spanish": "blanco",
+        "english": "white",
+        "category": "colors",
+        "chinese": "白色的"
+      },
+      {
+        "id": 104,
+        "spanish": "negro",
+        "english": "black",
+        "category": "colors",
+        "chinese": "黑色/黑的"
+      },
+      {
+        "id": 105,
+        "spanish": "gris",
+        "english": "gray",
+        "category": "colors",
+        "chinese": "灰色"
+      },
+      {
+        "id": 106,
+        "spanish": "marrón",
+        "english": "brown",
+        "category": "colors",
+        "chinese": "棕色/棕的"
+      },
+      {
+        "id": 107,
+        "spanish": "rosa",
+        "english": "pink",
+        "category": "colors",
+        "chinese": "粉红色的"
+      },
+      {
+        "id": 108,
+        "spanish": "café",
+        "english": "brown / coffee",
+        "category": "colors",
+        "chinese": "棕色/咖啡色"
+      },
+      {
+        "id": 109,
+        "spanish": "claro",
+        "english": "light (color)",
+        "category": "colors",
+        "chinese": "浅色的"
+      },
+      {
+        "id": 110,
+        "spanish": "oscuro",
+        "english": "dark",
+        "category": "colors",
+        "chinese": "黑暗的/深色的"
+      },
+      {
+        "id": 111,
+        "spanish": "sí",
+        "english": "yes",
+        "category": "basic",
+        "chinese": "是的"
+      },
+      {
+        "id": 112,
+        "spanish": "no",
+        "english": "no / not",
+        "category": "basic",
+        "chinese": "不/没有"
+      },
+      {
+        "id": 113,
+        "spanish": "yo",
+        "english": "I",
+        "category": "pronouns",
+        "chinese": "我"
+      },
+      {
+        "id": 114,
+        "spanish": "tú",
+        "english": "you (informal)",
+        "category": "pronouns",
+        "chinese": "你"
+      },
+      {
+        "id": 115,
+        "spanish": "usted",
+        "english": "you (formal)",
+        "category": "pronouns",
+        "chinese": "您"
+      },
+      {
+        "id": 116,
+        "spanish": "él",
+        "english": "he",
+        "category": "pronouns",
+        "chinese": "他"
+      },
+      {
+        "id": 117,
+        "spanish": "ella",
+        "english": "she",
+        "category": "pronouns",
+        "chinese": "她"
+      },
+      {
+        "id": 118,
+        "spanish": "nosotros",
+        "english": "we",
+        "category": "pronouns",
+        "chinese": "我们"
+      },
+      {
+        "id": 119,
+        "spanish": "ellos",
+        "english": "they",
+        "category": "pronouns",
+        "chinese": "他们/她们/它们"
+      },
+      {
+        "id": 120,
+        "spanish": "ustedes",
+        "english": "you all",
+        "category": "pronouns",
+        "chinese": "你们"
+      },
+      {
+        "id": 121,
+        "spanish": "me",
+        "english": "me",
+        "category": "pronouns",
+        "chinese": "我"
+      },
+      {
+        "id": 122,
+        "spanish": "te",
+        "english": "you",
+        "category": "pronouns",
+        "chinese": "你/您"
+      },
+      {
+        "id": 123,
+        "spanish": "lo",
+        "english": "him / it",
+        "category": "pronouns",
+        "chinese": "他/它"
+      },
+      {
+        "id": 124,
+        "spanish": "la",
+        "english": "her / it",
+        "category": "pronouns",
+        "chinese": "她/它"
+      },
+      {
+        "id": 125,
+        "spanish": "le",
+        "english": "to him / to her",
+        "category": "pronouns",
+        "chinese": "给他/给她"
+      },
+      {
+        "id": 126,
+        "spanish": "nos",
+        "english": "us",
+        "category": "pronouns",
+        "chinese": "我们"
+      },
+      {
+        "id": 127,
+        "spanish": "les",
+        "english": "to them",
+        "category": "pronouns",
+        "chinese": "给他们/对他们"
+      },
+      {
+        "id": 128,
+        "spanish": "esto",
+        "english": "this",
+        "category": "pronouns",
+        "chinese": "这个/这"
+      },
+      {
+        "id": 129,
+        "spanish": "ese",
+        "english": "that",
+        "category": "pronouns",
+        "chinese": "那/那个"
+      },
+      {
+        "id": 130,
+        "spanish": "aquél",
+        "english": "that (over there)",
+        "category": "pronouns",
+        "chinese": "那边那个"
+      },
+      {
+        "id": 131,
+        "spanish": "mi",
+        "english": "my",
+        "category": "possessives",
+        "chinese": "我的"
+      },
+      {
+        "id": 132,
+        "spanish": "tu",
+        "english": "your",
+        "category": "possessives",
+        "chinese": "你的/您的"
+      },
+      {
+        "id": 133,
+        "spanish": "su",
+        "english": "his / her / your",
+        "category": "possessives",
+        "chinese": "他的/她的/你的"
+      },
+      {
+        "id": 134,
+        "spanish": "nuestro",
+        "english": "our",
+        "category": "possessives",
+        "chinese": "我们的"
+      },
+      {
+        "id": 135,
+        "spanish": "casa",
+        "english": "house",
+        "category": "common_nouns",
+        "chinese": "房子/住宅"
+      },
+      {
+        "id": 136,
+        "spanish": "carro",
+        "english": "car (MX)",
+        "category": "common_nouns",
+        "chinese": "汽车"
+      },
+      {
+        "id": 137,
+        "spanish": "dinero",
+        "english": "money",
+        "category": "common_nouns",
+        "chinese": "钱"
+      },
+      {
+        "id": 138,
+        "spanish": "agua",
+        "english": "water",
+        "category": "common_nouns",
+        "chinese": "水"
+      },
+      {
+        "id": 139,
+        "spanish": "comida",
+        "english": "food",
+        "category": "common_nouns",
+        "chinese": "食物"
+      },
+      {
+        "id": 140,
+        "spanish": "amigo",
+        "english": "friend (male)",
+        "category": "common_nouns",
+        "chinese": "男性朋友"
+      },
+      {
+        "id": 141,
+        "spanish": "amiga",
+        "english": "friend (female)",
+        "category": "common_nouns",
+        "chinese": "女性朋友"
+      },
+      {
+        "id": 142,
+        "spanish": "persona",
+        "english": "person",
+        "category": "common_nouns",
+        "chinese": "人/个人"
+      },
+      {
+        "id": 143,
+        "spanish": "personas",
+        "english": "people",
+        "category": "common_nouns",
+        "chinese": "人们/人民"
+      },
+      {
+        "id": 144,
+        "spanish": "tiempo",
+        "english": "time",
+        "category": "common_nouns",
+        "chinese": "时间/次"
+      },
+      {
+        "id": 145,
+        "spanish": "trabajo",
+        "english": "work / job",
+        "category": "common_nouns",
+        "chinese": "工作/职业"
+      },
+      {
+        "id": 146,
+        "spanish": "mes",
+        "english": "month",
+        "category": "common_nouns",
+        "chinese": "月"
+      },
+      {
+        "id": 147,
+        "spanish": "día",
+        "english": "day",
+        "category": "common_nouns",
+        "chinese": "天/白天"
+      },
+      {
+        "id": 148,
+        "spanish": "año",
+        "english": "year",
+        "category": "common_nouns",
+        "chinese": "年"
+      },
+      {
+        "id": 149,
+        "spanish": "hombre",
+        "english": "man",
+        "category": "common_nouns",
+        "chinese": "男人"
+      },
+      {
+        "id": 150,
+        "spanish": "mujer",
+        "english": "woman",
+        "category": "common_nouns",
+        "chinese": "女人/女性"
+      },
+      {
+        "id": 151,
+        "spanish": "niño",
+        "english": "boy / child",
+        "category": "common_nouns",
+        "chinese": "男孩/孩子"
+      },
+      {
+        "id": 152,
+        "spanish": "niña",
+        "english": "girl",
+        "category": "common_nouns",
+        "chinese": "女孩"
+      },
+      {
+        "id": 153,
+        "spanish": "vida",
+        "english": "life",
+        "category": "common_nouns",
+        "chinese": "生命/生活"
+      },
+      {
+        "id": 154,
+        "spanish": "lugar",
+        "english": "place",
+        "category": "common_nouns",
+        "chinese": "地方/放置"
+      },
+      {
+        "id": 155,
+        "spanish": "nombre",
+        "english": "name",
+        "category": "common_nouns",
+        "chinese": "名字/名称"
+      },
+      {
+        "id": 156,
+        "spanish": "libro",
+        "english": "book",
+        "category": "common_nouns",
+        "chinese": "书"
+      },
+      {
+        "id": 157,
+        "spanish": "papel",
+        "english": "paper",
+        "category": "common_nouns",
+        "chinese": "纸/论文/报纸"
+      },
+      {
+        "id": 158,
+        "spanish": "celular",
+        "english": "cell phone (MX)",
+        "category": "common_nouns",
+        "chinese": "手机"
+      },
+      {
+        "id": 159,
+        "spanish": "computadora",
+        "english": "computer (MX)",
+        "category": "common_nouns",
+        "chinese": "电脑"
+      },
+      {
+        "id": 160,
+        "spanish": "calle",
+        "english": "street",
+        "category": "common_nouns",
+        "chinese": "街道"
+      },
+      {
+        "id": 161,
+        "spanish": "ciudad",
+        "english": "city",
+        "category": "common_nouns",
+        "chinese": "城市"
+      },
+      {
+        "id": 162,
+        "spanish": "país",
+        "english": "country",
+        "category": "common_nouns",
+        "chinese": "国家/乡村"
+      },
+      {
+        "id": 163,
+        "spanish": "aeropuerto",
+        "english": "airport",
+        "category": "common_nouns",
+        "chinese": "机场"
+      },
+      {
+        "id": 164,
+        "spanish": "hotel",
+        "english": "hotel",
+        "category": "common_nouns",
+        "chinese": "酒店"
+      },
+      {
+        "id": 165,
+        "spanish": "restaurante",
+        "english": "restaurant",
+        "category": "common_nouns",
+        "chinese": "餐馆/饭店"
+      },
+      {
+        "id": 166,
+        "spanish": "hospital",
+        "english": "hospital",
+        "category": "common_nouns",
+        "chinese": "医院"
+      },
+      {
+        "id": 167,
+        "spanish": "escuela",
+        "english": "school",
+        "category": "common_nouns",
+        "chinese": "学校"
+      },
+      {
+        "id": 168,
+        "spanish": "tienda",
+        "english": "store / shop",
+        "category": "common_nouns",
+        "chinese": "商店/店铺"
+      },
+      {
+        "id": 169,
+        "spanish": "mercado",
+        "english": "market",
+        "category": "common_nouns",
+        "chinese": "市场"
+      },
+      {
+        "id": 170,
+        "spanish": "banco",
+        "english": "bank",
+        "category": "common_nouns",
+        "chinese": "银行"
+      },
+      {
+        "id": 171,
+        "spanish": "jugo",
+        "english": "juice (MX)",
+        "category": "common_nouns",
+        "chinese": "果汁"
+      },
+      {
+        "id": 172,
+        "spanish": "leche",
+        "english": "milk",
+        "category": "common_nouns",
+        "chinese": "牛奶"
+      },
+      {
+        "id": 173,
+        "spanish": "pan",
+        "english": "bread",
+        "category": "common_nouns",
+        "chinese": "面包"
+      },
+      {
+        "id": 174,
+        "spanish": "carne",
+        "english": "meat",
+        "category": "common_nouns",
+        "chinese": "肉"
+      },
+      {
+        "id": 175,
+        "spanish": "pollo",
+        "english": "chicken",
+        "category": "common_nouns",
+        "chinese": "鸡肉/鸡"
+      },
+      {
+        "id": 176,
+        "spanish": "huevo",
+        "english": "egg",
+        "category": "common_nouns",
+        "chinese": "鸡蛋"
+      },
+      {
+        "id": 177,
+        "spanish": "fruta",
+        "english": "fruit",
+        "category": "common_nouns",
+        "chinese": "水果"
+      },
+      {
+        "id": 178,
+        "spanish": "verdura",
+        "english": "vegetable",
+        "category": "common_nouns",
+        "chinese": "蔬菜"
+      },
+      {
+        "id": 179,
+        "spanish": "tortilla",
+        "english": "tortilla (MX)",
+        "category": "common_nouns",
+        "chinese": "玉米饼（墨西哥）"
+      },
+      {
+        "id": 180,
+        "spanish": "tamal",
+        "english": "tamale",
+        "category": "common_nouns",
+        "chinese": "玉米粽"
+      },
+      {
+        "id": 181,
+        "spanish": "taco",
+        "english": "taco",
+        "category": "common_nouns",
+        "chinese": "玉米饼卷馅"
+      },
+      {
+        "id": 182,
+        "spanish": "pozole",
+        "english": "pozole (MX soup)",
+        "category": "common_nouns",
+        "chinese": "玉米粒肉汤（墨西哥汤）"
+      },
+      {
+        "id": 183,
+        "spanish": "chocolate",
+        "english": "chocolate / hot chocolate",
+        "category": "common_nouns",
+        "chinese": "巧克力/热巧克力"
+      },
+      {
+        "id": 184,
+        "spanish": "cerveza",
+        "english": "beer",
+        "category": "common_nouns",
+        "chinese": "啤酒"
+      },
+      {
+        "id": 185,
+        "spanish": "vino",
+        "english": "wine",
+        "category": "common_nouns",
+        "chinese": "葡萄酒"
+      },
+      {
+        "id": 186,
+        "spanish": "servicio",
+        "english": "service / tip",
+        "category": "common_nouns",
+        "chinese": "服务/小费"
+      },
+      {
+        "id": 187,
+        "spanish": "propina",
+        "english": "tip (money)",
+        "category": "common_nouns",
+        "chinese": "小费"
+      },
+      {
+        "id": 188,
+        "spanish": "precio",
+        "english": "price",
+        "category": "common_nouns",
+        "chinese": "价格"
+      },
+      {
+        "id": 189,
+        "spanish": "grifo",
+        "english": "faucet",
+        "category": "common_nouns",
+        "chinese": "水龙头"
+      },
+      {
+        "id": 190,
+        "spanish": "llave",
+        "english": "key",
+        "category": "common_nouns",
+        "chinese": "钥匙/关键的"
+      },
+      {
+        "id": 191,
+        "spanish": "puerta",
+        "english": "door",
+        "category": "common_nouns",
+        "chinese": "门"
+      },
+      {
+        "id": 192,
+        "spanish": "ventana",
+        "english": "window",
+        "category": "common_nouns",
+        "chinese": "窗户"
+      },
+      {
+        "id": 193,
+        "spanish": "habitación",
+        "english": "room",
+        "category": "common_nouns",
+        "chinese": "房间/空间"
+      },
+      {
+        "id": 194,
+        "spanish": "cama",
+        "english": "bed",
+        "category": "common_nouns",
+        "chinese": "床"
+      },
+      {
+        "id": 195,
+        "spanish": "silla",
+        "english": "chair",
+        "category": "common_nouns",
+        "chinese": "椅子"
+      },
+      {
+        "id": 196,
+        "spanish": "mesa",
+        "english": "table",
+        "category": "common_nouns",
+        "chinese": "桌子/表格"
+      },
+      {
+        "id": 197,
+        "spanish": "baño",
+        "english": "bathroom (MX)",
+        "category": "common_nouns",
+        "chinese": "洗手间"
+      },
+      {
+        "id": 198,
+        "spanish": "excusado",
+        "english": "toilet (MX)",
+        "category": "common_nouns",
+        "chinese": "厕所（墨西哥）"
+      }
+    ]
+  }
+]

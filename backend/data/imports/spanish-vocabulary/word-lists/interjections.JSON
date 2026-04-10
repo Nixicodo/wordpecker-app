@@ -1,0 +1,432 @@
+[
+  {
+    "region": "MX",
+    "partOfSpeech": "interjections",
+    "level": 1,
+    "words": [
+      {
+        "id": 1,
+        "spanish": "bueno",
+        "english": "well (filler/answering phone)",
+        "chinese": "喂/嗯"
+      },
+      {
+        "id": 2,
+        "spanish": "a ver",
+        "english": "let's see",
+        "chinese": "看看吧"
+      },
+      {
+        "id": 3,
+        "spanish": "claro",
+        "english": "of course",
+        "chinese": "当然"
+      },
+      {
+        "id": 4,
+        "spanish": "oye",
+        "english": "hey / listen",
+        "chinese": "喂/听着"
+      },
+      {
+        "id": 5,
+        "spanish": "mira",
+        "english": "look",
+        "chinese": "看"
+      },
+      {
+        "id": 6,
+        "spanish": "ay",
+        "english": "oh / ouch",
+        "chinese": "哦/哎哟"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "interjections",
+    "level": 2,
+    "words": [
+      {
+        "id": 7,
+        "spanish": "perdón",
+        "english": "sorry / excuse me",
+        "chinese": "对不起/劳驾"
+      },
+      {
+        "id": 8,
+        "spanish": "cuidado",
+        "english": "watch out / careful",
+        "chinese": "小心/当心"
+      },
+      {
+        "id": 9,
+        "spanish": "dale",
+        "english": "go ahead / okay",
+        "chinese": "请吧/好吧"
+      },
+      {
+        "id": 10,
+        "spanish": "exacto",
+        "english": "exactly",
+        "chinese": "恰好/正是/准确地"
+      },
+      {
+        "id": 11,
+        "spanish": "vaya",
+        "english": "wow / well",
+        "chinese": "哇/嗯"
+      },
+      {
+        "id": 12,
+        "spanish": "alto",
+        "english": "stop / halt",
+        "chinese": "停止/停下"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "interjections",
+    "level": 3,
+    "words": [
+      {
+        "id": 13,
+        "spanish": "mande",
+        "english": "what? / tell me (polite Mexican standard)",
+        "chinese": "什么？/请说（墨西哥标准敬语）"
+      },
+      {
+        "id": 14,
+        "spanish": "órale",
+        "english": "wow / okay / let's go (Mexican)",
+        "chinese": "哇/好吧/走吧（墨西哥）"
+      },
+      {
+        "id": 15,
+        "spanish": "fíjate",
+        "english": "look / imagine that",
+        "chinese": "你看/你想想看"
+      },
+      {
+        "id": 16,
+        "spanish": "dios mío",
+        "english": "oh my god",
+        "chinese": "天啊"
+      },
+      {
+        "id": 17,
+        "spanish": "ojalá",
+        "english": "hopefully / I hope so",
+        "chinese": "但愿如此/希望如此"
+      },
+      {
+        "id": 18,
+        "spanish": "salud",
+        "english": "bless you / cheers",
+        "chinese": "保重/干杯"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "interjections",
+    "level": 4,
+    "words": [
+      {
+        "id": 19,
+        "spanish": "ándale",
+        "english": "come on / hurry up / that's right (Mexican)",
+        "chinese": "快点/赶紧/对啊（墨西哥）"
+      },
+      {
+        "id": 20,
+        "spanish": "híjole",
+        "english": "wow / jeez / oh boy (Mexican)",
+        "chinese": "哇/天哪/哎呀（墨西哥）"
+      },
+      {
+        "id": 21,
+        "spanish": "bienvenido",
+        "english": "welcome",
+        "chinese": "欢迎/不客气"
+      },
+      {
+        "id": 22,
+        "spanish": "quizás",
+        "english": "maybe / perhaps",
+        "chinese": "也许/或许"
+      },
+      {
+        "id": 23,
+        "spanish": "basta",
+        "english": "enough",
+        "chinese": "足够"
+      },
+      {
+        "id": 24,
+        "spanish": "ánimo",
+        "english": "cheer up / let's go",
+        "chinese": "加油/走吧"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "interjections",
+    "level": 5,
+    "words": [
+      {
+        "id": 25,
+        "spanish": "aguas",
+        "english": "watch out / careful (Mexican)",
+        "chinese": "小心/当心（墨西哥）"
+      },
+      {
+        "id": 26,
+        "spanish": "neta",
+        "english": "really? / for real? (Mexican)",
+        "chinese": "真的？/不会吧？（墨西哥）"
+      },
+      {
+        "id": 27,
+        "spanish": "qué va",
+        "english": "no way / nonsense",
+        "chinese": "不可能/胡说"
+      },
+      {
+        "id": 28,
+        "spanish": "guau",
+        "english": "wow",
+        "chinese": "哇"
+      },
+      {
+        "id": 29,
+        "spanish": "obvio",
+        "english": "obviously",
+        "chinese": "显然"
+      },
+      {
+        "id": 30,
+        "spanish": "por supuesto",
+        "english": "of course",
+        "chinese": "当然"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "interjections",
+    "level": 6,
+    "words": [
+      {
+        "id": 31,
+        "spanish": "no manches",
+        "english": "no way / come on (Mexican, mild slang)",
+        "chinese": "不会吧/得了吧（墨西哥，轻微俚语）"
+      },
+      {
+        "id": 32,
+        "spanish": "chale",
+        "english": "damn / bummer (Mexican)",
+        "chinese": "该死/真倒霉"
+      },
+      {
+        "id": 33,
+        "spanish": "lástima",
+        "english": "what a pity / shame",
+        "chinese": "真可惜/真遗憾"
+      },
+      {
+        "id": 34,
+        "spanish": "menos mal",
+        "english": "thank goodness / luckily",
+        "chinese": "谢天谢地/幸好"
+      },
+      {
+        "id": 35,
+        "spanish": "qué padre",
+        "english": "how cool (Mexican)",
+        "chinese": "太酷了/真棒"
+      },
+      {
+        "id": 36,
+        "spanish": "uy",
+        "english": "oops / whoa",
+        "chinese": "哎呀/哇"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "interjections",
+    "level": 7,
+    "words": [
+      {
+        "id": 37,
+        "spanish": "en fin",
+        "english": "anyway / in short",
+        "chinese": "总之/反正"
+      },
+      {
+        "id": 38,
+        "spanish": "total",
+        "english": "so / in the end",
+        "chinese": "所以/最终"
+      },
+      {
+        "id": 39,
+        "spanish": "caray",
+        "english": "darn / gosh",
+        "chinese": "哎呀/天哪"
+      },
+      {
+        "id": 40,
+        "spanish": "ni modo",
+        "english": "oh well / nothing strictly to be done (Mexican)",
+        "chinese": "唉/也没办法（墨西哥）"
+      },
+      {
+        "id": 41,
+        "spanish": "oiga",
+        "english": "listen / hey (formal)",
+        "chinese": "听着/喂（正式）"
+      },
+      {
+        "id": 42,
+        "spanish": "permiso",
+        "english": "excuse me (passing by)",
+        "chinese": "借过"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "interjections",
+    "level": 8,
+    "words": [
+      {
+        "id": 43,
+        "spanish": "a poco",
+        "english": "really? / you don't say? (Mexican)",
+        "chinese": "是吗？/真的假的？（墨西哥）"
+      },
+      {
+        "id": 44,
+        "spanish": "socorro",
+        "english": "help",
+        "chinese": "帮助"
+      },
+      {
+        "id": 45,
+        "spanish": "bravo",
+        "english": "bravo / well done",
+        "chinese": "好样的/做得好"
+      },
+      {
+        "id": 46,
+        "spanish": "adelante",
+        "english": "come in / go ahead",
+        "chinese": "请进/请吧"
+      },
+      {
+        "id": 47,
+        "spanish": "hombre",
+        "english": "man! / come on! (emphasis)",
+        "chinese": "天哪/得了吧（强调）"
+      },
+      {
+        "id": 48,
+        "spanish": "genial",
+        "english": "great / brilliant",
+        "chinese": "很棒/出色"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "interjections",
+    "level": 9,
+    "words": [
+      {
+        "id": 49,
+        "spanish": "qué hubo",
+        "english": "what's up (Mexican: ¿Quiúbole?)",
+        "chinese": "怎么样/最近如何（墨西哥）"
+      },
+      {
+        "id": 50,
+        "spanish": "cielos",
+        "english": "heavens / good grief",
+        "chinese": "天哪/哎呀"
+      },
+      {
+        "id": 51,
+        "spanish": "diablos",
+        "english": "damn / heck",
+        "chinese": "该死/见鬼"
+      },
+      {
+        "id": 52,
+        "spanish": "suerte",
+        "english": "good luck",
+        "chinese": "祝你好运"
+      },
+      {
+        "id": 53,
+        "spanish": "cállate",
+        "english": "shut up",
+        "chinese": "闭嘴"
+      },
+      {
+        "id": 54,
+        "spanish": "estupendo",
+        "english": "stupendous / great",
+        "chinese": "极好的/了不起的"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "interjections",
+    "level": 10,
+    "words": [
+      {
+        "id": 55,
+        "spanish": "chido",
+        "english": "cool (Mexican)",
+        "chinese": "酷的/不错的"
+      },
+      {
+        "id": 56,
+        "spanish": "cámara",
+        "english": "agreed / it's a deal (Mexican slang)",
+        "chinese": "说定了/成交（墨西哥俚语）"
+      },
+      {
+        "id": 57,
+        "spanish": "maldición",
+        "english": "damn it",
+        "chinese": "该死"
+      },
+      {
+        "id": 58,
+        "spanish": "disculpa",
+        "english": "apologies / excuse me",
+        "chinese": "抱歉/劳驾"
+      },
+      {
+        "id": 59,
+        "spanish": "enhorabuena",
+        "english": "congratulations",
+        "chinese": "恭喜"
+      },
+      {
+        "id": 60,
+        "spanish": "arre",
+        "english": "let's go / agreed (Northern Mexico)",
+        "chinese": "走吧/就这么定了（墨北）"
+      }
+    ]
+  }
+]

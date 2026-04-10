@@ -1,0 +1,1512 @@
+[
+  {
+    "region": "MX",
+    "partOfSpeech": "adverbs",
+    "level": 1,
+    "words": [
+      {
+        "id": 1,
+        "spanish": "no",
+        "english": "no / not",
+        "chinese": "不/没有"
+      },
+      {
+        "id": 2,
+        "spanish": "sí",
+        "english": "yes",
+        "chinese": "是的"
+      },
+      {
+        "id": 3,
+        "spanish": "ya",
+        "english": "already / now",
+        "chinese": "已经/现在"
+      },
+      {
+        "id": 4,
+        "spanish": "muy",
+        "english": "very",
+        "chinese": "非常"
+      },
+      {
+        "id": 5,
+        "spanish": "más",
+        "english": "more",
+        "chinese": "更多/更"
+      },
+      {
+        "id": 6,
+        "spanish": "bien",
+        "english": "well / fine",
+        "chinese": "好/不错"
+      },
+      {
+        "id": 7,
+        "spanish": "aquí",
+        "english": "here",
+        "chinese": "这里"
+      },
+      {
+        "id": 8,
+        "spanish": "ahora",
+        "english": "now",
+        "chinese": "现在"
+      },
+      {
+        "id": 9,
+        "spanish": "hoy",
+        "english": "today",
+        "chinese": "今天"
+      },
+      {
+        "id": 10,
+        "spanish": "así",
+        "english": "like this / so",
+        "chinese": "像这样/这样"
+      },
+      {
+        "id": 11,
+        "spanish": "también",
+        "english": "also / too",
+        "chinese": "也/还"
+      },
+      {
+        "id": 12,
+        "spanish": "después",
+        "english": "after / later",
+        "chinese": "后来/之后"
+      },
+      {
+        "id": 13,
+        "spanish": "entonces",
+        "english": "then",
+        "chinese": "那时/然后"
+      },
+      {
+        "id": 14,
+        "spanish": "siempre",
+        "english": "always",
+        "chinese": "总是/一直"
+      },
+      {
+        "id": 15,
+        "spanish": "donde",
+        "english": "where (relative)",
+        "chinese": "……的地方"
+      },
+      {
+        "id": 16,
+        "spanish": "tan",
+        "english": "so (used with adj)",
+        "chinese": "这么/那么"
+      },
+      {
+        "id": 17,
+        "spanish": "solo",
+        "english": "only",
+        "chinese": "只/仅仅"
+      },
+      {
+        "id": 18,
+        "spanish": "luego",
+        "english": "later",
+        "chinese": "稍后"
+      },
+      {
+        "id": 19,
+        "spanish": "antes",
+        "english": "before",
+        "chinese": "在…之前"
+      },
+      {
+        "id": 20,
+        "spanish": "mucho",
+        "english": "a lot",
+        "chinese": "很多/非常"
+      },
+      {
+        "id": 21,
+        "spanish": "menos",
+        "english": "less",
+        "chinese": "更少/较少"
+      },
+      {
+        "id": 22,
+        "spanish": "allí",
+        "english": "there",
+        "chinese": "那里"
+      },
+      {
+        "id": 23,
+        "spanish": "casi",
+        "english": "almost",
+        "chinese": "几乎/差点"
+      },
+      {
+        "id": 24,
+        "spanish": "nunca",
+        "english": "never",
+        "chinese": "从不"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "adverbs",
+    "level": 2,
+    "words": [
+      {
+        "id": 25,
+        "spanish": "ahí",
+        "english": "there (near listener)",
+        "chinese": "那儿（靠近听话人）"
+      },
+      {
+        "id": 26,
+        "spanish": "además",
+        "english": "besides / furthermore",
+        "chinese": "此外/而且"
+      },
+      {
+        "id": 27,
+        "spanish": "ayer",
+        "english": "yesterday",
+        "chinese": "昨天"
+      },
+      {
+        "id": 28,
+        "spanish": "mañana",
+        "english": "tomorrow",
+        "chinese": "明天"
+      },
+      {
+        "id": 29,
+        "spanish": "tarde",
+        "english": "late",
+        "chinese": "晚的/迟到的"
+      },
+      {
+        "id": 30,
+        "spanish": "mal",
+        "english": "badly",
+        "chinese": "糟糕地/严重地"
+      },
+      {
+        "id": 31,
+        "spanish": "tampoco",
+        "english": "neither",
+        "chinese": "两者都不"
+      },
+      {
+        "id": 32,
+        "spanish": "lejos",
+        "english": "far",
+        "chinese": "远/遥远"
+      },
+      {
+        "id": 33,
+        "spanish": "cerca",
+        "english": "close / near",
+        "chinese": "近的/接近"
+      },
+      {
+        "id": 34,
+        "spanish": "todavía",
+        "english": "still",
+        "chinese": "仍然"
+      },
+      {
+        "id": 35,
+        "spanish": "aún",
+        "english": "still / yet",
+        "chinese": "还/仍然"
+      },
+      {
+        "id": 36,
+        "spanish": "pronto",
+        "english": "soon",
+        "chinese": "很快/不久"
+      },
+      {
+        "id": 37,
+        "spanish": "quizás",
+        "english": "maybe",
+        "chinese": "也许"
+      },
+      {
+        "id": 38,
+        "spanish": "tal vez",
+        "english": "perhaps",
+        "chinese": "也许/可能"
+      },
+      {
+        "id": 39,
+        "spanish": "claro",
+        "english": "clearly / of course",
+        "chinese": "显然/当然"
+      },
+      {
+        "id": 40,
+        "spanish": "bastante",
+        "english": "quite / enough",
+        "chinese": "相当/足够"
+      },
+      {
+        "id": 41,
+        "spanish": "demasiado",
+        "english": "too much",
+        "chinese": "太多"
+      },
+      {
+        "id": 42,
+        "spanish": "siquiera",
+        "english": "at least / even",
+        "chinese": "至少/甚至"
+      },
+      {
+        "id": 43,
+        "spanish": "mejor",
+        "english": "better",
+        "chinese": "更好"
+      },
+      {
+        "id": 44,
+        "spanish": "peor",
+        "english": "worse",
+        "chinese": "更糟的/更差的"
+      },
+      {
+        "id": 45,
+        "spanish": "arriba",
+        "english": "up / above",
+        "chinese": "向上/在上面"
+      },
+      {
+        "id": 46,
+        "spanish": "abajo",
+        "english": "down / below",
+        "chinese": "向下/在下面"
+      },
+      {
+        "id": 47,
+        "spanish": "dentro",
+        "english": "inside",
+        "chinese": "里面/在里面"
+      },
+      {
+        "id": 48,
+        "spanish": "fuera",
+        "english": "outside",
+        "chinese": "外面/在外面"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "adverbs",
+    "level": 3,
+    "words": [
+      {
+        "id": 49,
+        "spanish": "ahorita",
+        "english": "right now (Mexican: can mean now or later)",
+        "chinese": "现在/一会儿（墨西哥口语，可指现在或稍后）"
+      },
+      {
+        "id": 50,
+        "spanish": "seguro",
+        "english": "surely",
+        "chinese": "当然/肯定"
+      },
+      {
+        "id": 51,
+        "spanish": "realmente",
+        "english": "really",
+        "chinese": "真的/非常"
+      },
+      {
+        "id": 52,
+        "spanish": "apenas",
+        "english": "barely / hardly",
+        "chinese": "几乎不"
+      },
+      {
+        "id": 53,
+        "spanish": "acá",
+        "english": "here (movement/colloquial)",
+        "chinese": "到这儿来（口语）"
+      },
+      {
+        "id": 54,
+        "spanish": "allá",
+        "english": "over there (distance)",
+        "chinese": "那边/那儿（较远）"
+      },
+      {
+        "id": 55,
+        "spanish": "temprano",
+        "english": "early",
+        "chinese": "早/早地"
+      },
+      {
+        "id": 56,
+        "spanish": "juntos",
+        "english": "together",
+        "chinese": "一起"
+      },
+      {
+        "id": 57,
+        "spanish": "jamás",
+        "english": "never (emphatic)",
+        "chinese": "绝不/从来没有"
+      },
+      {
+        "id": 58,
+        "spanish": "igual",
+        "english": "equally / same",
+        "chinese": "同样地/一样"
+      },
+      {
+        "id": 59,
+        "spanish": "encima",
+        "english": "on top",
+        "chinese": "在上面"
+      },
+      {
+        "id": 60,
+        "spanish": "debajo",
+        "english": "underneath",
+        "chinese": "在下面"
+      },
+      {
+        "id": 61,
+        "spanish": "atrás",
+        "english": "back / behind",
+        "chinese": "后面/背后"
+      },
+      {
+        "id": 62,
+        "spanish": "adelante",
+        "english": "ahead / forward",
+        "chinese": "向前/前方"
+      },
+      {
+        "id": 63,
+        "spanish": "enfrente",
+        "english": "in front / opposite",
+        "chinese": "前面/对面"
+      },
+      {
+        "id": 64,
+        "spanish": "detrás",
+        "english": "behind",
+        "chinese": "在后面/后方"
+      },
+      {
+        "id": 65,
+        "spanish": "alrededor",
+        "english": "around",
+        "chinese": "在周围/大约"
+      },
+      {
+        "id": 66,
+        "spanish": "despacio",
+        "english": "slowly",
+        "chinese": "慢慢地"
+      },
+      {
+        "id": 67,
+        "spanish": "rápido",
+        "english": "quickly",
+        "chinese": "迅速地/很快地"
+      },
+      {
+        "id": 68,
+        "spanish": "directamente",
+        "english": "directly",
+        "chinese": "直接地"
+      },
+      {
+        "id": 69,
+        "spanish": "finalmente",
+        "english": "finally",
+        "chinese": "终于/最后"
+      },
+      {
+        "id": 70,
+        "spanish": "especialmente",
+        "english": "especially",
+        "chinese": "尤其"
+      },
+      {
+        "id": 71,
+        "spanish": "solamente",
+        "english": "only",
+        "chinese": "只/仅仅"
+      },
+      {
+        "id": 72,
+        "spanish": "aprisa",
+        "english": "hurriedly / quickly",
+        "chinese": "匆忙地/迅速地"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "adverbs",
+    "level": 4,
+    "words": [
+      {
+        "id": 73,
+        "spanish": "probablemente",
+        "english": "probably",
+        "chinese": "很可能"
+      },
+      {
+        "id": 74,
+        "spanish": "posiblemente",
+        "english": "possibly",
+        "chinese": "可能地/也许"
+      },
+      {
+        "id": 75,
+        "spanish": "seguramente",
+        "english": "surely / most likely",
+        "chinese": "必定/很可能"
+      },
+      {
+        "id": 76,
+        "spanish": "exactamente",
+        "english": "exactly",
+        "chinese": "恰好/正是/准确地"
+      },
+      {
+        "id": 77,
+        "spanish": "inmediatamente",
+        "english": "immediately",
+        "chinese": "立即/马上"
+      },
+      {
+        "id": 78,
+        "spanish": "simplemente",
+        "english": "simply",
+        "chinese": "简单地/仅仅"
+      },
+      {
+        "id": 79,
+        "spanish": "totalmente",
+        "english": "totally",
+        "chinese": "完全地"
+      },
+      {
+        "id": 80,
+        "spanish": "completamente",
+        "english": "completely",
+        "chinese": "完全地"
+      },
+      {
+        "id": 81,
+        "spanish": "generalmente",
+        "english": "generally",
+        "chinese": "一般来说/通常"
+      },
+      {
+        "id": 82,
+        "spanish": "normalmente",
+        "english": "normally",
+        "chinese": "通常/正常地"
+      },
+      {
+        "id": 83,
+        "spanish": "usualmente",
+        "english": "usually",
+        "chinese": "通常"
+      },
+      {
+        "id": 84,
+        "spanish": "frecuentemente",
+        "english": "frequently",
+        "chinese": "经常地/频繁地"
+      },
+      {
+        "id": 85,
+        "spanish": "raramente",
+        "english": "rarely",
+        "chinese": "很少"
+      },
+      {
+        "id": 86,
+        "spanish": "apenas",
+        "english": "as soon as (temporal)",
+        "chinese": "一到…就…"
+      },
+      {
+        "id": 87,
+        "spanish": "anoche",
+        "english": "last night",
+        "chinese": "昨晚"
+      },
+      {
+        "id": 88,
+        "spanish": "antier",
+        "english": "day before yesterday (Common in MX)",
+        "chinese": "前天（墨常用）"
+      },
+      {
+        "id": 89,
+        "spanish": "anteayer",
+        "english": "day before yesterday",
+        "chinese": "前天"
+      },
+      {
+        "id": 90,
+        "spanish": "en serio",
+        "english": "seriously",
+        "chinese": "认真地/严重地"
+      },
+      {
+        "id": 91,
+        "spanish": "a lo mejor",
+        "english": "maybe / probably",
+        "chinese": "也许/大概"
+      },
+      {
+        "id": 92,
+        "spanish": "de repente",
+        "english": "suddenly",
+        "chinese": "突然"
+      },
+      {
+        "id": 93,
+        "spanish": "de pronto",
+        "english": "suddenly",
+        "chinese": "突然"
+      },
+      {
+        "id": 94,
+        "spanish": "en fin",
+        "english": "anyway / in short",
+        "chinese": "总之/反正"
+      },
+      {
+        "id": 95,
+        "spanish": "por favor",
+        "english": "please",
+        "chinese": "请"
+      },
+      {
+        "id": 96,
+        "spanish": "ojalá",
+        "english": "hopefully",
+        "chinese": "有希望地/但愿"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "adverbs",
+    "level": 5,
+    "words": [
+      {
+        "id": 97,
+        "spanish": "afortunadamente",
+        "english": "fortunately",
+        "chinese": "幸运地/幸好"
+      },
+      {
+        "id": 98,
+        "spanish": "desafortunadamente",
+        "english": "unfortunately",
+        "chinese": "不幸地/可惜"
+      },
+      {
+        "id": 99,
+        "spanish": "obviamente",
+        "english": "obviously",
+        "chinese": "显然"
+      },
+      {
+        "id": 100,
+        "spanish": "precisamente",
+        "english": "precisely",
+        "chinese": "准确地/正是"
+      },
+      {
+        "id": 101,
+        "spanish": "claramente",
+        "english": "clearly",
+        "chinese": "清楚地"
+      },
+      {
+        "id": 102,
+        "spanish": "rápidamente",
+        "english": "rapidly",
+        "chinese": "迅速地"
+      },
+      {
+        "id": 103,
+        "spanish": "lentamente",
+        "english": "slowly",
+        "chinese": "慢慢地"
+      },
+      {
+        "id": 104,
+        "spanish": "actualmente",
+        "english": "currently / nowadays",
+        "chinese": "目前/如今"
+      },
+      {
+        "id": 105,
+        "spanish": "recientemente",
+        "english": "recently",
+        "chinese": "最近"
+      },
+      {
+        "id": 106,
+        "spanish": "últimamente",
+        "english": "lately",
+        "chinese": "最近"
+      },
+      {
+        "id": 107,
+        "spanish": "brevemente",
+        "english": "briefly",
+        "chinese": "简要地/短暂地"
+      },
+      {
+        "id": 108,
+        "spanish": "mientras",
+        "english": "meanwhile",
+        "chinese": "同时/与此同时"
+      },
+      {
+        "id": 109,
+        "spanish": "acaso",
+        "english": "perhaps / by chance",
+        "chinese": "也许/碰巧"
+      },
+      {
+        "id": 110,
+        "spanish": "incluso",
+        "english": "even",
+        "chinese": "甚至"
+      },
+      {
+        "id": 111,
+        "spanish": "inclusive",
+        "english": "inclusive / even (Latin America)",
+        "chinese": "包括在内的/甚至（拉美）"
+      },
+      {
+        "id": 112,
+        "spanish": "sólo",
+        "english": "only",
+        "chinese": "只/仅仅"
+      },
+      {
+        "id": 113,
+        "spanish": "aparte",
+        "english": "apart / aside",
+        "chinese": "分开/在一边"
+      },
+      {
+        "id": 114,
+        "spanish": "viceversa",
+        "english": "vice versa",
+        "chinese": "反之亦然"
+      },
+      {
+        "id": 115,
+        "spanish": "adrede",
+        "english": "on purpose",
+        "chinese": "故意地"
+      },
+      {
+        "id": 116,
+        "spanish": "a propósito",
+        "english": "on purpose / by the way",
+        "chinese": "故意地/顺便"
+      },
+      {
+        "id": 117,
+        "spanish": "de veras",
+        "english": "really / truly",
+        "chinese": "真的/确实"
+      },
+      {
+        "id": 118,
+        "spanish": "en seguida",
+        "english": "right away",
+        "chinese": "马上/立刻"
+      },
+      {
+        "id": 119,
+        "spanish": "luego luego",
+        "english": "immediately (Mexican)",
+        "chinese": "立刻/马上（墨西哥）"
+      },
+      {
+        "id": 120,
+        "spanish": "por cierto",
+        "english": "by the way",
+        "chinese": "顺便说一句/对了"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "adverbs",
+    "level": 6,
+    "words": [
+      {
+        "id": 121,
+        "spanish": "principalmente",
+        "english": "mainly",
+        "chinese": "主要地"
+      },
+      {
+        "id": 122,
+        "spanish": "básicamente",
+        "english": "basically",
+        "chinese": "基本上"
+      },
+      {
+        "id": 123,
+        "spanish": "supuestamente",
+        "english": "supposedly",
+        "chinese": "据说/按理说"
+      },
+      {
+        "id": 124,
+        "spanish": "aparentemente",
+        "english": "apparently",
+        "chinese": "显然/看来"
+      },
+      {
+        "id": 125,
+        "spanish": "evidentemente",
+        "english": "evidently",
+        "chinese": "显然"
+      },
+      {
+        "id": 126,
+        "spanish": "sinceramente",
+        "english": "sincerely",
+        "chinese": "真诚地/此致"
+      },
+      {
+        "id": 127,
+        "spanish": "honestamente",
+        "english": "honestly",
+        "chinese": "诚实地/老实说"
+      },
+      {
+        "id": 128,
+        "spanish": "particularmente",
+        "english": "particularly",
+        "chinese": "尤其/特别"
+      },
+      {
+        "id": 129,
+        "spanish": "naturalmente",
+        "english": "naturally",
+        "chinese": "自然地/当然"
+      },
+      {
+        "id": 130,
+        "spanish": "absolutamente",
+        "english": "absolutely",
+        "chinese": "绝对地/当然"
+      },
+      {
+        "id": 131,
+        "spanish": "extremadamente",
+        "english": "extremely",
+        "chinese": "极其/非常"
+      },
+      {
+        "id": 132,
+        "spanish": "sumamente",
+        "english": "highly / extremely",
+        "chinese": "非常/极其"
+      },
+      {
+        "id": 133,
+        "spanish": "igual",
+        "english": "anyway / perhaps (colloquial)",
+        "chinese": "反正/也许（口语）"
+      },
+      {
+        "id": 134,
+        "spanish": "ni siquiera",
+        "english": "not even",
+        "chinese": "甚至不"
+      },
+      {
+        "id": 135,
+        "spanish": "no obstante",
+        "english": "however",
+        "chinese": "然而/不过"
+      },
+      {
+        "id": 136,
+        "spanish": "sin embargo",
+        "english": "however",
+        "chinese": "然而/不过"
+      },
+      {
+        "id": 137,
+        "spanish": "en absoluto",
+        "english": "not at all",
+        "chinese": "一点也不/完全不"
+      },
+      {
+        "id": 138,
+        "spanish": "en efecto",
+        "english": "indeed",
+        "chinese": "确实/的确"
+      },
+      {
+        "id": 139,
+        "spanish": "de hecho",
+        "english": "in fact",
+        "chinese": "事实上/其实"
+      },
+      {
+        "id": 140,
+        "spanish": "mero",
+        "english": "exactly / mere (Mexican: 'el mero centro')",
+        "chinese": "正好/正中央（墨西哥用法）"
+      },
+      {
+        "id": 141,
+        "spanish": "ya mero",
+        "english": "almost / soon (Mexican)",
+        "chinese": "快要/马上（墨西哥）"
+      },
+      {
+        "id": 142,
+        "spanish": "quedito",
+        "english": "softly / quietly (Mexican)",
+        "chinese": "轻声地/轻轻地（墨西哥用法）"
+      },
+      {
+        "id": 143,
+        "spanish": "recio",
+        "english": "loudly / hard (Mexican)",
+        "chinese": "大声地/用力地（墨西哥）"
+      },
+      {
+        "id": 144,
+        "spanish": "padre",
+        "english": "cool (Mexican slang - adj acting as adv)",
+        "chinese": "很酷地/很好地"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "adverbs",
+    "level": 7,
+    "words": [
+      {
+        "id": 145,
+        "spanish": "constantemente",
+        "english": "constantly",
+        "chinese": "不断地"
+      },
+      {
+        "id": 146,
+        "spanish": "continuamente",
+        "english": "continuously",
+        "chinese": "连续地"
+      },
+      {
+        "id": 147,
+        "spanish": "diariamente",
+        "english": "daily",
+        "chinese": "每日的/日常的"
+      },
+      {
+        "id": 148,
+        "spanish": "anualmente",
+        "english": "annually",
+        "chinese": "每年/年度地"
+      },
+      {
+        "id": 149,
+        "spanish": "ocasionalmente",
+        "english": "occasionally",
+        "chinese": "偶尔"
+      },
+      {
+        "id": 150,
+        "spanish": "eventualmente",
+        "english": "possibly / eventually (Spanglish influence in MX)",
+        "chinese": "可能地/最终（受墨西哥英语混用影响）"
+      },
+      {
+        "id": 151,
+        "spanish": "definitivamente",
+        "english": "definitely",
+        "chinese": "肯定地/当然"
+      },
+      {
+        "id": 152,
+        "spanish": "ciertamente",
+        "english": "certainly",
+        "chinese": "当然/确定地"
+      },
+      {
+        "id": 153,
+        "spanish": "verdaderamente",
+        "english": "truly",
+        "chinese": "真正地"
+      },
+      {
+        "id": 154,
+        "spanish": "efectivamente",
+        "english": "effectively / indeed",
+        "chinese": "实际上/确实"
+      },
+      {
+        "id": 155,
+        "spanish": "fácilmente",
+        "english": "easily",
+        "chinese": "容易地/轻易地"
+      },
+      {
+        "id": 156,
+        "spanish": "difícilmente",
+        "english": "with difficulty / unlikely",
+        "chinese": "困难地/不太可能"
+      },
+      {
+        "id": 157,
+        "spanish": "apenas",
+        "english": "scarcely",
+        "chinese": "几乎不/勉强"
+      },
+      {
+        "id": 158,
+        "spanish": "alto",
+        "english": "loud / high",
+        "chinese": "大声的/高的"
+      },
+      {
+        "id": 159,
+        "spanish": "bajo",
+        "english": "low / quietly",
+        "chinese": "低的/安静地"
+      },
+      {
+        "id": 160,
+        "spanish": "gratis",
+        "english": "for free",
+        "chinese": "免费"
+      },
+      {
+        "id": 161,
+        "spanish": "a escondidas",
+        "english": "secretly",
+        "chinese": "秘密地/偷偷地"
+      },
+      {
+        "id": 162,
+        "spanish": "a ciegas",
+        "english": "blindly",
+        "chinese": "盲目地"
+      },
+      {
+        "id": 163,
+        "spanish": "a oscuras",
+        "english": "in the dark",
+        "chinese": "在黑暗中/不知道"
+      },
+      {
+        "id": 164,
+        "spanish": "de paso",
+        "english": "in passing",
+        "chinese": "顺便地/附带地"
+      },
+      {
+        "id": 165,
+        "spanish": "de nuevo",
+        "english": "again",
+        "chinese": "再/又"
+      },
+      {
+        "id": 166,
+        "spanish": "otra vez",
+        "english": "again",
+        "chinese": "再/又"
+      },
+      {
+        "id": 167,
+        "spanish": "en cambio",
+        "english": "on the other hand",
+        "chinese": "另一方面"
+      },
+      {
+        "id": 168,
+        "spanish": "al revés",
+        "english": "backwards / upside down",
+        "chinese": "倒着/颠倒"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "adverbs",
+    "level": 8,
+    "words": [
+      {
+        "id": 169,
+        "spanish": "perfectamente",
+        "english": "perfectly",
+        "chinese": "完美地/完全地"
+      },
+      {
+        "id": 170,
+        "spanish": "correctamente",
+        "english": "correctly",
+        "chinese": "正确地"
+      },
+      {
+        "id": 171,
+        "spanish": "automáticamente",
+        "english": "automatically",
+        "chinese": "自动地"
+      },
+      {
+        "id": 172,
+        "spanish": "mecánicamente",
+        "english": "mechanically",
+        "chinese": "机械地"
+      },
+      {
+        "id": 173,
+        "spanish": "físicamente",
+        "english": "physically",
+        "chinese": "身体上/实际上"
+      },
+      {
+        "id": 174,
+        "spanish": "mentalmente",
+        "english": "mentally",
+        "chinese": "精神上地/心理上地"
+      },
+      {
+        "id": 175,
+        "spanish": "emocionalmente",
+        "english": "emotionally",
+        "chinese": "情感上地"
+      },
+      {
+        "id": 176,
+        "spanish": "socialmente",
+        "english": "socially",
+        "chinese": "在社交方面/在社会上"
+      },
+      {
+        "id": 177,
+        "spanish": "políticamente",
+        "english": "politically",
+        "chinese": "政治上"
+      },
+      {
+        "id": 178,
+        "spanish": "económicamente",
+        "english": "economically",
+        "chinese": "经济上/节俭地"
+      },
+      {
+        "id": 179,
+        "spanish": "culturalmente",
+        "english": "culturally",
+        "chinese": "在文化上"
+      },
+      {
+        "id": 180,
+        "spanish": "técnicamente",
+        "english": "technically",
+        "chinese": "严格来说/从技术上讲"
+      },
+      {
+        "id": 181,
+        "spanish": "teóricamente",
+        "english": "theoretically",
+        "chinese": "理论上"
+      },
+      {
+        "id": 182,
+        "spanish": "prácticamente",
+        "english": "practically",
+        "chinese": "实际上/几乎"
+      },
+      {
+        "id": 183,
+        "spanish": "literalmente",
+        "english": "literally",
+        "chinese": "按字面地"
+      },
+      {
+        "id": 184,
+        "spanish": "figuradamente",
+        "english": "figuratively",
+        "chinese": "比喻地/打个比方说"
+      },
+      {
+        "id": 185,
+        "spanish": "a medias",
+        "english": "halfway / badly done",
+        "chinese": "一半/做得不好"
+      },
+      {
+        "id": 186,
+        "spanish": "de golpe",
+        "english": "all at once",
+        "chinese": "突然/一下子"
+      },
+      {
+        "id": 187,
+        "spanish": "de memoria",
+        "english": "by heart",
+        "chinese": "凭记忆/熟记"
+      },
+      {
+        "id": 188,
+        "spanish": "de rodillas",
+        "english": "on one's knees",
+        "chinese": "跪着/跪下"
+      },
+      {
+        "id": 189,
+        "spanish": "a gritos",
+        "english": "shouting / loudly",
+        "chinese": "大喊地/大声地"
+      },
+      {
+        "id": 190,
+        "spanish": "a fuerza",
+        "english": "by force / necessarily",
+        "chinese": "强行地/必然地"
+      },
+      {
+        "id": 191,
+        "spanish": "por desgracia",
+        "english": "unfortunately",
+        "chinese": "不幸地/可惜"
+      },
+      {
+        "id": 192,
+        "spanish": "por suerte",
+        "english": "luckily",
+        "chinese": "幸运地"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "adverbs",
+    "level": 9,
+    "words": [
+      {
+        "id": 193,
+        "spanish": "previamente",
+        "english": "previously",
+        "chinese": "先前地/之前"
+      },
+      {
+        "id": 194,
+        "spanish": "posteriormente",
+        "english": "subsequently",
+        "chinese": "随后/后来"
+      },
+      {
+        "id": 195,
+        "spanish": "simultáneamente",
+        "english": "simultaneously",
+        "chinese": "同时地"
+      },
+      {
+        "id": 196,
+        "spanish": "alternativamente",
+        "english": "alternatively",
+        "chinese": "或者/作为另一种选择"
+      },
+      {
+        "id": 197,
+        "spanish": "consecuentemente",
+        "english": "consequently",
+        "chinese": "因此"
+      },
+      {
+        "id": 198,
+        "spanish": "sucesivamente",
+        "english": "successively",
+        "chinese": "连续地/依次地"
+      },
+      {
+        "id": 199,
+        "spanish": "respectivamente",
+        "english": "respectively",
+        "chinese": "分别地/依次"
+      },
+      {
+        "id": 200,
+        "spanish": "independientemente",
+        "english": "independently",
+        "chinese": "独立地"
+      },
+      {
+        "id": 201,
+        "spanish": "voluntariamente",
+        "english": "voluntarily",
+        "chinese": "自愿地/主动地"
+      },
+      {
+        "id": 202,
+        "spanish": "involuntariamente",
+        "english": "involuntarily",
+        "chinese": "不由自主地"
+      },
+      {
+        "id": 203,
+        "spanish": "necesariamente",
+        "english": "necessarily",
+        "chinese": "必然地/一定"
+      },
+      {
+        "id": 204,
+        "spanish": "obligatoriamente",
+        "english": "compulsorily",
+        "chinese": "强制地/必须地"
+      },
+      {
+        "id": 205,
+        "spanish": "gratuitamente",
+        "english": "freely / gratuitously",
+        "chinese": "自由地/免费地"
+      },
+      {
+        "id": 206,
+        "spanish": "injustamente",
+        "english": "unjustly",
+        "chinese": "不公正地/冤枉地"
+      },
+      {
+        "id": 207,
+        "spanish": "ilegalmente",
+        "english": "illegally",
+        "chinese": "非法地"
+      },
+      {
+        "id": 208,
+        "spanish": "oficialmente",
+        "english": "officially",
+        "chinese": "正式地/官方地"
+      },
+      {
+        "id": 209,
+        "spanish": "públicamente",
+        "english": "publicly",
+        "chinese": "公开地"
+      },
+      {
+        "id": 210,
+        "spanish": "privadamente",
+        "english": "privately",
+        "chinese": "私下地"
+      },
+      {
+        "id": 211,
+        "spanish": "a menudo",
+        "english": "often",
+        "chinese": "经常"
+      },
+      {
+        "id": 212,
+        "spanish": "de plano",
+        "english": "flatly / entirely (Mexican)",
+        "chinese": "完全地/彻底地（墨西哥）"
+      },
+      {
+        "id": 213,
+        "spanish": "de volada",
+        "english": "quickly / in a flash (Mexican)",
+        "chinese": "很快地/一下子（墨西哥）"
+      },
+      {
+        "id": 214,
+        "spanish": "en balde",
+        "english": "in vain",
+        "chinese": "徒劳地/白费地"
+      },
+      {
+        "id": 215,
+        "spanish": "en vano",
+        "english": "in vain",
+        "chinese": "徒劳地/白费地"
+      },
+      {
+        "id": 216,
+        "spanish": "a fondo",
+        "english": "thoroughly",
+        "chinese": "彻底地"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "adverbs",
+    "level": 10,
+    "words": [
+      {
+        "id": 217,
+        "spanish": "exclusivamente",
+        "english": "exclusively",
+        "chinese": "专门地/独占地/仅仅"
+      },
+      {
+        "id": 218,
+        "spanish": "específicamente",
+        "english": "specifically",
+        "chinese": "具体地/尤其"
+      },
+      {
+        "id": 219,
+        "spanish": "explícitamente",
+        "english": "explicitly",
+        "chinese": "明确地/直白地"
+      },
+      {
+        "id": 220,
+        "spanish": "implícitamente",
+        "english": "implicitly",
+        "chinese": "含蓄地/暗中"
+      },
+      {
+        "id": 221,
+        "spanish": "literalmente",
+        "english": "literally (intensifier)",
+        "chinese": "真的/简直（加强语气）"
+      },
+      {
+        "id": 222,
+        "spanish": "virtualmente",
+        "english": "virtually",
+        "chinese": "几乎/实际上"
+      },
+      {
+        "id": 223,
+        "spanish": "potencialmente",
+        "english": "potentially",
+        "chinese": "潜在地/有可能地"
+      },
+      {
+        "id": 224,
+        "spanish": "aparentemente",
+        "english": "seemingly",
+        "chinese": "看似/表面上"
+      },
+      {
+        "id": 225,
+        "spanish": "supuestamente",
+        "english": "allegedly",
+        "chinese": "据称/据说"
+      },
+      {
+        "id": 226,
+        "spanish": "presuntamente",
+        "english": "allegedly (legal context)",
+        "chinese": "涉嫌地/据指控"
+      },
+      {
+        "id": 227,
+        "spanish": "notablemente",
+        "english": "notably",
+        "chinese": "尤其/显著地"
+      },
+      {
+        "id": 228,
+        "spanish": "considerablemente",
+        "english": "considerably",
+        "chinese": "相当地/大大地"
+      },
+      {
+        "id": 229,
+        "spanish": "sustancialmente",
+        "english": "substantially",
+        "chinese": "大幅度地/实质上"
+      },
+      {
+        "id": 230,
+        "spanish": "lamentablemente",
+        "english": "regrettably",
+        "chinese": "遗憾地"
+      },
+      {
+        "id": 231,
+        "spanish": "tristemente",
+        "english": "sadly",
+        "chinese": "难过地/遗憾地"
+      },
+      {
+        "id": 232,
+        "spanish": "felizmente",
+        "english": "happily",
+        "chinese": "高兴地/幸福地"
+      },
+      {
+        "id": 233,
+        "spanish": "a duras penas",
+        "english": "with great difficulty",
+        "chinese": "非常困难地"
+      },
+      {
+        "id": 234,
+        "spanish": "a hurtadillas",
+        "english": "stealthily",
+        "chinese": "偷偷地/悄悄地"
+      },
+      {
+        "id": 235,
+        "spanish": "a lo loco",
+        "english": "crazily / without thinking",
+        "chinese": "疯狂地/不假思索地"
+      },
+      {
+        "id": 236,
+        "spanish": "a cántaros",
+        "english": "heavily (raining buckets)",
+        "chinese": "很大地/倾盆地（雨）"
+      },
+      {
+        "id": 237,
+        "spanish": "de antemano",
+        "english": "beforehand",
+        "chinese": "事先/提前"
+      },
+      {
+        "id": 238,
+        "spanish": "de incógnito",
+        "english": "incognito",
+        "chinese": "隐姓埋名地/匿名地"
+      },
+      {
+        "id": 239,
+        "spanish": "ex profeso",
+        "english": "on purpose / deliberately",
+        "chinese": "故意地/有意地"
+      },
+      {
+        "id": 240,
+        "spanish": "ipso facto",
+        "english": "immediately",
+        "chinese": "立即/马上"
+      }
+    ]
+  }
+]

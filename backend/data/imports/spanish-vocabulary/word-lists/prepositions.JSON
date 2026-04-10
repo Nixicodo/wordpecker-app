@@ -1,0 +1,1152 @@
+[
+  {
+    "region": "MX",
+    "partOfSpeech": "prepositions",
+    "level": 1,
+    "words": [
+      {
+        "id": 1,
+        "spanish": "de",
+        "english": "of / from",
+        "chinese": "的/来自"
+      },
+      {
+        "id": 2,
+        "spanish": "a",
+        "english": "to / at",
+        "chinese": "到/在"
+      },
+      {
+        "id": 3,
+        "spanish": "en",
+        "english": "in / on",
+        "chinese": "在…里/在…上"
+      },
+      {
+        "id": 4,
+        "spanish": "con",
+        "english": "with",
+        "chinese": "和/与"
+      },
+      {
+        "id": 5,
+        "spanish": "por",
+        "english": "for / by / through",
+        "chinese": "为了/由/通过"
+      },
+      {
+        "id": 6,
+        "spanish": "para",
+        "english": "for / in order to",
+        "chinese": "为了/以便"
+      },
+      {
+        "id": 7,
+        "spanish": "sin",
+        "english": "without",
+        "chinese": "没有/不带"
+      },
+      {
+        "id": 8,
+        "spanish": "sobre",
+        "english": "on / about / over",
+        "chinese": "在……上/关于/在……之上"
+      },
+      {
+        "id": 9,
+        "spanish": "entre",
+        "english": "between / among",
+        "chinese": "在……之间/在……当中"
+      },
+      {
+        "id": 10,
+        "spanish": "hasta",
+        "english": "until / up to",
+        "chinese": "直到/到……为止"
+      },
+      {
+        "id": 11,
+        "spanish": "desde",
+        "english": "from / since",
+        "chinese": "从/自从"
+      },
+      {
+        "id": 12,
+        "spanish": "hacia",
+        "english": "toward",
+        "chinese": "朝向"
+      },
+      {
+        "id": 13,
+        "spanish": "contra",
+        "english": "against",
+        "chinese": "反对/对着"
+      },
+      {
+        "id": 14,
+        "spanish": "durante",
+        "english": "during",
+        "chinese": "在……期间"
+      },
+      {
+        "id": 15,
+        "spanish": "según",
+        "english": "according to",
+        "chinese": "根据/按照"
+      },
+      {
+        "id": 16,
+        "spanish": "ante",
+        "english": "before / in the presence of",
+        "chinese": "在…面前/当着…的面"
+      },
+      {
+        "id": 17,
+        "spanish": "bajo",
+        "english": "under",
+        "chinese": "在……下面"
+      },
+      {
+        "id": 18,
+        "spanish": "tras",
+        "english": "after / behind",
+        "chinese": "在……后面/在……之后"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "prepositions",
+    "level": 2,
+    "words": [
+      {
+        "id": 19,
+        "spanish": "encima de",
+        "english": "on top of",
+        "chinese": "在……上面"
+      },
+      {
+        "id": 20,
+        "spanish": "debajo de",
+        "english": "underneath / below",
+        "chinese": "在下面/低于"
+      },
+      {
+        "id": 21,
+        "spanish": "delante de",
+        "english": "in front of",
+        "chinese": "在…前面"
+      },
+      {
+        "id": 22,
+        "spanish": "detrás de",
+        "english": "behind",
+        "chinese": "在后面/后方"
+      },
+      {
+        "id": 23,
+        "spanish": "cerca de",
+        "english": "close to / near",
+        "chinese": "靠近/在…附近"
+      },
+      {
+        "id": 24,
+        "spanish": "lejos de",
+        "english": "far from",
+        "chinese": "远离/离…很远"
+      },
+      {
+        "id": 25,
+        "spanish": "dentro de",
+        "english": "inside of",
+        "chinese": "在……里面"
+      },
+      {
+        "id": 26,
+        "spanish": "fuera de",
+        "english": "outside of",
+        "chinese": "在……外面/除……之外"
+      },
+      {
+        "id": 27,
+        "spanish": "al lado de",
+        "english": "next to",
+        "chinese": "在旁边/紧挨着"
+      },
+      {
+        "id": 28,
+        "spanish": "alrededor de",
+        "english": "around",
+        "chinese": "在周围/大约"
+      },
+      {
+        "id": 29,
+        "spanish": "antes de",
+        "english": "before (time)",
+        "chinese": "以前/之前"
+      },
+      {
+        "id": 30,
+        "spanish": "después de",
+        "english": "after (time)",
+        "chinese": "……之后/过后"
+      },
+      {
+        "id": 31,
+        "spanish": "junto a",
+        "english": "next to / together with",
+        "chinese": "在旁边/和…一起"
+      },
+      {
+        "id": 32,
+        "spanish": "frente a",
+        "english": "facing / opposite",
+        "chinese": "对面/相对"
+      },
+      {
+        "id": 33,
+        "spanish": "acerca de",
+        "english": "about / concerning",
+        "chinese": "关于/对于"
+      },
+      {
+        "id": 34,
+        "spanish": "además de",
+        "english": "besides / in addition to",
+        "chinese": "除了……之外/加上"
+      },
+      {
+        "id": 35,
+        "spanish": "a través de",
+        "english": "through / across",
+        "chinese": "穿过/横过"
+      },
+      {
+        "id": 36,
+        "spanish": "debido a",
+        "english": "due to",
+        "chinese": "由于"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "prepositions",
+    "level": 3,
+    "words": [
+      {
+        "id": 37,
+        "spanish": "a pesar de",
+        "english": "despite / in spite of",
+        "chinese": "尽管/虽然"
+      },
+      {
+        "id": 38,
+        "spanish": "en vez de",
+        "english": "instead of",
+        "chinese": "而不是/代替"
+      },
+      {
+        "id": 39,
+        "spanish": "en lugar de",
+        "english": "in place of",
+        "chinese": "代替"
+      },
+      {
+        "id": 40,
+        "spanish": "gracias a",
+        "english": "thanks to",
+        "chinese": "多亏/由于"
+      },
+      {
+        "id": 41,
+        "spanish": "a causa de",
+        "english": "because of",
+        "chinese": "因为/由于"
+      },
+      {
+        "id": 42,
+        "spanish": "a favor de",
+        "english": "in favor of",
+        "chinese": "支持/赞成"
+      },
+      {
+        "id": 43,
+        "spanish": "en contra de",
+        "english": "against / opposed to",
+        "chinese": "反对/与……相对"
+      },
+      {
+        "id": 44,
+        "spanish": "en medio de",
+        "english": "in the middle of",
+        "chinese": "在……中间"
+      },
+      {
+        "id": 45,
+        "spanish": "a partir de",
+        "english": "starting from",
+        "chinese": "从……开始"
+      },
+      {
+        "id": 46,
+        "spanish": "con respecto a",
+        "english": "regarding / with respect to",
+        "chinese": "关于/就…而言"
+      },
+      {
+        "id": 47,
+        "spanish": "en cuanto a",
+        "english": "regarding / as for",
+        "chinese": "关于/至于"
+      },
+      {
+        "id": 48,
+        "spanish": "rumbo a",
+        "english": "headed for / towards (Common in MX)",
+        "chinese": "前往/朝向（墨西哥常用）"
+      },
+      {
+        "id": 49,
+        "spanish": "camino a",
+        "english": "on the way to",
+        "chinese": "在去……的路上"
+      },
+      {
+        "id": 50,
+        "spanish": "a cargo de",
+        "english": "in charge of",
+        "chinese": "负责/主管"
+      },
+      {
+        "id": 51,
+        "spanish": "a cambio de",
+        "english": "in exchange for",
+        "chinese": "交换/作为…的交换"
+      },
+      {
+        "id": 52,
+        "spanish": "a lo largo de",
+        "english": "along / throughout",
+        "chinese": "沿着/遍及"
+      },
+      {
+        "id": 53,
+        "spanish": "más allá de",
+        "english": "beyond",
+        "chinese": "超出/在……那边"
+      },
+      {
+        "id": 54,
+        "spanish": "por medio de",
+        "english": "by means of",
+        "chinese": "通过/借助"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "prepositions",
+    "level": 4,
+    "words": [
+      {
+        "id": 55,
+        "spanish": "de acuerdo con",
+        "english": "in accordance with",
+        "chinese": "按照/根据"
+      },
+      {
+        "id": 56,
+        "spanish": "conforme a",
+        "english": "according to / compliant with",
+        "chinese": "根据/符合"
+      },
+      {
+        "id": 57,
+        "spanish": "referente a",
+        "english": "referring to",
+        "chinese": "提到/关于"
+      },
+      {
+        "id": 58,
+        "spanish": "en torno a",
+        "english": "around / concerning",
+        "chinese": "关于/围绕"
+      },
+      {
+        "id": 59,
+        "spanish": "a fines de",
+        "english": "at the end of (time)",
+        "chinese": "在…结束时"
+      },
+      {
+        "id": 60,
+        "spanish": "a principios de",
+        "english": "at the beginning of",
+        "chinese": "在…开始时"
+      },
+      {
+        "id": 61,
+        "spanish": "a mediados de",
+        "english": "in the middle of (time)",
+        "chinese": "在……期间/正当……时候"
+      },
+      {
+        "id": 62,
+        "spanish": "al fondo de",
+        "english": "at the back of",
+        "chinese": "在…后面"
+      },
+      {
+        "id": 63,
+        "spanish": "a orillas de",
+        "english": "on the banks/shores of",
+        "chinese": "在……岸边"
+      },
+      {
+        "id": 64,
+        "spanish": "al borde de",
+        "english": "at the edge of",
+        "chinese": "在…边缘"
+      },
+      {
+        "id": 65,
+        "spanish": "a diferencia de",
+        "english": "unlike",
+        "chinese": "不像/不同于"
+      },
+      {
+        "id": 66,
+        "spanish": "por encima de",
+        "english": "above / over (figurative)",
+        "chinese": "高于/超过（比喻）"
+      },
+      {
+        "id": 67,
+        "spanish": "por debajo de",
+        "english": "below (figurative)",
+        "chinese": "低于/不如"
+      },
+      {
+        "id": 68,
+        "spanish": "de parte de",
+        "english": "on behalf of",
+        "chinese": "代表"
+      },
+      {
+        "id": 69,
+        "spanish": "en frente de",
+        "english": "in front of",
+        "chinese": "在…前面"
+      },
+      {
+        "id": 70,
+        "spanish": "junto con",
+        "english": "together with",
+        "chinese": "连同/和…一起"
+      },
+      {
+        "id": 71,
+        "spanish": "aparte de",
+        "english": "apart from",
+        "chinese": "除……之外"
+      },
+      {
+        "id": 72,
+        "spanish": "encara a",
+        "english": "facing / in the face of",
+        "chinese": "面对/面临"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "prepositions",
+    "level": 5,
+    "words": [
+      {
+        "id": 73,
+        "spanish": "mediante",
+        "english": "via / by means of",
+        "chinese": "通过/借助"
+      },
+      {
+        "id": 74,
+        "spanish": "vía",
+        "english": "via / through",
+        "chinese": "通过/经由"
+      },
+      {
+        "id": 75,
+        "spanish": "salvo",
+        "english": "except",
+        "chinese": "除了"
+      },
+      {
+        "id": 76,
+        "spanish": "excepto",
+        "english": "except",
+        "chinese": "除了"
+      },
+      {
+        "id": 77,
+        "spanish": "incluso",
+        "english": "including / even",
+        "chinese": "包括/甚至"
+      },
+      {
+        "id": 78,
+        "spanish": "menos",
+        "english": "except / minus",
+        "chinese": "除了/减去"
+      },
+      {
+        "id": 79,
+        "spanish": "en busca de",
+        "english": "in search of",
+        "chinese": "寻找/寻求"
+      },
+      {
+        "id": 80,
+        "spanish": "en base a",
+        "english": "based on (Common usage)",
+        "chinese": "根据/基于"
+      },
+      {
+        "id": 81,
+        "spanish": "con base en",
+        "english": "based on (Formal/Correct)",
+        "chinese": "以…为基础/基于"
+      },
+      {
+        "id": 82,
+        "spanish": "a punto de",
+        "english": "about to / on the verge of",
+        "chinese": "快要/即将"
+      },
+      {
+        "id": 83,
+        "spanish": "a costa de",
+        "english": "at the expense of",
+        "chinese": "以…为代价"
+      },
+      {
+        "id": 84,
+        "spanish": "a falta de",
+        "english": "for lack of",
+        "chinese": "由于缺乏/因没有"
+      },
+      {
+        "id": 85,
+        "spanish": "a prueba de",
+        "english": "proof against (e.g., waterproof)",
+        "chinese": "防…的（如防水）"
+      },
+      {
+        "id": 86,
+        "spanish": "en honor a",
+        "english": "in honor of",
+        "chinese": "为了纪念/向…致敬"
+      },
+      {
+        "id": 87,
+        "spanish": "en memoria de",
+        "english": "in memory of",
+        "chinese": "为纪念"
+      },
+      {
+        "id": 88,
+        "spanish": "con tal de",
+        "english": "provided that / for the sake of",
+        "chinese": "为了/只要"
+      },
+      {
+        "id": 89,
+        "spanish": "so",
+        "english": "under (archaic but used in set phrases like 'so pena de')",
+        "chinese": "在……之下（古语，用于固定短语）"
+      },
+      {
+        "id": 90,
+        "spanish": "pro",
+        "english": "in favor of (e.g., cupón pro ciegos)",
+        "chinese": "为了…的利益/有利于"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "prepositions",
+    "level": 6,
+    "words": [
+      {
+        "id": 91,
+        "spanish": "en virtud de",
+        "english": "by virtue of",
+        "chinese": "凭借/由于"
+      },
+      {
+        "id": 92,
+        "spanish": "con motivo de",
+        "english": "on the occasion of / due to",
+        "chinese": "值此……之际/由于"
+      },
+      {
+        "id": 93,
+        "spanish": "a raíz de",
+        "english": "as a result of",
+        "chinese": "由于/因……结果"
+      },
+      {
+        "id": 94,
+        "spanish": "a espaldas de",
+        "english": "behind someone's back",
+        "chinese": "背着某人/在某人背后"
+      },
+      {
+        "id": 95,
+        "spanish": "a manos de",
+        "english": "at the hands of",
+        "chinese": "在…手中/遭受"
+      },
+      {
+        "id": 96,
+        "spanish": "a juicio de",
+        "english": "in the opinion of",
+        "chinese": "依……看来/据……意见"
+      },
+      {
+        "id": 97,
+        "spanish": "al margen de",
+        "english": "outside of / regardless of",
+        "chinese": "除……之外/不管"
+      },
+      {
+        "id": 98,
+        "spanish": "en vista de",
+        "english": "in view of",
+        "chinese": "鉴于/考虑到"
+      },
+      {
+        "id": 99,
+        "spanish": "en nombre de",
+        "english": "in the name of",
+        "chinese": "以……的名义"
+      },
+      {
+        "id": 100,
+        "spanish": "por cuenta de",
+        "english": "on behalf of / at the expense of",
+        "chinese": "代表/由……承担费用"
+      },
+      {
+        "id": 101,
+        "spanish": "de cara a",
+        "english": "facing / with regards to",
+        "chinese": "关于/对于"
+      },
+      {
+        "id": 102,
+        "spanish": "en vías de",
+        "english": "in the process of",
+        "chinese": "在……过程中/正在"
+      },
+      {
+        "id": 103,
+        "spanish": "en aras de",
+        "english": "for the sake of",
+        "chinese": "为了/看在……的份上"
+      },
+      {
+        "id": 104,
+        "spanish": "so pena de",
+        "english": "under penalty of",
+        "chinese": "以……为处罚/违者受……处罚"
+      },
+      {
+        "id": 105,
+        "spanish": "con miras a",
+        "english": "with an eye to / aiming at",
+        "chinese": "着眼于/旨在"
+      },
+      {
+        "id": 106,
+        "spanish": "a excepción de",
+        "english": "with the exception of",
+        "chinese": "除了……之外"
+      },
+      {
+        "id": 107,
+        "spanish": "a eso de",
+        "english": "at around (time)",
+        "chinese": "大约在（时间）"
+      },
+      {
+        "id": 108,
+        "spanish": "a par de",
+        "english": "on par with",
+        "chinese": "与……相当"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "prepositions",
+    "level": 7,
+    "words": [
+      {
+        "id": 109,
+        "spanish": "en relación con",
+        "english": "in relation to",
+        "chinese": "关于/与……有关"
+      },
+      {
+        "id": 110,
+        "spanish": "en compañía de",
+        "english": "in the company of",
+        "chinese": "与……一起/在……陪同下"
+      },
+      {
+        "id": 111,
+        "spanish": "en colaboración con",
+        "english": "in collaboration with",
+        "chinese": "与…合作"
+      },
+      {
+        "id": 112,
+        "spanish": "sin contar",
+        "english": "without counting / excluding",
+        "chinese": "不算/除外"
+      },
+      {
+        "id": 113,
+        "spanish": "contando con",
+        "english": "counting on / including",
+        "chinese": "算上/包括"
+      },
+      {
+        "id": 114,
+        "spanish": "a instancias de",
+        "english": "at the request of",
+        "chinese": "应…要求"
+      },
+      {
+        "id": 115,
+        "spanish": "a merced de",
+        "english": "at the mercy of",
+        "chinese": "任凭…摆布/受…支配"
+      },
+      {
+        "id": 116,
+        "spanish": "en calidad de",
+        "english": "in the capacity of",
+        "chinese": "以……身份"
+      },
+      {
+        "id": 117,
+        "spanish": "por parte de",
+        "english": "on the part of",
+        "chinese": "就……而言/由……方面"
+      },
+      {
+        "id": 118,
+        "spanish": "de conformidad con",
+        "english": "in compliance with",
+        "chinese": "按照/遵照"
+      },
+      {
+        "id": 119,
+        "spanish": "a modo de",
+        "english": "by way of",
+        "chinese": "经由/作为"
+      },
+      {
+        "id": 120,
+        "spanish": "a manera de",
+        "english": "in the manner of",
+        "chinese": "以……方式/按照……风格"
+      },
+      {
+        "id": 121,
+        "spanish": "en forma de",
+        "english": "in the shape of",
+        "chinese": "呈……形状/以……形式"
+      },
+      {
+        "id": 122,
+        "spanish": "so pretexto de",
+        "english": "under the pretext of",
+        "chinese": "以……为借口"
+      },
+      {
+        "id": 123,
+        "spanish": "a sabiendas de",
+        "english": "knowing full well that",
+        "chinese": "明知"
+      },
+      {
+        "id": 124,
+        "spanish": "con arreglo a",
+        "english": "in accordance with",
+        "chinese": "按照/根据"
+      },
+      {
+        "id": 125,
+        "spanish": "al cabo de",
+        "english": "at the end of (time period)",
+        "chinese": "在…末尾/期末"
+      },
+      {
+        "id": 126,
+        "spanish": "en perjuicio de",
+        "english": "to the detriment of",
+        "chinese": "有损于/以……为代价"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "prepositions",
+    "level": 8,
+    "words": [
+      {
+        "id": 127,
+        "spanish": "a fuerza de",
+        "english": "by dint of / through sheer...",
+        "chinese": "凭借/全靠……"
+      },
+      {
+        "id": 128,
+        "spanish": "a golpe de",
+        "english": "by the force of",
+        "chinese": "由于……的力量/迫于"
+      },
+      {
+        "id": 129,
+        "spanish": "en razón de",
+        "english": "by reason of",
+        "chinese": "由于/因为"
+      },
+      {
+        "id": 130,
+        "spanish": "merced a",
+        "english": "thanks to (literary)",
+        "chinese": "幸亏/承蒙（书面）"
+      },
+      {
+        "id": 131,
+        "spanish": "camino de",
+        "english": "on the road to",
+        "chinese": "在前往……的路上"
+      },
+      {
+        "id": 132,
+        "spanish": "vis-a-vis",
+        "english": "face to face (rare but used)",
+        "chinese": "面对面（较少见但会用）"
+      },
+      {
+        "id": 133,
+        "spanish": "cara a",
+        "english": "facing",
+        "chinese": "朝向/面向"
+      },
+      {
+        "id": 134,
+        "spanish": "en pro de",
+        "english": "in favor of",
+        "chinese": "支持/赞成"
+      },
+      {
+        "id": 135,
+        "spanish": "en pos de",
+        "english": "in pursuit of",
+        "chinese": "追求/寻求"
+      },
+      {
+        "id": 136,
+        "spanish": "a beneficio de",
+        "english": "for the benefit of",
+        "chinese": "为了……的利益"
+      },
+      {
+        "id": 137,
+        "spanish": "en ausencia de",
+        "english": "in the absence of",
+        "chinese": "在没有……的情况下/缺少"
+      },
+      {
+        "id": 138,
+        "spanish": "en defecto de",
+        "english": "in default of",
+        "chinese": "在缺少…时/若无"
+      },
+      {
+        "id": 139,
+        "spanish": "a pesar de los pesares",
+        "english": "despite everything",
+        "chinese": "尽管如此/不管怎样"
+      },
+      {
+        "id": 140,
+        "spanish": "en comparación con",
+        "english": "in comparison with",
+        "chinese": "与…相比"
+      },
+      {
+        "id": 141,
+        "spanish": "en contraste con",
+        "english": "in contrast with",
+        "chinese": "与…形成对比"
+      },
+      {
+        "id": 142,
+        "spanish": "a espaldas",
+        "english": "behind the back",
+        "chinese": "在背后"
+      },
+      {
+        "id": 143,
+        "spanish": "lejos de",
+        "english": "far from (figurative)",
+        "chinese": "远非/绝不是"
+      },
+      {
+        "id": 144,
+        "spanish": "cerca de",
+        "english": "about / approximately (quantity)",
+        "chinese": "大约/左右（数量）"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "prepositions",
+    "level": 9,
+    "words": [
+      {
+        "id": 145,
+        "spanish": "a título de",
+        "english": "in the capacity of",
+        "chinese": "以……身份"
+      },
+      {
+        "id": 146,
+        "spanish": "en concepto de",
+        "english": "as / by way of",
+        "chinese": "作为/通过"
+      },
+      {
+        "id": 147,
+        "spanish": "a la luz de",
+        "english": "in light of",
+        "chinese": "鉴于/考虑到"
+      },
+      {
+        "id": 148,
+        "spanish": "al calor de",
+        "english": "in the heat of / under the protection of",
+        "chinese": "在……激烈时刻/在……保护下"
+      },
+      {
+        "id": 149,
+        "spanish": "al amparo de",
+        "english": "under the protection of",
+        "chinese": "在……保护下"
+      },
+      {
+        "id": 150,
+        "spanish": "con objeto de",
+        "english": "with the aim of",
+        "chinese": "以……为目的"
+      },
+      {
+        "id": 151,
+        "spanish": "a efecto de",
+        "english": "for the purpose of",
+        "chinese": "为了……的目的"
+      },
+      {
+        "id": 152,
+        "spanish": "en cumplimiento de",
+        "english": "in compliance with",
+        "chinese": "按照/遵照"
+      },
+      {
+        "id": 153,
+        "spanish": "en atención a",
+        "english": "in consideration of",
+        "chinese": "考虑到/鉴于"
+      },
+      {
+        "id": 154,
+        "spanish": "en función de",
+        "english": "depending on / as a function of",
+        "chinese": "取决于/根据"
+      },
+      {
+        "id": 155,
+        "spanish": "por conducto de",
+        "english": "through the channel of",
+        "chinese": "通过/经由"
+      },
+      {
+        "id": 156,
+        "spanish": "so capa de",
+        "english": "under the guise of",
+        "chinese": "以……为幌子"
+      },
+      {
+        "id": 157,
+        "spanish": "fuera de",
+        "english": "apart from / aside from",
+        "chinese": "除……之外/撇开"
+      },
+      {
+        "id": 158,
+        "spanish": "independientemente de",
+        "english": "regardless of",
+        "chinese": "不管/无论"
+      },
+      {
+        "id": 159,
+        "spanish": "amén de",
+        "english": "as well as / in addition to",
+        "chinese": "以及/除…之外还"
+      },
+      {
+        "id": 160,
+        "spanish": "allende",
+        "english": "beyond (literary/formal)",
+        "chinese": "在……彼方/超越"
+      },
+      {
+        "id": 161,
+        "spanish": "aquende",
+        "english": "on this side of (literary)",
+        "chinese": "在……这边（书面）"
+      },
+      {
+        "id": 162,
+        "spanish": "con excepción de",
+        "english": "with the exception of",
+        "chinese": "除了……之外"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "prepositions",
+    "level": 10,
+    "words": [
+      {
+        "id": 163,
+        "spanish": "en detrimento de",
+        "english": "to the detriment of",
+        "chinese": "有损于/以……为代价"
+      },
+      {
+        "id": 164,
+        "spanish": "en menoscabo de",
+        "english": "at the expense of / lessening",
+        "chinese": "以牺牲…为代价/减损"
+      },
+      {
+        "id": 165,
+        "spanish": "en vísperas de",
+        "english": "on the eve of",
+        "chinese": "在……前夕"
+      },
+      {
+        "id": 166,
+        "spanish": "a sabiendas de que",
+        "english": "knowing full well that",
+        "chinese": "明知"
+      },
+      {
+        "id": 167,
+        "spanish": "a despecho de",
+        "english": "in spite of (defiance)",
+        "chinese": "不顾/冒着"
+      },
+      {
+        "id": 168,
+        "spanish": "a resultas de",
+        "english": "as a consequence of",
+        "chinese": "由于/作为……的结果"
+      },
+      {
+        "id": 169,
+        "spanish": "por orden de",
+        "english": "by order of",
+        "chinese": "奉……之命/根据……命令"
+      },
+      {
+        "id": 170,
+        "spanish": "a semejanza de",
+        "english": "in the likeness of",
+        "chinese": "以……的样子/像……一样"
+      },
+      {
+        "id": 171,
+        "spanish": "a paso de",
+        "english": "at the pace of",
+        "chinese": "以…的速度"
+      },
+      {
+        "id": 172,
+        "spanish": "a ras de",
+        "english": "level with / flush with",
+        "chinese": "与…齐平/与…平齐"
+      },
+      {
+        "id": 173,
+        "spanish": "a prueba de",
+        "english": "resistant to",
+        "chinese": "对…有抵抗力的/耐…的"
+      },
+      {
+        "id": 174,
+        "spanish": "a tenor de",
+        "english": "according to the terms of",
+        "chinese": "按照……的条款"
+      },
+      {
+        "id": 175,
+        "spanish": "a trueque de",
+        "english": "in exchange for (archaic/literary)",
+        "chinese": "以换取（古/书）"
+      },
+      {
+        "id": 176,
+        "spanish": "a vista de",
+        "english": "in the sight of",
+        "chinese": "在……看来/在……眼前"
+      },
+      {
+        "id": 177,
+        "spanish": "de espaldas a",
+        "english": "with one's back to",
+        "chinese": "背对着"
+      },
+      {
+        "id": 178,
+        "spanish": "de cara a",
+        "english": "facing (problems/future)",
+        "chinese": "面对"
+      },
+      {
+        "id": 179,
+        "spanish": "en lo tocante a",
+        "english": "regarding / concerning",
+        "chinese": "关于/有关"
+      },
+      {
+        "id": 180,
+        "spanish": "en lo referente a",
+        "english": "with reference to",
+        "chinese": "关于/有关"
+      }
+    ]
+  }
+]

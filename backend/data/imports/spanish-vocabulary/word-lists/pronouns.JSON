@@ -1,0 +1,792 @@
+[
+  {
+    "region": "MX",
+    "partOfSpeech": "pronouns",
+    "level": 1,
+    "words": [
+      {
+        "id": 1,
+        "spanish": "yo",
+        "english": "I",
+        "chinese": "我"
+      },
+      {
+        "id": 2,
+        "spanish": "tú",
+        "english": "you (informal)",
+        "chinese": "你"
+      },
+      {
+        "id": 3,
+        "spanish": "él",
+        "english": "he",
+        "chinese": "他"
+      },
+      {
+        "id": 4,
+        "spanish": "ella",
+        "english": "she",
+        "chinese": "她"
+      },
+      {
+        "id": 5,
+        "spanish": "usted",
+        "english": "you (formal)",
+        "chinese": "您"
+      },
+      {
+        "id": 6,
+        "spanish": "nosotros",
+        "english": "we (masculine/mixed)",
+        "chinese": "我们（男性/混合）"
+      },
+      {
+        "id": 7,
+        "spanish": "nosotras",
+        "english": "we (feminine)",
+        "chinese": "我们（全女性）"
+      },
+      {
+        "id": 8,
+        "spanish": "ustedes",
+        "english": "you all (plural)",
+        "chinese": "你们（复数）"
+      },
+      {
+        "id": 9,
+        "spanish": "ellos",
+        "english": "they (masculine/mixed)",
+        "chinese": "他们"
+      },
+      {
+        "id": 10,
+        "spanish": "ellas",
+        "english": "they (feminine)",
+        "chinese": "她们"
+      },
+      {
+        "id": 11,
+        "spanish": "me",
+        "english": "me / myself",
+        "chinese": "我/我自己"
+      },
+      {
+        "id": 12,
+        "spanish": "te",
+        "english": "you / yourself",
+        "chinese": "你/你自己"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "pronouns",
+    "level": 2,
+    "words": [
+      {
+        "id": 13,
+        "spanish": "lo",
+        "english": "it / him (direct object)",
+        "chinese": "它/他（直接宾语）"
+      },
+      {
+        "id": 14,
+        "spanish": "la",
+        "english": "it / her (direct object)",
+        "chinese": "它/她（直接宾语）"
+      },
+      {
+        "id": 15,
+        "spanish": "le",
+        "english": "him / her (indirect object)",
+        "chinese": "给他/给她"
+      },
+      {
+        "id": 16,
+        "spanish": "se",
+        "english": "himself / herself / each other",
+        "chinese": "他自己/她自己/彼此"
+      },
+      {
+        "id": 17,
+        "spanish": "nos",
+        "english": "us / ourselves",
+        "chinese": "我们/我们自己"
+      },
+      {
+        "id": 18,
+        "spanish": "les",
+        "english": "them / you all (indirect object)",
+        "chinese": "他们/你们（间接宾语）"
+      },
+      {
+        "id": 19,
+        "spanish": "esto",
+        "english": "this (neutral)",
+        "chinese": "这个（中性）"
+      },
+      {
+        "id": 20,
+        "spanish": "eso",
+        "english": "that (neutral)",
+        "chinese": "那个/那件事"
+      },
+      {
+        "id": 21,
+        "spanish": "mí",
+        "english": "me (after preposition)",
+        "chinese": "我（介词后）"
+      },
+      {
+        "id": 22,
+        "spanish": "ti",
+        "english": "you (after preposition)",
+        "chinese": "你/您（介词后）"
+      },
+      {
+        "id": 23,
+        "spanish": "nada",
+        "english": "nothing",
+        "chinese": "没有什么/什么都没有"
+      },
+      {
+        "id": 24,
+        "spanish": "todo",
+        "english": "everything / all",
+        "chinese": "一切/全部"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "pronouns",
+    "level": 3,
+    "words": [
+      {
+        "id": 25,
+        "spanish": "este",
+        "english": "this one (masculine)",
+        "chinese": "这个（阳性）"
+      },
+      {
+        "id": 26,
+        "spanish": "esta",
+        "english": "this one (feminine)",
+        "chinese": "这个（阴性）"
+      },
+      {
+        "id": 27,
+        "spanish": "ese",
+        "english": "that one (masculine)",
+        "chinese": "那个（阳性）"
+      },
+      {
+        "id": 28,
+        "spanish": "esa",
+        "english": "that one (feminine)",
+        "chinese": "那个（阴性）"
+      },
+      {
+        "id": 29,
+        "spanish": "algo",
+        "english": "something",
+        "chinese": "某物/某事"
+      },
+      {
+        "id": 30,
+        "spanish": "alguien",
+        "english": "someone",
+        "chinese": "某人"
+      },
+      {
+        "id": 31,
+        "spanish": "nadie",
+        "english": "no one / nobody",
+        "chinese": "没有人"
+      },
+      {
+        "id": 32,
+        "spanish": "conmigo",
+        "english": "with me",
+        "chinese": "和我一起"
+      },
+      {
+        "id": 33,
+        "spanish": "contigo",
+        "english": "with you",
+        "chinese": "和你一起/和您一起"
+      },
+      {
+        "id": 34,
+        "spanish": "mío",
+        "english": "mine",
+        "chinese": "我的"
+      },
+      {
+        "id": 35,
+        "spanish": "tuyo",
+        "english": "yours",
+        "chinese": "你的/您 的"
+      },
+      {
+        "id": 36,
+        "spanish": "suyo",
+        "english": "his / hers / yours / theirs",
+        "chinese": "他的/她的/你的/他们的"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "pronouns",
+    "level": 4,
+    "words": [
+      {
+        "id": 37,
+        "spanish": "estos",
+        "english": "these (masculine)",
+        "chinese": "这些（阳性）"
+      },
+      {
+        "id": 38,
+        "spanish": "estas",
+        "english": "these (feminine)",
+        "chinese": "这些（阴性）"
+      },
+      {
+        "id": 39,
+        "spanish": "esos",
+        "english": "those (masculine)",
+        "chinese": "那些（阳性）"
+      },
+      {
+        "id": 40,
+        "spanish": "esas",
+        "english": "those (feminine)",
+        "chinese": "那些（阴性）"
+      },
+      {
+        "id": 41,
+        "spanish": "quién",
+        "english": "who",
+        "chinese": "谁"
+      },
+      {
+        "id": 42,
+        "spanish": "qué",
+        "english": "what",
+        "chinese": "什么"
+      },
+      {
+        "id": 43,
+        "spanish": "cuál",
+        "english": "which one",
+        "chinese": "哪一个"
+      },
+      {
+        "id": 44,
+        "spanish": "míos",
+        "english": "mine (plural)",
+        "chinese": "我的（复数）"
+      },
+      {
+        "id": 45,
+        "spanish": "tuyos",
+        "english": "yours (plural)",
+        "chinese": "你们的（复数）"
+      },
+      {
+        "id": 46,
+        "spanish": "suyos",
+        "english": "his / hers / yours / theirs (plural)",
+        "chinese": "他们的/她们的/你们的/它们的"
+      },
+      {
+        "id": 47,
+        "spanish": "uno",
+        "english": "one",
+        "chinese": "一/一个"
+      },
+      {
+        "id": 48,
+        "spanish": "otro",
+        "english": "other / another",
+        "chinese": "另一个/其他的"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "pronouns",
+    "level": 5,
+    "words": [
+      {
+        "id": 49,
+        "spanish": "aquello",
+        "english": "that over there (neutral)",
+        "chinese": "那边那个（中性）"
+      },
+      {
+        "id": 50,
+        "spanish": "aquel",
+        "english": "that one over there (masculine)",
+        "chinese": "那边那个（阳性）"
+      },
+      {
+        "id": 51,
+        "spanish": "aquella",
+        "english": "that one over there (feminine)",
+        "chinese": "那边那个（阴性）"
+      },
+      {
+        "id": 52,
+        "spanish": "ninguno",
+        "english": "none / not any",
+        "chinese": "一个也没有/没有任何"
+      },
+      {
+        "id": 53,
+        "spanish": "alguno",
+        "english": "some / any",
+        "chinese": "一些/任何"
+      },
+      {
+        "id": 54,
+        "spanish": "cualquiera",
+        "english": "anyone / whichever",
+        "chinese": "任何人/无论哪个"
+      },
+      {
+        "id": 55,
+        "spanish": "muchos",
+        "english": "many",
+        "chinese": "许多"
+      },
+      {
+        "id": 56,
+        "spanish": "pocos",
+        "english": "few",
+        "chinese": "少数的/几个"
+      },
+      {
+        "id": 57,
+        "spanish": "ambos",
+        "english": "both",
+        "chinese": "两者都"
+      },
+      {
+        "id": 58,
+        "spanish": "varios",
+        "english": "various / several",
+        "chinese": "各种各样的/几个"
+      },
+      {
+        "id": 59,
+        "spanish": "los",
+        "english": "them (direct object masculine)",
+        "chinese": "他们（阳性直接宾语）"
+      },
+      {
+        "id": 60,
+        "spanish": "las",
+        "english": "them (direct object feminine)",
+        "chinese": "她们/它们（阴性直接宾语）"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "pronouns",
+    "level": 6,
+    "words": [
+      {
+        "id": 61,
+        "spanish": "aquellos",
+        "english": "those over there (masculine)",
+        "chinese": "那边那些（阳性）"
+      },
+      {
+        "id": 62,
+        "spanish": "aquellas",
+        "english": "those over there (feminine)",
+        "chinese": "那边那些（阴性）"
+      },
+      {
+        "id": 63,
+        "spanish": "mía",
+        "english": "mine (feminine)",
+        "chinese": "我的（阴性）"
+      },
+      {
+        "id": 64,
+        "spanish": "tuya",
+        "english": "yours (feminine)",
+        "chinese": "你的（阴性）"
+      },
+      {
+        "id": 65,
+        "spanish": "suya",
+        "english": "his/hers/yours (feminine)",
+        "chinese": "她的/你的（阴性）"
+      },
+      {
+        "id": 66,
+        "spanish": "demás",
+        "english": "the rest / others",
+        "chinese": "其余的人/其他人"
+      },
+      {
+        "id": 67,
+        "spanish": "bastante",
+        "english": "enough / plenty",
+        "chinese": "足够/很多"
+      },
+      {
+        "id": 68,
+        "spanish": "mismo",
+        "english": "same one",
+        "chinese": "同一个/同一件"
+      },
+      {
+        "id": 69,
+        "spanish": "sí",
+        "english": "himself/herself (prepositional)",
+        "chinese": "他自己/她自己"
+      },
+      {
+        "id": 70,
+        "spanish": "consigo",
+        "english": "with himself/herself",
+        "chinese": "和他自己一起/和她自己一起"
+      },
+      {
+        "id": 71,
+        "spanish": "cada uno",
+        "english": "each one",
+        "chinese": "每一个"
+      },
+      {
+        "id": 72,
+        "spanish": "quienes",
+        "english": "who (plural)",
+        "chinese": "谁们/哪些人"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "pronouns",
+    "level": 7,
+    "words": [
+      {
+        "id": 73,
+        "spanish": "lo que",
+        "english": "that which / what",
+        "chinese": "所…的东西/什么"
+      },
+      {
+        "id": 74,
+        "spanish": "el que",
+        "english": "the one that (masculine)",
+        "chinese": "那个……的（阳性）"
+      },
+      {
+        "id": 75,
+        "spanish": "la que",
+        "english": "the one that (feminine)",
+        "chinese": "那个……的（阴性）"
+      },
+      {
+        "id": 76,
+        "spanish": "los que",
+        "english": "the ones that (masculine)",
+        "chinese": "那些……的（阳性）"
+      },
+      {
+        "id": 77,
+        "spanish": "las que",
+        "english": "the ones that (feminine)",
+        "chinese": "那些……的（阴性）"
+      },
+      {
+        "id": 78,
+        "spanish": "cuyo",
+        "english": "whose (masculine)",
+        "chinese": "谁的（阳性）"
+      },
+      {
+        "id": 79,
+        "spanish": "cuya",
+        "english": "whose (feminine)",
+        "chinese": "谁的（阴性）"
+      },
+      {
+        "id": 80,
+        "spanish": "cuáles",
+        "english": "which ones",
+        "chinese": "哪一些/哪几个"
+      },
+      {
+        "id": 81,
+        "spanish": "mías",
+        "english": "mine (plural feminine)",
+        "chinese": "我的（阴性复数）"
+      },
+      {
+        "id": 82,
+        "spanish": "tuyas",
+        "english": "yours (plural feminine)",
+        "chinese": "你们的（阴性复数）"
+      },
+      {
+        "id": 83,
+        "spanish": "suyas",
+        "english": "theirs (plural feminine)",
+        "chinese": "她们的/它们的（阴性复数）"
+      },
+      {
+        "id": 84,
+        "spanish": "semejante",
+        "english": "such / similar one",
+        "chinese": "这样的/类似的"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "pronouns",
+    "level": 8,
+    "words": [
+      {
+        "id": 85,
+        "spanish": "lo cual",
+        "english": "which (relative)",
+        "chinese": "……的那个/那个……"
+      },
+      {
+        "id": 86,
+        "spanish": "cuyos",
+        "english": "whose (plural masculine)",
+        "chinese": "谁的（阳性复数）"
+      },
+      {
+        "id": 87,
+        "spanish": "cuyas",
+        "english": "whose (plural feminine)",
+        "chinese": "谁的（阴性复数）"
+      },
+      {
+        "id": 88,
+        "spanish": "uno al otro",
+        "english": "each other (masculine)",
+        "chinese": "彼此（阳性）"
+      },
+      {
+        "id": 89,
+        "spanish": "una a la otra",
+        "english": "each other (feminine)",
+        "chinese": "彼此（阴性）"
+      },
+      {
+        "id": 90,
+        "spanish": "tal",
+        "english": "such a one",
+        "chinese": "这样一个"
+      },
+      {
+        "id": 91,
+        "spanish": "tales",
+        "english": "such ones",
+        "chinese": "这样的那些"
+      },
+      {
+        "id": 92,
+        "spanish": "quienquiera",
+        "english": "whoever",
+        "chinese": "无论谁/任何人"
+      },
+      {
+        "id": 93,
+        "spanish": "dondequiera",
+        "english": "wherever (used nominally)",
+        "chinese": "无论哪里/任何地方"
+      },
+      {
+        "id": 94,
+        "spanish": "nosotros mismos",
+        "english": "ourselves (emphatic)",
+        "chinese": "我们自己（强调）"
+      },
+      {
+        "id": 95,
+        "spanish": "ustedes mismos",
+        "english": "yourselves (emphatic)",
+        "chinese": "你们自己（强调）"
+      },
+      {
+        "id": 96,
+        "spanish": "ellos mismos",
+        "english": "themselves (emphatic)",
+        "chinese": "他们自己/她们自己（强调）"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "pronouns",
+    "level": 9,
+    "words": [
+      {
+        "id": 97,
+        "spanish": "el cual",
+        "english": "which / who (formal masculine)",
+        "chinese": "哪位/哪一个（阳性，正式）"
+      },
+      {
+        "id": 98,
+        "spanish": "la cual",
+        "english": "which / who (formal feminine)",
+        "chinese": "哪位/哪一个（阴性，正式）"
+      },
+      {
+        "id": 99,
+        "spanish": "los cuales",
+        "english": "which / who (plural masculine)",
+        "chinese": "哪些/哪几位（阳性复数）"
+      },
+      {
+        "id": 100,
+        "spanish": "las cuales",
+        "english": "which / who (plural feminine)",
+        "chinese": "哪些/哪几位（阴性复数）"
+      },
+      {
+        "id": 101,
+        "spanish": "cuanto",
+        "english": "as much as",
+        "chinese": "多达/和…一样多"
+      },
+      {
+        "id": 102,
+        "spanish": "cuanta",
+        "english": "as much as (feminine)",
+        "chinese": "多达/和…一样多（阴性）"
+      },
+      {
+        "id": 103,
+        "spanish": "cuantos",
+        "english": "as many as",
+        "chinese": "多达"
+      },
+      {
+        "id": 104,
+        "spanish": "cuantas",
+        "english": "as many as (feminine)",
+        "chinese": "多达（阴性）"
+      },
+      {
+        "id": 105,
+        "spanish": "entrambos",
+        "english": "both (literary/formal)",
+        "chinese": "两者皆/双方皆"
+      },
+      {
+        "id": 106,
+        "spanish": "sendos",
+        "english": "one each",
+        "chinese": "每人一个/各一个"
+      },
+      {
+        "id": 107,
+        "spanish": "servidor",
+        "english": "yours truly / I (humble)",
+        "chinese": "鄙人/我（谦称）"
+      },
+      {
+        "id": 108,
+        "spanish": "fulano",
+        "english": "so-and-so",
+        "chinese": "某某"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "pronouns",
+    "level": 10,
+    "words": [
+      {
+        "id": 109,
+        "spanish": "mengano",
+        "english": "what's-his-name",
+        "chinese": "那个谁/叫什么来着"
+      },
+      {
+        "id": 110,
+        "spanish": "zutano",
+        "english": "so-and-so (third party)",
+        "chinese": "某人/那个谁"
+      },
+      {
+        "id": 111,
+        "spanish": "cualquier cosa",
+        "english": "whatever",
+        "chinese": "无论什么/随便"
+      },
+      {
+        "id": 112,
+        "spanish": "lo demás",
+        "english": "the rest (abstract)",
+        "chinese": "其余部分/其余的"
+      },
+      {
+        "id": 113,
+        "spanish": "propio",
+        "english": "one's own",
+        "chinese": "自己的"
+      },
+      {
+        "id": 114,
+        "spanish": "ajeno",
+        "english": "someone else's",
+        "chinese": "别人的"
+      },
+      {
+        "id": 115,
+        "spanish": "conmigo mismo",
+        "english": "with myself",
+        "chinese": "和我自己一起"
+      },
+      {
+        "id": 116,
+        "spanish": "contigo mismo",
+        "english": "with yourself",
+        "chinese": "和你自己一起/和您自己一起"
+      },
+      {
+        "id": 117,
+        "spanish": "consigo mismo",
+        "english": "with himself/herself",
+        "chinese": "和他自己一起/和她自己一起"
+      },
+      {
+        "id": 118,
+        "spanish": "cualesquiera",
+        "english": "any / whichever (plural)",
+        "chinese": "任何一些/无论哪些"
+      },
+      {
+        "id": 119,
+        "spanish": "quienesquiera",
+        "english": "whoever (plural)",
+        "chinese": "无论哪些人/任何人"
+      },
+      {
+        "id": 120,
+        "spanish": "don",
+        "english": "Mr. (title often used pronominally)",
+        "chinese": "先生（常也可代称使用）"
+      }
+    ]
+  }
+]
