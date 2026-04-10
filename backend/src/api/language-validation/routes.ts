@@ -1,9 +1,12 @@
 import { Router } from 'express';
-import { run } from '@openai/agents';
-import { languageValidationAgent } from '../../agents';
-import { LanguageValidationResultType } from '../../agents/language-validation-agent/schemas';
+import { LanguageValidationResult, LanguageValidationResultType } from '../../agents/language-validation-agent/schemas';
+import { generateStructuredResult } from '../../services/structuredChat';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const router = Router();
+const promptPath = path.join(__dirname, '../../agents/language-validation-agent/prompt.md');
+const promptContent = fs.readFileSync(promptPath, 'utf-8');
 
 router.post('/validate', async (req, res) => {
   try {
@@ -15,8 +18,24 @@ router.post('/validate', async (req, res) => {
       });
     }
 
-    const result = await run(languageValidationAgent, language.trim());
-    const validationResult = result.finalOutput as LanguageValidationResultType;
+    const validationResult = await generateStructuredResult<LanguageValidationResultType>({
+      systemPrompt: promptContent,
+      userPrompt: language.trim(),
+      schema: LanguageValidationResult,
+      schemaHint: `{
+  "isValid": boolean,
+  "languageCode": string | null,
+  "standardizedName": string | null,
+  "parameters": Array<{
+    "type": "script" | "dialect" | "formality" | "region" | "learning_focus",
+    "value": string,
+    "description": string
+  }> | null,
+  "explanation": string | null
+}`,
+      temperature: 0.2,
+      maxTokens: 500,
+    });
 
     res.json(validationResult);
   } catch (error) {

@@ -1,6 +1,9 @@
-import { run } from '@openai/agents';
-import { exerciseAgent } from '../../agents';
-import { ExerciseResultType, ExerciseWithId } from '../../agents/exercise-agent/schemas';
+import { ExerciseResult, ExerciseResultType, ExerciseWithId } from '../../agents/exercise-agent/schemas';
+import { generateStructuredResult } from '../../services/structuredChat';
+import * as fs from 'fs';
+import * as path from 'path';
+
+const exercisePrompt = fs.readFileSync(path.join(__dirname, '../../agents/exercise-agent/prompt.md'), 'utf-8');
 
 export class QuizAgentService {
   async generateQuestions(
@@ -18,8 +21,27 @@ Learning Context: "${context}"
 Use these question types: ${questionTypes.join(', ')}
 Create exactly ${words.length} questions (one per word).`;
     
-    const response = await run(exerciseAgent, prompt);
-    const result = response.finalOutput as ExerciseResultType;
+    const result = await generateStructuredResult<ExerciseResultType>({
+      systemPrompt: exercisePrompt,
+      userPrompt: prompt,
+      schema: ExerciseResult,
+      schemaHint: `{
+  "exercises": Array<{
+    "type": "multiple_choice" | "fill_blank" | "true_false" | "sentence_completion" | "matching",
+    "word": string,
+    "question": string,
+    "options": string[] | null,
+    "optionLabels": string[] | null,
+    "correctAnswer": string,
+    "difficulty": "easy" | "medium" | "hard",
+    "hint": string | null,
+    "feedback": string | null,
+    "pairs": Array<{ "word": string, "definition": string }> | null
+  }>
+}`,
+      temperature: 0.7,
+      maxTokens: 2400,
+    });
     
     // Map the returned exercises back to include word IDs
     const questionsWithIds = result.exercises.map(exercise => {
