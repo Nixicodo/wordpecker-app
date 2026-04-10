@@ -10,6 +10,7 @@ const promptContent = fs.readFileSync(promptPath, 'utf-8');
 export const definitionAgent = new Agent({
   name: 'Definition Agent',
   instructions: promptContent,
+  model: process.env.OPENAI_MODEL || 'gpt-5.4',
   outputType: DefinitionResult,
   modelSettings: {
     temperature: 0.5,

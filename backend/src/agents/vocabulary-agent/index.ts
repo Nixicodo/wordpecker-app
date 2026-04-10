@@ -10,6 +10,7 @@ const promptContent = fs.readFileSync(promptPath, 'utf-8');
 export const vocabularyAgent = new Agent({
   name: 'Vocabulary Agent',
   instructions: promptContent,
+  model: process.env.OPENAI_MODEL || 'gpt-5.4',
   outputType: VocabularyResult,
   modelSettings: {
     temperature: 0.8,

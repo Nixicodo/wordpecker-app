@@ -10,6 +10,7 @@ const promptContent = fs.readFileSync(promptPath, 'utf-8');
 export const languageValidationAgent = new Agent({
   name: 'Language Validation Agent',
   instructions: promptContent,
+  model: process.env.OPENAI_MODEL || 'gpt-5.4',
   outputType: LanguageValidationResult,
   modelSettings: {
     temperature: 0.2,
