@@ -1,18 +1,5 @@
-import OpenAI from 'openai';
 import { ZodSchema } from 'zod';
-
-let client: OpenAI | null = null;
-
-function getClient(): OpenAI {
-  if (!client) {
-    client = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-      baseURL: process.env.OPENAI_BASE_URL,
-    });
-  }
-
-  return client;
-}
+import { createChatCompletion, DEFAULT_MODEL } from '../config/openai';
 
 function extractJson(text: string): string {
   const trimmed = text.trim();
@@ -50,11 +37,9 @@ export async function generateStructuredResult<T>({
   temperature?: number;
   maxTokens?: number;
 }): Promise<T> {
-  const response = await getClient().chat.completions.create({
-    model: process.env.OPENAI_MODEL || 'gpt-5.4',
-    response_format: { type: 'json_object' },
+  const response = await createChatCompletion({
+    model: process.env.OPENAI_MODEL || DEFAULT_MODEL,
     temperature,
-    max_tokens: maxTokens,
     messages: [
       {
         role: 'system',
@@ -65,9 +50,10 @@ export async function generateStructuredResult<T>({
         content: userPrompt,
       },
     ],
+    maxTokens,
   });
 
-  const content = response.choices[0]?.message?.content;
+  const content = response.choices?.[0]?.message?.content;
   if (!content) {
     throw new Error('Model response was empty');
   }

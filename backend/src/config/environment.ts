@@ -15,5 +15,6 @@ export const environment = {
   nodeEnv: process.env.NODE_ENV || 'development',
   openaiApiKey: process.env.OPENAI_API_KEY!,
   openaiBaseUrl: process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1',
+  openaiModel: process.env.OPENAI_MODEL || 'gemini-3-flash-preview',
   mongodbUrl: process.env.MONGODB_URL!
 } as const; 

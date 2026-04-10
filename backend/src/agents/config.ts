@@ -1,9 +1,10 @@
 import 'dotenv/config';
+import { DEFAULT_MODEL } from '../config/openai';
 
 export async function configureOpenAIAgents(): Promise<void> {
   const apiKey = process.env.OPENAI_API_KEY;
   const baseURL = process.env.OPENAI_BASE_URL;
-  const model = process.env.OPENAI_MODEL || 'gpt-5.4';
+  const model = process.env.OPENAI_MODEL || DEFAULT_MODEL;
 
   if (!apiKey) {
     console.error('Error: OPENAI_API_KEY environment variable is required');
