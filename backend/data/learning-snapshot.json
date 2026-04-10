@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "exportedAt": "2026-04-10T19:53:02.585Z",
+  "exportedAt": "2026-04-10T20:04:44.522Z",
   "data": {
     "lists": [
       {
@@ -9,7 +9,7 @@
         "description": "",
         "context": "",
         "created_at": "2026-04-10T17:48:57.198Z",
-        "updated_at": "2026-04-10T19:08:18.571Z"
+        "updated_at": "2026-04-10T20:04:44.490Z"
       },
       {
         "id": "69d9499325168ea64d2921bf",
@@ -107,7 +107,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???red?",
+            "meaning": "红色的（red）",
             "learnedPoint": 0
           },
           {
@@ -117,7 +117,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:47.525Z",
-        "updated_at": "2026-04-10T19:52:59.352Z"
+        "updated_at": "2026-04-10T20:03:35.870Z"
       },
       {
         "id": "69d949937b3041261d9eb003",
@@ -125,7 +125,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???blue?",
+            "meaning": "蓝色/蓝的（blue）",
             "learnedPoint": 0
           },
           {
@@ -135,7 +135,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:47.526Z",
-        "updated_at": "2026-04-10T19:52:59.355Z"
+        "updated_at": "2026-04-10T20:03:35.874Z"
       },
       {
         "id": "69d949937b3041261d9eb006",
@@ -143,7 +143,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???yellow?",
+            "meaning": "黄色的（yellow）",
             "learnedPoint": 0
           },
           {
@@ -153,7 +153,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:47.527Z",
-        "updated_at": "2026-04-10T19:52:59.357Z"
+        "updated_at": "2026-04-10T20:03:35.876Z"
       },
       {
         "id": "69d949937b3041261d9eb0ba",
@@ -161,7 +161,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???cell phone?",
+            "meaning": "手机（cell phone (MX)）",
             "learnedPoint": 0
           },
           {
@@ -171,7 +171,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:47.615Z",
-        "updated_at": "2026-04-10T19:52:59.441Z"
+        "updated_at": "2026-04-10T20:03:35.878Z"
       },
       {
         "id": "69d949937b3041261d9eb0d5",
@@ -179,7 +179,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???school?",
+            "meaning": "学校（school）",
             "learnedPoint": 0
           },
           {
@@ -194,7 +194,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:47.629Z",
-        "updated_at": "2026-04-10T19:52:59.824Z"
+        "updated_at": "2026-04-10T20:03:35.880Z"
       },
       {
         "id": "69d949937b3041261d9eb199",
@@ -202,7 +202,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "??/sexy ???????????hot - temperature of objects / sexy; not used for weather?",
+            "meaning": "热的/性感的（指物体温度高；形容人时可指性感）（hot / sexy）",
             "learnedPoint": 0
           },
           {
@@ -212,7 +212,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:47.733Z",
-        "updated_at": "2026-04-10T19:52:59.579Z"
+        "updated_at": "2026-04-10T20:03:35.881Z"
       },
       {
         "id": "69d949937b3041261d9eb24e",
@@ -220,7 +220,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "??????between / among?",
+            "meaning": "在……之间/在……当中（between / among）",
             "learnedPoint": 0
           },
           {
@@ -230,7 +230,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:47.847Z",
-        "updated_at": "2026-04-10T19:52:59.882Z"
+        "updated_at": "2026-04-10T20:03:35.882Z"
       },
       {
         "id": "69d949937b3041261d9eb2a3",
@@ -238,7 +238,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "?/???to give?",
+            "meaning": "给（to give）",
             "learnedPoint": 0
           },
           {
@@ -248,7 +248,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:47.897Z",
-        "updated_at": "2026-04-10T19:52:59.933Z"
+        "updated_at": "2026-04-10T20:03:35.883Z"
       },
       {
         "id": "69d949937b3041261d9eb2a9",
@@ -256,7 +256,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "?????????to pass / to happen / to spend time?",
+            "meaning": "经过/发生/度过（时间）（to pass / happen / spend time）",
             "learnedPoint": 0
           },
           {
@@ -266,7 +266,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:47.900Z",
-        "updated_at": "2026-04-10T19:52:59.936Z"
+        "updated_at": "2026-04-10T20:03:35.884Z"
       },
       {
         "id": "69d949937b3041261d9eb2af",
@@ -274,7 +274,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???arrive?",
+            "meaning": "到达（to arrive）",
             "learnedPoint": 0
           },
           {
@@ -284,7 +284,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:47.903Z",
-        "updated_at": "2026-04-10T19:52:59.938Z"
+        "updated_at": "2026-04-10T20:03:35.886Z"
       },
       {
         "id": "69d949937b3041261d9eb2cd",
@@ -292,7 +292,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "????????to think / to plan?",
+            "meaning": "想/思考/打算（to think / plan）",
             "learnedPoint": 0
           },
           {
@@ -302,7 +302,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:47.917Z",
-        "updated_at": "2026-04-10T19:52:59.952Z"
+        "updated_at": "2026-04-10T20:03:35.886Z"
       },
       {
         "id": "69d949937b3041261d9eb2ee",
@@ -310,7 +310,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "??/??/???to wait / to hope / to expect?",
+            "meaning": "等待/希望/期待（to wait / hope / expect）",
             "learnedPoint": 0
           },
           {
@@ -325,7 +325,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:47.933Z",
-        "updated_at": "2026-04-10T19:53:01.000Z"
+        "updated_at": "2026-04-10T20:03:35.888Z"
       },
       {
         "id": "69d949937b3041261d9eb312",
@@ -333,7 +333,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "??/???to remember / remind?",
+            "meaning": "记得/想起（to remember）",
             "learnedPoint": 0
           },
           {
@@ -343,7 +343,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:47.955Z",
-        "updated_at": "2026-04-10T19:52:59.985Z"
+        "updated_at": "2026-04-10T20:03:35.889Z"
       },
       {
         "id": "69d949947b3041261d9eb501",
@@ -351,7 +351,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "?????????to use?",
+            "meaning": "使用（to use）",
             "learnedPoint": 0
           },
           {
@@ -361,7 +361,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:48.228Z",
-        "updated_at": "2026-04-10T19:53:00.406Z"
+        "updated_at": "2026-04-10T20:03:35.890Z"
       },
       {
         "id": "69d949947b3041261d9eb601",
@@ -369,7 +369,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "??/???around / approximately?",
+            "meaning": "在周围/大约（around）",
             "learnedPoint": 0
           },
           {
@@ -379,7 +379,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:48.335Z",
-        "updated_at": "2026-04-10T19:53:00.502Z"
+        "updated_at": "2026-04-10T20:03:35.890Z"
       },
       {
         "id": "69d949947b3041261d9eb67b",
@@ -387,7 +387,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "??????/????? using??by means of / through?",
+            "meaning": "通过/借助/经由（by means of / through）",
             "learnedPoint": 0
           },
           {
@@ -397,7 +397,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:48.384Z",
-        "updated_at": "2026-04-10T19:53:00.680Z"
+        "updated_at": "2026-04-10T20:03:35.891Z"
       },
       {
         "id": "69d949947b3041261d9eb67e",
@@ -405,7 +405,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "?? / ???East / This?",
+            "meaning": "东/这个（East / this）",
             "learnedPoint": 0
           },
           {
@@ -415,7 +415,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:48.385Z",
-        "updated_at": "2026-04-10T19:53:00.681Z"
+        "updated_at": "2026-04-10T20:03:35.892Z"
       },
       {
         "id": "69d949947b3041261d9eb6ad",
@@ -423,7 +423,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "??/???to grow?",
+            "meaning": "生长/成长（to grow）",
             "learnedPoint": 0
           },
           {
@@ -433,7 +433,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:48.403Z",
-        "updated_at": "2026-04-10T19:53:00.697Z"
+        "updated_at": "2026-04-10T20:03:35.893Z"
       },
       {
         "id": "69d949947b3041261d9eb732",
@@ -441,7 +441,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???????to dance?",
+            "meaning": "跳舞（to dance）",
             "learnedPoint": 0
           },
           {
@@ -451,7 +451,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:48.454Z",
-        "updated_at": "2026-04-10T19:53:00.744Z"
+        "updated_at": "2026-04-10T20:03:35.894Z"
       },
       {
         "id": "69d949947b3041261d9eb735",
@@ -459,7 +459,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???to sing?",
+            "meaning": "唱歌（to sing）",
             "learnedPoint": 0
           },
           {
@@ -469,7 +469,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:48.455Z",
-        "updated_at": "2026-04-10T19:53:00.745Z"
+        "updated_at": "2026-04-10T20:03:35.895Z"
       },
       {
         "id": "69d949947b3041261d9eb8bd",
@@ -477,7 +477,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???????to clean?",
+            "meaning": "清理/打扫（to clean）",
             "learnedPoint": 0
           },
           {
@@ -487,7 +487,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:48.611Z",
-        "updated_at": "2026-04-10T19:53:00.984Z"
+        "updated_at": "2026-04-10T20:03:35.896Z"
       },
       {
         "id": "69d949947b3041261d9eb984",
@@ -495,7 +495,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "????foreigner?",
+            "meaning": "外国人（foreigner）",
             "learnedPoint": 0
           },
           {
@@ -510,7 +510,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:48.688Z",
-        "updated_at": "2026-04-10T19:53:01.420Z"
+        "updated_at": "2026-04-10T20:03:35.897Z"
       },
       {
         "id": "69d949957b3041261d9ebf20",
@@ -518,7 +518,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "??ir?",
+            "meaning": "出席/协助（to attend / assist）",
             "learnedPoint": 0
           },
           {
@@ -528,7 +528,7 @@
           }
         ],
         "created_at": "2026-04-10T19:03:49.211Z",
-        "updated_at": "2026-04-10T19:53:01.807Z"
+        "updated_at": "2026-04-10T20:03:35.898Z"
       },
       {
         "id": "69d94a44bb9361c6f06754cc",
@@ -536,12 +536,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???church?",
+            "meaning": "教堂（church）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.558Z",
-        "updated_at": "2026-04-10T19:06:44.558Z"
+        "updated_at": "2026-04-10T20:03:35.899Z"
       },
       {
         "id": "69d94a44bb9361c6f06754cf",
@@ -549,25 +549,25 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "??/????convent / monastery?",
+            "meaning": "女修道院/修道院（convent / monastery）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.564Z",
-        "updated_at": "2026-04-10T19:06:44.564Z"
+        "updated_at": "2026-04-10T20:03:35.900Z"
       },
       {
         "id": "69d94a44bb9361c6f06754d2",
-        "value": "foto / fotograf?a",
+        "value": "foto / fotografía",
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???photo / photograph?",
+            "meaning": "照片（photo / photograph）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.567Z",
-        "updated_at": "2026-04-10T19:06:44.567Z"
+        "updated_at": "2026-04-10T20:03:35.902Z"
       },
       {
         "id": "69d94a44bb9361c6f06754d5",
@@ -575,12 +575,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???????relatives / family members?",
+            "meaning": "亲戚/家人（relatives / family members）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.571Z",
-        "updated_at": "2026-04-10T19:06:44.571Z"
+        "updated_at": "2026-04-10T20:03:35.903Z"
       },
       {
         "id": "69d94a44bb9361c6f06754d8",
@@ -588,7 +588,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???family?",
+            "meaning": "家庭/家人（family）",
             "learnedPoint": 0
           },
           {
@@ -598,7 +598,7 @@
           }
         ],
         "created_at": "2026-04-10T19:06:44.573Z",
-        "updated_at": "2026-04-10T19:52:59.502Z"
+        "updated_at": "2026-04-10T20:03:35.904Z"
       },
       {
         "id": "69d94a44bb9361c6f06754e1",
@@ -606,12 +606,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "?????????clean?",
+            "meaning": "干净的（clean）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.584Z",
-        "updated_at": "2026-04-10T19:06:44.584Z"
+        "updated_at": "2026-04-10T20:03:35.906Z"
       },
       {
         "id": "69d94a44bb9361c6f06754e6",
@@ -619,12 +619,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "??????????????? estar??using?",
+            "meaning": "正在使用/用着（using）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.588Z",
-        "updated_at": "2026-04-10T19:06:44.588Z"
+        "updated_at": "2026-04-10T20:03:35.907Z"
       },
       {
         "id": "69d94a44bb9361c6f06754eb",
@@ -632,7 +632,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "??/???????dance / dance party?",
+            "meaning": "舞蹈/舞会（dance / dance party）",
             "learnedPoint": 0
           },
           {
@@ -642,7 +642,7 @@
           }
         ],
         "created_at": "2026-04-10T19:06:44.592Z",
-        "updated_at": "2026-04-10T19:53:00.894Z"
+        "updated_at": "2026-04-10T20:03:35.907Z"
       },
       {
         "id": "69d94a44bb9361c6f06754f0",
@@ -650,12 +650,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???/???girlfriend / bride?",
+            "meaning": "女朋友/新娘（girlfriend / bride）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.595Z",
-        "updated_at": "2026-04-10T19:06:44.595Z"
+        "updated_at": "2026-04-10T20:03:35.908Z"
       },
       {
         "id": "69d94a44bb9361c6f06754f3",
@@ -663,7 +663,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???/???boyfriend / groom?",
+            "meaning": "男朋友/新郎（boyfriend / groom）",
             "learnedPoint": 0
           },
           {
@@ -673,7 +673,7 @@
           }
         ],
         "created_at": "2026-04-10T19:06:44.597Z",
-        "updated_at": "2026-04-10T19:52:59.841Z"
+        "updated_at": "2026-04-10T20:03:35.909Z"
       },
       {
         "id": "69d94a44bb9361c6f06754f6",
@@ -681,7 +681,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???company / business?",
+            "meaning": "公司/企业（company / business）",
             "learnedPoint": 0
           },
           {
@@ -691,7 +691,7 @@
           }
         ],
         "created_at": "2026-04-10T19:06:44.598Z",
-        "updated_at": "2026-04-10T19:53:00.202Z"
+        "updated_at": "2026-04-10T20:03:35.910Z"
       },
       {
         "id": "69d94a44bb9361c6f06754fb",
@@ -699,25 +699,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "?????until now / so far?",
+            "meaning": "直到现在/到目前为止（until now / so far）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.602Z",
-        "updated_at": "2026-04-10T19:06:44.602Z"
-      },
-      {
-        "id": "69d94a44bb9361c6f06754fe",
-        "value": "todav?a",
-        "ownedByLists": [
-          {
-            "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "?????still / yet?",
-            "learnedPoint": 0
-          }
-        ],
-        "created_at": "2026-04-10T19:06:44.603Z",
-        "updated_at": "2026-04-10T19:06:44.603Z"
+        "updated_at": "2026-04-10T20:03:35.911Z"
       },
       {
         "id": "69d94a44bb9361c6f0675501",
@@ -725,12 +712,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???????married - male?",
+            "meaning": "已婚的（男性）（married, male）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.604Z",
-        "updated_at": "2026-04-10T19:06:44.604Z"
+        "updated_at": "2026-04-10T20:04:44.437Z"
       },
       {
         "id": "69d94a44bb9361c6f0675504",
@@ -738,12 +725,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???????married - female?",
+            "meaning": "已婚的（女性）（married, female）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.606Z",
-        "updated_at": "2026-04-10T19:06:44.606Z"
+        "updated_at": "2026-04-10T20:04:44.439Z"
       },
       {
         "id": "69d94a44bb9361c6f0675507",
@@ -751,12 +738,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "??????????it is hot - weather?",
+            "meaning": "天气热（it is hot）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.608Z",
-        "updated_at": "2026-04-10T19:06:44.608Z"
+        "updated_at": "2026-04-10T20:04:44.441Z"
       },
       {
         "id": "69d94a44bb9361c6f067550a",
@@ -764,12 +751,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "?????I am hot / I feel hot?",
+            "meaning": "我觉得热/我很热（I feel hot）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.609Z",
-        "updated_at": "2026-04-10T19:06:44.609Z"
+        "updated_at": "2026-04-10T20:04:44.442Z"
       },
       {
         "id": "69d94a44bb9361c6f067550d",
@@ -777,25 +764,25 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "????????/??/??????hot / warm / heat-sensitive person?",
+            "meaning": "炎热的/很热的（hot / warm）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.611Z",
-        "updated_at": "2026-04-10T19:06:44.611Z"
+        "updated_at": "2026-04-10T20:04:44.443Z"
       },
       {
         "id": "69d94a44bb9361c6f0675510",
-        "value": "templado / c?lido",
+        "value": "templado / cálido",
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "????temperate / mild / warm?",
+            "meaning": "温和的/温暖的（temperate / mild / warm）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.612Z",
-        "updated_at": "2026-04-10T19:06:44.612Z"
+        "updated_at": "2026-04-10T20:04:44.446Z"
       },
       {
         "id": "69d94a44bb9361c6f0675515",
@@ -803,7 +790,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???world?",
+            "meaning": "世界（world）",
             "learnedPoint": 0
           },
           {
@@ -813,7 +800,7 @@
           }
         ],
         "created_at": "2026-04-10T19:06:44.615Z",
-        "updated_at": "2026-04-10T19:52:59.500Z"
+        "updated_at": "2026-04-10T20:04:44.447Z"
       },
       {
         "id": "69d94a44bb9361c6f0675518",
@@ -821,12 +808,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "??????known as?",
+            "meaning": "被称为/以……著称（known as）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.617Z",
-        "updated_at": "2026-04-10T19:06:44.617Z"
+        "updated_at": "2026-04-10T20:04:44.448Z"
       },
       {
         "id": "69d94a44bb9361c6f067551b",
@@ -834,25 +821,25 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "?????called / named?",
+            "meaning": "叫作/名为（called / named）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.618Z",
-        "updated_at": "2026-04-10T19:06:44.618Z"
+        "updated_at": "2026-04-10T20:04:44.449Z"
       },
       {
         "id": "69d94a44bb9361c6f067551e",
-        "value": "am?rica",
+        "value": "américa",
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???America - continent?",
+            "meaning": "美洲（America, the continent）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.620Z",
-        "updated_at": "2026-04-10T19:06:44.620Z"
+        "updated_at": "2026-04-10T20:04:44.451Z"
       },
       {
         "id": "69d94a44bb9361c6f0675521",
@@ -860,12 +847,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???United States - country?",
+            "meaning": "美国（United States）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.621Z",
-        "updated_at": "2026-04-10T19:06:44.621Z"
+        "updated_at": "2026-04-10T20:04:44.452Z"
       },
       {
         "id": "69d94a44bb9361c6f0675524",
@@ -873,12 +860,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "??/????vocabulary?",
+            "meaning": "词汇/词汇量（vocabulary）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.623Z",
-        "updated_at": "2026-04-10T19:06:44.623Z"
+        "updated_at": "2026-04-10T20:04:44.453Z"
       },
       {
         "id": "69d94a44bb9361c6f0675527",
@@ -886,7 +873,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???word?",
+            "meaning": "单词/词语（word）",
             "learnedPoint": 0
           },
           {
@@ -896,7 +883,7 @@
           }
         ],
         "created_at": "2026-04-10T19:06:44.625Z",
-        "updated_at": "2026-04-10T19:52:59.524Z"
+        "updated_at": "2026-04-10T20:04:44.454Z"
       },
       {
         "id": "69d94a44bb9361c6f067552a",
@@ -904,7 +891,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???letter?",
+            "meaning": "字母（letter）",
             "learnedPoint": 0
           },
           {
@@ -914,7 +901,7 @@
           }
         ],
         "created_at": "2026-04-10T19:06:44.626Z",
-        "updated_at": "2026-04-10T19:53:01.494Z"
+        "updated_at": "2026-04-10T20:04:44.456Z"
       },
       {
         "id": "69d94a44bb9361c6f067552f",
@@ -922,12 +909,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "????beautiful?",
+            "meaning": "美丽的（beautiful）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.629Z",
-        "updated_at": "2026-04-10T19:06:44.629Z"
+        "updated_at": "2026-04-10T20:04:44.457Z"
       },
       {
         "id": "69d94a44bb9361c6f0675532",
@@ -935,12 +922,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "??/???to introduce?",
+            "meaning": "介绍/引入（to introduce）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.631Z",
-        "updated_at": "2026-04-10T19:06:44.631Z"
+        "updated_at": "2026-04-10T20:04:44.458Z"
       },
       {
         "id": "69d94a44bb9361c6f0675537",
@@ -948,7 +935,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???West?",
+            "meaning": "西方（west）",
             "learnedPoint": 0
           },
           {
@@ -958,20 +945,20 @@
           }
         ],
         "created_at": "2026-04-10T19:06:44.633Z",
-        "updated_at": "2026-04-10T19:53:01.701Z"
+        "updated_at": "2026-04-10T20:04:44.459Z"
       },
       {
         "id": "69d94a44bb9361c6f067553a",
-        "value": "?ltimo",
+        "value": "último",
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???/?????last?",
+            "meaning": "最后的/最近的（last）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.635Z",
-        "updated_at": "2026-04-10T19:06:44.635Z"
+        "updated_at": "2026-04-10T20:04:44.461Z"
       },
       {
         "id": "69d94a44bb9361c6f067553d",
@@ -979,12 +966,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "????elderly people / older people?",
+            "meaning": "老年人/年长者（elderly people / older people）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.636Z",
-        "updated_at": "2026-04-10T19:06:44.636Z"
+        "updated_at": "2026-04-10T20:04:44.461Z"
       },
       {
         "id": "69d94a44bb9361c6f0675540",
@@ -992,7 +979,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "??/???question?",
+            "meaning": "问题/提问（question）",
             "learnedPoint": 0
           },
           {
@@ -1002,7 +989,7 @@
           }
         ],
         "created_at": "2026-04-10T19:06:44.639Z",
-        "updated_at": "2026-04-10T19:52:59.525Z"
+        "updated_at": "2026-04-10T20:04:44.462Z"
       },
       {
         "id": "69d94a44bb9361c6f0675549",
@@ -1010,7 +997,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "??/???answer?",
+            "meaning": "回答/答案（answer）",
             "learnedPoint": 0
           },
           {
@@ -1020,7 +1007,7 @@
           }
         ],
         "created_at": "2026-04-10T19:06:44.646Z",
-        "updated_at": "2026-04-10T19:52:59.527Z"
+        "updated_at": "2026-04-10T20:04:44.463Z"
       },
       {
         "id": "69d94a44bb9361c6f067554c",
@@ -1028,7 +1015,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "??/???teacher / master?",
+            "meaning": "老师/大师（teacher / master）",
             "learnedPoint": 0
           },
           {
@@ -1038,7 +1025,7 @@
           }
         ],
         "created_at": "2026-04-10T19:06:44.648Z",
-        "updated_at": "2026-04-10T19:53:00.276Z"
+        "updated_at": "2026-04-10T20:04:44.464Z"
       },
       {
         "id": "69d94a44bb9361c6f067554f",
@@ -1046,7 +1033,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "??/??/???entrance / ticket / starter?",
+            "meaning": "入口/门票/前菜（entrance / ticket / starter）",
             "learnedPoint": 0
           },
           {
@@ -1056,20 +1043,20 @@
           }
         ],
         "created_at": "2026-04-10T19:06:44.649Z",
-        "updated_at": "2026-04-10T19:53:00.581Z"
+        "updated_at": "2026-04-10T20:04:44.465Z"
       },
       {
         "id": "69d94a44bb9361c6f0675552",
-        "value": "rec?mara",
+        "value": "recámara",
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???bedroom - mainly Mexico?",
+            "meaning": "卧室（墨西哥常用）（bedroom, mainly Mexico）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.650Z",
-        "updated_at": "2026-04-10T19:06:44.650Z"
+        "updated_at": "2026-04-10T20:04:44.467Z"
       },
       {
         "id": "69d94a44bb9361c6f0675555",
@@ -1077,12 +1064,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "????inside?",
+            "meaning": "里面/在里面（inside）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.652Z",
-        "updated_at": "2026-04-10T19:06:44.652Z"
+        "updated_at": "2026-04-10T20:04:44.468Z"
       },
       {
         "id": "69d94a44bb9361c6f0675558",
@@ -1090,12 +1077,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "????outside?",
+            "meaning": "外面/在外面（outside）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.653Z",
-        "updated_at": "2026-04-10T19:06:44.653Z"
+        "updated_at": "2026-04-10T20:04:44.469Z"
       },
       {
         "id": "69d94a44bb9361c6f067555b",
@@ -1103,12 +1090,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "??/???to open?",
+            "meaning": "打开（to open）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.654Z",
-        "updated_at": "2026-04-10T19:06:44.654Z"
+        "updated_at": "2026-04-10T20:04:44.469Z"
       },
       {
         "id": "69d94a44bb9361c6f067555e",
@@ -1116,12 +1103,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???/???countable / accountants?",
+            "meaning": "可数的/会计人员（countable / accountants）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.655Z",
-        "updated_at": "2026-04-10T19:06:44.655Z"
+        "updated_at": "2026-04-10T20:04:44.470Z"
       },
       {
         "id": "69d94a44bb9361c6f0675563",
@@ -1129,12 +1116,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???fireworks?",
+            "meaning": "烟花（fireworks）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.659Z",
-        "updated_at": "2026-04-10T19:06:44.659Z"
+        "updated_at": "2026-04-10T20:04:44.471Z"
       },
       {
         "id": "69d94a44bb9361c6f0675572",
@@ -1142,12 +1129,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???take / carry?",
+            "meaning": "带/携带（to carry / take）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.669Z",
-        "updated_at": "2026-04-10T19:06:44.669Z"
+        "updated_at": "2026-04-10T20:04:44.472Z"
       },
       {
         "id": "69d94a44bb9361c6f0675577",
@@ -1155,7 +1142,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???????arrival?",
+            "meaning": "到达（arrival）",
             "learnedPoint": 0
           },
           {
@@ -1165,20 +1152,7 @@
           }
         ],
         "created_at": "2026-04-10T19:06:44.671Z",
-        "updated_at": "2026-04-10T19:53:01.991Z"
-      },
-      {
-        "id": "69d94a44bb9361c6f067557a",
-        "value": "cumplea?os",
-        "ownedByLists": [
-          {
-            "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???birthday?",
-            "learnedPoint": 0
-          }
-        ],
-        "created_at": "2026-04-10T19:06:44.672Z",
-        "updated_at": "2026-04-10T19:06:44.672Z"
+        "updated_at": "2026-04-10T20:04:44.473Z"
       },
       {
         "id": "69d94a44bb9361c6f067557d",
@@ -1186,38 +1160,25 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???Professor?",
+            "meaning": "女老师（female teacher）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.674Z",
-        "updated_at": "2026-04-10T19:06:44.674Z"
-      },
-      {
-        "id": "69d94a44bb9361c6f0675580",
-        "value": "perd?n",
-        "ownedByLists": [
-          {
-            "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???sorry?",
-            "learnedPoint": 0
-          }
-        ],
-        "created_at": "2026-04-10T19:06:44.676Z",
-        "updated_at": "2026-04-10T19:06:44.676Z"
+        "updated_at": "2026-04-10T20:04:44.477Z"
       },
       {
         "id": "69d94a44bb9361c6f0675583",
-        "value": "confund?",
+        "value": "confundí",
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???confused?",
+            "meaning": "我搞混了/我弄错了（I got confused）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.677Z",
-        "updated_at": "2026-04-10T19:06:44.677Z"
+        "updated_at": "2026-04-10T20:04:44.482Z"
       },
       {
         "id": "69d94a44bb9361c6f0675586",
@@ -1225,7 +1186,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???university?",
+            "meaning": "大学（university）",
             "learnedPoint": 0
           },
           {
@@ -1235,7 +1196,7 @@
           }
         ],
         "created_at": "2026-04-10T19:06:44.679Z",
-        "updated_at": "2026-04-10T19:52:59.512Z"
+        "updated_at": "2026-04-10T20:04:44.483Z"
       },
       {
         "id": "69d94a44bb9361c6f067558b",
@@ -1243,12 +1204,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "????museum?",
+            "meaning": "博物馆（museums）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.681Z",
-        "updated_at": "2026-04-10T19:06:44.681Z"
+        "updated_at": "2026-04-10T20:04:44.484Z"
       },
       {
         "id": "69d94a44bb9361c6f067558e",
@@ -1256,12 +1217,12 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???landscape?",
+            "meaning": "风景/景观（landscapes）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.683Z",
-        "updated_at": "2026-04-10T19:06:44.683Z"
+        "updated_at": "2026-04-10T20:04:44.485Z"
       },
       {
         "id": "69d94a44bb9361c6f0675593",
@@ -1269,25 +1230,25 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???equal?",
+            "meaning": "等价的/对应的（equivalent）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.685Z",
-        "updated_at": "2026-04-10T19:06:44.685Z"
+        "updated_at": "2026-04-10T20:04:44.486Z"
       },
       {
         "id": "69d94a44bb9361c6f0675596",
-        "value": "vencimient",
+        "value": "vencimiento",
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???final / end?",
+            "meaning": "到期/截止日期（expiration / due date）",
             "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:06:44.686Z",
-        "updated_at": "2026-04-10T19:06:44.686Z"
+        "updated_at": "2026-04-10T20:04:44.488Z"
       },
       {
         "id": "69d94a44bb9361c6f0675599",
@@ -1295,7 +1256,7 @@
         "ownedByLists": [
           {
             "listId": "69d938089e96ddba245dc7d3",
-            "meaning": "???permit?",
+            "meaning": "签证（visa）",
             "learnedPoint": 0
           },
           {
@@ -1305,7 +1266,7 @@
           }
         ],
         "created_at": "2026-04-10T19:06:44.687Z",
-        "updated_at": "2026-04-10T19:52:59.509Z"
+        "updated_at": "2026-04-10T20:04:44.489Z"
       },
       {
         "id": "69d9551b86b8d64047d17d16",
@@ -1579,10 +1540,15 @@
             "listId": "69d9499425168ea64d2921c2",
             "meaning": "原谅（forgiveness）",
             "learnedPoint": 0
+          },
+          {
+            "listId": "69d938089e96ddba245dc7d3",
+            "meaning": "对不起/请原谅（sorry / pardon me）",
+            "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:52:59.239Z",
-        "updated_at": "2026-04-10T19:53:00.533Z"
+        "updated_at": "2026-04-10T20:04:44.480Z"
       },
       {
         "id": "69d9551b86b8d64047d17d4f",
@@ -8740,10 +8706,15 @@
             "listId": "69d9499325168ea64d2921c1",
             "meaning": "仍然（still）",
             "learnedPoint": 0
+          },
+          {
+            "listId": "69d938089e96ddba245dc7d3",
+            "meaning": "还/仍然（still / yet）",
+            "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:53:00.109Z",
-        "updated_at": "2026-04-10T19:53:00.109Z"
+        "updated_at": "2026-04-10T20:04:44.430Z"
       },
       {
         "id": "69d9551c86b8d64047d183ad",
@@ -16652,10 +16623,15 @@
             "listId": "69d9499425168ea64d2921c3",
             "meaning": "生日（birthday）",
             "learnedPoint": 0
+          },
+          {
+            "listId": "69d938089e96ddba245dc7d3",
+            "meaning": "生日（birthday）",
+            "learnedPoint": 0
           }
         ],
         "created_at": "2026-04-10T19:53:00.867Z",
-        "updated_at": "2026-04-10T19:53:00.867Z"
+        "updated_at": "2026-04-10T20:04:44.475Z"
       },
       {
         "id": "69d9551c86b8d64047d18b25",
@@ -40573,10 +40549,10 @@
           "true_false": true,
           "sentence_completion": false
         },
-        "baseLanguage": "简体中文",
-        "targetLanguage": "拉丁美洲西班牙语",
+        "baseLanguage": "Simplified Chinese",
+        "targetLanguage": "Latin American Spanish",
         "createdAt": "2026-04-10T10:44:25.656Z",
-        "updatedAt": "2026-04-10T19:48:59.623Z"
+        "updatedAt": "2026-04-10T20:01:55.677Z"
       }
     ]
   }

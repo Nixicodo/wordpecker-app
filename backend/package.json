@@ -9,6 +9,7 @@
     "lint": "eslint . --ext .ts",
     "test": "jest",
     "import:spanish-vocabulary": "ts-node src/scripts/importSpanishVocabulary.ts",
+    "repair:private-study-list": "ts-node src/scripts/repairCorruptedPrivateStudyList.ts",
     "seed:templates": "ts-node src/scripts/seedTemplatesFromFiles.ts",
     "seed:templates:legacy": "ts-node src/scripts/seedTemplates.ts"
   },
