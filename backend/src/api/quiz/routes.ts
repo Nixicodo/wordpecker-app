@@ -7,6 +7,7 @@ import { QuestionType } from '../../types';
 import { quizAgentService } from './agent-service';
 import { shuffleArray } from '../../utils/arrayUtils';
 import { listIdSchema, updatePointsSchema } from './schemas';
+import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
 
 const router = Router();
 
@@ -111,6 +112,7 @@ router.put('/:listId/learned-points', validate(updatePointsSchema), async (req, 
       await word.save();
     }));
     
+    await persistLearningSnapshot();
     res.json({ message: 'Learned points updated successfully' });
   } catch (error) {
     console.error('Error updating learned points:', error);

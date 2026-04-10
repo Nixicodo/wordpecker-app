@@ -6,7 +6,8 @@ config();
 
 // Set test environment
 process.env.NODE_ENV = 'test';
-process.env.MONGODB_URL = process.env.MONGODB_URL || 'mongodb://localhost:27017/wordpecker_test';
+process.env.MONGODB_URL = 'mongodb://localhost:27017/wordpecker_test';
+process.env.OPENAI_API_KEY = process.env.OPENAI_API_KEY || 'test-key';
 
 // Mock console.log to reduce noise in tests
 if (typeof jest !== 'undefined') {

@@ -6,6 +6,7 @@ import { Word, IWord } from './model';
 import { wordAgentService } from './agent-service';
 import mongoose from 'mongoose';
 import { getUserLanguages } from '../../utils/getUserLanguages';
+import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
 import { 
   listIdSchema, 
   addWordSchema, 
@@ -103,6 +104,7 @@ router.post('/:listId/words', validate(addWordSchema), async (req, res) => {
     }
 
     await WordList.findByIdAndUpdate(listId, { updated_at: new Date() });
+    await persistLearningSnapshot();
     res.status(201).json({ ...transformWord(result.word, listId), _id: result.word._id });
   } catch (error) {
     res.status(500).json({ message: 'Internal server error' });
@@ -165,6 +167,7 @@ router.post('/:listId/words/bulk', validate(bulkAddWordsSchema), async (req, res
 
     if (imported.length > 0) {
       await WordList.findByIdAndUpdate(listId, { updated_at: new Date() });
+      await persistLearningSnapshot();
     }
 
     res.status(201).json({
@@ -209,6 +212,7 @@ router.delete('/:listId/words/:wordId', validate(deleteWordSchema), async (req, 
     }
 
     await WordList.findByIdAndUpdate(listId, { updated_at: new Date() });
+    await persistLearningSnapshot();
     res.json({ message: 'Word deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Internal server error' });

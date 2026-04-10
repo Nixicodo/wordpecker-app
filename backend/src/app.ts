@@ -6,6 +6,7 @@ import { errorHandler } from './middleware/errorHandler';
 import { openaiRateLimiter } from './middleware/rateLimiter';
 import { connectDB } from './config/mongodb';
 import { configureOpenAIAgents } from './agents';
+import { restoreLearningSnapshotIfNeeded } from './services/repoLearningSnapshot';
 
 // Import routes
 import listRoutes from './api/lists/routes';
@@ -60,7 +61,11 @@ if (process.env.NODE_ENV !== 'test') {
   Promise.all([
     configureOpenAIAgents(),
     connectDB()
-  ]).then(() => {
+  ]).then(async () => {
+    const restored = await restoreLearningSnapshotIfNeeded();
+    if (restored) {
+      console.log('Restored learning data from repository snapshot');
+    }
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT} in ${environment.nodeEnv} mode`);
     });

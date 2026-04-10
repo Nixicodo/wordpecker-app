@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { validate } from 'echt';
 import { UserPreferences } from './model';
 import { updatePreferencesSchema } from './schemas';
+import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
 
 const router = Router();
 
@@ -22,14 +23,17 @@ const defaultExerciseTypes = {
 router.get('/', async (req: Request, res: Response) => {
   try {
     const userId = getUserId(req);
-    
-    const preferences = await UserPreferences.findOne({ userId }) || 
-      await UserPreferences.create({
+    let preferences = await UserPreferences.findOne({ userId });
+
+    if (!preferences) {
+      preferences = await UserPreferences.create({
         userId,
         exerciseTypes: defaultExerciseTypes,
         baseLanguage: 'en',
         targetLanguage: 'en'
       });
+      await persistLearningSnapshot();
+    }
 
     res.json({
       exerciseTypes: preferences.exerciseTypes,
@@ -67,6 +71,7 @@ router.put('/', validate(updatePreferencesSchema), async (req, res) => {
       { new: true, upsert: true }
     );
 
+    await persistLearningSnapshot();
     res.json({
       exerciseTypes: preferences.exerciseTypes,
       baseLanguage: preferences.baseLanguage,

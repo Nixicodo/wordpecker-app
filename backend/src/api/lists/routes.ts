@@ -3,6 +3,7 @@ import { validate } from 'echt';
 import { WordList, IWordList } from './model';
 import { Word } from '../words/model';
 import { createListSchema, listParamsSchema, updateListSchema } from './schemas';
+import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
 
 const router = Router();
 
@@ -18,6 +19,7 @@ const transform = (list: IWordList) => ({
 router.post('/', validate(createListSchema), async (req, res) => {
   try {
     const list = await WordList.create(req.body);
+    await persistLearningSnapshot();
     res.status(201).json(transform(list));
   } catch (error) {
     res.status(500).json({ message: 'Error creating list' });
@@ -63,6 +65,7 @@ router.put('/:id', validate(updateListSchema), async (req, res) => {
     const list = await WordList.findByIdAndUpdate(id, req.body, { new: true, lean: true });
     if (!list) return res.status(404).json({ message: 'List not found' });
     
+    await persistLearningSnapshot();
     res.json(transform(list));
   } catch (error) {
     res.status(500).json({ message: 'Error updating list' });
@@ -73,14 +76,13 @@ router.delete('/:id', validate(listParamsSchema), async (req, res) => {
   try {
     const { id } = req.params;
     
-    await Promise.all([
-      Word.updateMany({ 'ownedByLists.listId': id }, { $pull: { ownedByLists: { listId: id } } }),
-      Word.deleteMany({ ownedByLists: { $size: 0 } })
-    ]);
+    await Word.updateMany({ 'ownedByLists.listId': id }, { $pull: { ownedByLists: { listId: id } } });
+    await Word.deleteMany({ ownedByLists: { $size: 0 } });
 
     const deleted = await WordList.findByIdAndDelete(id);
     if (!deleted) return res.status(404).json({ message: 'List not found' });
     
+    await persistLearningSnapshot();
     res.status(204).send();
   } catch (error) {
     res.status(500).json({ message: 'Error deleting list' });
