@@ -1,9 +1,47 @@
 {
   "version": 1,
-  "exportedAt": "1970-01-01T00:00:00.000Z",
+  "exportedAt": "2026-04-10T18:46:39.451Z",
   "data": {
-    "lists": [],
+    "lists": [
+      {
+        "id": "69d938089e96ddba245dc7d3",
+        "name": "私教学习自用",
+        "description": "",
+        "context": "",
+        "created_at": "2026-04-10T17:48:57.198Z",
+        "updated_at": "2026-04-10T17:48:57.198Z"
+      }
+    ],
     "words": [],
-    "preferences": []
+    "preferences": [
+      {
+        "userId": "user_39dkk0ytw",
+        "exerciseTypes": {
+          "multiple_choice": true,
+          "fill_blank": true,
+          "matching": true,
+          "true_false": true,
+          "sentence_completion": true
+        },
+        "baseLanguage": "en",
+        "targetLanguage": "en",
+        "createdAt": "2026-04-10T10:30:47.290Z",
+        "updatedAt": "2026-04-10T10:30:47.290Z"
+      },
+      {
+        "userId": "local-ai-test-user",
+        "exerciseTypes": {
+          "fill_blank": true,
+          "matching": true,
+          "multiple_choice": true,
+          "sentence_completion": true,
+          "true_false": true
+        },
+        "baseLanguage": "Simplified Chinese",
+        "targetLanguage": "Latin American Spanish",
+        "createdAt": "2026-04-10T10:44:25.656Z",
+        "updatedAt": "2026-04-10T12:18:08.967Z"
+      }
+    ]
   }
 }
