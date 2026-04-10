@@ -21,6 +21,16 @@ export const addWordSchema = {
   })
 };
 
+export const bulkAddWordsSchema = {
+  ...listIdSchema,
+  body: z.object({
+    words: z.array(z.object({
+      word: z.string().min(1).trim(),
+      meaning: z.string().optional()
+    })).min(1).max(500)
+  })
+};
+
 export const deleteWordSchema = {
   params: z.object({
     listId: z.string().refine(val => mongoose.Types.ObjectId.isValid(val), 'Invalid list ID'),

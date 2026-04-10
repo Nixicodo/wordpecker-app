@@ -1,4 +1,4 @@
-import { 
+﻿import { 
   Box, 
   Button, 
   Text, 
@@ -29,9 +29,10 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { Word, WordList } from '../types';
 import { ArrowBackIcon, DeleteIcon } from '@chakra-ui/icons';
-import { FaGraduationCap, FaGamepad, FaPlus, FaBookOpen, FaMicrophone } from 'react-icons/fa';
+import { FaGraduationCap, FaGamepad, FaPlus, FaBookOpen, FaMicrophone, FaFileImport } from 'react-icons/fa';
 import { GiTreeBranch } from 'react-icons/gi';
 import { AddWordModal } from '../components/AddWordModal';
+import { BulkImportWordsModal } from '../components/BulkImportWordsModal';
 import { ProgressIndicator, OverallProgress } from '../components/ProgressIndicator';
 // Voice agent modal component removed - now using dedicated page
 import { apiService } from '../services/api';
@@ -61,11 +62,54 @@ const fadeIn = {
   visible: { opacity: 1, y: 0 }
 };
 
+const UI = {
+  errorLoadListTitle: '加载词树失败',
+  errorLoadListDescription: '请稍后重试',
+  addedWordTitle: '单词添加成功',
+  errorAddWordTitle: '添加单词失败',
+  deletedWordTitle: '单词删除成功',
+  errorDeleteWordTitle: '删除单词失败',
+  confirmDeleteList: '确定要删除这个词树吗？该操作无法撤销。',
+  deletedListTitle: '词树删除成功',
+  errorDeleteListTitle: '删除词树失败',
+  errorGenerateReadingTitle: '生成轻阅读失败',
+  listNotFound: '未找到词树',
+  backToLists: '返回词树列表',
+  contextPrefix: '学习场景：',
+  actionLearn: '学习',
+  actionQuiz: '测验',
+  actionLightReading: '轻阅读',
+  actionVoiceChat: '语音对练',
+  actionAddWord: '添加单词',
+  actionBulkImport: '批量导入',
+  emptyHint: '你的词树还是空的，先添加一些单词让它长起来吧。🌱',
+  emptyPrimaryButton: '添加第一个单词',
+  deleteWordAria: '删除单词',
+  readingModalTitle: '生成轻阅读',
+  readingModalHint: '根据词树中的单词生成一篇个性化短文，请选择难度：',
+  readingLevelLabel: '阅读难度',
+  readingLevelBeginner: '初级 - 简短句子与基础词汇',
+  readingLevelIntermediate: '中级 - 自然表达与适中复杂度',
+  readingLevelAdvanced: '高级 - 复杂句式与更地道表达',
+  cancel: '取消',
+  generateReading: '生成阅读',
+  creatingReading: '生成中...',
+  bulkImportSuccess: '批量导入完成',
+  bulkImportFail: '批量导入失败',
+  bulkImportResult: (imported: number, skipped: number, failed: number) =>
+    `成功 ${imported} 条，跳过 ${skipped} 条，失败 ${failed} 条。`
+};
+
 export const ListDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isBulkImportOpen,
+    onOpen: onBulkImportOpen,
+    onClose: onBulkImportClose
+  } = useDisclosure();
   
   const [list, setList] = useState<WordList | null>(null);
   const [words, setWords] = useState<Word[]>([]);
@@ -101,8 +145,8 @@ export const ListDetail = () => {
       } catch (error) {
         console.error('Error fetching list details:', error);
         toast({
-          title: 'Error loading list',
-          description: 'Please try again later',
+          title: UI.errorLoadListTitle,
+          description: UI.errorLoadListDescription,
           status: 'error',
           duration: 5000,
           isClosable: true,
@@ -121,7 +165,7 @@ export const ListDetail = () => {
       const newWord = await apiService.addWord(id!, word);
       setWords(prevWords => [newWord, ...prevWords]);
       toast({
-        title: 'Word added successfully',
+        title: UI.addedWordTitle,
         status: 'success',
         duration: 3000,
         isClosable: true,
@@ -130,8 +174,8 @@ export const ListDetail = () => {
     } catch (error) {
       console.error('Error adding word:', error);
       toast({
-        title: 'Error adding word',
-        description: 'Please try again later',
+        title: UI.errorAddWordTitle,
+        description: UI.errorLoadListDescription,
         status: 'error',
         duration: 5000,
         isClosable: true,
@@ -144,7 +188,7 @@ export const ListDetail = () => {
       await apiService.deleteWord(id!, wordId);
       setWords(prevWords => prevWords.filter(word => word.id !== wordId));
       toast({
-        title: 'Word deleted successfully',
+        title: UI.deletedWordTitle,
         status: 'success',
         duration: 3000,
         isClosable: true,
@@ -152,8 +196,40 @@ export const ListDetail = () => {
     } catch (error) {
       console.error('Error deleting word:', error);
       toast({
-        title: 'Error deleting word',
-        description: 'Please try again later',
+        title: UI.errorDeleteWordTitle,
+        description: UI.errorLoadListDescription,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const handleBulkImportWords = async (entries: Array<{ word: string; meaning?: string }>) => {
+    if (!id || entries.length === 0) return;
+
+    try {
+      const result = await apiService.bulkAddWords(id, entries);
+      if (result.imported.length > 0) {
+        setWords(prevWords => [...result.imported, ...prevWords]);
+      }
+      toast({
+        title: UI.bulkImportSuccess,
+        description: UI.bulkImportResult(
+          result.summary.imported,
+          result.summary.skipped,
+          result.summary.failed
+        ),
+        status: result.summary.failed > 0 ? 'warning' : 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+      onBulkImportClose();
+    } catch (error) {
+      console.error('Error importing words:', error);
+      toast({
+        title: UI.bulkImportFail,
+        description: UI.errorLoadListDescription,
         status: 'error',
         duration: 5000,
         isClosable: true,
@@ -162,12 +238,12 @@ export const ListDetail = () => {
   };
 
   const handleDeleteList = async () => {
-    if (!id || !window.confirm('Are you sure you want to delete this list? This action cannot be undone.')) return;
+    if (!id || !window.confirm(UI.confirmDeleteList)) return;
     
     try {
       await apiService.deleteList(id);
       toast({
-        title: 'List deleted successfully',
+        title: UI.deletedListTitle,
         status: 'success',
         duration: 3000,
         isClosable: true,
@@ -176,8 +252,8 @@ export const ListDetail = () => {
     } catch (error) {
       console.error('Error deleting list:', error);
       toast({
-        title: 'Error deleting list',
-        description: 'Please try again later',
+        title: UI.errorDeleteListTitle,
+        description: UI.errorLoadListDescription,
         status: 'error',
         duration: 5000,
         isClosable: true,
@@ -205,8 +281,8 @@ export const ListDetail = () => {
     } catch (error) {
       console.error('Error generating light reading:', error);
       toast({
-        title: 'Error generating reading',
-        description: 'Please try again later',
+        title: UI.errorGenerateReadingTitle,
+        description: UI.errorLoadListDescription,
         status: 'error',
         duration: 5000,
         isClosable: true,
@@ -228,13 +304,13 @@ export const ListDetail = () => {
     return (
       <Container maxW="container.xl" py={8} px={{ base: 4, md: 8 }}>
         <Box textAlign="center" py={10}>
-          <Text>List not found</Text>
+          <Text>{UI.listNotFound}</Text>
           <Button 
             onClick={() => navigate('/lists')} 
             mt={4}
             colorScheme="green"
           >
-            Back to Lists
+            {UI.backToLists}
           </Button>
         </Box>
       </Container>
@@ -253,7 +329,7 @@ export const ListDetail = () => {
         <Flex mb={6} justify="space-between" align="center">
           <Flex align="center" gap={2}>
             <IconButton
-              aria-label="Go back"
+              aria-label="返回上一页"
               icon={<ArrowBackIcon />}
               variant="ghost"
               onClick={() => navigate(-1)}
@@ -282,7 +358,7 @@ export const ListDetail = () => {
             </Heading>
           </Flex>
           <IconButton
-            aria-label="Delete list"
+            aria-label="删除词树"
             icon={<DeleteIcon />}
             variant="ghost"
             colorScheme="red"
@@ -314,7 +390,7 @@ export const ListDetail = () => {
             <Text color="gray.400" fontSize="lg">{list.description}</Text>
             {list.context && (
               <Text color="gray.500" fontSize="md" mt={2}>
-                Context: {list.context}
+                {UI.contextPrefix} {list.context}
               </Text>
             )}
           </Box>
@@ -331,7 +407,7 @@ export const ListDetail = () => {
               isDisabled={words.length === 0}
               onClick={() => navigate(`/learn/${list!.id}`, { state: { list } })}
             >
-              Learn
+              {UI.actionLearn}
             </Button>
             <Button 
               variant="ghost"
@@ -345,7 +421,7 @@ export const ListDetail = () => {
               isDisabled={words.length === 0}
               onClick={() => navigate(`/quiz/${list!.id}`, { state: { list } })}
             >
-              Quiz
+              {UI.actionQuiz}
             </Button>
             <Button 
               variant="ghost"
@@ -359,7 +435,7 @@ export const ListDetail = () => {
               isDisabled={words.length === 0}
               onClick={onReadingModalOpen}
             >
-              Light Reading
+              {UI.actionLightReading}
             </Button>
             <Button 
               variant="ghost"
@@ -386,7 +462,20 @@ export const ListDetail = () => {
                 } 
               })}
             >
-              Voice Chat
+              {UI.actionVoiceChat}
+            </Button>
+            <Button
+              variant="outline"
+              colorScheme="green"
+              leftIcon={<FaFileImport />}
+              _hover={{
+                transform: 'translateY(-2px)',
+              }}
+              transition="all 0.2s"
+              size="lg"
+              onClick={onBulkImportOpen}
+            >
+              {UI.actionBulkImport}
             </Button>
             <Button 
               variant="solid"
@@ -399,7 +488,7 @@ export const ListDetail = () => {
               size="lg"
               onClick={onOpen}
             >
-              Add Word
+              {UI.actionAddWord}
             </Button>
           </Flex>
         </Flex>
@@ -428,7 +517,7 @@ export const ListDetail = () => {
                 style={{ animation: 'sparkle 3s ease infinite' }}
               />
               <Text color="gray.400" fontSize="lg" textAlign="center">
-                Your tree is empty! Add some words to help it grow. 🌱
+                {UI.emptyHint}
               </Text>
               <Button
                 variant="outline"
@@ -441,7 +530,7 @@ export const ListDetail = () => {
                 }}
                 transition="all 0.2s"
               >
-                Add Your First Word
+                {UI.emptyPrimaryButton}
               </Button>
             </Flex>
           ) : (
@@ -513,7 +602,7 @@ export const ListDetail = () => {
                       }}
                     >
                       <IconButton
-                        aria-label="Delete word"
+                        aria-label={UI.deleteWordAria}
                         icon={<DeleteIcon />}
                         variant="ghost"
                         colorScheme="red"
@@ -542,6 +631,12 @@ export const ListDetail = () => {
           listName={list?.name || ''}
         />
 
+        <BulkImportWordsModal
+          isOpen={isBulkImportOpen}
+          onClose={onBulkImportClose}
+          onImport={handleBulkImportWords}
+        />
+
         {/* Light Reading Level Selection Modal */}
         <Modal isOpen={isReadingModalOpen} onClose={onReadingModalClose} size="md">
           <ModalOverlay />
@@ -549,19 +644,18 @@ export const ListDetail = () => {
             <ModalHeader>
               <Flex align="center" gap={2}>
                 <FaBookOpen color="purple" />
-                <Text color="purple.400">Generate Light Reading</Text>
+                <Text color="purple.400">{UI.readingModalTitle}</Text>
               </Flex>
             </ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <VStack spacing={4} align="stretch">
                 <Text fontSize="sm" color="gray.400">
-                  Create a personalized reading passage using the words from "{list?.name}". 
-                  Choose your preferred difficulty level:
+                  {UI.readingModalHint}
                 </Text>
                 
                 <FormControl>
-                  <FormLabel color="purple.300">Reading Level</FormLabel>
+                  <FormLabel color="purple.300">{UI.readingLevelLabel}</FormLabel>
                   <Select 
                     value={lightReadingLevel} 
                     onChange={(e) => setLightReadingLevel(e.target.value as 'beginner' | 'intermediate' | 'advanced')}
@@ -569,33 +663,34 @@ export const ListDetail = () => {
                     borderColor="slate.600"
                     _focus={{ borderColor: 'purple.400' }}
                   >
-                    <option value="beginner">Beginner - Simple sentences and basic vocabulary</option>
-                    <option value="intermediate">Intermediate - Natural flow with moderate complexity</option>
-                    <option value="advanced">Advanced - Complex sentences and sophisticated language</option>
+                    <option value="beginner">{UI.readingLevelBeginner}</option>
+                    <option value="intermediate">{UI.readingLevelIntermediate}</option>
+                    <option value="advanced">{UI.readingLevelAdvanced}</option>
                   </Select>
                 </FormControl>
 
                 <Box p={3} bg="purple.50" borderRadius="md" borderLeft="4px solid" borderColor="purple.400">
                   <Text fontSize="sm" color="purple.700">
-                    💡 The reading will include {Math.min(12, words.length)} randomly selected words from your list 
-                    {words.length > 12 && ` (out of ${words.length} total)`} in a contextual story or article
-                    {list?.context && ` related to "${list.context}"`}.
+                    本次将随机选取 {Math.min(12, words.length)} 个单词生成轻阅读
+                    {words.length > 12 && `（共 ${words.length} 个）`}
+                    {list?.context && `，并结合学习场景「${list.context}」`}
+                    。
                   </Text>
                 </Box>
               </VStack>
             </ModalBody>
             <ModalFooter>
               <Button variant="ghost" mr={3} onClick={onReadingModalClose}>
-                Cancel
+                {UI.cancel}
               </Button>
               <Button
                 colorScheme="purple"
                 onClick={handleGenerateLightReading}
                 isLoading={generatingReading}
-                loadingText="Creating Reading..."
+                loadingText={UI.creatingReading}
                 leftIcon={<FaBookOpen />}
               >
-                Generate Reading
+                {UI.generateReading}
               </Button>
             </ModalFooter>
           </ModalContent>
@@ -606,3 +701,5 @@ export const ListDetail = () => {
     </Container>
   );
 }; 
+
+

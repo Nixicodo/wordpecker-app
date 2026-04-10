@@ -71,6 +71,15 @@ export const apiService = {
   // Words
   getWords: (listId: string): ApiResponse<Word[]> => api.get(`/api/lists/${listId}/words`),
   addWord: (listId: string, word: string, meaning?: string): ApiResponse<Word> => api.post(`/api/lists/${listId}/words`, { word, ...(meaning && { meaning }) }),
+  bulkAddWords: (
+    listId: string,
+    words: Array<{ word: string; meaning?: string }>
+  ): ApiResponse<{
+    imported: Word[];
+    skipped: Array<{ word: string; reason: string }>;
+    failed: Array<{ word: string; reason: string }>;
+    summary: { total: number; imported: number; skipped: number; failed: number };
+  }> => api.post(`/api/lists/${listId}/words/bulk`, { words }),
   deleteWord: (listId: string, wordId: string): ApiResponse<void> => api.delete(`/api/lists/${listId}/words/${wordId}`),
   validateFillBlankAnswer: (userAnswer: string, correctAnswer: string, question: string, context?: string): ApiResponse<{isValid: boolean}> => 
     api.post('/api/lists/validate-answer', { userAnswer, correctAnswer, question, context }),
