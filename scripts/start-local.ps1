@@ -59,15 +59,19 @@ if (-not (Test-Path (Join-Path $frontendDir "node_modules"))) {
 }
 
 $backendLog = Join-Path $logsDir "backend.log"
+$backendErrLog = Join-Path $logsDir "backend.err.log"
 $frontendLog = Join-Path $logsDir "frontend.log"
+$frontendErrLog = Join-Path $logsDir "frontend.err.log"
 
 if (Test-Path $backendLog) { Remove-Item $backendLog -Force }
+if (Test-Path $backendErrLog) { Remove-Item $backendErrLog -Force }
 if (Test-Path $frontendLog) { Remove-Item $frontendLog -Force }
+if (Test-Path $frontendErrLog) { Remove-Item $frontendErrLog -Force }
 
 $backendProcess = Start-Process -FilePath $nodeExe -WorkingDirectory $backendDir -ArgumentList @(
     ".\node_modules\nodemon\bin\nodemon.js",
     "src/app.ts"
-) -RedirectStandardOutput $backendLog -RedirectStandardError $backendLog -WindowStyle Hidden -PassThru
+) -RedirectStandardOutput $backendLog -RedirectStandardError $backendErrLog -WindowStyle Hidden -PassThru
 $backendProcess.Id | Set-Content -Path (Join-Path $runtimeDir "backend.pid") -NoNewline
 
 Start-Sleep -Seconds 8
@@ -76,7 +80,7 @@ $frontendProcess = Start-Process -FilePath $nodeExe -WorkingDirectory $frontendD
     ".\node_modules\vite\bin\vite.js",
     "--host",
     "0.0.0.0"
-) -RedirectStandardOutput $frontendLog -RedirectStandardError $frontendLog -WindowStyle Hidden -PassThru
+) -RedirectStandardOutput $frontendLog -RedirectStandardError $frontendErrLog -WindowStyle Hidden -PassThru
 $frontendProcess.Id | Set-Content -Path (Join-Path $runtimeDir "frontend.pid") -NoNewline
 
 Write-Host ""
