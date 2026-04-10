@@ -143,7 +143,7 @@ export const ListDetail = () => {
         setWords(wordsData);
         setUserPreferences(preferencesData);
       } catch (error) {
-        console.error('Error fetching list details:', error);
+        console.error('加载词树详情失败:', error);
         toast({
           title: UI.errorLoadListTitle,
           description: UI.errorLoadListDescription,
@@ -172,7 +172,7 @@ export const ListDetail = () => {
       });
       onClose();
     } catch (error) {
-      console.error('Error adding word:', error);
+      console.error('添加单词失败:', error);
       toast({
         title: UI.errorAddWordTitle,
         description: UI.errorLoadListDescription,
@@ -194,7 +194,7 @@ export const ListDetail = () => {
         isClosable: true,
       });
     } catch (error) {
-      console.error('Error deleting word:', error);
+      console.error('删除单词失败:', error);
       toast({
         title: UI.errorDeleteWordTitle,
         description: UI.errorLoadListDescription,
@@ -226,7 +226,7 @@ export const ListDetail = () => {
       });
       onBulkImportClose();
     } catch (error) {
-      console.error('Error importing words:', error);
+      console.error('批量导入单词失败:', error);
       toast({
         title: UI.bulkImportFail,
         description: UI.errorLoadListDescription,
@@ -250,7 +250,7 @@ export const ListDetail = () => {
       });
       navigate('/lists');
     } catch (error) {
-      console.error('Error deleting list:', error);
+      console.error('删除词树失败:', error);
       toast({
         title: UI.errorDeleteListTitle,
         description: UI.errorLoadListDescription,
@@ -279,7 +279,7 @@ export const ListDetail = () => {
       
       onReadingModalClose();
     } catch (error) {
-      console.error('Error generating light reading:', error);
+      console.error('生成轻阅读失败:', error);
       toast({
         title: UI.errorGenerateReadingTitle,
         description: UI.errorLoadListDescription,
