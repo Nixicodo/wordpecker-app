@@ -36,6 +36,7 @@ cd F:\aprojects\wordpecker-app
 - 当前部署默认会自动写入 `backend/.env`，并填入一个本地占位 `OPENAI_API_KEY`，这样后端可以通过启动阶段的环境校验。
 - 启动脚本会优先读取 `C:\Users\JKL\.codex\auth.json` 和 `C:\Users\JKL\.codex\config.toml` 中已有的 OpenAI 兼容配置；如果读不到，才回退到本地占位值。
 - 当前本地 AI 默认模型固定写为 `gpt-5.4`，因为你机器上这套 provider 提供的是 Codex 模型族，不包含仓库默认假定的 `gpt-4.1`。
+- 当前后端 agents 走的是 `chat/completions` 兼容模式，而不是 `responses`。原因是你本机这套 `right.codes` provider 的 `responses` 返回格式和仓库当前依赖版本不兼容，但 `chat/completions` 已实测可用。
 - 这意味着和 OpenAI、ElevenLabs、Pexels 真实联网的能力默认不可用；如果你之后要使用 AI 生成释义、图片、语音等功能，把 `.env` 里的对应 key 换成你自己的即可。
 - 需要改 key 时，改这两个文件：
   - `F:\aprojects\wordpecker-app\backend\.env`

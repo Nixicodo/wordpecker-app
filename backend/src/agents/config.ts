@@ -18,7 +18,7 @@ export async function configureOpenAIAgents(): Promise<void> {
     setDefaultModelProvider(new OpenAIProvider({
       apiKey,
       baseURL,
-      useResponses: true,
+      useResponses: false,
     }));
     process.env.OPENAI_MODEL = model;
   } catch (error) {
