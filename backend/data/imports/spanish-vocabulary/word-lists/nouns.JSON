@@ -8,145 +8,145 @@
         "id": 1,
         "spanish": "mundo",
         "english": "world",
-        "chinese": "??"
+        "chinese": "世界"
       },
       {
         "id": 2,
         "spanish": "familia",
         "english": "family",
-        "chinese": "??"
+        "chinese": "家庭"
       },
       {
         "id": 3,
         "spanish": "papá",
         "english": "dad",
-        "chinese": "??"
+        "chinese": "爸爸"
       },
       {
         "id": 4,
         "spanish": "mamá",
         "english": "mom",
-        "chinese": "??"
+        "chinese": "妈妈"
       },
       {
         "id": 5,
         "spanish": "boleto",
         "english": "ticket",
-        "chinese": "?"
+        "chinese": "票"
       },
       {
         "id": 6,
         "spanish": "pasaporte",
         "english": "passport",
-        "chinese": "??"
+        "chinese": "护照"
       },
       {
         "id": 7,
         "spanish": "visa",
         "english": "visa",
-        "chinese": "??"
+        "chinese": "签证"
       },
       {
         "id": 8,
         "spanish": "mapa",
         "english": "map",
-        "chinese": "??"
+        "chinese": "地图"
       },
       {
         "id": 9,
         "spanish": "universidad",
         "english": "university",
-        "chinese": "??"
+        "chinese": "大学"
       },
       {
         "id": 10,
         "spanish": "doctor",
         "english": "doctor",
-        "chinese": "??"
+        "chinese": "医生"
       },
       {
         "id": 11,
         "spanish": "farmacia",
         "english": "pharmacy",
-        "chinese": "??"
+        "chinese": "药店"
       },
       {
         "id": 12,
         "spanish": "policía",
         "english": "police",
-        "chinese": "??"
+        "chinese": "警察"
       },
       {
         "id": 13,
         "spanish": "avión",
         "english": "airplane",
-        "chinese": "??"
+        "chinese": "飞机"
       },
       {
         "id": 14,
         "spanish": "camión",
         "english": "bus",
-        "chinese": "???"
+        "chinese": "公交车"
       },
       {
         "id": 15,
         "spanish": "taxi",
         "english": "taxi",
-        "chinese": "???"
+        "chinese": "出租车"
       },
       {
         "id": 16,
         "spanish": "estación",
         "english": "station",
-        "chinese": "??"
+        "chinese": "车站"
       },
       {
         "id": 17,
         "spanish": "teléfono",
         "english": "telephone",
-        "chinese": "??"
+        "chinese": "电话"
       },
       {
         "id": 18,
         "spanish": "palabra",
         "english": "word",
-        "chinese": "??"
+        "chinese": "单词"
       },
       {
         "id": 19,
         "spanish": "pregunta",
         "english": "question",
-        "chinese": "??"
+        "chinese": "问题"
       },
       {
         "id": 20,
         "spanish": "respuesta",
         "english": "answer",
-        "chinese": "??"
+        "chinese": "回答"
       },
       {
         "id": 21,
         "spanish": "foto",
         "english": "photo",
-        "chinese": "??"
+        "chinese": "照片"
       },
       {
         "id": 22,
         "spanish": "música",
         "english": "music",
-        "chinese": "??"
+        "chinese": "音乐"
       },
       {
         "id": 23,
         "spanish": "noche",
         "english": "night",
-        "chinese": "??"
+        "chinese": "夜晚"
       },
       {
         "id": 24,
         "spanish": "semana",
         "english": "week",
-        "chinese": "??"
+        "chinese": "星期"
       }
     ]
   },

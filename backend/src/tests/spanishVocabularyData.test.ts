@@ -21,6 +21,11 @@ describe('spanish vocabulary import data', () => {
     expect(house?.english).toBeTruthy();
     expect(house?.chinese).toBeTruthy();
 
+    const placeholderMeanings = Array.from(levels.values())
+      .flat()
+      .filter((entry) => /^\?+$/.test(entry.chinese));
+    expect(placeholderMeanings).toEqual([]);
+
     expect(buildSpanishVocabularyListName(0)).toBe('西语3k词-Level0-Pre-A1');
     expect(buildSpanishVocabularyListName(6)).toBe('西语3k词-Level6-A2');
     expect(buildSpanishVocabularyListName(7)).toBe('西语3k词-Level7-B1');
