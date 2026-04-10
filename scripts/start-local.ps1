@@ -15,7 +15,7 @@ $frontendEnv = Join-Path $frontendDir ".env"
 @"
 OPENAI_API_KEY=local-placeholder-key
 OPENAI_BASE_URL=https://api.openai.com/v1
-ELEVENLABS_API_KEY=
+ELEVENLABS_API_KEY=local-placeholder-key
 PEXELS_API_KEY=
 MONGODB_URL=mongodb://127.0.0.1:27017/wordpecker
 PORT=3000
@@ -61,7 +61,7 @@ Start-Sleep -Seconds 8
 $frontendProcess = Start-Process powershell -WorkingDirectory $frontendDir -WindowStyle Hidden -ArgumentList @(
     "-NoProfile",
     "-ExecutionPolicy", "Bypass",
-    "-Command", "npm run dev -- --host 0.0.0.0 *> '$frontendLog'"
+    "-Command", "npm run dev -- --host=0.0.0.0 *> '$frontendLog'"
 ) -PassThru
 $frontendProcess.Id | Set-Content -Path (Join-Path $runtimeDir "frontend.pid") -NoNewline
 
