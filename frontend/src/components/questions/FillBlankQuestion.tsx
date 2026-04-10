@@ -1,7 +1,7 @@
-import { 
-  Text, 
-  Input, 
-  VStack 
+import {
+  Text,
+  Input,
+  VStack
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { Exercise, Question } from '../../types';
@@ -23,7 +23,6 @@ export const FillBlankQuestion: React.FC<FillBlankQuestionProps> = ({
 }) => {
   const [fillBlankAnswer, setFillBlankAnswer] = useState('');
 
-  // Reset local state when selectedAnswer changes (new question)
   useEffect(() => {
     setFillBlankAnswer(selectedAnswer || '');
   }, [selectedAnswer, question.word]);
@@ -41,7 +40,7 @@ export const FillBlankQuestion: React.FC<FillBlankQuestionProps> = ({
       <Input
         value={fillBlankAnswer}
         onChange={(e) => handleFillBlankChange(e.target.value)}
-        placeholder="在这里输入答案……"
+        placeholder="请在这里输入答案…"
         size="lg"
         textAlign="center"
         bg="slate.700"
@@ -53,7 +52,7 @@ export const FillBlankQuestion: React.FC<FillBlankQuestionProps> = ({
       />
       {isAnswered && !isCorrect && (
         <Text color="green.400" textAlign="center" fontSize="md">
-          正确答案：{question.correctAnswer}
+          {`正确答案：${question.correctAnswer}`}
         </Text>
       )}
     </VStack>

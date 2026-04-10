@@ -53,12 +53,10 @@ export class SessionService {
 
   answerQuestion(userAnswer: string, question: Exercise | Question, overrideCorrect?: boolean): boolean {
     const isCorrect = overrideCorrect !== undefined ? overrideCorrect : this.checkAnswer(userAnswer, question);
-    
-    // Update progress
+
     this.progress.answered[this.progress.currentIndex] = true;
     this.progress.userAnswers[this.progress.currentIndex] = userAnswer;
-    
-    // Update stats
+
     if (isCorrect) {
       this.progress.stats.correct++;
       this.progress.stats.streak++;
@@ -68,11 +66,10 @@ export class SessionService {
       this.progress.stats.incorrect++;
       this.progress.stats.streak = 0;
     }
-    
-    // Update completion rate
+
     const answeredCount = this.progress.answered.filter(Boolean).length;
     this.progress.stats.completionRate = (answeredCount / this.progress.totalQuestions) * 100;
-    
+
     return isCorrect;
   }
 
@@ -100,19 +97,17 @@ export class SessionService {
 
   private checkAnswer(userAnswer: string, question: Exercise | Question): boolean {
     if (question.type === 'matching') {
-      // Parse user matching answers
       const userAnswers = userAnswer.split('|').reduce((acc, pair) => {
         const [word, definition] = pair.split(':');
         if (word && definition) acc[word] = definition;
         return acc;
       }, {} as Record<string, string>);
-      
+
       const correctPairs = question.pairs || [];
       return correctPairs.every(pair => userAnswers[pair.word] === pair.definition);
-    } else {
-      // Use the new validation utility for all other types
-      return isCorrectAnswer(userAnswer, question);
     }
+
+    return isCorrectAnswer(userAnswer, question);
   }
 
   private calculateScore(streak: number): number {
@@ -122,29 +117,28 @@ export class SessionService {
     return 100;
   }
 
-  // Get performance insights
   getInsights(): string[] {
     const insights: string[] = [];
     const { correct, incorrect, maxStreak, completionRate } = this.progress.stats;
-    
+
     if (completionRate === 100) {
-      insights.push('🎉 Completed all questions!');
+      insights.push('已完成全部题目');
     }
-    
+
     if (correct > incorrect) {
-      insights.push('🎯 Great accuracy!');
+      insights.push('正确率表现不错');
     }
-    
+
     if (maxStreak >= 5) {
-      insights.push('🔥 Amazing streak!');
+      insights.push('连对状态非常强');
     } else if (maxStreak >= 3) {
-      insights.push('⚡ Good streak!');
+      insights.push('连对节奏很好');
     }
-    
+
     if (completionRate >= 80) {
-      insights.push('💪 Strong performance!');
+      insights.push('整体发挥稳定');
     }
-    
+
     return insights;
   }
 }

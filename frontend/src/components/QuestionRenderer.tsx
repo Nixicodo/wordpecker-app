@@ -1,5 +1,5 @@
-import { 
-  Box, 
+import {
+  Box,
   Text,
   VStack,
   HStack,
@@ -13,7 +13,7 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { FaLightbulb } from 'react-icons/fa';
 import { Exercise, Question } from '../types';
-import { 
+import {
   MultipleChoiceQuestion,
   FillBlankQuestion,
   TrueFalseQuestion,
@@ -22,6 +22,13 @@ import {
 } from './questions';
 
 const MotionBox = motion(Box);
+
+const UI = {
+  hideHint: '隐藏提示',
+  showHint: '显示提示',
+  hintPrefix: '提示：',
+  feedbackPrefix: '讲解：',
+};
 
 interface QuestionRendererProps {
   question: Exercise | Question;
@@ -39,12 +46,11 @@ export const QuestionRenderer: React.FC<QuestionRendererProps> = ({
   isCorrect
 }) => {
   const [showHint, setShowHint] = useState(false);
-  
-  // Reset hint state when question changes
+
   useEffect(() => {
     setShowHint(false);
-  }, [question.word, question.question]); // Reset when question changes
-  
+  }, [question.word, question.question]);
+
   const hintBg = useColorModeValue('blue.50', 'blue.900');
   const hintColor = useColorModeValue('blue.700', 'blue.200');
   const feedbackBg = useColorModeValue('green.50', 'green.900');
@@ -114,8 +120,7 @@ export const QuestionRenderer: React.FC<QuestionRendererProps> = ({
       transition={{ duration: 0.3 }}
     >
       <VStack spacing={4} align="stretch">
-        {/* Question */}
-        <Text 
+        <Text
           fontSize={{ base: 'xl', md: '2xl' }}
           textAlign="center"
           fontWeight="bold"
@@ -125,7 +130,6 @@ export const QuestionRenderer: React.FC<QuestionRendererProps> = ({
           {question.question}
         </Text>
 
-        {/* Hint Button */}
         {question.hint && !isAnswered && (
           <HStack justify="center">
             <Button
@@ -135,32 +139,29 @@ export const QuestionRenderer: React.FC<QuestionRendererProps> = ({
               size="sm"
               onClick={() => setShowHint(!showHint)}
             >
-              {showHint ? '隐藏提示' : '显示提示'}
+              {showHint ? UI.hideHint : UI.showHint}
             </Button>
           </HStack>
         )}
 
-        {/* Hint Display */}
         {question.hint && !isAnswered && (
           <Collapse in={showHint} animateOpacity>
             <Alert status="info" borderRadius="lg" bg={hintBg}>
               <AlertIcon />
               <Text color={hintColor} fontSize="sm">
-                💡 {question.hint}
+                {`${UI.hintPrefix} ${question.hint}`}
               </Text>
             </Alert>
           </Collapse>
         )}
 
-        {/* Question Component */}
         {renderQuestionComponent()}
 
-        {/* Feedback Display */}
         {question.feedback && isAnswered && isCorrect && (
           <Alert status="success" borderRadius="lg" bg={feedbackBg}>
             <AlertIcon />
             <Text color={feedbackColor} fontSize="sm">
-              🎉 {question.feedback}
+              {`${UI.feedbackPrefix} ${question.feedback}`}
             </Text>
           </Alert>
         )}

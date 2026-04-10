@@ -1,9 +1,9 @@
-import { 
-  Text, 
-  Radio, 
-  RadioGroup, 
-  Stack, 
-  Flex 
+import {
+  Text,
+  Radio,
+  RadioGroup,
+  Stack,
+  Flex
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { Exercise, Question } from '../../types';
@@ -26,33 +26,30 @@ export const TrueFalseQuestion: React.FC<TrueFalseQuestionProps> = ({
 }) => {
   const getBorderColor = (label: string) => {
     if (!isAnswered) return 'transparent';
-    
-    // Find the correct label for the correct answer
-    const correctLabel = question.options && question.optionLabels 
+
+    const correctLabel = question.options && question.optionLabels
       ? question.optionLabels[question.options.indexOf(question.correctAnswer)]
       : question.correctAnswer;
-    
+
     if (label === correctLabel) return 'green.500';
     if (selectedAnswer === label && selectedAnswer !== correctLabel) return 'red.500';
-    
+
     return 'transparent';
   };
 
   const getBackgroundColor = (label: string) => {
     if (!isAnswered) return 'slate.700';
-    
-    // Find the correct label for the correct answer
-    const correctLabel = question.options && question.optionLabels 
+
+    const correctLabel = question.options && question.optionLabels
       ? question.optionLabels[question.options.indexOf(question.correctAnswer)]
       : question.correctAnswer;
-    
+
     if (label === correctLabel) return 'green.900';
     if (selectedAnswer === label && selectedAnswer !== correctLabel) return 'red.900';
-    
+
     return 'slate.700';
   };
 
-  // Use options and optionLabels if available, fall back to regular true/false for backward compatibility
   const optionsToRender = question.options && question.optionLabels
     ? question.options.map((option, index) => ({
         label: question.optionLabels![index],
@@ -64,9 +61,9 @@ export const TrueFalseQuestion: React.FC<TrueFalseQuestionProps> = ({
       ];
 
   return (
-    <RadioGroup 
-      value={selectedAnswer} 
-      onChange={onAnswerChange} 
+    <RadioGroup
+      value={selectedAnswer}
+      onChange={onAnswerChange}
       isDisabled={isAnswered}
     >
       <Stack spacing={4}>
@@ -87,12 +84,12 @@ export const TrueFalseQuestion: React.FC<TrueFalseQuestionProps> = ({
               borderColor={getBorderColor(option.label)}
               bg={getBackgroundColor(option.label)}
               _hover={{
-                bg: isAnswered ? undefined : "slate.600"
+                bg: isAnswered ? undefined : 'slate.600'
               }}
             >
               <Text ml={2} fontSize={{ base: 'lg', md: 'xl' }} fontWeight="bold">
                 <Text as="span" fontWeight="bold" mr={2}>{option.label}.</Text>
-                  {option.text}
+                {option.text}
               </Text>
             </Radio>
           </MotionFlex>
