@@ -1,0 +1,7506 @@
+[
+  {
+    "region": "MX",
+    "partOfSpeech": "nouns",
+    "level": 0,
+    "words": [
+      {
+        "id": 1,
+        "spanish": "mundo",
+        "english": "world",
+        "chinese": "??"
+      },
+      {
+        "id": 2,
+        "spanish": "familia",
+        "english": "family",
+        "chinese": "??"
+      },
+      {
+        "id": 3,
+        "spanish": "papá",
+        "english": "dad",
+        "chinese": "??"
+      },
+      {
+        "id": 4,
+        "spanish": "mamá",
+        "english": "mom",
+        "chinese": "??"
+      },
+      {
+        "id": 5,
+        "spanish": "boleto",
+        "english": "ticket",
+        "chinese": "?"
+      },
+      {
+        "id": 6,
+        "spanish": "pasaporte",
+        "english": "passport",
+        "chinese": "??"
+      },
+      {
+        "id": 7,
+        "spanish": "visa",
+        "english": "visa",
+        "chinese": "??"
+      },
+      {
+        "id": 8,
+        "spanish": "mapa",
+        "english": "map",
+        "chinese": "??"
+      },
+      {
+        "id": 9,
+        "spanish": "universidad",
+        "english": "university",
+        "chinese": "??"
+      },
+      {
+        "id": 10,
+        "spanish": "doctor",
+        "english": "doctor",
+        "chinese": "??"
+      },
+      {
+        "id": 11,
+        "spanish": "farmacia",
+        "english": "pharmacy",
+        "chinese": "??"
+      },
+      {
+        "id": 12,
+        "spanish": "policía",
+        "english": "police",
+        "chinese": "??"
+      },
+      {
+        "id": 13,
+        "spanish": "avión",
+        "english": "airplane",
+        "chinese": "??"
+      },
+      {
+        "id": 14,
+        "spanish": "camión",
+        "english": "bus",
+        "chinese": "???"
+      },
+      {
+        "id": 15,
+        "spanish": "taxi",
+        "english": "taxi",
+        "chinese": "???"
+      },
+      {
+        "id": 16,
+        "spanish": "estación",
+        "english": "station",
+        "chinese": "??"
+      },
+      {
+        "id": 17,
+        "spanish": "teléfono",
+        "english": "telephone",
+        "chinese": "??"
+      },
+      {
+        "id": 18,
+        "spanish": "palabra",
+        "english": "word",
+        "chinese": "??"
+      },
+      {
+        "id": 19,
+        "spanish": "pregunta",
+        "english": "question",
+        "chinese": "??"
+      },
+      {
+        "id": 20,
+        "spanish": "respuesta",
+        "english": "answer",
+        "chinese": "??"
+      },
+      {
+        "id": 21,
+        "spanish": "foto",
+        "english": "photo",
+        "chinese": "??"
+      },
+      {
+        "id": 22,
+        "spanish": "música",
+        "english": "music",
+        "chinese": "??"
+      },
+      {
+        "id": 23,
+        "spanish": "noche",
+        "english": "night",
+        "chinese": "??"
+      },
+      {
+        "id": 24,
+        "spanish": "semana",
+        "english": "week",
+        "chinese": "??"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "nouns",
+    "level": 1,
+    "words": [
+      {
+        "id": 1,
+        "spanish": "vez",
+        "english": "time",
+        "chinese": "次"
+      },
+      {
+        "id": 2,
+        "spanish": "día",
+        "english": "day",
+        "chinese": "天"
+      },
+      {
+        "id": 3,
+        "spanish": "año",
+        "english": "year",
+        "chinese": "年"
+      },
+      {
+        "id": 4,
+        "spanish": "padre",
+        "english": "father",
+        "chinese": "父亲"
+      },
+      {
+        "id": 5,
+        "spanish": "cosa",
+        "english": "thing",
+        "chinese": "东西"
+      },
+      {
+        "id": 6,
+        "spanish": "señor",
+        "english": "sir",
+        "chinese": "先生"
+      },
+      {
+        "id": 7,
+        "spanish": "hombre",
+        "english": "man",
+        "chinese": "男人"
+      },
+      {
+        "id": 8,
+        "spanish": "tiempo",
+        "english": "time",
+        "chinese": "时间"
+      },
+      {
+        "id": 9,
+        "spanish": "casa",
+        "english": "house",
+        "chinese": "房子"
+      },
+      {
+        "id": 10,
+        "spanish": "verdad",
+        "english": "truth",
+        "chinese": "真相"
+      },
+      {
+        "id": 11,
+        "spanish": "vida",
+        "english": "life",
+        "chinese": "生活"
+      },
+      {
+        "id": 12,
+        "spanish": "hijo",
+        "english": "son",
+        "chinese": "儿子"
+      },
+      {
+        "id": 13,
+        "spanish": "favor",
+        "english": "favor",
+        "chinese": "帮忙"
+      },
+      {
+        "id": 14,
+        "spanish": "amigo",
+        "english": "friend",
+        "chinese": "朋友"
+      },
+      {
+        "id": 15,
+        "spanish": "hecho",
+        "english": "fact",
+        "chinese": "事实"
+      },
+      {
+        "id": 16,
+        "spanish": "trabajo",
+        "english": "job",
+        "chinese": "工作"
+      },
+      {
+        "id": 17,
+        "spanish": "mujer",
+        "english": "woman",
+        "chinese": "女人"
+      },
+      {
+        "id": 18,
+        "spanish": "parte",
+        "english": "part",
+        "chinese": "部分"
+      },
+      {
+        "id": 19,
+        "spanish": "acuerdo",
+        "english": "agreement",
+        "chinese": "协议"
+      },
+      {
+        "id": 20,
+        "spanish": "momento",
+        "english": "moment",
+        "chinese": "时刻"
+      },
+      {
+        "id": 21,
+        "spanish": "gente",
+        "english": "people",
+        "chinese": "人们"
+      },
+      {
+        "id": 22,
+        "spanish": "niño",
+        "english": "child",
+        "chinese": "孩子"
+      },
+      {
+        "id": 23,
+        "spanish": "hora",
+        "english": "hour",
+        "chinese": "小时"
+      },
+      {
+        "id": 24,
+        "spanish": "problema",
+        "english": "problem",
+        "chinese": "问题"
+      },
+      {
+        "id": 25,
+        "spanish": "lugar",
+        "english": "place",
+        "chinese": "地方"
+      },
+      {
+        "id": 26,
+        "spanish": "persona",
+        "english": "person",
+        "chinese": "人"
+      },
+      {
+        "id": 27,
+        "spanish": "tipo",
+        "english": "type",
+        "chinese": "类型"
+      },
+      {
+        "id": 28,
+        "spanish": "dinero",
+        "english": "money",
+        "chinese": "钱"
+      },
+      {
+        "id": 29,
+        "spanish": "mañana",
+        "english": "morning",
+        "chinese": "早晨"
+      },
+      {
+        "id": 30,
+        "spanish": "hermano",
+        "english": "brother",
+        "chinese": "兄弟"
+      },
+      {
+        "id": 31,
+        "spanish": "mano",
+        "english": "hand",
+        "chinese": "手"
+      },
+      {
+        "id": 32,
+        "spanish": "caso",
+        "english": "case",
+        "chinese": "情况"
+      },
+      {
+        "id": 33,
+        "spanish": "nombre",
+        "english": "name",
+        "chinese": "名字"
+      },
+      {
+        "id": 34,
+        "spanish": "forma",
+        "english": "shape",
+        "chinese": "形状"
+      },
+      {
+        "id": 35,
+        "spanish": "cuenta",
+        "english": "bill",
+        "chinese": "账单"
+      },
+      {
+        "id": 36,
+        "spanish": "razón",
+        "english": "reason",
+        "chinese": "原因"
+      },
+      {
+        "id": 37,
+        "spanish": "idea",
+        "english": "idea",
+        "chinese": "想法"
+      },
+      {
+        "id": 38,
+        "spanish": "pasado",
+        "english": "past",
+        "chinese": "过去"
+      },
+      {
+        "id": 39,
+        "spanish": "país",
+        "english": "country",
+        "chinese": "国家"
+      },
+      {
+        "id": 40,
+        "spanish": "minuto",
+        "english": "minute",
+        "chinese": "分钟"
+      },
+      {
+        "id": 41,
+        "spanish": "historia",
+        "english": "history",
+        "chinese": "历史"
+      },
+      {
+        "id": 42,
+        "spanish": "amor",
+        "english": "love",
+        "chinese": "爱"
+      },
+      {
+        "id": 43,
+        "spanish": "lado",
+        "english": "side",
+        "chinese": "一边"
+      },
+      {
+        "id": 44,
+        "spanish": "manera",
+        "english": "way",
+        "chinese": "方式"
+      },
+      {
+        "id": 45,
+        "spanish": "cabeza",
+        "english": "head",
+        "chinese": "头"
+      },
+      {
+        "id": 46,
+        "spanish": "punto",
+        "english": "point",
+        "chinese": "点"
+      },
+      {
+        "id": 47,
+        "spanish": "mes",
+        "english": "month",
+        "chinese": "月"
+      },
+      {
+        "id": 48,
+        "spanish": "ciudad",
+        "english": "city",
+        "chinese": "城市"
+      },
+      {
+        "id": 49,
+        "spanish": "tío",
+        "english": "uncle",
+        "chinese": "叔叔"
+      },
+      {
+        "id": 50,
+        "spanish": "puerta",
+        "english": "door",
+        "chinese": "门"
+      },
+      {
+        "id": 51,
+        "spanish": "ojo",
+        "english": "eye",
+        "chinese": "眼睛"
+      },
+      {
+        "id": 52,
+        "spanish": "agua",
+        "english": "water",
+        "chinese": "水"
+      },
+      {
+        "id": 53,
+        "spanish": "medio",
+        "english": "means",
+        "chinese": "方式"
+      },
+      {
+        "id": 54,
+        "spanish": "fin",
+        "english": "end",
+        "chinese": "结束"
+      },
+      {
+        "id": 55,
+        "spanish": "camino",
+        "english": "path",
+        "chinese": "道路"
+      },
+      {
+        "id": 56,
+        "spanish": "esposo",
+        "english": "husband",
+        "chinese": "丈夫"
+      },
+      {
+        "id": 57,
+        "spanish": "muerte",
+        "english": "death",
+        "chinese": "死亡"
+      },
+      {
+        "id": 58,
+        "spanish": "millón",
+        "english": "million",
+        "chinese": "百万"
+      },
+      {
+        "id": 59,
+        "spanish": "realidad",
+        "english": "reality",
+        "chinese": "现实"
+      },
+      {
+        "id": 60,
+        "spanish": "equipo",
+        "english": "team",
+        "chinese": "团队"
+      },
+      {
+        "id": 61,
+        "spanish": "ayuda",
+        "english": "help",
+        "chinese": "帮助"
+      },
+      {
+        "id": 62,
+        "spanish": "cuerpo",
+        "english": "body",
+        "chinese": "身体"
+      },
+      {
+        "id": 63,
+        "spanish": "jefe",
+        "english": "boss",
+        "chinese": "老板"
+      },
+      {
+        "id": 64,
+        "spanish": "presidente",
+        "english": "president",
+        "chinese": "总统"
+      },
+      {
+        "id": 65,
+        "spanish": "supuesto",
+        "english": "assumption",
+        "chinese": "假设"
+      },
+      {
+        "id": 66,
+        "spanish": "gobierno",
+        "english": "government",
+        "chinese": "政府"
+      },
+      {
+        "id": 67,
+        "spanish": "tierra",
+        "english": "earth",
+        "chinese": "地球"
+      },
+      {
+        "id": 68,
+        "spanish": "número",
+        "english": "number",
+        "chinese": "数字"
+      },
+      {
+        "id": 69,
+        "spanish": "final",
+        "english": "ending",
+        "chinese": "结尾"
+      },
+      {
+        "id": 70,
+        "spanish": "grupo",
+        "english": "group",
+        "chinese": "小组"
+      },
+      {
+        "id": 71,
+        "spanish": "guerra",
+        "english": "war",
+        "chinese": "战争"
+      },
+      {
+        "id": 72,
+        "spanish": "cariño",
+        "english": "affection",
+        "chinese": "喜爱"
+      },
+      {
+        "id": 73,
+        "spanish": "clase",
+        "english": "class",
+        "chinese": "课"
+      },
+      {
+        "id": 74,
+        "spanish": "arma",
+        "english": "weapon",
+        "chinese": "武器"
+      },
+      {
+        "id": 75,
+        "spanish": "cara",
+        "english": "face",
+        "chinese": "脸"
+      },
+      {
+        "id": 76,
+        "spanish": "juego",
+        "english": "game",
+        "chinese": "游戏"
+      },
+      {
+        "id": 77,
+        "spanish": "corazón",
+        "english": "heart",
+        "chinese": "心脏"
+      },
+      {
+        "id": 78,
+        "spanish": "suerte",
+        "english": "luck",
+        "chinese": "运气"
+      },
+      {
+        "id": 79,
+        "spanish": "libro",
+        "english": "book",
+        "chinese": "书"
+      },
+      {
+        "id": 80,
+        "spanish": "luz",
+        "english": "light",
+        "chinese": "光"
+      },
+      {
+        "id": 81,
+        "spanish": "miedo",
+        "english": "fear",
+        "chinese": "害怕"
+      },
+      {
+        "id": 82,
+        "spanish": "modo",
+        "english": "mode",
+        "chinese": "方式"
+      },
+      {
+        "id": 83,
+        "spanish": "relación",
+        "english": "relationship",
+        "chinese": "关系"
+      },
+      {
+        "id": 84,
+        "spanish": "cambio",
+        "english": "change",
+        "chinese": "变化"
+      },
+      {
+        "id": 85,
+        "spanish": "derecho",
+        "english": "right",
+        "chinese": "权利"
+      },
+      {
+        "id": 86,
+        "spanish": "prueba",
+        "english": "test",
+        "chinese": "测试"
+      },
+      {
+        "id": 87,
+        "spanish": "sentido",
+        "english": "meaning",
+        "chinese": "意义"
+      },
+      {
+        "id": 88,
+        "spanish": "orden",
+        "english": "order",
+        "chinese": "秩序"
+      },
+      {
+        "id": 89,
+        "spanish": "perro",
+        "english": "dog",
+        "chinese": "狗"
+      },
+      {
+        "id": 90,
+        "spanish": "vuelta",
+        "english": "turn",
+        "chinese": "转弯"
+      },
+      {
+        "id": 91,
+        "spanish": "fuerza",
+        "english": "force",
+        "chinese": "力量"
+      },
+      {
+        "id": 92,
+        "spanish": "sistema",
+        "english": "system",
+        "chinese": "系统"
+      },
+      {
+        "id": 93,
+        "spanish": "paso",
+        "english": "step",
+        "chinese": "步"
+      },
+      {
+        "id": 94,
+        "spanish": "plan",
+        "english": "plan",
+        "chinese": "计划"
+      },
+      {
+        "id": 95,
+        "spanish": "calle",
+        "english": "street",
+        "chinese": "街道"
+      },
+      {
+        "id": 96,
+        "spanish": "pueblo",
+        "english": "town",
+        "chinese": "小镇"
+      },
+      {
+        "id": 97,
+        "spanish": "cuidado",
+        "english": "care",
+        "chinese": "小心"
+      },
+      {
+        "id": 98,
+        "spanish": "partido",
+        "english": "match",
+        "chinese": "比赛"
+      },
+      {
+        "id": 99,
+        "spanish": "fiesta",
+        "english": "party",
+        "chinese": "聚会"
+      },
+      {
+        "id": 100,
+        "spanish": "pie",
+        "english": "foot",
+        "chinese": "脚"
+      },
+      {
+        "id": 101,
+        "spanish": "frente",
+        "english": "front",
+        "chinese": "前面"
+      },
+      {
+        "id": 102,
+        "spanish": "escuela",
+        "english": "school",
+        "chinese": "学校"
+      },
+      {
+        "id": 103,
+        "spanish": "sangre",
+        "english": "blood",
+        "chinese": "血液"
+      },
+      {
+        "id": 104,
+        "spanish": "oportunidad",
+        "english": "opportunity",
+        "chinese": "机会"
+      },
+      {
+        "id": 105,
+        "spanish": "muchacho",
+        "english": "boy",
+        "chinese": "男孩"
+      },
+      {
+        "id": 106,
+        "spanish": "situación",
+        "english": "situation",
+        "chinese": "情况"
+      },
+      {
+        "id": 107,
+        "spanish": "política",
+        "english": "politics",
+        "chinese": "政治"
+      },
+      {
+        "id": 108,
+        "spanish": "ley",
+        "english": "law",
+        "chinese": "法律"
+      },
+      {
+        "id": 109,
+        "spanish": "servicio",
+        "english": "service",
+        "chinese": "服务"
+      },
+      {
+        "id": 110,
+        "spanish": "novio",
+        "english": "boyfriend",
+        "chinese": "男朋友"
+      },
+      {
+        "id": 111,
+        "spanish": "puesto",
+        "english": "position",
+        "chinese": "职位"
+      },
+      {
+        "id": 112,
+        "spanish": "dólar",
+        "english": "dollar",
+        "chinese": "美元"
+      },
+      {
+        "id": 113,
+        "spanish": "recuerdo",
+        "english": "memory",
+        "chinese": "回忆"
+      },
+      {
+        "id": 114,
+        "spanish": "seguridad",
+        "english": "security",
+        "chinese": "安全"
+      },
+      {
+        "id": 115,
+        "spanish": "obra",
+        "english": "work",
+        "chinese": "作品"
+      },
+      {
+        "id": 116,
+        "spanish": "película",
+        "english": "movie",
+        "chinese": "电影"
+      },
+      {
+        "id": 117,
+        "spanish": "lista",
+        "english": "list",
+        "chinese": "清单"
+      },
+      {
+        "id": 118,
+        "spanish": "vino",
+        "english": "wine",
+        "chinese": "葡萄酒"
+      },
+      {
+        "id": 119,
+        "spanish": "centro",
+        "english": "center",
+        "chinese": "中心"
+      },
+      {
+        "id": 120,
+        "spanish": "asunto",
+        "english": "matter",
+        "chinese": "事情"
+      },
+      {
+        "id": 121,
+        "spanish": "embargo",
+        "english": "embargo",
+        "chinese": "禁运"
+      },
+      {
+        "id": 122,
+        "spanish": "información",
+        "english": "information",
+        "chinese": "信息"
+      },
+      {
+        "id": 123,
+        "spanish": "habitación",
+        "english": "room",
+        "chinese": "房间"
+      },
+      {
+        "id": 124,
+        "spanish": "falta",
+        "english": "lack",
+        "chinese": "缺乏"
+      },
+      {
+        "id": 125,
+        "spanish": "cielo",
+        "english": "sky",
+        "chinese": "天空"
+      },
+      {
+        "id": 126,
+        "spanish": "negocio",
+        "english": "business",
+        "chinese": "生意"
+      },
+      {
+        "id": 127,
+        "spanish": "sueño",
+        "english": "sleep",
+        "chinese": "睡眠"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "nouns",
+    "level": 2,
+    "words": [
+      {
+        "id": 1,
+        "spanish": "chico",
+        "english": "boy",
+        "chinese": "男孩"
+      },
+      {
+        "id": 2,
+        "spanish": "poder",
+        "english": "power",
+        "chinese": "力量"
+      },
+      {
+        "id": 3,
+        "spanish": "viejo",
+        "english": "old man",
+        "chinese": "老头"
+      },
+      {
+        "id": 4,
+        "spanish": "capitán",
+        "english": "captain",
+        "chinese": "队长"
+      },
+      {
+        "id": 5,
+        "spanish": "comida",
+        "english": "food",
+        "chinese": "食物"
+      },
+      {
+        "id": 6,
+        "spanish": "bebé",
+        "english": "baby",
+        "chinese": "婴儿"
+      },
+      {
+        "id": 7,
+        "spanish": "voz",
+        "english": "voice",
+        "chinese": "声音"
+      },
+      {
+        "id": 8,
+        "spanish": "par",
+        "english": "pair",
+        "chinese": "一对"
+      },
+      {
+        "id": 9,
+        "spanish": "paz",
+        "english": "peace",
+        "chinese": "和平"
+      },
+      {
+        "id": 10,
+        "spanish": "culpa",
+        "english": "fault",
+        "chinese": "过错"
+      },
+      {
+        "id": 11,
+        "spanish": "noticia",
+        "english": "news",
+        "chinese": "新闻"
+      },
+      {
+        "id": 12,
+        "spanish": "diablo",
+        "english": "devil",
+        "chinese": "魔鬼"
+      },
+      {
+        "id": 13,
+        "spanish": "resto",
+        "english": "rest",
+        "chinese": "剩余部分"
+      },
+      {
+        "id": 14,
+        "spanish": "médico",
+        "english": "doctor",
+        "chinese": "医生"
+      },
+      {
+        "id": 15,
+        "spanish": "carta",
+        "english": "letter",
+        "chinese": "信"
+      },
+      {
+        "id": 16,
+        "spanish": "programa",
+        "english": "program",
+        "chinese": "节目"
+      },
+      {
+        "id": 17,
+        "spanish": "sitio",
+        "english": "place",
+        "chinese": "地方"
+      },
+      {
+        "id": 18,
+        "spanish": "campo",
+        "english": "field",
+        "chinese": "田野"
+      },
+      {
+        "id": 19,
+        "spanish": "cama",
+        "english": "bed",
+        "chinese": "床"
+      },
+      {
+        "id": 20,
+        "spanish": "abuelo",
+        "english": "grandfather",
+        "chinese": "祖父"
+      },
+      {
+        "id": 21,
+        "spanish": "viaje",
+        "english": "trip",
+        "chinese": "旅行"
+      },
+      {
+        "id": 22,
+        "spanish": "demonio",
+        "english": "demon",
+        "chinese": "恶魔"
+      },
+      {
+        "id": 23,
+        "spanish": "oficina",
+        "english": "office",
+        "chinese": "办公室"
+      },
+      {
+        "id": 24,
+        "spanish": "acción",
+        "english": "action",
+        "chinese": "行动"
+      },
+      {
+        "id": 25,
+        "spanish": "línea",
+        "english": "line",
+        "chinese": "线"
+      },
+      {
+        "id": 26,
+        "spanish": "agente",
+        "english": "agent",
+        "chinese": "代理人"
+      },
+      {
+        "id": 27,
+        "spanish": "papel",
+        "english": "paper",
+        "chinese": "纸"
+      },
+      {
+        "id": 28,
+        "spanish": "aire",
+        "english": "air",
+        "chinese": "空气"
+      },
+      {
+        "id": 29,
+        "spanish": "principio",
+        "english": "principle",
+        "chinese": "原则"
+      },
+      {
+        "id": 30,
+        "spanish": "empresa",
+        "english": "company",
+        "chinese": "公司"
+      },
+      {
+        "id": 31,
+        "spanish": "director",
+        "english": "director",
+        "chinese": "主任"
+      },
+      {
+        "id": 32,
+        "spanish": "ejemplo",
+        "english": "example",
+        "chinese": "例子"
+      },
+      {
+        "id": 33,
+        "spanish": "amo",
+        "english": "master",
+        "chinese": "主人"
+      },
+      {
+        "id": 34,
+        "spanish": "rey",
+        "english": "king",
+        "chinese": "国王"
+      },
+      {
+        "id": 35,
+        "spanish": "cuarto",
+        "english": "room",
+        "chinese": "房间"
+      },
+      {
+        "id": 36,
+        "spanish": "decisión",
+        "english": "decision",
+        "chinese": "决定"
+      },
+      {
+        "id": 37,
+        "spanish": "control",
+        "english": "control",
+        "chinese": "控制"
+      },
+      {
+        "id": 38,
+        "spanish": "hospital",
+        "english": "hospital",
+        "chinese": "医院"
+      },
+      {
+        "id": 39,
+        "spanish": "marido",
+        "english": "husband",
+        "chinese": "丈夫"
+      },
+      {
+        "id": 40,
+        "spanish": "fuego",
+        "english": "fire",
+        "chinese": "火"
+      },
+      {
+        "id": 41,
+        "spanish": "tema",
+        "english": "topic",
+        "chinese": "话题"
+      },
+      {
+        "id": 42,
+        "spanish": "nivel",
+        "english": "level",
+        "chinese": "水平"
+      },
+      {
+        "id": 43,
+        "spanish": "estudio",
+        "english": "study",
+        "chinese": "学习"
+      },
+      {
+        "id": 44,
+        "spanish": "secreto",
+        "english": "secret",
+        "chinese": "秘密"
+      },
+      {
+        "id": 45,
+        "spanish": "mensaje",
+        "english": "message",
+        "chinese": "信息"
+      },
+      {
+        "id": 46,
+        "spanish": "resultado",
+        "english": "result",
+        "chinese": "结果"
+      },
+      {
+        "id": 47,
+        "spanish": "error",
+        "english": "error",
+        "chinese": "错误"
+      },
+      {
+        "id": 48,
+        "spanish": "futuro",
+        "english": "future",
+        "chinese": "未来"
+      },
+      {
+        "id": 49,
+        "spanish": "compañero",
+        "english": "classmate",
+        "chinese": "同伴"
+      },
+      {
+        "id": 50,
+        "spanish": "atención",
+        "english": "attention",
+        "chinese": "注意"
+      },
+      {
+        "id": 51,
+        "spanish": "zona",
+        "english": "area",
+        "chinese": "区域"
+      },
+      {
+        "id": 52,
+        "spanish": "vista",
+        "english": "view",
+        "chinese": "视野"
+      },
+      {
+        "id": 53,
+        "spanish": "edad",
+        "english": "age",
+        "chinese": "年龄"
+      },
+      {
+        "id": 54,
+        "spanish": "abogado",
+        "english": "lawyer",
+        "chinese": "律师"
+      },
+      {
+        "id": 55,
+        "spanish": "dirección",
+        "english": "address",
+        "chinese": "地址"
+      },
+      {
+        "id": 56,
+        "spanish": "fondo",
+        "english": "bottom",
+        "chinese": "底部"
+      },
+      {
+        "id": 57,
+        "spanish": "compañía",
+        "english": "company",
+        "chinese": "公司"
+      },
+      {
+        "id": 58,
+        "spanish": "proceso",
+        "english": "process",
+        "chinese": "过程"
+      },
+      {
+        "id": 59,
+        "spanish": "investigación",
+        "english": "investigation",
+        "chinese": "调查"
+      },
+      {
+        "id": 60,
+        "spanish": "café",
+        "english": "coffee",
+        "chinese": "咖啡"
+      },
+      {
+        "id": 61,
+        "spanish": "duda",
+        "english": "doubt",
+        "chinese": "怀疑"
+      },
+      {
+        "id": 62,
+        "spanish": "estado",
+        "english": "state",
+        "chinese": "状态"
+      },
+      {
+        "id": 63,
+        "spanish": "ropa",
+        "english": "clothing",
+        "chinese": "衣服"
+      },
+      {
+        "id": 64,
+        "spanish": "valor",
+        "english": "value",
+        "chinese": "价值"
+      },
+      {
+        "id": 65,
+        "spanish": "profesor",
+        "english": "teacher",
+        "chinese": "老师"
+      },
+      {
+        "id": 66,
+        "spanish": "reunión",
+        "english": "meeting",
+        "chinese": "会议"
+      },
+      {
+        "id": 67,
+        "spanish": "boca",
+        "english": "mouth",
+        "chinese": "嘴"
+      },
+      {
+        "id": 68,
+        "spanish": "cámara",
+        "english": "camera",
+        "chinese": "相机"
+      },
+      {
+        "id": 69,
+        "spanish": "espacio",
+        "english": "space",
+        "chinese": "空间"
+      },
+      {
+        "id": 70,
+        "spanish": "imagen",
+        "english": "image",
+        "chinese": "图像"
+      },
+      {
+        "id": 71,
+        "spanish": "cargo",
+        "english": "position",
+        "chinese": "职位"
+      },
+      {
+        "id": 72,
+        "spanish": "caballero",
+        "english": "gentleman",
+        "chinese": "绅士"
+      },
+      {
+        "id": 73,
+        "spanish": "posibilidad",
+        "english": "possibility",
+        "chinese": "可能性"
+      },
+      {
+        "id": 74,
+        "spanish": "consejo",
+        "english": "advice",
+        "chinese": "建议"
+      },
+      {
+        "id": 75,
+        "spanish": "asesino",
+        "english": "murderer",
+        "chinese": "杀手"
+      },
+      {
+        "id": 76,
+        "spanish": "daño",
+        "english": "damage",
+        "chinese": "损害"
+      },
+      {
+        "id": 77,
+        "spanish": "sociedad",
+        "english": "society",
+        "chinese": "社会"
+      },
+      {
+        "id": 78,
+        "spanish": "base",
+        "english": "base",
+        "chinese": "基础"
+      },
+      {
+        "id": 79,
+        "spanish": "proyecto",
+        "english": "project",
+        "chinese": "项目"
+      },
+      {
+        "id": 80,
+        "spanish": "mesa",
+        "english": "table",
+        "chinese": "桌子"
+      },
+      {
+        "id": 81,
+        "spanish": "paciente",
+        "english": "patient",
+        "chinese": "病人"
+      },
+      {
+        "id": 82,
+        "spanish": "movimiento",
+        "english": "movement",
+        "chinese": "运动"
+      },
+      {
+        "id": 83,
+        "spanish": "maestro",
+        "english": "teacher",
+        "chinese": "老师"
+      },
+      {
+        "id": 84,
+        "spanish": "carrera",
+        "english": "career",
+        "chinese": "职业"
+      },
+      {
+        "id": 85,
+        "spanish": "caballo",
+        "english": "horse",
+        "chinese": "马"
+      },
+      {
+        "id": 86,
+        "spanish": "siglo",
+        "english": "century",
+        "chinese": "世纪"
+      },
+      {
+        "id": 87,
+        "spanish": "pena",
+        "english": "shame",
+        "chinese": "羞耻"
+      },
+      {
+        "id": 88,
+        "spanish": "banco",
+        "english": "bank",
+        "chinese": "银行"
+      },
+      {
+        "id": 89,
+        "spanish": "mayoría",
+        "english": "majority",
+        "chinese": "大多数"
+      },
+      {
+        "id": 90,
+        "spanish": "miembro",
+        "english": "member",
+        "chinese": "成员"
+      },
+      {
+        "id": 91,
+        "spanish": "condición",
+        "english": "condition",
+        "chinese": "条件"
+      },
+      {
+        "id": 92,
+        "spanish": "efecto",
+        "english": "effect",
+        "chinese": "影响"
+      },
+      {
+        "id": 93,
+        "spanish": "brazo",
+        "english": "arm",
+        "chinese": "手臂"
+      },
+      {
+        "id": 94,
+        "spanish": "ministro",
+        "english": "minister",
+        "chinese": "部长"
+      },
+      {
+        "id": 95,
+        "spanish": "libertad",
+        "english": "freedom",
+        "chinese": "自由"
+      },
+      {
+        "id": 96,
+        "spanish": "asesinato",
+        "english": "murder",
+        "chinese": "谋杀"
+      },
+      {
+        "id": 97,
+        "spanish": "interés",
+        "english": "interest",
+        "chinese": "兴趣"
+      },
+      {
+        "id": 98,
+        "spanish": "animal",
+        "english": "animal",
+        "chinese": "动物"
+      },
+      {
+        "id": 99,
+        "spanish": "sol",
+        "english": "sun",
+        "chinese": "太阳"
+      },
+      {
+        "id": 100,
+        "spanish": "color",
+        "english": "color",
+        "chinese": "颜色"
+      },
+      {
+        "id": 101,
+        "spanish": "caja",
+        "english": "box",
+        "chinese": "盒子"
+      },
+      {
+        "id": 102,
+        "spanish": "cliente",
+        "english": "customer",
+        "chinese": "顾客"
+      },
+      {
+        "id": 103,
+        "spanish": "víctima",
+        "english": "victim",
+        "chinese": "受害者"
+      },
+      {
+        "id": 104,
+        "spanish": "deseo",
+        "english": "desire",
+        "chinese": "愿望"
+      },
+      {
+        "id": 105,
+        "spanish": "arte",
+        "english": "art",
+        "chinese": "艺术"
+      },
+      {
+        "id": 106,
+        "spanish": "causa",
+        "english": "cause",
+        "chinese": "原因"
+      },
+      {
+        "id": 107,
+        "spanish": "cita",
+        "english": "appointment",
+        "chinese": "约会"
+      },
+      {
+        "id": 108,
+        "spanish": "trato",
+        "english": "treatment",
+        "chinese": "对待"
+      },
+      {
+        "id": 109,
+        "spanish": "hotel",
+        "english": "hotel",
+        "chinese": "酒店"
+      },
+      {
+        "id": 110,
+        "spanish": "estrella",
+        "english": "star",
+        "chinese": "星星"
+      },
+      {
+        "id": 111,
+        "spanish": "sexo",
+        "english": "sex",
+        "chinese": "性别"
+      },
+      {
+        "id": 112,
+        "spanish": "dolor",
+        "english": "pain",
+        "chinese": "疼痛"
+      },
+      {
+        "id": 113,
+        "spanish": "mitad",
+        "english": "half",
+        "chinese": "一半"
+      },
+      {
+        "id": 114,
+        "spanish": "gusto",
+        "english": "taste",
+        "chinese": "味道"
+      },
+      {
+        "id": 115,
+        "spanish": "canción",
+        "english": "song",
+        "chinese": "歌曲"
+      },
+      {
+        "id": 116,
+        "spanish": "baño",
+        "english": "bathroom",
+        "chinese": "浴室"
+      },
+      {
+        "id": 117,
+        "spanish": "objetivo",
+        "english": "goal",
+        "chinese": "目标"
+      },
+      {
+        "id": 118,
+        "spanish": "salud",
+        "english": "health",
+        "chinese": "健康"
+      },
+      {
+        "id": 119,
+        "spanish": "sal",
+        "english": "salt",
+        "chinese": "盐"
+      },
+      {
+        "id": 120,
+        "spanish": "mente",
+        "english": "mind",
+        "chinese": "头脑"
+      },
+      {
+        "id": 121,
+        "spanish": "suelo",
+        "english": "floor",
+        "chinese": "地板"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "nouns",
+    "level": 3,
+    "words": [
+      {
+        "id": 1,
+        "spanish": "perdón",
+        "english": "forgiveness",
+        "chinese": "原谅"
+      },
+      {
+        "id": 2,
+        "spanish": "posición",
+        "english": "position",
+        "chinese": "位置"
+      },
+      {
+        "id": 3,
+        "spanish": "medida",
+        "english": "measure",
+        "chinese": "措施"
+      },
+      {
+        "id": 4,
+        "spanish": "especie",
+        "english": "species",
+        "chinese": "物种"
+      },
+      {
+        "id": 5,
+        "spanish": "diferencia",
+        "english": "difference",
+        "chinese": "差别"
+      },
+      {
+        "id": 6,
+        "spanish": "precio",
+        "english": "price",
+        "chinese": "价格"
+      },
+      {
+        "id": 7,
+        "spanish": "pelo",
+        "english": "hair",
+        "chinese": "头发"
+      },
+      {
+        "id": 8,
+        "spanish": "opinión",
+        "english": "opinion",
+        "chinese": "意见"
+      },
+      {
+        "id": 9,
+        "spanish": "mercado",
+        "english": "market",
+        "chinese": "市场"
+      },
+      {
+        "id": 10,
+        "spanish": "elección",
+        "english": "election",
+        "chinese": "选举"
+      },
+      {
+        "id": 11,
+        "spanish": "interior",
+        "english": "interior",
+        "chinese": "内部"
+      },
+      {
+        "id": 12,
+        "spanish": "silencio",
+        "english": "silence",
+        "chinese": "安静"
+      },
+      {
+        "id": 13,
+        "spanish": "necesidad",
+        "english": "need",
+        "chinese": "需要"
+      },
+      {
+        "id": 14,
+        "spanish": "odio",
+        "english": "hatred",
+        "chinese": "仇恨"
+      },
+      {
+        "id": 15,
+        "spanish": "experiencia",
+        "english": "experience",
+        "chinese": "经验"
+      },
+      {
+        "id": 16,
+        "spanish": "actividad",
+        "english": "activity",
+        "chinese": "活动"
+      },
+      {
+        "id": 17,
+        "spanish": "droga",
+        "english": "drug",
+        "chinese": "毒品"
+      },
+      {
+        "id": 18,
+        "spanish": "accidente",
+        "english": "accident",
+        "chinese": "事故"
+      },
+      {
+        "id": 19,
+        "spanish": "club",
+        "english": "club",
+        "chinese": "俱乐部"
+      },
+      {
+        "id": 20,
+        "spanish": "ejército",
+        "english": "army",
+        "chinese": "军队"
+      },
+      {
+        "id": 21,
+        "spanish": "mar",
+        "english": "sea",
+        "chinese": "海"
+      },
+      {
+        "id": 22,
+        "spanish": "ataque",
+        "english": "attack",
+        "chinese": "攻击"
+      },
+      {
+        "id": 23,
+        "spanish": "contacto",
+        "english": "contact",
+        "chinese": "联系"
+      },
+      {
+        "id": 24,
+        "spanish": "alma",
+        "english": "soul",
+        "chinese": "灵魂"
+      },
+      {
+        "id": 25,
+        "spanish": "soldado",
+        "english": "soldier",
+        "chinese": "士兵"
+      },
+      {
+        "id": 26,
+        "spanish": "llave",
+        "english": "key",
+        "chinese": "钥匙"
+      },
+      {
+        "id": 27,
+        "spanish": "energía",
+        "english": "energy",
+        "chinese": "能量"
+      },
+      {
+        "id": 28,
+        "spanish": "barco",
+        "english": "boat",
+        "chinese": "船"
+      },
+      {
+        "id": 29,
+        "spanish": "juez",
+        "english": "judge",
+        "chinese": "法官"
+      },
+      {
+        "id": 30,
+        "spanish": "río",
+        "english": "river",
+        "chinese": "河流"
+      },
+      {
+        "id": 31,
+        "spanish": "tienda",
+        "english": "store",
+        "chinese": "商店"
+      },
+      {
+        "id": 32,
+        "spanish": "dulce",
+        "english": "candy",
+        "chinese": "糖果"
+      },
+      {
+        "id": 33,
+        "spanish": "operación",
+        "english": "operation",
+        "chinese": "手术"
+      },
+      {
+        "id": 34,
+        "spanish": "encuentro",
+        "english": "meeting",
+        "chinese": "会面"
+      },
+      {
+        "id": 35,
+        "spanish": "fuente",
+        "english": "source",
+        "chinese": "来源"
+      },
+      {
+        "id": 36,
+        "spanish": "informe",
+        "english": "report",
+        "chinese": "报告"
+      },
+      {
+        "id": 37,
+        "spanish": "izquierda",
+        "english": "left side",
+        "chinese": "左边"
+      },
+      {
+        "id": 38,
+        "spanish": "pierna",
+        "english": "leg",
+        "chinese": "腿"
+      },
+      {
+        "id": 39,
+        "spanish": "sala",
+        "english": "room",
+        "chinese": "房间"
+      },
+      {
+        "id": 40,
+        "spanish": "señal",
+        "english": "sign",
+        "chinese": "标志"
+      },
+      {
+        "id": 41,
+        "spanish": "muestra",
+        "english": "sample",
+        "chinese": "样本"
+      },
+      {
+        "id": 42,
+        "spanish": "nota",
+        "english": "note",
+        "chinese": "笔记"
+      },
+      {
+        "id": 43,
+        "spanish": "derecha",
+        "english": "right side",
+        "chinese": "右边"
+      },
+      {
+        "id": 44,
+        "spanish": "escena",
+        "english": "scene",
+        "chinese": "场景"
+      },
+      {
+        "id": 45,
+        "spanish": "metro",
+        "english": "meter",
+        "chinese": "米"
+      },
+      {
+        "id": 46,
+        "spanish": "entrada",
+        "english": "entrance",
+        "chinese": "入口"
+      },
+      {
+        "id": 47,
+        "spanish": "regalo",
+        "english": "gift",
+        "chinese": "礼物"
+      },
+      {
+        "id": 48,
+        "spanish": "edificio",
+        "english": "building",
+        "chinese": "建筑物"
+      },
+      {
+        "id": 49,
+        "spanish": "enfermedad",
+        "english": "illness",
+        "chinese": "疾病"
+      },
+      {
+        "id": 50,
+        "spanish": "traje",
+        "english": "suit",
+        "chinese": "西装"
+      },
+      {
+        "id": 51,
+        "spanish": "disculpa",
+        "english": "apology",
+        "chinese": "道歉"
+      },
+      {
+        "id": 52,
+        "spanish": "cena",
+        "english": "dinner",
+        "chinese": "晚餐"
+      },
+      {
+        "id": 53,
+        "spanish": "guardia",
+        "english": "guard",
+        "chinese": "警卫"
+      },
+      {
+        "id": 54,
+        "spanish": "desarrollo",
+        "english": "development",
+        "chinese": "发展"
+      },
+      {
+        "id": 55,
+        "spanish": "cuestión",
+        "english": "issue",
+        "chinese": "问题"
+      },
+      {
+        "id": 56,
+        "spanish": "dato",
+        "english": "data point",
+        "chinese": "数据"
+      },
+      {
+        "id": 57,
+        "spanish": "motivo",
+        "english": "reason",
+        "chinese": "原因"
+      },
+      {
+        "id": 58,
+        "spanish": "crimen",
+        "english": "crime",
+        "chinese": "犯罪"
+      },
+      {
+        "id": 59,
+        "spanish": "flor",
+        "english": "flower",
+        "chinese": "花"
+      },
+      {
+        "id": 60,
+        "spanish": "boda",
+        "english": "wedding",
+        "chinese": "婚礼"
+      },
+      {
+        "id": 61,
+        "spanish": "unidad",
+        "english": "unit",
+        "chinese": "单位"
+      },
+      {
+        "id": 62,
+        "spanish": "montón",
+        "english": "pile",
+        "chinese": "一堆"
+      },
+      {
+        "id": 63,
+        "spanish": "éxito",
+        "english": "success",
+        "chinese": "成功"
+      },
+      {
+        "id": 64,
+        "spanish": "peligro",
+        "english": "danger",
+        "chinese": "危险"
+      },
+      {
+        "id": 65,
+        "spanish": "producto",
+        "english": "product",
+        "chinese": "产品"
+      },
+      {
+        "id": 66,
+        "spanish": "carne",
+        "english": "meat",
+        "chinese": "肉"
+      },
+      {
+        "id": 67,
+        "spanish": "placer",
+        "english": "pleasure",
+        "chinese": "乐趣"
+      },
+      {
+        "id": 68,
+        "spanish": "ventana",
+        "english": "window",
+        "chinese": "窗户"
+      },
+      {
+        "id": 69,
+        "spanish": "oro",
+        "english": "gold",
+        "chinese": "黄金"
+      },
+      {
+        "id": 70,
+        "spanish": "lamento",
+        "english": "lament",
+        "chinese": "哀叹"
+      },
+      {
+        "id": 71,
+        "spanish": "acto",
+        "english": "act",
+        "chinese": "行为"
+      },
+      {
+        "id": 72,
+        "spanish": "cárcel",
+        "english": "prison",
+        "chinese": "监狱"
+      },
+      {
+        "id": 73,
+        "spanish": "radio",
+        "english": "radio",
+        "chinese": "收音机"
+      },
+      {
+        "id": 74,
+        "spanish": "enemigo",
+        "english": "enemy",
+        "chinese": "敌人"
+      },
+      {
+        "id": 75,
+        "spanish": "hambre",
+        "english": "hunger",
+        "chinese": "饥饿"
+      },
+      {
+        "id": 76,
+        "spanish": "departamento",
+        "english": "department",
+        "chinese": "部门"
+      },
+      {
+        "id": 77,
+        "spanish": "piso",
+        "english": "floor",
+        "chinese": "地板"
+      },
+      {
+        "id": 78,
+        "spanish": "espalda",
+        "english": "back",
+        "chinese": "背部"
+      },
+      {
+        "id": 79,
+        "spanish": "vestido",
+        "english": "dress",
+        "chinese": "连衣裙"
+      },
+      {
+        "id": 80,
+        "spanish": "norte",
+        "english": "north",
+        "chinese": "北方"
+      },
+      {
+        "id": 81,
+        "spanish": "aspecto",
+        "english": "aspect",
+        "chinese": "方面"
+      },
+      {
+        "id": 82,
+        "spanish": "visita",
+        "english": "visit",
+        "chinese": "拜访"
+      },
+      {
+        "id": 83,
+        "spanish": "broma",
+        "english": "joke",
+        "chinese": "玩笑"
+      },
+      {
+        "id": 84,
+        "spanish": "sorpresa",
+        "english": "surprise",
+        "chinese": "惊喜"
+      },
+      {
+        "id": 85,
+        "spanish": "juicio",
+        "english": "judgment",
+        "chinese": "判断"
+      },
+      {
+        "id": 86,
+        "spanish": "defensa",
+        "english": "defense",
+        "chinese": "防御"
+      },
+      {
+        "id": 87,
+        "spanish": "regla",
+        "english": "rule",
+        "chinese": "规则"
+      },
+      {
+        "id": 88,
+        "spanish": "comunidad",
+        "english": "community",
+        "chinese": "社区"
+      },
+      {
+        "id": 89,
+        "spanish": "intento",
+        "english": "attempt",
+        "chinese": "尝试"
+      },
+      {
+        "id": 90,
+        "spanish": "cantidad",
+        "english": "amount",
+        "chinese": "数量"
+      },
+      {
+        "id": 91,
+        "spanish": "riesgo",
+        "english": "risk",
+        "chinese": "风险"
+      },
+      {
+        "id": 92,
+        "spanish": "justicia",
+        "english": "justice",
+        "chinese": "正义"
+      },
+      {
+        "id": 93,
+        "spanish": "salida",
+        "english": "exit",
+        "chinese": "出口"
+      },
+      {
+        "id": 94,
+        "spanish": "tren",
+        "english": "train",
+        "chinese": "火车"
+      },
+      {
+        "id": 95,
+        "spanish": "serie",
+        "english": "series",
+        "chinese": "系列"
+      },
+      {
+        "id": 96,
+        "spanish": "sector",
+        "english": "sector",
+        "chinese": "部门"
+      },
+      {
+        "id": 97,
+        "spanish": "uso",
+        "english": "use",
+        "chinese": "用途"
+      },
+      {
+        "id": 98,
+        "spanish": "corte",
+        "english": "cut",
+        "chinese": "切口"
+      },
+      {
+        "id": 99,
+        "spanish": "dedo",
+        "english": "finger",
+        "chinese": "手指"
+      },
+      {
+        "id": 100,
+        "spanish": "esperanza",
+        "english": "hope",
+        "chinese": "希望"
+      },
+      {
+        "id": 101,
+        "spanish": "peso",
+        "english": "weight",
+        "chinese": "重量"
+      },
+      {
+        "id": 102,
+        "spanish": "opción",
+        "english": "option",
+        "chinese": "选项"
+      },
+      {
+        "id": 103,
+        "spanish": "época",
+        "english": "era",
+        "chinese": "时代"
+      },
+      {
+        "id": 104,
+        "spanish": "rato",
+        "english": "while",
+        "chinese": "一会儿"
+      },
+      {
+        "id": 105,
+        "spanish": "testigo",
+        "english": "witness",
+        "chinese": "证人"
+      },
+      {
+        "id": 106,
+        "spanish": "ocasión",
+        "english": "occasion",
+        "chinese": "场合"
+      },
+      {
+        "id": 107,
+        "spanish": "área",
+        "english": "area",
+        "chinese": "区域"
+      },
+      {
+        "id": 108,
+        "spanish": "detective",
+        "english": "detective",
+        "chinese": "侦探"
+      },
+      {
+        "id": 109,
+        "spanish": "matrimonio",
+        "english": "marriage",
+        "chinese": "婚姻"
+      },
+      {
+        "id": 110,
+        "spanish": "árbol",
+        "english": "tree",
+        "chinese": "树"
+      },
+      {
+        "id": 111,
+        "spanish": "destino",
+        "english": "destination",
+        "chinese": "目的地"
+      },
+      {
+        "id": 112,
+        "spanish": "frío",
+        "english": "cold",
+        "chinese": "寒冷"
+      },
+      {
+        "id": 113,
+        "spanish": "objeto",
+        "english": "object",
+        "chinese": "物体"
+      },
+      {
+        "id": 114,
+        "spanish": "sur",
+        "english": "south",
+        "chinese": "南方"
+      },
+      {
+        "id": 115,
+        "spanish": "cine",
+        "english": "movie theater",
+        "chinese": "电影院"
+      },
+      {
+        "id": 116,
+        "spanish": "marcha",
+        "english": "march",
+        "chinese": "游行"
+      },
+      {
+        "id": 117,
+        "spanish": "misión",
+        "english": "mission",
+        "chinese": "任务"
+      },
+      {
+        "id": 118,
+        "spanish": "cocina",
+        "english": "kitchen",
+        "chinese": "厨房"
+      },
+      {
+        "id": 119,
+        "spanish": "isla",
+        "english": "island",
+        "chinese": "岛"
+      },
+      {
+        "id": 120,
+        "spanish": "enfermo",
+        "english": "sick person",
+        "chinese": "病人"
+      },
+      {
+        "id": 121,
+        "spanish": "sentimiento",
+        "english": "feeling",
+        "chinese": "感情"
+      },
+      {
+        "id": 122,
+        "spanish": "prensa",
+        "english": "press",
+        "chinese": "媒体"
+      },
+      {
+        "id": 123,
+        "spanish": "actor",
+        "english": "actor"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "nouns",
+    "level": 4,
+    "words": [
+      {
+        "id": 1,
+        "spanish": "organización",
+        "english": "organization",
+        "chinese": "组织"
+      },
+      {
+        "id": 2,
+        "spanish": "televisión",
+        "english": "television",
+        "chinese": "电视"
+      },
+      {
+        "id": 3,
+        "spanish": "prisa",
+        "english": "hurry",
+        "chinese": "匆忙"
+      },
+      {
+        "id": 4,
+        "spanish": "autoridad",
+        "english": "authority",
+        "chinese": "权威"
+      },
+      {
+        "id": 5,
+        "spanish": "lucha",
+        "english": "struggle",
+        "chinese": "斗争"
+      },
+      {
+        "id": 6,
+        "spanish": "modelo",
+        "english": "model",
+        "chinese": "模型"
+      },
+      {
+        "id": 7,
+        "spanish": "mentira",
+        "english": "lie",
+        "chinese": "谎言"
+      },
+      {
+        "id": 8,
+        "spanish": "bolsa",
+        "english": "bag",
+        "chinese": "袋子"
+      },
+      {
+        "id": 9,
+        "spanish": "honor",
+        "english": "honor",
+        "chinese": "荣誉"
+      },
+      {
+        "id": 10,
+        "spanish": "luna",
+        "english": "moon",
+        "chinese": "月亮"
+      },
+      {
+        "id": 11,
+        "spanish": "pareja",
+        "english": "partner",
+        "chinese": "伴侣"
+      },
+      {
+        "id": 12,
+        "spanish": "cerebro",
+        "english": "brain",
+        "chinese": "大脑"
+      },
+      {
+        "id": 13,
+        "spanish": "pared",
+        "english": "wall",
+        "chinese": "墙"
+      },
+      {
+        "id": 14,
+        "spanish": "pista",
+        "english": "clue",
+        "chinese": "线索"
+      },
+      {
+        "id": 15,
+        "spanish": "banda",
+        "english": "band",
+        "chinese": "乐队"
+      },
+      {
+        "id": 16,
+        "spanish": "héroe",
+        "english": "hero",
+        "chinese": "英雄"
+      },
+      {
+        "id": 17,
+        "spanish": "reina",
+        "english": "queen",
+        "chinese": "女王"
+      },
+      {
+        "id": 18,
+        "spanish": "bar",
+        "english": "bar",
+        "chinese": "酒吧"
+      },
+      {
+        "id": 19,
+        "spanish": "memoria",
+        "english": "memory",
+        "chinese": "记忆"
+      },
+      {
+        "id": 20,
+        "spanish": "artículo",
+        "english": "article",
+        "chinese": "文章"
+      },
+      {
+        "id": 21,
+        "spanish": "presencia",
+        "english": "presence",
+        "chinese": "存在"
+      },
+      {
+        "id": 22,
+        "spanish": "máquina",
+        "english": "machine",
+        "chinese": "机器"
+      },
+      {
+        "id": 23,
+        "spanish": "permiso",
+        "english": "permission",
+        "chinese": "许可"
+      },
+      {
+        "id": 24,
+        "spanish": "función",
+        "english": "function",
+        "chinese": "功能"
+      },
+      {
+        "id": 25,
+        "spanish": "apoyo",
+        "english": "support",
+        "chinese": "支持"
+      },
+      {
+        "id": 26,
+        "spanish": "estilo",
+        "english": "style",
+        "chinese": "风格"
+      },
+      {
+        "id": 27,
+        "spanish": "cumpleaños",
+        "english": "birthday",
+        "chinese": "生日"
+      },
+      {
+        "id": 28,
+        "spanish": "planeta",
+        "english": "planet",
+        "chinese": "行星"
+      },
+      {
+        "id": 29,
+        "spanish": "material",
+        "english": "material",
+        "chinese": "材料"
+      },
+      {
+        "id": 30,
+        "spanish": "espíritu",
+        "english": "spirit",
+        "chinese": "精神"
+      },
+      {
+        "id": 31,
+        "spanish": "respeto",
+        "english": "respect",
+        "chinese": "尊重"
+      },
+      {
+        "id": 32,
+        "spanish": "teniente",
+        "english": "lieutenant",
+        "chinese": "中尉"
+      },
+      {
+        "id": 33,
+        "spanish": "bomba",
+        "english": "bomb",
+        "chinese": "炸弹"
+      },
+      {
+        "id": 34,
+        "spanish": "líder",
+        "english": "leader",
+        "chinese": "领导者"
+      },
+      {
+        "id": 35,
+        "spanish": "naturaleza",
+        "english": "nature",
+        "chinese": "自然"
+      },
+      {
+        "id": 36,
+        "spanish": "estudiante",
+        "english": "student",
+        "chinese": "学生"
+      },
+      {
+        "id": 37,
+        "spanish": "figura",
+        "english": "figure",
+        "chinese": "人物"
+      },
+      {
+        "id": 38,
+        "spanish": "locura",
+        "english": "madness",
+        "chinese": "疯狂"
+      },
+      {
+        "id": 39,
+        "spanish": "piel",
+        "english": "skin",
+        "chinese": "皮肤"
+      },
+      {
+        "id": 40,
+        "spanish": "periódico",
+        "english": "newspaper",
+        "chinese": "报纸"
+      },
+      {
+        "id": 41,
+        "spanish": "detalle",
+        "english": "detail",
+        "chinese": "细节"
+      },
+      {
+        "id": 42,
+        "spanish": "recurso",
+        "english": "resource",
+        "chinese": "资源"
+      },
+      {
+        "id": 43,
+        "spanish": "red",
+        "english": "network",
+        "chinese": "网络"
+      },
+      {
+        "id": 44,
+        "spanish": "prisión",
+        "english": "prison",
+        "chinese": "监狱"
+      },
+      {
+        "id": 45,
+        "spanish": "pelea",
+        "english": "fight",
+        "chinese": "打架"
+      },
+      {
+        "id": 46,
+        "spanish": "piedra",
+        "english": "stone",
+        "chinese": "石头"
+      },
+      {
+        "id": 47,
+        "spanish": "cerveza",
+        "english": "beer",
+        "chinese": "啤酒"
+      },
+      {
+        "id": 48,
+        "spanish": "hogar",
+        "english": "home",
+        "chinese": "家庭"
+      },
+      {
+        "id": 49,
+        "spanish": "copa",
+        "english": "cup",
+        "chinese": "杯子"
+      },
+      {
+        "id": 50,
+        "spanish": "ciencia",
+        "english": "science",
+        "chinese": "科学"
+      },
+      {
+        "id": 51,
+        "spanish": "secretario",
+        "english": "secretary",
+        "chinese": "秘书"
+      },
+      {
+        "id": 52,
+        "spanish": "presión",
+        "english": "pressure",
+        "chinese": "压力"
+      },
+      {
+        "id": 53,
+        "spanish": "conversación",
+        "english": "conversation",
+        "chinese": "谈话"
+      },
+      {
+        "id": 54,
+        "spanish": "cultura",
+        "english": "culture",
+        "chinese": "文化"
+      },
+      {
+        "id": 55,
+        "spanish": "basura",
+        "english": "trash",
+        "chinese": "垃圾"
+      },
+      {
+        "id": 56,
+        "spanish": "baile",
+        "english": "dance",
+        "chinese": "舞蹈"
+      },
+      {
+        "id": 57,
+        "spanish": "planta",
+        "english": "plant",
+        "chinese": "植物"
+      },
+      {
+        "id": 58,
+        "spanish": "inglés",
+        "english": "English language",
+        "chinese": "英语"
+      },
+      {
+        "id": 59,
+        "spanish": "grado",
+        "english": "degree",
+        "chinese": "程度"
+      },
+      {
+        "id": 60,
+        "spanish": "marca",
+        "english": "brand",
+        "chinese": "品牌"
+      },
+      {
+        "id": 61,
+        "spanish": "maldición",
+        "english": "curse",
+        "chinese": "诅咒"
+      },
+      {
+        "id": 62,
+        "spanish": "junta",
+        "english": "meeting",
+        "chinese": "会议"
+      },
+      {
+        "id": 63,
+        "spanish": "comisión",
+        "english": "committee",
+        "chinese": "委员会"
+      },
+      {
+        "id": 64,
+        "spanish": "escrito",
+        "english": "writing",
+        "chinese": "文字"
+      },
+      {
+        "id": 65,
+        "spanish": "tarjeta",
+        "english": "card",
+        "chinese": "卡片"
+      },
+      {
+        "id": 66,
+        "spanish": "autor",
+        "english": "author",
+        "chinese": "作者"
+      },
+      {
+        "id": 67,
+        "spanish": "capital",
+        "english": "capital",
+        "chinese": "首都"
+      },
+      {
+        "id": 68,
+        "spanish": "declaración",
+        "english": "statement",
+        "chinese": "声明"
+      },
+      {
+        "id": 69,
+        "spanish": "esfuerzo",
+        "english": "effort",
+        "chinese": "努力"
+      },
+      {
+        "id": 70,
+        "spanish": "teatro",
+        "english": "theater",
+        "chinese": "剧院"
+      },
+      {
+        "id": 71,
+        "spanish": "victoria",
+        "english": "victory",
+        "chinese": "胜利"
+      },
+      {
+        "id": 72,
+        "spanish": "comunicación",
+        "english": "communication",
+        "chinese": "交流"
+      },
+      {
+        "id": 73,
+        "spanish": "propiedad",
+        "english": "property",
+        "chinese": "财产"
+      },
+      {
+        "id": 74,
+        "spanish": "infierno",
+        "english": "hell",
+        "chinese": "地狱"
+      },
+      {
+        "id": 75,
+        "spanish": "verano",
+        "english": "summer",
+        "chinese": "夏天"
+      },
+      {
+        "id": 76,
+        "spanish": "consecuencia",
+        "english": "consequence",
+        "chinese": "后果"
+      },
+      {
+        "id": 77,
+        "spanish": "zapato",
+        "english": "shoe",
+        "chinese": "鞋"
+      },
+      {
+        "id": 78,
+        "spanish": "conocimiento",
+        "english": "knowledge",
+        "chinese": "知识"
+      },
+      {
+        "id": 79,
+        "spanish": "intención",
+        "english": "intention",
+        "chinese": "意图"
+      },
+      {
+        "id": 80,
+        "spanish": "jugador",
+        "english": "player",
+        "chinese": "选手"
+      },
+      {
+        "id": 81,
+        "spanish": "producción",
+        "english": "production",
+        "chinese": "生产"
+      },
+      {
+        "id": 82,
+        "spanish": "mirada",
+        "english": "look",
+        "chinese": "目光"
+      },
+      {
+        "id": 83,
+        "spanish": "coronel",
+        "english": "colonel",
+        "chinese": "上校"
+      },
+      {
+        "id": 84,
+        "spanish": "fecha",
+        "english": "date",
+        "chinese": "日期"
+      },
+      {
+        "id": 85,
+        "spanish": "responsabilidad",
+        "english": "responsibility",
+        "chinese": "责任"
+      },
+      {
+        "id": 86,
+        "spanish": "población",
+        "english": "population",
+        "chinese": "人口"
+      },
+      {
+        "id": 87,
+        "spanish": "elemento",
+        "english": "element",
+        "chinese": "元素"
+      },
+      {
+        "id": 88,
+        "spanish": "huevo",
+        "english": "egg",
+        "chinese": "鸡蛋"
+      },
+      {
+        "id": 89,
+        "spanish": "página",
+        "english": "page",
+        "chinese": "页"
+      },
+      {
+        "id": 90,
+        "spanish": "gato",
+        "english": "cat",
+        "chinese": "猫"
+      },
+      {
+        "id": 91,
+        "spanish": "personaje",
+        "english": "character",
+        "chinese": "角色"
+      },
+      {
+        "id": 92,
+        "spanish": "período",
+        "english": "period",
+        "chinese": "时期"
+      },
+      {
+        "id": 93,
+        "spanish": "voto",
+        "english": "vote",
+        "chinese": "选票"
+      },
+      {
+        "id": 94,
+        "spanish": "herida",
+        "english": "wound",
+        "chinese": "伤口"
+      },
+      {
+        "id": 95,
+        "spanish": "premio",
+        "english": "prize",
+        "chinese": "奖品"
+      },
+      {
+        "id": 96,
+        "spanish": "felicidad",
+        "english": "happiness",
+        "chinese": "幸福"
+      },
+      {
+        "id": 97,
+        "spanish": "educación",
+        "english": "education",
+        "chinese": "教育"
+      },
+      {
+        "id": 98,
+        "spanish": "propósito",
+        "english": "purpose",
+        "chinese": "目的"
+      },
+      {
+        "id": 99,
+        "spanish": "artista",
+        "english": "artist",
+        "chinese": "艺术家"
+      },
+      {
+        "id": 100,
+        "spanish": "costa",
+        "english": "coast",
+        "chinese": "海岸"
+      },
+      {
+        "id": 101,
+        "spanish": "tribunal",
+        "english": "court",
+        "chinese": "法庭"
+      },
+      {
+        "id": 102,
+        "spanish": "capacidad",
+        "english": "ability",
+        "chinese": "能力"
+      },
+      {
+        "id": 103,
+        "spanish": "término",
+        "english": "term",
+        "chinese": "术语"
+      },
+      {
+        "id": 104,
+        "spanish": "julio",
+        "english": "July",
+        "chinese": "七月"
+      },
+      {
+        "id": 105,
+        "spanish": "pieza",
+        "english": "piece",
+        "chinese": "片"
+      },
+      {
+        "id": 106,
+        "spanish": "teoría",
+        "english": "theory",
+        "chinese": "理论"
+      },
+      {
+        "id": 107,
+        "spanish": "tarea",
+        "english": "task",
+        "chinese": "任务"
+      },
+      {
+        "id": 108,
+        "spanish": "sonido",
+        "english": "sound",
+        "chinese": "声音"
+      },
+      {
+        "id": 109,
+        "spanish": "bosque",
+        "english": "forest",
+        "chinese": "森林"
+      },
+      {
+        "id": 110,
+        "spanish": "regreso",
+        "english": "return",
+        "chinese": "返回"
+      },
+      {
+        "id": 111,
+        "spanish": "venta",
+        "english": "sale",
+        "chinese": "销售"
+      },
+      {
+        "id": 112,
+        "spanish": "solución",
+        "english": "solution",
+        "chinese": "解决方案"
+      },
+      {
+        "id": 113,
+        "spanish": "documento",
+        "english": "document",
+        "chinese": "文件"
+      },
+      {
+        "id": 114,
+        "spanish": "nación",
+        "english": "nation",
+        "chinese": "国家"
+      },
+      {
+        "id": 115,
+        "spanish": "cuadro",
+        "english": "picture",
+        "chinese": "画"
+      },
+      {
+        "id": 116,
+        "spanish": "registro",
+        "english": "record",
+        "chinese": "记录"
+      },
+      {
+        "id": 117,
+        "spanish": "nene",
+        "english": "little boy",
+        "chinese": "小男孩"
+      },
+      {
+        "id": 118,
+        "spanish": "vecino",
+        "english": "neighbor",
+        "chinese": "邻居"
+      },
+      {
+        "id": 119,
+        "spanish": "distancia",
+        "english": "distance",
+        "chinese": "距离"
+      },
+      {
+        "id": 120,
+        "spanish": "batalla",
+        "english": "battle",
+        "chinese": "战斗"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "nouns",
+    "level": 5,
+    "words": [
+      {
+        "id": 1,
+        "spanish": "diario",
+        "english": "newspaper",
+        "chinese": "报纸"
+      },
+      {
+        "id": 2,
+        "spanish": "vuelo",
+        "english": "flight",
+        "chinese": "航班"
+      },
+      {
+        "id": 3,
+        "spanish": "montaña",
+        "english": "mountain",
+        "chinese": "山"
+      },
+      {
+        "id": 4,
+        "spanish": "colegio",
+        "english": "school",
+        "chinese": "学校"
+      },
+      {
+        "id": 5,
+        "spanish": "confianza",
+        "english": "trust",
+        "chinese": "信任"
+      },
+      {
+        "id": 6,
+        "spanish": "viento",
+        "english": "wind",
+        "chinese": "风"
+      },
+      {
+        "id": 7,
+        "spanish": "tratamiento",
+        "english": "treatment",
+        "chinese": "治疗"
+      },
+      {
+        "id": 8,
+        "spanish": "dueño",
+        "english": "owner",
+        "chinese": "主人"
+      },
+      {
+        "id": 9,
+        "spanish": "pensamiento",
+        "english": "thought",
+        "chinese": "想法"
+      },
+      {
+        "id": 10,
+        "spanish": "calor",
+        "english": "heat",
+        "chinese": "热"
+      },
+      {
+        "id": 11,
+        "spanish": "contrato",
+        "english": "contract",
+        "chinese": "合同"
+      },
+      {
+        "id": 12,
+        "spanish": "carácter",
+        "english": "character",
+        "chinese": "性格"
+      },
+      {
+        "id": 13,
+        "spanish": "crisis",
+        "english": "crisis",
+        "chinese": "危机"
+      },
+      {
+        "id": 14,
+        "spanish": "importancia",
+        "english": "importance",
+        "chinese": "重要性"
+      },
+      {
+        "id": 15,
+        "spanish": "compra",
+        "english": "purchase",
+        "chinese": "购买"
+      },
+      {
+        "id": 16,
+        "spanish": "cuello",
+        "english": "neck",
+        "chinese": "脖子"
+      },
+      {
+        "id": 17,
+        "spanish": "práctica",
+        "english": "practice",
+        "chinese": "练习"
+      },
+      {
+        "id": 18,
+        "spanish": "campaña",
+        "english": "campaign",
+        "chinese": "活动"
+      },
+      {
+        "id": 19,
+        "spanish": "sargento",
+        "english": "sergeant",
+        "chinese": "中士"
+      },
+      {
+        "id": 20,
+        "spanish": "bala",
+        "english": "bullet",
+        "chinese": "子弹"
+      },
+      {
+        "id": 21,
+        "spanish": "calma",
+        "english": "calm",
+        "chinese": "平静"
+      },
+      {
+        "id": 22,
+        "spanish": "fe",
+        "english": "faith",
+        "chinese": "信念"
+      },
+      {
+        "id": 23,
+        "spanish": "título",
+        "english": "title",
+        "chinese": "标题"
+      },
+      {
+        "id": 24,
+        "spanish": "trabajador",
+        "english": "worker",
+        "chinese": "工人"
+      },
+      {
+        "id": 25,
+        "spanish": "toque",
+        "english": "touch",
+        "chinese": "触碰"
+      },
+      {
+        "id": 26,
+        "spanish": "té",
+        "english": "tea",
+        "chinese": "茶"
+      },
+      {
+        "id": 27,
+        "spanish": "comandante",
+        "english": "commander",
+        "chinese": "指挥官"
+      },
+      {
+        "id": 28,
+        "spanish": "colega",
+        "english": "colleague",
+        "chinese": "同事"
+      },
+      {
+        "id": 29,
+        "spanish": "curso",
+        "english": "course",
+        "chinese": "课程"
+      },
+      {
+        "id": 30,
+        "spanish": "ruido",
+        "english": "noise",
+        "chinese": "噪音"
+      },
+      {
+        "id": 31,
+        "spanish": "pistola",
+        "english": "pistol",
+        "chinese": "手枪"
+      },
+      {
+        "id": 32,
+        "spanish": "leche",
+        "english": "milk",
+        "chinese": "牛奶"
+      },
+      {
+        "id": 33,
+        "spanish": "fútbol",
+        "english": "soccer",
+        "chinese": "足球"
+      },
+      {
+        "id": 34,
+        "spanish": "código",
+        "english": "code",
+        "chinese": "代码"
+      },
+      {
+        "id": 35,
+        "spanish": "pan",
+        "english": "bread",
+        "chinese": "面包"
+      },
+      {
+        "id": 36,
+        "spanish": "porqué",
+        "english": "reason",
+        "chinese": "原因"
+      },
+      {
+        "id": 37,
+        "spanish": "diente",
+        "english": "tooth",
+        "chinese": "牙齿"
+      },
+      {
+        "id": 38,
+        "spanish": "calidad",
+        "english": "quality",
+        "chinese": "质量"
+      },
+      {
+        "id": 39,
+        "spanish": "amenaza",
+        "english": "threat",
+        "chinese": "威胁"
+      },
+      {
+        "id": 40,
+        "spanish": "actitud",
+        "english": "attitude",
+        "chinese": "态度"
+      },
+      {
+        "id": 41,
+        "spanish": "lengua",
+        "english": "tongue",
+        "chinese": "舌头"
+      },
+      {
+        "id": 42,
+        "spanish": "pedido",
+        "english": "order",
+        "chinese": "订单"
+      },
+      {
+        "id": 43,
+        "spanish": "región",
+        "english": "region",
+        "chinese": "地区"
+      },
+      {
+        "id": 44,
+        "spanish": "beso",
+        "english": "kiss",
+        "chinese": "吻"
+      },
+      {
+        "id": 45,
+        "spanish": "medicina",
+        "english": "medicine",
+        "chinese": "药"
+      },
+      {
+        "id": 46,
+        "spanish": "oferta",
+        "english": "offer",
+        "chinese": "优惠"
+      },
+      {
+        "id": 47,
+        "spanish": "pérdida",
+        "english": "loss",
+        "chinese": "损失"
+      },
+      {
+        "id": 48,
+        "spanish": "rostro",
+        "english": "face",
+        "chinese": "脸"
+      },
+      {
+        "id": 49,
+        "spanish": "plaza",
+        "english": "plaza",
+        "chinese": "广场"
+      },
+      {
+        "id": 50,
+        "spanish": "alcalde",
+        "english": "mayor",
+        "chinese": "市长"
+      },
+      {
+        "id": 51,
+        "spanish": "pintura",
+        "english": "painting",
+        "chinese": "绘画"
+      },
+      {
+        "id": 52,
+        "spanish": "parque",
+        "english": "park",
+        "chinese": "公园"
+      },
+      {
+        "id": 53,
+        "spanish": "silla",
+        "english": "chair",
+        "chinese": "椅子"
+      },
+      {
+        "id": 54,
+        "spanish": "velocidad",
+        "english": "speed",
+        "chinese": "速度"
+      },
+      {
+        "id": 55,
+        "spanish": "texto",
+        "english": "text",
+        "chinese": "文本"
+      },
+      {
+        "id": 56,
+        "spanish": "asiento",
+        "english": "seat",
+        "chinese": "座位"
+      },
+      {
+        "id": 57,
+        "spanish": "voluntad",
+        "english": "willpower",
+        "chinese": "意志"
+      },
+      {
+        "id": 58,
+        "spanish": "laboratorio",
+        "english": "laboratory",
+        "chinese": "实验室"
+      },
+      {
+        "id": 59,
+        "spanish": "tontería",
+        "english": "nonsense",
+        "chinese": "蠢话"
+      },
+      {
+        "id": 60,
+        "spanish": "límite",
+        "english": "limit",
+        "chinese": "限制"
+      },
+      {
+        "id": 61,
+        "spanish": "ganado",
+        "english": "livestock",
+        "chinese": "牲畜"
+      },
+      {
+        "id": 62,
+        "spanish": "economía",
+        "english": "economy",
+        "chinese": "经济"
+      },
+      {
+        "id": 63,
+        "spanish": "botella",
+        "english": "bottle",
+        "chinese": "瓶子"
+      },
+      {
+        "id": 64,
+        "spanish": "espectáculo",
+        "english": "show",
+        "chinese": "表演"
+      },
+      {
+        "id": 65,
+        "spanish": "visión",
+        "english": "vision",
+        "chinese": "视力"
+      },
+      {
+        "id": 66,
+        "spanish": "restaurante",
+        "english": "restaurant",
+        "chinese": "餐馆"
+      },
+      {
+        "id": 67,
+        "spanish": "fantasma",
+        "english": "ghost",
+        "chinese": "鬼"
+      },
+      {
+        "id": 68,
+        "spanish": "pago",
+        "english": "payment",
+        "chinese": "付款"
+      },
+      {
+        "id": 69,
+        "spanish": "discurso",
+        "english": "speech",
+        "chinese": "演讲"
+      },
+      {
+        "id": 70,
+        "spanish": "sujeto",
+        "english": "subject",
+        "chinese": "主体"
+      },
+      {
+        "id": 71,
+        "spanish": "apartamento",
+        "english": "apartment",
+        "chinese": "公寓"
+      },
+      {
+        "id": 72,
+        "spanish": "acceso",
+        "english": "access",
+        "chinese": "通道"
+      },
+      {
+        "id": 73,
+        "spanish": "estructura",
+        "english": "structure",
+        "chinese": "结构"
+      },
+      {
+        "id": 74,
+        "spanish": "cuento",
+        "english": "story",
+        "chinese": "故事"
+      },
+      {
+        "id": 75,
+        "spanish": "congreso",
+        "english": "congress",
+        "chinese": "国会"
+      },
+      {
+        "id": 76,
+        "spanish": "carga",
+        "english": "load",
+        "chinese": "负载"
+      },
+      {
+        "id": 77,
+        "spanish": "revista",
+        "english": "magazine",
+        "chinese": "杂志"
+      },
+      {
+        "id": 78,
+        "spanish": "kilómetro",
+        "english": "kilometer",
+        "chinese": "公里"
+      },
+      {
+        "id": 79,
+        "spanish": "viernes",
+        "english": "Friday",
+        "chinese": "星期五"
+      },
+      {
+        "id": 80,
+        "spanish": "archivo",
+        "english": "file",
+        "chinese": "文件"
+      },
+      {
+        "id": 81,
+        "spanish": "rayo",
+        "english": "ray",
+        "chinese": "光线"
+      },
+      {
+        "id": 82,
+        "spanish": "huella",
+        "english": "footprint",
+        "chinese": "足迹"
+      },
+      {
+        "id": 83,
+        "spanish": "pecho",
+        "english": "chest",
+        "chinese": "胸部"
+      },
+      {
+        "id": 84,
+        "spanish": "disco",
+        "english": "disc",
+        "chinese": "唱片"
+      },
+      {
+        "id": 85,
+        "spanish": "plato",
+        "english": "plate",
+        "chinese": "盘子"
+      },
+      {
+        "id": 86,
+        "spanish": "ambiente",
+        "english": "atmosphere",
+        "chinese": "氛围"
+      },
+      {
+        "id": 87,
+        "spanish": "instituto",
+        "english": "institute",
+        "chinese": "学院"
+      },
+      {
+        "id": 88,
+        "spanish": "socio",
+        "english": "partner",
+        "chinese": "合伙人"
+      },
+      {
+        "id": 89,
+        "spanish": "jardín",
+        "english": "garden",
+        "chinese": "花园"
+      },
+      {
+        "id": 90,
+        "spanish": "origen",
+        "english": "origin",
+        "chinese": "起源"
+      },
+      {
+        "id": 91,
+        "spanish": "entrevista",
+        "english": "interview",
+        "chinese": "采访"
+      },
+      {
+        "id": 92,
+        "spanish": "nariz",
+        "english": "nose",
+        "chinese": "鼻子"
+      },
+      {
+        "id": 93,
+        "spanish": "unión",
+        "english": "union",
+        "chinese": "联合"
+      },
+      {
+        "id": 94,
+        "spanish": "conjunto",
+        "english": "set",
+        "chinese": "一套"
+      },
+      {
+        "id": 95,
+        "spanish": "tiro",
+        "english": "shot",
+        "chinese": "射击"
+      },
+      {
+        "id": 96,
+        "spanish": "evidencia",
+        "english": "evidence",
+        "chinese": "证据"
+      },
+      {
+        "id": 97,
+        "spanish": "carretera",
+        "english": "highway",
+        "chinese": "公路"
+      },
+      {
+        "id": 98,
+        "spanish": "reloj",
+        "english": "clock",
+        "chinese": "时钟"
+      },
+      {
+        "id": 99,
+        "spanish": "príncipe",
+        "english": "prince",
+        "chinese": "王子"
+      },
+      {
+        "id": 100,
+        "spanish": "ciudadano",
+        "english": "citizen",
+        "chinese": "公民"
+      },
+      {
+        "id": 101,
+        "spanish": "sábado",
+        "english": "Saturday",
+        "chinese": "星期六"
+      },
+      {
+        "id": 102,
+        "spanish": "análisis",
+        "english": "analysis",
+        "chinese": "分析"
+      },
+      {
+        "id": 103,
+        "spanish": "playa",
+        "english": "beach",
+        "chinese": "海滩"
+      },
+      {
+        "id": 104,
+        "spanish": "cerdo",
+        "english": "pig",
+        "chinese": "猪"
+      },
+      {
+        "id": 105,
+        "spanish": "trampa",
+        "english": "trap",
+        "chinese": "陷阱"
+      },
+      {
+        "id": 106,
+        "spanish": "ladrón",
+        "english": "thief",
+        "chinese": "小偷"
+      },
+      {
+        "id": 107,
+        "spanish": "turno",
+        "english": "turn",
+        "chinese": "轮次"
+      },
+      {
+        "id": 108,
+        "spanish": "empleo",
+        "english": "job",
+        "chinese": "工作"
+      },
+      {
+        "id": 109,
+        "spanish": "ministerio",
+        "english": "ministry",
+        "chinese": "部"
+      },
+      {
+        "id": 110,
+        "spanish": "altura",
+        "english": "height",
+        "chinese": "高度"
+      },
+      {
+        "id": 111,
+        "spanish": "comienzo",
+        "english": "beginning",
+        "chinese": "开始"
+      },
+      {
+        "id": 112,
+        "spanish": "sensación",
+        "english": "feeling",
+        "chinese": "感觉"
+      },
+      {
+        "id": 113,
+        "spanish": "puente",
+        "english": "bridge",
+        "chinese": "桥"
+      },
+      {
+        "id": 114,
+        "spanish": "trago",
+        "english": "sip",
+        "chinese": "一口"
+      },
+      {
+        "id": 115,
+        "spanish": "periodista",
+        "english": "journalist",
+        "chinese": "记者"
+      },
+      {
+        "id": 116,
+        "spanish": "escenario",
+        "english": "scene",
+        "chinese": "场景"
+      },
+      {
+        "id": 117,
+        "spanish": "corriente",
+        "english": "current",
+        "chinese": "电流"
+      },
+      {
+        "id": 118,
+        "spanish": "administración",
+        "english": "administration",
+        "chinese": "管理"
+      },
+      {
+        "id": 119,
+        "spanish": "barrio",
+        "english": "neighborhood",
+        "chinese": "街区"
+      },
+      {
+        "id": 120,
+        "spanish": "emergencia",
+        "english": "emergency",
+        "chinese": "紧急情况"
+      },
+      {
+        "id": 121,
+        "spanish": "propuesta",
+        "english": "proposal",
+        "chinese": "提议"
+      },
+      {
+        "id": 122,
+        "spanish": "sombra",
+        "english": "shadow",
+        "chinese": "阴影"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "nouns",
+    "level": 6,
+    "words": [
+      {
+        "id": 1,
+        "spanish": "vía",
+        "english": "route",
+        "chinese": "路线"
+      },
+      {
+        "id": 2,
+        "spanish": "extranjero",
+        "english": "foreigner",
+        "chinese": "外国人"
+      },
+      {
+        "id": 3,
+        "spanish": "cadena",
+        "english": "chain",
+        "chinese": "链条"
+      },
+      {
+        "id": 4,
+        "spanish": "monstruo",
+        "english": "monster",
+        "chinese": "怪物"
+      },
+      {
+        "id": 5,
+        "spanish": "cadáver",
+        "english": "corpse",
+        "chinese": "尸体"
+      },
+      {
+        "id": 6,
+        "spanish": "temporada",
+        "english": "season",
+        "chinese": "季节"
+      },
+      {
+        "id": 7,
+        "spanish": "institución",
+        "english": "institution",
+        "chinese": "机构"
+      },
+      {
+        "id": 8,
+        "spanish": "majestad",
+        "english": "majesty",
+        "chinese": "陛下"
+      },
+      {
+        "id": 9,
+        "spanish": "vacación",
+        "english": "vacation",
+        "chinese": "假期"
+      },
+      {
+        "id": 10,
+        "spanish": "disparo",
+        "english": "shot",
+        "chinese": "枪声"
+      },
+      {
+        "id": 11,
+        "spanish": "crédito",
+        "english": "credit",
+        "chinese": "信用"
+      },
+      {
+        "id": 12,
+        "spanish": "anillo",
+        "english": "ring",
+        "chinese": "戒指"
+      },
+      {
+        "id": 13,
+        "spanish": "vistazo",
+        "english": "glance",
+        "chinese": "一瞥"
+      },
+      {
+        "id": 14,
+        "spanish": "tecnología",
+        "english": "technology",
+        "chinese": "技术"
+      },
+      {
+        "id": 15,
+        "spanish": "hueso",
+        "english": "bone",
+        "chinese": "骨头"
+      },
+      {
+        "id": 16,
+        "spanish": "federal",
+        "english": "federal agent",
+        "chinese": "联邦警察"
+      },
+      {
+        "id": 17,
+        "spanish": "violencia",
+        "english": "violence",
+        "chinese": "暴力"
+      },
+      {
+        "id": 18,
+        "spanish": "firma",
+        "english": "signature",
+        "chinese": "签名"
+      },
+      {
+        "id": 19,
+        "spanish": "conciencia",
+        "english": "conscience",
+        "chinese": "良心"
+      },
+      {
+        "id": 20,
+        "spanish": "belleza",
+        "english": "beauty",
+        "chinese": "美丽"
+      },
+      {
+        "id": 21,
+        "spanish": "construcción",
+        "english": "construction",
+        "chinese": "建设"
+      },
+      {
+        "id": 22,
+        "spanish": "escritor",
+        "english": "writer",
+        "chinese": "作家"
+      },
+      {
+        "id": 23,
+        "spanish": "examen",
+        "english": "exam",
+        "chinese": "考试"
+      },
+      {
+        "id": 24,
+        "spanish": "escalera",
+        "english": "stairs",
+        "chinese": "楼梯"
+      },
+      {
+        "id": 25,
+        "spanish": "mando",
+        "english": "command",
+        "chinese": "指挥"
+      },
+      {
+        "id": 26,
+        "spanish": "expresión",
+        "english": "expression",
+        "chinese": "表达"
+      },
+      {
+        "id": 27,
+        "spanish": "vehículo",
+        "english": "vehicle",
+        "chinese": "车辆"
+      },
+      {
+        "id": 28,
+        "spanish": "amante",
+        "english": "lover",
+        "chinese": "情人"
+      },
+      {
+        "id": 29,
+        "spanish": "industria",
+        "english": "industry",
+        "chinese": "工业"
+      },
+      {
+        "id": 30,
+        "spanish": "ejercicio",
+        "english": "exercise",
+        "chinese": "锻炼"
+      },
+      {
+        "id": 31,
+        "spanish": "pedazo",
+        "english": "piece",
+        "chinese": "一块"
+      },
+      {
+        "id": 32,
+        "spanish": "terreno",
+        "english": "land",
+        "chinese": "土地"
+      },
+      {
+        "id": 33,
+        "spanish": "candidato",
+        "english": "candidate",
+        "chinese": "候选人"
+      },
+      {
+        "id": 34,
+        "spanish": "deber",
+        "english": "duty",
+        "chinese": "责任"
+      },
+      {
+        "id": 35,
+        "spanish": "universo",
+        "english": "universe",
+        "chinese": "宇宙"
+      },
+      {
+        "id": 36,
+        "spanish": "tamaño",
+        "english": "size",
+        "chinese": "大小"
+      },
+      {
+        "id": 37,
+        "spanish": "materia",
+        "english": "matter",
+        "chinese": "物质"
+      },
+      {
+        "id": 38,
+        "spanish": "técnico",
+        "english": "technician",
+        "chinese": "技术员"
+      },
+      {
+        "id": 39,
+        "spanish": "compromiso",
+        "english": "commitment",
+        "chinese": "承诺"
+      },
+      {
+        "id": 40,
+        "spanish": "circunstancia",
+        "english": "circumstance",
+        "chinese": "情况"
+      },
+      {
+        "id": 41,
+        "spanish": "fotografía",
+        "english": "photograph",
+        "chinese": "照片"
+      },
+      {
+        "id": 42,
+        "spanish": "existencia",
+        "english": "existence",
+        "chinese": "存在"
+      },
+      {
+        "id": 43,
+        "spanish": "tratado",
+        "english": "treaty",
+        "chinese": "条约"
+      },
+      {
+        "id": 44,
+        "spanish": "gas",
+        "english": "gas",
+        "chinese": "气体"
+      },
+      {
+        "id": 45,
+        "spanish": "robo",
+        "english": "theft",
+        "chinese": "盗窃"
+      },
+      {
+        "id": 46,
+        "spanish": "empleado",
+        "english": "employee",
+        "chinese": "雇员"
+      },
+      {
+        "id": 47,
+        "spanish": "hoja",
+        "english": "leaf",
+        "chinese": "叶子"
+      },
+      {
+        "id": 48,
+        "spanish": "protección",
+        "english": "protection",
+        "chinese": "保护"
+      },
+      {
+        "id": 49,
+        "spanish": "paseo",
+        "english": "walk",
+        "chinese": "散步"
+      },
+      {
+        "id": 50,
+        "spanish": "búsqueda",
+        "english": "search",
+        "chinese": "搜索"
+      },
+      {
+        "id": 51,
+        "spanish": "canal",
+        "english": "channel",
+        "chinese": "渠道"
+      },
+      {
+        "id": 52,
+        "spanish": "experto",
+        "english": "expert",
+        "chinese": "专家"
+      },
+      {
+        "id": 53,
+        "spanish": "cuchillo",
+        "english": "knife",
+        "chinese": "刀"
+      },
+      {
+        "id": 54,
+        "spanish": "concepto",
+        "english": "concept",
+        "chinese": "概念"
+      },
+      {
+        "id": 55,
+        "spanish": "lunes",
+        "english": "Monday",
+        "chinese": "星期一"
+      },
+      {
+        "id": 56,
+        "spanish": "cabello",
+        "english": "hair",
+        "chinese": "头发"
+      },
+      {
+        "id": 57,
+        "spanish": "beneficio",
+        "english": "benefit",
+        "chinese": "益处"
+      },
+      {
+        "id": 58,
+        "spanish": "método",
+        "english": "method",
+        "chinese": "方法"
+      },
+      {
+        "id": 59,
+        "spanish": "bebida",
+        "english": "drink",
+        "chinese": "饮料"
+      },
+      {
+        "id": 60,
+        "spanish": "deuda",
+        "english": "debt",
+        "chinese": "债务"
+      },
+      {
+        "id": 61,
+        "spanish": "clave",
+        "english": "key",
+        "chinese": "关键"
+      },
+      {
+        "id": 62,
+        "spanish": "norma",
+        "english": "rule",
+        "chinese": "规则"
+      },
+      {
+        "id": 63,
+        "spanish": "inspector",
+        "english": "inspector",
+        "chinese": "检查员"
+      },
+      {
+        "id": 64,
+        "spanish": "cinta",
+        "english": "tape",
+        "chinese": "胶带"
+      },
+      {
+        "id": 65,
+        "spanish": "demanda",
+        "english": "demand",
+        "chinese": "需求"
+      },
+      {
+        "id": 66,
+        "spanish": "ritmo",
+        "english": "rhythm",
+        "chinese": "节奏"
+      },
+      {
+        "id": 67,
+        "spanish": "bola",
+        "english": "ball",
+        "chinese": "球"
+      },
+      {
+        "id": 68,
+        "spanish": "ventaja",
+        "english": "advantage",
+        "chinese": "优势"
+      },
+      {
+        "id": 69,
+        "spanish": "representante",
+        "english": "representative",
+        "chinese": "代表"
+      },
+      {
+        "id": 70,
+        "spanish": "asociación",
+        "english": "association",
+        "chinese": "协会"
+      },
+      {
+        "id": 71,
+        "spanish": "pantalones",
+        "english": "pants",
+        "chinese": "裤子"
+      },
+      {
+        "id": 72,
+        "spanish": "lluvia",
+        "english": "rain",
+        "chinese": "雨"
+      },
+      {
+        "id": 73,
+        "spanish": "versión",
+        "english": "version",
+        "chinese": "版本"
+      },
+      {
+        "id": 74,
+        "spanish": "meta",
+        "english": "goal",
+        "chinese": "目标"
+      },
+      {
+        "id": 75,
+        "spanish": "autobús",
+        "english": "bus",
+        "chinese": "公交车"
+      },
+      {
+        "id": 76,
+        "spanish": "enfermero",
+        "english": "nurse",
+        "chinese": "护士"
+      },
+      {
+        "id": 77,
+        "spanish": "república",
+        "english": "republic",
+        "chinese": "共和国"
+      },
+      {
+        "id": 78,
+        "spanish": "motor",
+        "english": "engine",
+        "chinese": "发动机"
+      },
+      {
+        "id": 79,
+        "spanish": "inversión",
+        "english": "investment",
+        "chinese": "投资"
+      },
+      {
+        "id": 80,
+        "spanish": "agencia",
+        "english": "agency",
+        "chinese": "机构"
+      },
+      {
+        "id": 81,
+        "spanish": "desastre",
+        "english": "disaster",
+        "chinese": "灾难"
+      },
+      {
+        "id": 82,
+        "spanish": "dama",
+        "english": "lady",
+        "chinese": "女士"
+      },
+      {
+        "id": 83,
+        "spanish": "plazo",
+        "english": "deadline",
+        "chinese": "期限"
+      },
+      {
+        "id": 84,
+        "spanish": "alimento",
+        "english": "food",
+        "chinese": "食物"
+      },
+      {
+        "id": 85,
+        "spanish": "etapa",
+        "english": "stage",
+        "chinese": "阶段"
+      },
+      {
+        "id": 86,
+        "spanish": "letra",
+        "english": "letter",
+        "chinese": "字母"
+      },
+      {
+        "id": 87,
+        "spanish": "actuación",
+        "english": "performance",
+        "chinese": "表演"
+      },
+      {
+        "id": 88,
+        "spanish": "formación",
+        "english": "training",
+        "chinese": "培训"
+      },
+      {
+        "id": 89,
+        "spanish": "competencia",
+        "english": "competition",
+        "chinese": "竞争"
+      },
+      {
+        "id": 90,
+        "spanish": "pelota",
+        "english": "ball",
+        "chinese": "球"
+      },
+      {
+        "id": 91,
+        "spanish": "impuesto",
+        "english": "tax",
+        "chinese": "税"
+      },
+      {
+        "id": 92,
+        "spanish": "novela",
+        "english": "novel",
+        "chinese": "小说"
+      },
+      {
+        "id": 93,
+        "spanish": "rueda",
+        "english": "wheel",
+        "chinese": "车轮"
+      },
+      {
+        "id": 94,
+        "spanish": "revolución",
+        "english": "revolution",
+        "chinese": "革命"
+      },
+      {
+        "id": 95,
+        "spanish": "bienvenida",
+        "english": "welcome",
+        "chinese": "欢迎"
+      },
+      {
+        "id": 96,
+        "spanish": "agujero",
+        "english": "hole",
+        "chinese": "洞"
+      },
+      {
+        "id": 97,
+        "spanish": "delito",
+        "english": "crime",
+        "chinese": "犯罪"
+      },
+      {
+        "id": 98,
+        "spanish": "humor",
+        "english": "mood",
+        "chinese": "心情"
+      },
+      {
+        "id": 99,
+        "spanish": "pez",
+        "english": "fish",
+        "chinese": "鱼"
+      },
+      {
+        "id": 100,
+        "spanish": "factor",
+        "english": "factor",
+        "chinese": "因素"
+      },
+      {
+        "id": 101,
+        "spanish": "vacío",
+        "english": "emptiness",
+        "chinese": "空虚"
+      },
+      {
+        "id": 102,
+        "spanish": "contenido",
+        "english": "content",
+        "chinese": "内容"
+      },
+      {
+        "id": 103,
+        "spanish": "hielo",
+        "english": "ice",
+        "chinese": "冰"
+      },
+      {
+        "id": 104,
+        "spanish": "descanso",
+        "english": "rest",
+        "chinese": "休息"
+      },
+      {
+        "id": 105,
+        "spanish": "aventura",
+        "english": "adventure",
+        "chinese": "冒险"
+      },
+      {
+        "id": 106,
+        "spanish": "espada",
+        "english": "sword",
+        "chinese": "剑"
+      },
+      {
+        "id": 107,
+        "spanish": "crítica",
+        "english": "criticism",
+        "chinese": "批评"
+      },
+      {
+        "id": 108,
+        "spanish": "plano",
+        "english": "map",
+        "chinese": "地图"
+      },
+      {
+        "id": 109,
+        "spanish": "frontera",
+        "english": "border",
+        "chinese": "边界"
+      },
+      {
+        "id": 110,
+        "spanish": "alumno",
+        "english": "student",
+        "chinese": "学生"
+      },
+      {
+        "id": 111,
+        "spanish": "conferencia",
+        "english": "conference",
+        "chinese": "会议"
+      },
+      {
+        "id": 112,
+        "spanish": "jurado",
+        "english": "jury",
+        "chinese": "陪审团"
+      },
+      {
+        "id": 113,
+        "spanish": "vaso",
+        "english": "glass",
+        "chinese": "杯子"
+      },
+      {
+        "id": 114,
+        "spanish": "ejecutivo",
+        "english": "executive",
+        "chinese": "高管"
+      },
+      {
+        "id": 115,
+        "spanish": "sombrero",
+        "english": "hat",
+        "chinese": "帽子"
+      },
+      {
+        "id": 116,
+        "spanish": "territorio",
+        "english": "territory",
+        "chinese": "领土"
+      },
+      {
+        "id": 117,
+        "spanish": "palacio",
+        "english": "palace",
+        "chinese": "宫殿"
+      },
+      {
+        "id": 118,
+        "spanish": "generación",
+        "english": "generation",
+        "chinese": "一代"
+      },
+      {
+        "id": 119,
+        "spanish": "indio",
+        "english": "Indigenous person",
+        "chinese": "印第安人"
+      },
+      {
+        "id": 120,
+        "spanish": "pájaro",
+        "english": "bird",
+        "chinese": "鸟"
+      },
+      {
+        "id": 121,
+        "spanish": "mayo",
+        "english": "May",
+        "chinese": "五月"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "nouns",
+    "level": 7,
+    "words": [
+      {
+        "id": 1,
+        "spanish": "borracho",
+        "english": "drunk person",
+        "chinese": "醉汉"
+      },
+      {
+        "id": 2,
+        "spanish": "sesión",
+        "english": "session",
+        "chinese": "场次"
+      },
+      {
+        "id": 3,
+        "spanish": "comité",
+        "english": "committee",
+        "chinese": "委员会"
+      },
+      {
+        "id": 4,
+        "spanish": "roca",
+        "english": "rock",
+        "chinese": "岩石"
+      },
+      {
+        "id": 5,
+        "spanish": "organismo",
+        "english": "organism",
+        "chinese": "生物体"
+      },
+      {
+        "id": 6,
+        "spanish": "frase",
+        "english": "phrase",
+        "chinese": "短语"
+      },
+      {
+        "id": 7,
+        "spanish": "marco",
+        "english": "frame",
+        "chinese": "框架"
+      },
+      {
+        "id": 8,
+        "spanish": "reacción",
+        "english": "reaction",
+        "chinese": "反应"
+      },
+      {
+        "id": 9,
+        "spanish": "característica",
+        "english": "feature",
+        "chinese": "特征"
+      },
+      {
+        "id": 10,
+        "spanish": "reino",
+        "english": "kingdom",
+        "chinese": "王国"
+      },
+      {
+        "id": 11,
+        "spanish": "deporte",
+        "english": "sport",
+        "chinese": "运动"
+      },
+      {
+        "id": 12,
+        "spanish": "gasto",
+        "english": "expense",
+        "chinese": "开销"
+      },
+      {
+        "id": 13,
+        "spanish": "emoción",
+        "english": "emotion",
+        "chinese": "情绪"
+      },
+      {
+        "id": 14,
+        "spanish": "conflicto",
+        "english": "conflict",
+        "chinese": "冲突"
+      },
+      {
+        "id": 15,
+        "spanish": "hombro",
+        "english": "shoulder",
+        "chinese": "肩膀"
+      },
+      {
+        "id": 16,
+        "spanish": "pollo",
+        "english": "chicken",
+        "chinese": "鸡肉"
+      },
+      {
+        "id": 17,
+        "spanish": "dificultad",
+        "english": "difficulty",
+        "chinese": "困难"
+      },
+      {
+        "id": 18,
+        "spanish": "labio",
+        "english": "lip",
+        "chinese": "嘴唇"
+      },
+      {
+        "id": 19,
+        "spanish": "primo",
+        "english": "cousin",
+        "chinese": "表亲"
+      },
+      {
+        "id": 20,
+        "spanish": "explicación",
+        "english": "explanation",
+        "chinese": "解释"
+      },
+      {
+        "id": 21,
+        "spanish": "habilidad",
+        "english": "skill",
+        "chinese": "技能"
+      },
+      {
+        "id": 22,
+        "spanish": "brujo",
+        "english": "sorcerer",
+        "chinese": "巫师"
+      },
+      {
+        "id": 23,
+        "spanish": "entrenador",
+        "english": "coach",
+        "chinese": "教练"
+      },
+      {
+        "id": 24,
+        "spanish": "procedimiento",
+        "english": "procedure",
+        "chinese": "程序"
+      },
+      {
+        "id": 25,
+        "spanish": "vergüenza",
+        "english": "shame",
+        "chinese": "羞耻"
+      },
+      {
+        "id": 26,
+        "spanish": "capítulo",
+        "english": "chapter",
+        "chinese": "章节"
+      },
+      {
+        "id": 27,
+        "spanish": "alcohol",
+        "english": "alcohol",
+        "chinese": "酒精"
+      },
+      {
+        "id": 28,
+        "spanish": "aeropuerto",
+        "english": "airport",
+        "chinese": "机场"
+      },
+      {
+        "id": 29,
+        "spanish": "olor",
+        "english": "smell",
+        "chinese": "气味"
+      },
+      {
+        "id": 30,
+        "spanish": "aumento",
+        "english": "increase",
+        "chinese": "增加"
+      },
+      {
+        "id": 31,
+        "spanish": "oscuridad",
+        "english": "darkness",
+        "chinese": "黑暗"
+      },
+      {
+        "id": 32,
+        "spanish": "grito",
+        "english": "shout",
+        "chinese": "喊叫"
+      },
+      {
+        "id": 33,
+        "spanish": "comportamiento",
+        "english": "behavior",
+        "chinese": "行为"
+      },
+      {
+        "id": 34,
+        "spanish": "identidad",
+        "english": "identity",
+        "chinese": "身份"
+      },
+      {
+        "id": 35,
+        "spanish": "prisionero",
+        "english": "prisoner",
+        "chinese": "囚犯"
+      },
+      {
+        "id": 36,
+        "spanish": "superficie",
+        "english": "surface",
+        "chinese": "表面"
+      },
+      {
+        "id": 37,
+        "spanish": "madera",
+        "english": "wood",
+        "chinese": "木头"
+      },
+      {
+        "id": 38,
+        "spanish": "truco",
+        "english": "trick",
+        "chinese": "把戏"
+      },
+      {
+        "id": 39,
+        "spanish": "masa",
+        "english": "dough",
+        "chinese": "面团"
+      },
+      {
+        "id": 40,
+        "spanish": "piloto",
+        "english": "pilot",
+        "chinese": "飞行员"
+      },
+      {
+        "id": 41,
+        "spanish": "oeste",
+        "english": "west",
+        "chinese": "西方"
+      },
+      {
+        "id": 42,
+        "spanish": "anciano",
+        "english": "elderly person",
+        "chinese": "老人"
+      },
+      {
+        "id": 43,
+        "spanish": "talento",
+        "english": "talent",
+        "chinese": "天赋"
+      },
+      {
+        "id": 44,
+        "spanish": "princesa",
+        "english": "princess",
+        "chinese": "公主"
+      },
+      {
+        "id": 45,
+        "spanish": "transporte",
+        "english": "transportation",
+        "chinese": "交通"
+      },
+      {
+        "id": 46,
+        "spanish": "bolsillo",
+        "english": "pocket",
+        "chinese": "口袋"
+      },
+      {
+        "id": 47,
+        "spanish": "sonrisa",
+        "english": "smile",
+        "chinese": "微笑"
+      },
+      {
+        "id": 48,
+        "spanish": "conexión",
+        "english": "connection",
+        "chinese": "连接"
+      },
+      {
+        "id": 49,
+        "spanish": "plata",
+        "english": "silver",
+        "chinese": "银"
+      },
+      {
+        "id": 50,
+        "spanish": "lenguaje",
+        "english": "language",
+        "chinese": "语言"
+      },
+      {
+        "id": 51,
+        "spanish": "copia",
+        "english": "copy",
+        "chinese": "副本"
+      },
+      {
+        "id": 52,
+        "spanish": "gloria",
+        "english": "glory",
+        "chinese": "荣耀"
+      },
+      {
+        "id": 53,
+        "spanish": "adulto",
+        "english": "adult",
+        "chinese": "成年人"
+      },
+      {
+        "id": 54,
+        "spanish": "impresión",
+        "english": "impression",
+        "chinese": "印象"
+      },
+      {
+        "id": 55,
+        "spanish": "promesa",
+        "english": "promise",
+        "chinese": "承诺"
+      },
+      {
+        "id": 56,
+        "spanish": "gobernador",
+        "english": "governor",
+        "chinese": "州长"
+      },
+      {
+        "id": 57,
+        "spanish": "moneda",
+        "english": "coin",
+        "chinese": "硬币"
+      },
+      {
+        "id": 58,
+        "spanish": "bastardo",
+        "english": "bastard",
+        "chinese": "私生子"
+      },
+      {
+        "id": 59,
+        "spanish": "creación",
+        "english": "creation",
+        "chinese": "创造"
+      },
+      {
+        "id": 60,
+        "spanish": "alegría",
+        "english": "joy",
+        "chinese": "喜悦"
+      },
+      {
+        "id": 61,
+        "spanish": "funcionario",
+        "english": "public official",
+        "chinese": "公务员"
+      },
+      {
+        "id": 62,
+        "spanish": "camisa",
+        "english": "shirt",
+        "chinese": "衬衫"
+      },
+      {
+        "id": 63,
+        "spanish": "esquina",
+        "english": "corner",
+        "chinese": "拐角"
+      },
+      {
+        "id": 64,
+        "spanish": "pastel",
+        "english": "cake",
+        "chinese": "蛋糕"
+      },
+      {
+        "id": 65,
+        "spanish": "temperatura",
+        "english": "temperature",
+        "chinese": "温度"
+      },
+      {
+        "id": 66,
+        "spanish": "apuesta",
+        "english": "bet",
+        "chinese": "赌注"
+      },
+      {
+        "id": 67,
+        "spanish": "espejo",
+        "english": "mirror",
+        "chinese": "镜子"
+      },
+      {
+        "id": 68,
+        "spanish": "crecimiento",
+        "english": "growth",
+        "chinese": "增长"
+      },
+      {
+        "id": 69,
+        "spanish": "entrega",
+        "english": "delivery",
+        "chinese": "递送"
+      },
+      {
+        "id": 70,
+        "spanish": "inteligencia",
+        "english": "intelligence",
+        "chinese": "智力"
+      },
+      {
+        "id": 71,
+        "spanish": "criatura",
+        "english": "creature",
+        "chinese": "生物"
+      },
+      {
+        "id": 72,
+        "spanish": "museo",
+        "english": "museum",
+        "chinese": "博物馆"
+      },
+      {
+        "id": 73,
+        "spanish": "septiembre",
+        "english": "September",
+        "chinese": "九月"
+      },
+      {
+        "id": 74,
+        "spanish": "preocupación",
+        "english": "worry",
+        "chinese": "担忧"
+      },
+      {
+        "id": 75,
+        "spanish": "diputado",
+        "english": "legislator",
+        "chinese": "议员"
+      },
+      {
+        "id": 76,
+        "spanish": "tono",
+        "english": "tone",
+        "chinese": "语气"
+      },
+      {
+        "id": 77,
+        "spanish": "fenómeno",
+        "english": "phenomenon",
+        "chinese": "现象"
+      },
+      {
+        "id": 78,
+        "spanish": "magia",
+        "english": "magic",
+        "chinese": "魔法"
+      },
+      {
+        "id": 79,
+        "spanish": "frecuencia",
+        "english": "frequency",
+        "chinese": "频率"
+      },
+      {
+        "id": 80,
+        "spanish": "techo",
+        "english": "ceiling",
+        "chinese": "天花板"
+      },
+      {
+        "id": 81,
+        "spanish": "régimen",
+        "english": "regime",
+        "chinese": "政权"
+      },
+      {
+        "id": 82,
+        "spanish": "reserva",
+        "english": "reservation",
+        "chinese": "预订"
+      },
+      {
+        "id": 83,
+        "spanish": "amistad",
+        "english": "friendship",
+        "chinese": "友谊"
+      },
+      {
+        "id": 84,
+        "spanish": "gordo",
+        "english": "fat person",
+        "chinese": "胖子"
+      },
+      {
+        "id": 85,
+        "spanish": "década",
+        "english": "decade",
+        "chinese": "十年"
+      },
+      {
+        "id": 86,
+        "spanish": "cáncer",
+        "english": "cancer",
+        "chinese": "癌症"
+      },
+      {
+        "id": 87,
+        "spanish": "ingreso",
+        "english": "income",
+        "chinese": "收入"
+      },
+      {
+        "id": 88,
+        "spanish": "reforma",
+        "english": "reform",
+        "chinese": "改革"
+      },
+      {
+        "id": 89,
+        "spanish": "cura",
+        "english": "cure",
+        "chinese": "疗法"
+      },
+      {
+        "id": 90,
+        "spanish": "queso",
+        "english": "cheese",
+        "chinese": "奶酪"
+      },
+      {
+        "id": 91,
+        "spanish": "tradición",
+        "english": "tradition",
+        "chinese": "传统"
+      },
+      {
+        "id": 92,
+        "spanish": "referencia",
+        "english": "reference",
+        "chinese": "参考"
+      },
+      {
+        "id": 93,
+        "spanish": "rodilla",
+        "english": "knee",
+        "chinese": "膝盖"
+      },
+      {
+        "id": 94,
+        "spanish": "gracia",
+        "english": "grace",
+        "chinese": "优雅"
+      },
+      {
+        "id": 95,
+        "spanish": "participación",
+        "english": "participation",
+        "chinese": "参与"
+      },
+      {
+        "id": 96,
+        "spanish": "lección",
+        "english": "lesson",
+        "chinese": "课"
+      },
+      {
+        "id": 97,
+        "spanish": "concierto",
+        "english": "concert",
+        "chinese": "音乐会"
+      },
+      {
+        "id": 98,
+        "spanish": "comercio",
+        "english": "trade",
+        "chinese": "贸易"
+      },
+      {
+        "id": 99,
+        "spanish": "campeón",
+        "english": "champion",
+        "chinese": "冠军"
+      },
+      {
+        "id": 100,
+        "spanish": "octubre",
+        "english": "October",
+        "chinese": "十月"
+      },
+      {
+        "id": 101,
+        "spanish": "lago",
+        "english": "lake",
+        "chinese": "湖"
+      },
+      {
+        "id": 102,
+        "spanish": "milagro",
+        "english": "miracle",
+        "chinese": "奇迹"
+      },
+      {
+        "id": 103,
+        "spanish": "paquete",
+        "english": "package",
+        "chinese": "包裹"
+      },
+      {
+        "id": 104,
+        "spanish": "correo",
+        "english": "mail",
+        "chinese": "邮件"
+      },
+      {
+        "id": 105,
+        "spanish": "estrategia",
+        "english": "strategy",
+        "chinese": "策略"
+      },
+      {
+        "id": 106,
+        "spanish": "instante",
+        "english": "moment",
+        "chinese": "瞬间"
+      },
+      {
+        "id": 107,
+        "spanish": "diciembre",
+        "english": "December",
+        "chinese": "十二月"
+      },
+      {
+        "id": 108,
+        "spanish": "sección",
+        "english": "section",
+        "chinese": "部分"
+      },
+      {
+        "id": 109,
+        "spanish": "influencia",
+        "english": "influence",
+        "chinese": "影响"
+      },
+      {
+        "id": 110,
+        "spanish": "junio",
+        "english": "June",
+        "chinese": "六月"
+      },
+      {
+        "id": 111,
+        "spanish": "abril",
+        "english": "April",
+        "chinese": "四月"
+      },
+      {
+        "id": 112,
+        "spanish": "ángel",
+        "english": "angel",
+        "chinese": "天使"
+      },
+      {
+        "id": 113,
+        "spanish": "aceite",
+        "english": "oil",
+        "chinese": "油"
+      },
+      {
+        "id": 114,
+        "spanish": "almuerzo",
+        "english": "lunch",
+        "chinese": "午餐"
+      },
+      {
+        "id": 115,
+        "spanish": "computadora",
+        "english": "computer",
+        "chinese": "电脑"
+      },
+      {
+        "id": 116,
+        "spanish": "individuo",
+        "english": "individual",
+        "chinese": "个体"
+      },
+      {
+        "id": 117,
+        "spanish": "costumbre",
+        "english": "habit",
+        "chinese": "习惯"
+      },
+      {
+        "id": 118,
+        "spanish": "cuerda",
+        "english": "rope",
+        "chinese": "绳子"
+      },
+      {
+        "id": 119,
+        "spanish": "enero",
+        "english": "January",
+        "chinese": "一月"
+      },
+      {
+        "id": 120,
+        "spanish": "pecado",
+        "english": "sin",
+        "chinese": "罪恶"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "nouns",
+    "level": 8,
+    "words": [
+      {
+        "id": 1,
+        "spanish": "exposición",
+        "english": "exhibition",
+        "chinese": "展览"
+      },
+      {
+        "id": 2,
+        "spanish": "tarde",
+        "english": "afternoon",
+        "chinese": "下午"
+      },
+      {
+        "id": 3,
+        "spanish": "cigarrillo",
+        "english": "cigarette",
+        "chinese": "香烟"
+      },
+      {
+        "id": 4,
+        "spanish": "risa",
+        "english": "laughter",
+        "chinese": "笑声"
+      },
+      {
+        "id": 5,
+        "spanish": "taza",
+        "english": "cup",
+        "chinese": "杯子"
+      },
+      {
+        "id": 6,
+        "spanish": "senador",
+        "english": "senator",
+        "chinese": "参议员"
+      },
+      {
+        "id": 7,
+        "spanish": "moda",
+        "english": "fashion",
+        "chinese": "时尚"
+      },
+      {
+        "id": 8,
+        "spanish": "instrumento",
+        "english": "instrument",
+        "chinese": "工具"
+      },
+      {
+        "id": 9,
+        "spanish": "genio",
+        "english": "genius",
+        "chinese": "天才"
+      },
+      {
+        "id": 10,
+        "spanish": "democracia",
+        "english": "democracy",
+        "chinese": "民主"
+      },
+      {
+        "id": 11,
+        "spanish": "tormenta",
+        "english": "storm",
+        "chinese": "暴风雨"
+      },
+      {
+        "id": 12,
+        "spanish": "tumba",
+        "english": "tomb",
+        "chinese": "坟墓"
+      },
+      {
+        "id": 13,
+        "spanish": "lobo",
+        "english": "wolf",
+        "chinese": "狼"
+      },
+      {
+        "id": 14,
+        "spanish": "signo",
+        "english": "sign",
+        "chinese": "标志"
+      },
+      {
+        "id": 15,
+        "spanish": "ganador",
+        "english": "winner",
+        "chinese": "获胜者"
+      },
+      {
+        "id": 16,
+        "spanish": "fase",
+        "english": "phase",
+        "chinese": "阶段"
+      },
+      {
+        "id": 17,
+        "spanish": "personalidad",
+        "english": "personality",
+        "chinese": "个性"
+      },
+      {
+        "id": 18,
+        "spanish": "tráfico",
+        "english": "traffic",
+        "chinese": "交通"
+      },
+      {
+        "id": 19,
+        "spanish": "mono",
+        "english": "monkey",
+        "chinese": "猴子"
+      },
+      {
+        "id": 20,
+        "spanish": "anuncio",
+        "english": "announcement",
+        "chinese": "公告"
+      },
+      {
+        "id": 21,
+        "spanish": "alternativa",
+        "english": "alternative",
+        "chinese": "替代方案"
+      },
+      {
+        "id": 22,
+        "spanish": "fortuna",
+        "english": "fortune",
+        "chinese": "财富"
+      },
+      {
+        "id": 23,
+        "spanish": "campamento",
+        "english": "camp",
+        "chinese": "营地"
+      },
+      {
+        "id": 24,
+        "spanish": "gesto",
+        "english": "gesture",
+        "chinese": "手势"
+      },
+      {
+        "id": 25,
+        "spanish": "combate",
+        "english": "combat",
+        "chinese": "战斗"
+      },
+      {
+        "id": 26,
+        "spanish": "tesoro",
+        "english": "treasure",
+        "chinese": "宝藏"
+      },
+      {
+        "id": 27,
+        "spanish": "patrón",
+        "english": "boss",
+        "chinese": "老板"
+      },
+      {
+        "id": 28,
+        "spanish": "libra",
+        "english": "pound",
+        "chinese": "磅"
+      },
+      {
+        "id": 29,
+        "spanish": "evento",
+        "english": "event",
+        "chinese": "事件"
+      },
+      {
+        "id": 30,
+        "spanish": "presupuesto",
+        "english": "budget",
+        "chinese": "预算"
+      },
+      {
+        "id": 31,
+        "spanish": "fábrica",
+        "english": "factory",
+        "chinese": "工厂"
+      },
+      {
+        "id": 32,
+        "spanish": "cifra",
+        "english": "figure",
+        "chinese": "数字"
+      },
+      {
+        "id": 33,
+        "spanish": "despacho",
+        "english": "office",
+        "chinese": "办公室"
+      },
+      {
+        "id": 34,
+        "spanish": "división",
+        "english": "division",
+        "chinese": "分割"
+      },
+      {
+        "id": 35,
+        "spanish": "cola",
+        "english": "line",
+        "chinese": "队伍"
+      },
+      {
+        "id": 36,
+        "spanish": "uniforme",
+        "english": "uniform",
+        "chinese": "制服"
+      },
+      {
+        "id": 37,
+        "spanish": "asistente",
+        "english": "assistant",
+        "chinese": "助理"
+      },
+      {
+        "id": 38,
+        "spanish": "raíz",
+        "english": "root",
+        "chinese": "根"
+      },
+      {
+        "id": 39,
+        "spanish": "comentario",
+        "english": "comment",
+        "chinese": "评论"
+      },
+      {
+        "id": 40,
+        "spanish": "conductor",
+        "english": "driver",
+        "chinese": "司机"
+      },
+      {
+        "id": 41,
+        "spanish": "extremo",
+        "english": "extreme",
+        "chinese": "极端"
+      },
+      {
+        "id": 42,
+        "spanish": "desayuno",
+        "english": "breakfast",
+        "chinese": "早餐"
+      },
+      {
+        "id": 43,
+        "spanish": "incendio",
+        "english": "fire",
+        "chinese": "火灾"
+      },
+      {
+        "id": 44,
+        "spanish": "martes",
+        "english": "Tuesday",
+        "chinese": "星期二"
+      },
+      {
+        "id": 45,
+        "spanish": "bote",
+        "english": "container",
+        "chinese": "罐子"
+      },
+      {
+        "id": 46,
+        "spanish": "gira",
+        "english": "tour",
+        "chinese": "巡回活动"
+      },
+      {
+        "id": 47,
+        "spanish": "esclavo",
+        "english": "slave",
+        "chinese": "奴隶"
+      },
+      {
+        "id": 48,
+        "spanish": "pasión",
+        "english": "passion",
+        "chinese": "热情"
+      },
+      {
+        "id": 49,
+        "spanish": "conducta",
+        "english": "behavior",
+        "chinese": "行为"
+      },
+      {
+        "id": 50,
+        "spanish": "rumor",
+        "english": "rumor",
+        "chinese": "谣言"
+      },
+      {
+        "id": 51,
+        "spanish": "ruta",
+        "english": "route",
+        "chinese": "路线"
+      },
+      {
+        "id": 52,
+        "spanish": "aplicación",
+        "english": "application",
+        "chinese": "应用"
+      },
+      {
+        "id": 53,
+        "spanish": "jueves",
+        "english": "Thursday",
+        "chinese": "星期四"
+      },
+      {
+        "id": 54,
+        "spanish": "lástima",
+        "english": "pity",
+        "chinese": "遗憾"
+      },
+      {
+        "id": 55,
+        "spanish": "carro",
+        "english": "car",
+        "chinese": "汽车"
+      },
+      {
+        "id": 56,
+        "spanish": "fila",
+        "english": "row",
+        "chinese": "排"
+      },
+      {
+        "id": 57,
+        "spanish": "toro",
+        "english": "bull",
+        "chinese": "公牛"
+      },
+      {
+        "id": 58,
+        "spanish": "cristal",
+        "english": "glass",
+        "chinese": "玻璃"
+      },
+      {
+        "id": 59,
+        "spanish": "pescado",
+        "english": "fish",
+        "chinese": "鱼肉"
+      },
+      {
+        "id": 60,
+        "spanish": "tropa",
+        "english": "troops",
+        "chinese": "部队"
+      },
+      {
+        "id": 61,
+        "spanish": "dirigente",
+        "english": "leader",
+        "chinese": "领导人"
+      },
+      {
+        "id": 62,
+        "spanish": "presentación",
+        "english": "presentation",
+        "chinese": "展示"
+      },
+      {
+        "id": 63,
+        "spanish": "ciento",
+        "english": "hundred",
+        "chinese": "一百"
+      },
+      {
+        "id": 64,
+        "spanish": "mina",
+        "english": "mine",
+        "chinese": "矿"
+      },
+      {
+        "id": 65,
+        "spanish": "homicidio",
+        "english": "homicide",
+        "chinese": "凶杀"
+      },
+      {
+        "id": 66,
+        "spanish": "instalación",
+        "english": "facility",
+        "chinese": "设施"
+      },
+      {
+        "id": 67,
+        "spanish": "pesadilla",
+        "english": "nightmare",
+        "chinese": "噩梦"
+      },
+      {
+        "id": 68,
+        "spanish": "círculo",
+        "english": "circle",
+        "chinese": "圆圈"
+      },
+      {
+        "id": 69,
+        "spanish": "humanidad",
+        "english": "humanity",
+        "chinese": "人类"
+      },
+      {
+        "id": 70,
+        "spanish": "marzo",
+        "english": "March",
+        "chinese": "三月"
+      },
+      {
+        "id": 71,
+        "spanish": "chocolate",
+        "english": "chocolate",
+        "chinese": "巧克力"
+      },
+      {
+        "id": 72,
+        "spanish": "ala",
+        "english": "wing",
+        "chinese": "翅膀"
+      },
+      {
+        "id": 73,
+        "spanish": "adolescente",
+        "english": "teenager",
+        "chinese": "青少年"
+      },
+      {
+        "id": 74,
+        "spanish": "virgen",
+        "english": "virgin",
+        "chinese": "处女"
+      },
+      {
+        "id": 75,
+        "spanish": "oso",
+        "english": "bear",
+        "chinese": "熊"
+      },
+      {
+        "id": 76,
+        "spanish": "oreja",
+        "english": "ear",
+        "chinese": "耳朵"
+      },
+      {
+        "id": 77,
+        "spanish": "tensión",
+        "english": "tension",
+        "chinese": "紧张"
+      },
+      {
+        "id": 78,
+        "spanish": "maleta",
+        "english": "suitcase",
+        "chinese": "行李箱"
+      },
+      {
+        "id": 79,
+        "spanish": "negociación",
+        "english": "negotiation",
+        "chinese": "谈判"
+      },
+      {
+        "id": 80,
+        "spanish": "pata",
+        "english": "leg",
+        "chinese": "腿"
+      },
+      {
+        "id": 81,
+        "spanish": "punta",
+        "english": "tip",
+        "chinese": "尖端"
+      },
+      {
+        "id": 82,
+        "spanish": "noviembre",
+        "english": "November",
+        "chinese": "十一月"
+      },
+      {
+        "id": 83,
+        "spanish": "explosión",
+        "english": "explosion",
+        "chinese": "爆炸"
+      },
+      {
+        "id": 84,
+        "spanish": "invierno",
+        "english": "winter",
+        "chinese": "冬天"
+      },
+      {
+        "id": 85,
+        "spanish": "diseño",
+        "english": "design",
+        "chinese": "设计"
+      },
+      {
+        "id": 86,
+        "spanish": "poeta",
+        "english": "poet",
+        "chinese": "诗人"
+      },
+      {
+        "id": 87,
+        "spanish": "discusión",
+        "english": "discussion",
+        "chinese": "讨论"
+      },
+      {
+        "id": 88,
+        "spanish": "excusa",
+        "english": "excuse",
+        "chinese": "借口"
+      },
+      {
+        "id": 89,
+        "spanish": "célula",
+        "english": "cell",
+        "chinese": "细胞"
+      },
+      {
+        "id": 90,
+        "spanish": "conclusión",
+        "english": "conclusion",
+        "chinese": "结论"
+      },
+      {
+        "id": 91,
+        "spanish": "productor",
+        "english": "producer",
+        "chinese": "制作人"
+      },
+      {
+        "id": 92,
+        "spanish": "rata",
+        "english": "rat",
+        "chinese": "老鼠"
+      },
+      {
+        "id": 93,
+        "spanish": "pasillo",
+        "english": "hallway",
+        "chinese": "走廊"
+      },
+      {
+        "id": 94,
+        "spanish": "lectura",
+        "english": "reading",
+        "chinese": "阅读"
+      },
+      {
+        "id": 95,
+        "spanish": "desgracia",
+        "english": "misfortune",
+        "chinese": "不幸"
+      },
+      {
+        "id": 96,
+        "spanish": "oposición",
+        "english": "opposition",
+        "chinese": "反对"
+      },
+      {
+        "id": 97,
+        "spanish": "caída",
+        "english": "fall",
+        "chinese": "跌落"
+      },
+      {
+        "id": 98,
+        "spanish": "partida",
+        "english": "departure",
+        "chinese": "离开"
+      },
+      {
+        "id": 99,
+        "spanish": "ensayo",
+        "english": "essay",
+        "chinese": "文章"
+      },
+      {
+        "id": 100,
+        "spanish": "muñeca",
+        "english": "wrist",
+        "chinese": "手腕"
+      },
+      {
+        "id": 101,
+        "spanish": "gallo",
+        "english": "rooster",
+        "chinese": "公鸡"
+      },
+      {
+        "id": 102,
+        "spanish": "venganza",
+        "english": "revenge",
+        "chinese": "报复"
+      },
+      {
+        "id": 103,
+        "spanish": "episodio",
+        "english": "episode",
+        "chinese": "一集"
+      },
+      {
+        "id": 104,
+        "spanish": "entrenamiento",
+        "english": "training",
+        "chinese": "训练"
+      },
+      {
+        "id": 105,
+        "spanish": "consumo",
+        "english": "consumption",
+        "chinese": "消费"
+      },
+      {
+        "id": 106,
+        "spanish": "misterio",
+        "english": "mystery",
+        "chinese": "谜团"
+      },
+      {
+        "id": 107,
+        "spanish": "pantalla",
+        "english": "screen",
+        "chinese": "屏幕"
+      },
+      {
+        "id": 108,
+        "spanish": "clínica",
+        "english": "clinic",
+        "chinese": "诊所"
+      },
+      {
+        "id": 109,
+        "spanish": "instrucción",
+        "english": "instruction",
+        "chinese": "说明"
+      },
+      {
+        "id": 110,
+        "spanish": "llegada",
+        "english": "arrival",
+        "chinese": "到达"
+      },
+      {
+        "id": 111,
+        "spanish": "billete",
+        "english": "bill",
+        "chinese": "纸币"
+      },
+      {
+        "id": 112,
+        "spanish": "agosto",
+        "english": "August",
+        "chinese": "八月"
+      },
+      {
+        "id": 113,
+        "spanish": "estómago",
+        "english": "stomach",
+        "chinese": "胃"
+      },
+      {
+        "id": 114,
+        "spanish": "disposición",
+        "english": "arrangement",
+        "chinese": "安排"
+      },
+      {
+        "id": 115,
+        "spanish": "provincia",
+        "english": "province",
+        "chinese": "省"
+      },
+      {
+        "id": 116,
+        "spanish": "alianza",
+        "english": "alliance",
+        "chinese": "联盟"
+      },
+      {
+        "id": 117,
+        "spanish": "kilo",
+        "english": "kilo",
+        "chinese": "公斤"
+      },
+      {
+        "id": 118,
+        "spanish": "comisario",
+        "english": "commissioner",
+        "chinese": "专员"
+      },
+      {
+        "id": 119,
+        "spanish": "manzana",
+        "english": "apple",
+        "chinese": "苹果"
+      },
+      {
+        "id": 120,
+        "spanish": "aparato",
+        "english": "device",
+        "chinese": "设备"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "nouns",
+    "level": 9,
+    "words": [
+      {
+        "id": 1,
+        "spanish": "nieve",
+        "english": "snow",
+        "chinese": "雪"
+      },
+      {
+        "id": 2,
+        "spanish": "criterio",
+        "english": "criterion",
+        "chinese": "标准"
+      },
+      {
+        "id": 3,
+        "spanish": "cheque",
+        "english": "check",
+        "chinese": "支票"
+      },
+      {
+        "id": 4,
+        "spanish": "nube",
+        "english": "cloud",
+        "chinese": "云"
+      },
+      {
+        "id": 5,
+        "spanish": "rastro",
+        "english": "trace",
+        "chinese": "痕迹"
+      },
+      {
+        "id": 6,
+        "spanish": "debate",
+        "english": "debate",
+        "chinese": "辩论"
+      },
+      {
+        "id": 7,
+        "spanish": "intervención",
+        "english": "intervention",
+        "chinese": "干预"
+      },
+      {
+        "id": 8,
+        "spanish": "cable",
+        "english": "cable",
+        "chinese": "电缆"
+      },
+      {
+        "id": 9,
+        "spanish": "distrito",
+        "english": "district",
+        "chinese": "地区"
+      },
+      {
+        "id": 10,
+        "spanish": "vaca",
+        "english": "cow",
+        "chinese": "母牛"
+      },
+      {
+        "id": 11,
+        "spanish": "empresario",
+        "english": "businessman",
+        "chinese": "企业家"
+      },
+      {
+        "id": 12,
+        "spanish": "hierba",
+        "english": "grass",
+        "chinese": "草"
+      },
+      {
+        "id": 13,
+        "spanish": "tendencia",
+        "english": "trend",
+        "chinese": "趋势"
+      },
+      {
+        "id": 14,
+        "spanish": "sobrino",
+        "english": "nephew",
+        "chinese": "侄子"
+      },
+      {
+        "id": 15,
+        "spanish": "arena",
+        "english": "sand",
+        "chinese": "沙子"
+      },
+      {
+        "id": 16,
+        "spanish": "virus",
+        "english": "virus",
+        "chinese": "病毒"
+      },
+      {
+        "id": 17,
+        "spanish": "cirugía",
+        "english": "surgery",
+        "chinese": "手术"
+      },
+      {
+        "id": 18,
+        "spanish": "ira",
+        "english": "anger",
+        "chinese": "愤怒"
+      },
+      {
+        "id": 19,
+        "spanish": "muro",
+        "english": "wall",
+        "chinese": "墙"
+      },
+      {
+        "id": 20,
+        "spanish": "perspectiva",
+        "english": "perspective",
+        "chinese": "观点"
+      },
+      {
+        "id": 21,
+        "spanish": "edición",
+        "english": "edition",
+        "chinese": "版本"
+      },
+      {
+        "id": 22,
+        "spanish": "sindicato",
+        "english": "union",
+        "chinese": "工会"
+      },
+      {
+        "id": 23,
+        "spanish": "sacerdote",
+        "english": "priest",
+        "chinese": "神父"
+      },
+      {
+        "id": 24,
+        "spanish": "lío",
+        "english": "mess",
+        "chinese": "麻烦"
+      },
+      {
+        "id": 25,
+        "spanish": "órgano",
+        "english": "organ",
+        "chinese": "器官"
+      },
+      {
+        "id": 26,
+        "spanish": "resistencia",
+        "english": "resistance",
+        "chinese": "抵抗"
+      },
+      {
+        "id": 27,
+        "spanish": "dibujo",
+        "english": "drawing",
+        "chinese": "图画"
+      },
+      {
+        "id": 28,
+        "spanish": "cubierta",
+        "english": "cover",
+        "chinese": "封面"
+      },
+      {
+        "id": 29,
+        "spanish": "alcance",
+        "english": "scope",
+        "chinese": "范围"
+      },
+      {
+        "id": 30,
+        "spanish": "nieto",
+        "english": "grandson",
+        "chinese": "孙子"
+      },
+      {
+        "id": 31,
+        "spanish": "funeral",
+        "english": "funeral",
+        "chinese": "葬礼"
+      },
+      {
+        "id": 32,
+        "spanish": "whisky",
+        "english": "whiskey",
+        "chinese": "威士忌"
+      },
+      {
+        "id": 33,
+        "spanish": "bandera",
+        "english": "flag",
+        "chinese": "旗帜"
+      },
+      {
+        "id": 34,
+        "spanish": "mami",
+        "english": "mommy",
+        "chinese": "妈妈"
+      },
+      {
+        "id": 35,
+        "spanish": "diversión",
+        "english": "fun",
+        "chinese": "乐趣"
+      },
+      {
+        "id": 36,
+        "spanish": "patio",
+        "english": "yard",
+        "chinese": "院子"
+      },
+      {
+        "id": 37,
+        "spanish": "investigador",
+        "english": "researcher",
+        "chinese": "研究员"
+      },
+      {
+        "id": 38,
+        "spanish": "selección",
+        "english": "selection",
+        "chinese": "选择"
+      },
+      {
+        "id": 39,
+        "spanish": "milla",
+        "english": "mile",
+        "chinese": "英里"
+      },
+      {
+        "id": 40,
+        "spanish": "charla",
+        "english": "chat",
+        "chinese": "聊天"
+      },
+      {
+        "id": 41,
+        "spanish": "cierre",
+        "english": "closing",
+        "chinese": "关闭"
+      },
+      {
+        "id": 42,
+        "spanish": "concurso",
+        "english": "contest",
+        "chinese": "比赛"
+      },
+      {
+        "id": 43,
+        "spanish": "ayuntamiento",
+        "english": "city council",
+        "chinese": "市政厅"
+      },
+      {
+        "id": 44,
+        "spanish": "entidad",
+        "english": "entity",
+        "chinese": "实体"
+      },
+      {
+        "id": 45,
+        "spanish": "botón",
+        "english": "button",
+        "chinese": "按钮"
+      },
+      {
+        "id": 46,
+        "spanish": "miércoles",
+        "english": "Wednesday",
+        "chinese": "星期三"
+      },
+      {
+        "id": 47,
+        "spanish": "biblioteca",
+        "english": "library",
+        "chinese": "图书馆"
+      },
+      {
+        "id": 48,
+        "spanish": "religión",
+        "english": "religion",
+        "chinese": "宗教"
+      },
+      {
+        "id": 49,
+        "spanish": "centavo",
+        "english": "cent",
+        "chinese": "分"
+      },
+      {
+        "id": 50,
+        "spanish": "lágrima",
+        "english": "tear",
+        "chinese": "眼泪"
+      },
+      {
+        "id": 51,
+        "spanish": "granja",
+        "english": "farm",
+        "chinese": "农场"
+      },
+      {
+        "id": 52,
+        "spanish": "incidente",
+        "english": "incident",
+        "chinese": "事件"
+      },
+      {
+        "id": 53,
+        "spanish": "jornada",
+        "english": "workday",
+        "chinese": "工作日"
+      },
+      {
+        "id": 54,
+        "spanish": "licencia",
+        "english": "license",
+        "chinese": "执照"
+      },
+      {
+        "id": 55,
+        "spanish": "abrigo",
+        "english": "coat",
+        "chinese": "外套"
+      },
+      {
+        "id": 56,
+        "spanish": "síntoma",
+        "english": "symptom",
+        "chinese": "症状"
+      },
+      {
+        "id": 57,
+        "spanish": "parada",
+        "english": "stop",
+        "chinese": "车站"
+      },
+      {
+        "id": 58,
+        "spanish": "bolso",
+        "english": "handbag",
+        "chinese": "手提包"
+      },
+      {
+        "id": 59,
+        "spanish": "placa",
+        "english": "plate",
+        "chinese": "牌子"
+      },
+      {
+        "id": 60,
+        "spanish": "nacimiento",
+        "english": "birth",
+        "chinese": "出生"
+      },
+      {
+        "id": 61,
+        "spanish": "salsa",
+        "english": "sauce",
+        "chinese": "酱"
+      },
+      {
+        "id": 62,
+        "spanish": "evolución",
+        "english": "evolution",
+        "chinese": "演变"
+      },
+      {
+        "id": 63,
+        "spanish": "ánimo",
+        "english": "mood",
+        "chinese": "心情"
+      },
+      {
+        "id": 64,
+        "spanish": "templo",
+        "english": "temple",
+        "chinese": "寺庙"
+      },
+      {
+        "id": 65,
+        "spanish": "propietario",
+        "english": "owner",
+        "chinese": "所有者"
+      },
+      {
+        "id": 66,
+        "spanish": "acusación",
+        "english": "accusation",
+        "chinese": "指控"
+      },
+      {
+        "id": 67,
+        "spanish": "camioneta",
+        "english": "pickup truck",
+        "chinese": "皮卡车"
+      },
+      {
+        "id": 68,
+        "spanish": "vela",
+        "english": "candle",
+        "chinese": "蜡烛"
+      },
+      {
+        "id": 69,
+        "spanish": "emperador",
+        "english": "emperor",
+        "chinese": "皇帝"
+      },
+      {
+        "id": 70,
+        "spanish": "curiosidad",
+        "english": "curiosity",
+        "chinese": "好奇心"
+      },
+      {
+        "id": 71,
+        "spanish": "caza",
+        "english": "hunting",
+        "chinese": "狩猎"
+      },
+      {
+        "id": 72,
+        "spanish": "representación",
+        "english": "representation",
+        "chinese": "代表"
+      },
+      {
+        "id": 73,
+        "spanish": "complejo",
+        "english": "complex",
+        "chinese": "综合体"
+      },
+      {
+        "id": 74,
+        "spanish": "identificación",
+        "english": "identification",
+        "chinese": "身份证明"
+      },
+      {
+        "id": 75,
+        "spanish": "petición",
+        "english": "request",
+        "chinese": "请求"
+      },
+      {
+        "id": 76,
+        "spanish": "juventud",
+        "english": "youth",
+        "chinese": "青年"
+      },
+      {
+        "id": 77,
+        "spanish": "coincidencia",
+        "english": "coincidence",
+        "chinese": "巧合"
+      },
+      {
+        "id": 78,
+        "spanish": "vigilancia",
+        "english": "surveillance",
+        "chinese": "监视"
+      },
+      {
+        "id": 79,
+        "spanish": "desierto",
+        "english": "desert",
+        "chinese": "沙漠"
+      },
+      {
+        "id": 80,
+        "spanish": "torre",
+        "english": "tower",
+        "chinese": "塔"
+      },
+      {
+        "id": 81,
+        "spanish": "publicidad",
+        "english": "advertising",
+        "chinese": "广告"
+      },
+      {
+        "id": 82,
+        "spanish": "saco",
+        "english": "sack",
+        "chinese": "袋子"
+      },
+      {
+        "id": 83,
+        "spanish": "gestión",
+        "english": "management",
+        "chinese": "管理"
+      },
+      {
+        "id": 84,
+        "spanish": "volumen",
+        "english": "volume",
+        "chinese": "体积"
+      },
+      {
+        "id": 85,
+        "spanish": "bestia",
+        "english": "beast",
+        "chinese": "野兽"
+      },
+      {
+        "id": 86,
+        "spanish": "guía",
+        "english": "guide",
+        "chinese": "指南"
+      },
+      {
+        "id": 87,
+        "spanish": "tabla",
+        "english": "board",
+        "chinese": "木板"
+      },
+      {
+        "id": 88,
+        "spanish": "humo",
+        "english": "smoke",
+        "chinese": "烟"
+      },
+      {
+        "id": 89,
+        "spanish": "labor",
+        "english": "work",
+        "chinese": "工作"
+      },
+      {
+        "id": 90,
+        "spanish": "celda",
+        "english": "cell",
+        "chinese": "牢房"
+      },
+      {
+        "id": 91,
+        "spanish": "alarma",
+        "english": "alarm",
+        "chinese": "警报"
+      },
+      {
+        "id": 92,
+        "spanish": "continuación",
+        "english": "continuation",
+        "chinese": "继续"
+      },
+      {
+        "id": 93,
+        "spanish": "aviso",
+        "english": "warning",
+        "chinese": "警告"
+      },
+      {
+        "id": 94,
+        "spanish": "ceremonia",
+        "english": "ceremony",
+        "chinese": "仪式"
+      },
+      {
+        "id": 95,
+        "spanish": "significado",
+        "english": "meaning",
+        "chinese": "意思"
+      },
+      {
+        "id": 96,
+        "spanish": "ausencia",
+        "english": "absence",
+        "chinese": "缺席"
+      },
+      {
+        "id": 97,
+        "spanish": "chaqueta",
+        "english": "jacket",
+        "chinese": "夹克"
+      },
+      {
+        "id": 98,
+        "spanish": "iniciativa",
+        "english": "initiative",
+        "chinese": "主动性"
+      },
+      {
+        "id": 99,
+        "spanish": "ave",
+        "english": "bird",
+        "chinese": "鸟类"
+      },
+      {
+        "id": 100,
+        "spanish": "traducción",
+        "english": "translation",
+        "chinese": "翻译"
+      },
+      {
+        "id": 101,
+        "spanish": "obligación",
+        "english": "obligation",
+        "chinese": "义务"
+      },
+      {
+        "id": 102,
+        "spanish": "temor",
+        "english": "fear",
+        "chinese": "恐惧"
+      },
+      {
+        "id": 103,
+        "spanish": "progreso",
+        "english": "progress",
+        "chinese": "进步"
+      },
+      {
+        "id": 104,
+        "spanish": "castigo",
+        "english": "punishment",
+        "chinese": "惩罚"
+      },
+      {
+        "id": 105,
+        "spanish": "clima",
+        "english": "climate",
+        "chinese": "气候"
+      },
+      {
+        "id": 106,
+        "spanish": "triunfo",
+        "english": "triumph",
+        "chinese": "胜利"
+      },
+      {
+        "id": 107,
+        "spanish": "maravilla",
+        "english": "wonder",
+        "chinese": "奇迹"
+      },
+      {
+        "id": 108,
+        "spanish": "borde",
+        "english": "edge",
+        "chinese": "边缘"
+      },
+      {
+        "id": 109,
+        "spanish": "febrero",
+        "english": "February",
+        "chinese": "二月"
+      },
+      {
+        "id": 110,
+        "spanish": "suicidio",
+        "english": "suicide",
+        "chinese": "自杀"
+      },
+      {
+        "id": 111,
+        "spanish": "escala",
+        "english": "scale",
+        "chinese": "规模"
+      },
+      {
+        "id": 112,
+        "spanish": "símbolo",
+        "english": "symbol",
+        "chinese": "符号"
+      },
+      {
+        "id": 113,
+        "spanish": "primavera",
+        "english": "spring",
+        "chinese": "春天"
+      },
+      {
+        "id": 114,
+        "spanish": "palo",
+        "english": "stick",
+        "chinese": "棍子"
+      },
+      {
+        "id": 115,
+        "spanish": "fruta",
+        "english": "fruit",
+        "chinese": "水果"
+      },
+      {
+        "id": 116,
+        "spanish": "mecanismo",
+        "english": "mechanism",
+        "chinese": "机制"
+      },
+      {
+        "id": 117,
+        "spanish": "alerta",
+        "english": "alert",
+        "chinese": "警报"
+      },
+      {
+        "id": 118,
+        "spanish": "suma",
+        "english": "sum",
+        "chinese": "总和"
+      },
+      {
+        "id": 119,
+        "spanish": "impacto",
+        "english": "impact",
+        "chinese": "影响"
+      },
+      {
+        "id": 120,
+        "spanish": "ronda",
+        "english": "round",
+        "chinese": "一轮"
+      }
+    ]
+  },
+  {
+    "region": "MX",
+    "partOfSpeech": "nouns",
+    "level": 10,
+    "words": [
+      {
+        "id": 1,
+        "spanish": "vivienda",
+        "english": "housing",
+        "chinese": "住房"
+      },
+      {
+        "id": 2,
+        "spanish": "felicitación",
+        "english": "congratulation",
+        "chinese": "祝贺"
+      },
+      {
+        "id": 3,
+        "spanish": "sabor",
+        "english": "flavor",
+        "chinese": "味道"
+      },
+      {
+        "id": 4,
+        "spanish": "argumento",
+        "english": "argument",
+        "chinese": "论点"
+      },
+      {
+        "id": 5,
+        "spanish": "tribu",
+        "english": "tribe",
+        "chinese": "部落"
+      },
+      {
+        "id": 6,
+        "spanish": "barra",
+        "english": "bar",
+        "chinese": "条"
+      },
+      {
+        "id": 7,
+        "spanish": "categoría",
+        "english": "category",
+        "chinese": "类别"
+      },
+      {
+        "id": 8,
+        "spanish": "mancha",
+        "english": "stain",
+        "chinese": "污点"
+      },
+      {
+        "id": 9,
+        "spanish": "dimensión",
+        "english": "dimension",
+        "chinese": "维度"
+      },
+      {
+        "id": 10,
+        "spanish": "saludo",
+        "english": "greeting",
+        "chinese": "问候"
+      },
+      {
+        "id": 11,
+        "spanish": "capa",
+        "english": "layer",
+        "chinese": "层"
+      },
+      {
+        "id": 12,
+        "spanish": "avance",
+        "english": "advance",
+        "chinese": "进展"
+      },
+      {
+        "id": 13,
+        "spanish": "orgullo",
+        "english": "pride",
+        "chinese": "自豪"
+      },
+      {
+        "id": 14,
+        "spanish": "coma",
+        "english": "comma",
+        "chinese": "逗号"
+      },
+      {
+        "id": 15,
+        "spanish": "excepción",
+        "english": "exception",
+        "chinese": "例外"
+      },
+      {
+        "id": 16,
+        "spanish": "margen",
+        "english": "margin",
+        "chinese": "边距"
+      },
+      {
+        "id": 17,
+        "spanish": "encargo",
+        "english": "order",
+        "chinese": "订单"
+      },
+      {
+        "id": 18,
+        "spanish": "salto",
+        "english": "jump",
+        "chinese": "跳跃"
+      },
+      {
+        "id": 19,
+        "spanish": "cartel",
+        "english": "poster",
+        "chinese": "海报"
+      },
+      {
+        "id": 20,
+        "spanish": "metal",
+        "english": "metal",
+        "chinese": "金属"
+      },
+      {
+        "id": 21,
+        "spanish": "huelga",
+        "english": "strike",
+        "chinese": "罢工"
+      },
+      {
+        "id": 22,
+        "spanish": "sentencia",
+        "english": "sentence",
+        "chinese": "判决"
+      },
+      {
+        "id": 23,
+        "spanish": "hierro",
+        "english": "iron",
+        "chinese": "铁"
+      },
+      {
+        "id": 24,
+        "spanish": "tasa",
+        "english": "rate",
+        "chinese": "比率"
+      },
+      {
+        "id": 25,
+        "spanish": "desafío",
+        "english": "challenge",
+        "chinese": "挑战"
+      },
+      {
+        "id": 26,
+        "spanish": "armario",
+        "english": "closet",
+        "chinese": "衣柜"
+      },
+      {
+        "id": 27,
+        "spanish": "trozo",
+        "english": "piece",
+        "chinese": "块"
+      },
+      {
+        "id": 28,
+        "spanish": "experimento",
+        "english": "experiment",
+        "chinese": "实验"
+      },
+      {
+        "id": 29,
+        "spanish": "serpiente",
+        "english": "snake",
+        "chinese": "蛇"
+      },
+      {
+        "id": 30,
+        "spanish": "festival",
+        "english": "festival",
+        "chinese": "节日"
+      },
+      {
+        "id": 31,
+        "spanish": "miel",
+        "english": "honey",
+        "chinese": "蜂蜜"
+      },
+      {
+        "id": 32,
+        "spanish": "imaginación",
+        "english": "imagination",
+        "chinese": "想象力"
+      },
+      {
+        "id": 33,
+        "spanish": "paciencia",
+        "english": "patience",
+        "chinese": "耐心"
+      },
+      {
+        "id": 34,
+        "spanish": "raza",
+        "english": "race",
+        "chinese": "种族"
+      },
+      {
+        "id": 35,
+        "spanish": "poema",
+        "english": "poem",
+        "chinese": "诗"
+      },
+      {
+        "id": 36,
+        "spanish": "piscina",
+        "english": "swimming pool",
+        "chinese": "游泳池"
+      },
+      {
+        "id": 37,
+        "spanish": "manifestación",
+        "english": "protest",
+        "chinese": "示威"
+      },
+      {
+        "id": 38,
+        "spanish": "chiste",
+        "english": "joke",
+        "chinese": "笑话"
+      },
+      {
+        "id": 39,
+        "spanish": "depósito",
+        "english": "deposit",
+        "chinese": "存款"
+      },
+      {
+        "id": 40,
+        "spanish": "ilusión",
+        "english": "hope",
+        "chinese": "期待"
+      },
+      {
+        "id": 41,
+        "spanish": "literatura",
+        "english": "literature",
+        "chinese": "文学"
+      },
+      {
+        "id": 42,
+        "spanish": "diálogo",
+        "english": "dialogue",
+        "chinese": "对话"
+      },
+      {
+        "id": 43,
+        "spanish": "mezcla",
+        "english": "mixture",
+        "chinese": "混合物"
+      },
+      {
+        "id": 44,
+        "spanish": "embajador",
+        "english": "ambassador",
+        "chinese": "大使"
+      },
+      {
+        "id": 45,
+        "spanish": "fracaso",
+        "english": "failure",
+        "chinese": "失败"
+      },
+      {
+        "id": 46,
+        "spanish": "herramienta",
+        "english": "tool",
+        "chinese": "工具"
+      },
+      {
+        "id": 47,
+        "spanish": "espía",
+        "english": "spy",
+        "chinese": "间谍"
+      },
+      {
+        "id": 48,
+        "spanish": "expediente",
+        "english": "file",
+        "chinese": "档案"
+      },
+      {
+        "id": 49,
+        "spanish": "reconocimiento",
+        "english": "recognition",
+        "chinese": "认可"
+      },
+      {
+        "id": 50,
+        "spanish": "imperio",
+        "english": "empire",
+        "chinese": "帝国"
+      },
+      {
+        "id": 51,
+        "spanish": "denuncia",
+        "english": "report",
+        "chinese": "举报"
+      },
+      {
+        "id": 52,
+        "spanish": "gol",
+        "english": "goal",
+        "chinese": "进球"
+      },
+      {
+        "id": 53,
+        "spanish": "colección",
+        "english": "collection",
+        "chinese": "收藏"
+      },
+      {
+        "id": 54,
+        "spanish": "divorcio",
+        "english": "divorce",
+        "chinese": "离婚"
+      },
+      {
+        "id": 55,
+        "spanish": "sopa",
+        "english": "soup",
+        "chinese": "汤"
+      },
+      {
+        "id": 56,
+        "spanish": "violación",
+        "english": "rape",
+        "chinese": "强奸"
+      },
+      {
+        "id": 57,
+        "spanish": "costo",
+        "english": "cost",
+        "chinese": "成本"
+      },
+      {
+        "id": 58,
+        "spanish": "juguete",
+        "english": "toy",
+        "chinese": "玩具"
+      },
+      {
+        "id": 59,
+        "spanish": "parlamento",
+        "english": "parliament",
+        "chinese": "议会"
+      },
+      {
+        "id": 60,
+        "spanish": "fantasía",
+        "english": "fantasy",
+        "chinese": "幻想"
+      },
+      {
+        "id": 61,
+        "spanish": "sustancia",
+        "english": "substance",
+        "chinese": "物质"
+      },
+      {
+        "id": 62,
+        "spanish": "facultad",
+        "english": "college department",
+        "chinese": "学院"
+      },
+      {
+        "id": 63,
+        "spanish": "potencial",
+        "english": "potential",
+        "chinese": "潜力"
+      },
+      {
+        "id": 64,
+        "spanish": "leyenda",
+        "english": "legend",
+        "chinese": "传说"
+      },
+      {
+        "id": 65,
+        "spanish": "sospecha",
+        "english": "suspicion",
+        "chinese": "怀疑"
+      },
+      {
+        "id": 66,
+        "spanish": "queja",
+        "english": "complaint",
+        "chinese": "抱怨"
+      },
+      {
+        "id": 67,
+        "spanish": "perfil",
+        "english": "profile",
+        "chinese": "简介"
+      },
+      {
+        "id": 68,
+        "spanish": "escándalo",
+        "english": "scandal",
+        "chinese": "丑闻"
+      },
+      {
+        "id": 69,
+        "spanish": "habitante",
+        "english": "resident",
+        "chinese": "居民"
+      },
+      {
+        "id": 70,
+        "spanish": "columna",
+        "english": "column",
+        "chinese": "柱子"
+      },
+      {
+        "id": 71,
+        "spanish": "arresto",
+        "english": "arrest",
+        "chinese": "逮捕"
+      },
+      {
+        "id": 72,
+        "spanish": "poesía",
+        "english": "poetry",
+        "chinese": "诗歌"
+      },
+      {
+        "id": 73,
+        "spanish": "sacrificio",
+        "english": "sacrifice",
+        "chinese": "牺牲"
+      },
+      {
+        "id": 74,
+        "spanish": "bienes",
+        "english": "goods",
+        "chinese": "财产"
+      },
+      {
+        "id": 75,
+        "spanish": "ingeniero",
+        "english": "engineer",
+        "chinese": "工程师"
+      },
+      {
+        "id": 76,
+        "spanish": "fórmula",
+        "english": "formula",
+        "chinese": "公式"
+      },
+      {
+        "id": 77,
+        "spanish": "consejero",
+        "english": "adviser",
+        "chinese": "顾问"
+      },
+      {
+        "id": 78,
+        "spanish": "cazador",
+        "english": "hunter",
+        "chinese": "猎人"
+      },
+      {
+        "id": 79,
+        "spanish": "onda",
+        "english": "wave",
+        "chinese": "波"
+      },
+      {
+        "id": 80,
+        "spanish": "testimonio",
+        "english": "testimony",
+        "chinese": "证词"
+      },
+      {
+        "id": 81,
+        "spanish": "monte",
+        "english": "mountain",
+        "chinese": "山"
+      },
+      {
+        "id": 82,
+        "spanish": "joya",
+        "english": "jewel",
+        "chinese": "珠宝"
+      },
+      {
+        "id": 83,
+        "spanish": "titular",
+        "english": "headline",
+        "chinese": "标题"
+      },
+      {
+        "id": 84,
+        "spanish": "ambulancia",
+        "english": "ambulance",
+        "chinese": "救护车"
+      },
+      {
+        "id": 85,
+        "spanish": "inicio",
+        "english": "beginning",
+        "chinese": "开始"
+      },
+      {
+        "id": 86,
+        "spanish": "traidor",
+        "english": "traitor",
+        "chinese": "叛徒"
+      },
+      {
+        "id": 87,
+        "spanish": "cantante",
+        "english": "singer",
+        "chinese": "歌手"
+      },
+      {
+        "id": 88,
+        "spanish": "residencia",
+        "english": "residence",
+        "chinese": "住所"
+      },
+      {
+        "id": 89,
+        "spanish": "monje",
+        "english": "monk",
+        "chinese": "僧侣"
+      },
+      {
+        "id": 90,
+        "spanish": "pasta",
+        "english": "pasta",
+        "chinese": "意大利面"
+      },
+      {
+        "id": 91,
+        "spanish": "océano",
+        "english": "ocean",
+        "chinese": "海洋"
+      },
+      {
+        "id": 92,
+        "spanish": "juzgado",
+        "english": "court",
+        "chinese": "法院"
+      },
+      {
+        "id": 93,
+        "spanish": "garganta",
+        "english": "throat",
+        "chinese": "喉咙"
+      },
+      {
+        "id": 94,
+        "spanish": "terapia",
+        "english": "therapy",
+        "chinese": "治疗"
+      },
+      {
+        "id": 95,
+        "spanish": "medicamento",
+        "english": "medicine",
+        "chinese": "药物"
+      },
+      {
+        "id": 96,
+        "spanish": "vampiro",
+        "english": "vampire",
+        "chinese": "吸血鬼"
+      },
+      {
+        "id": 97,
+        "spanish": "grano",
+        "english": "grain",
+        "chinese": "谷粒"
+      },
+      {
+        "id": 98,
+        "spanish": "docena",
+        "english": "dozen",
+        "chinese": "一打"
+      },
+      {
+        "id": 99,
+        "spanish": "pasajero",
+        "english": "passenger",
+        "chinese": "乘客"
+      },
+      {
+        "id": 100,
+        "spanish": "potencia",
+        "english": "power",
+        "chinese": "功率"
+      },
+      {
+        "id": 101,
+        "spanish": "galleta",
+        "english": "cookie",
+        "chinese": "饼干"
+      },
+      {
+        "id": 102,
+        "spanish": "casualidad",
+        "english": "coincidence",
+        "chinese": "巧合"
+      },
+      {
+        "id": 103,
+        "spanish": "género",
+        "english": "type",
+        "chinese": "类型"
+      },
+      {
+        "id": 104,
+        "spanish": "horno",
+        "english": "oven",
+        "chinese": "烤箱"
+      },
+      {
+        "id": 105,
+        "spanish": "lector",
+        "english": "reader",
+        "chinese": "读者"
+      },
+      {
+        "id": 106,
+        "spanish": "piano",
+        "english": "piano",
+        "chinese": "钢琴"
+      },
+      {
+        "id": 107,
+        "spanish": "ducha",
+        "english": "shower",
+        "chinese": "淋浴"
+      },
+      {
+        "id": 108,
+        "spanish": "fiebre",
+        "english": "fever",
+        "chinese": "发烧"
+      },
+      {
+        "id": 109,
+        "spanish": "ámbito",
+        "english": "scope",
+        "chinese": "范围"
+      },
+      {
+        "id": 110,
+        "spanish": "idioma",
+        "english": "language",
+        "chinese": "语言"
+      },
+      {
+        "id": 111,
+        "spanish": "ciclo",
+        "english": "cycle",
+        "chinese": "周期"
+      },
+      {
+        "id": 112,
+        "spanish": "escritorio",
+        "english": "desk",
+        "chinese": "书桌"
+      },
+      {
+        "id": 113,
+        "spanish": "rama",
+        "english": "branch",
+        "chinese": "树枝"
+      },
+      {
+        "id": 114,
+        "spanish": "refugio",
+        "english": "shelter",
+        "chinese": "避难所"
+      },
+      {
+        "id": 115,
+        "spanish": "remedio",
+        "english": "remedy",
+        "chinese": "疗法"
+      },
+      {
+        "id": 116,
+        "spanish": "dormitorio",
+        "english": "bedroom",
+        "chinese": "卧室"
+      },
+      {
+        "id": 117,
+        "spanish": "recompensa",
+        "english": "reward",
+        "chinese": "奖励"
+      },
+      {
+        "id": 118,
+        "spanish": "especialista",
+        "english": "specialist",
+        "chinese": "专家"
+      },
+      {
+        "id": 119,
+        "spanish": "rumbo",
+        "english": "direction",
+        "chinese": "方向"
+      },
+      {
+        "id": 120,
+        "spanish": "sótano",
+        "english": "basement",
+        "chinese": "地下室"
+      }
+    ]
+  }
+]
