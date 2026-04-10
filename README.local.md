@@ -11,6 +11,13 @@ cd F:\aprojects\wordpecker-app
 .\scripts\start-local.ps1
 ```
 
+启动脚本会自动做这些事：
+
+- 确保本机 `MongoDB` 服务已启动
+- 自动写入 `backend/.env` 和 `frontend/.env`
+- 如果缺少依赖则执行 `npm ci`
+- 后台启动前后端，并把日志写到 `logs\`
+
 启动完成后访问：
 
 - Frontend: `http://localhost:5173`
@@ -26,6 +33,9 @@ cd F:\aprojects\wordpecker-app
 
 ## 说明
 
-- 当前部署默认会自动生成根目录 `.env`，并填入一个本地占位 `OPENAI_API_KEY`，这样应用可以正常启动。
+- 当前部署默认会自动写入 `backend/.env`，并填入一个本地占位 `OPENAI_API_KEY`，这样后端可以通过启动阶段的环境校验。
 - 这意味着和 OpenAI、ElevenLabs、Pexels 真实联网的能力默认不可用；如果你之后要使用 AI 生成释义、图片、语音等功能，把 `.env` 里的对应 key 换成你自己的即可。
+- 需要改 key 时，改这两个文件：
+  - `F:\aprojects\wordpecker-app\backend\.env`
+  - `F:\aprojects\wordpecker-app\frontend\.env`
 - 普通的前端加载、MongoDB 连接、列表接口、模板种子数据等本地运行能力不受影响。
