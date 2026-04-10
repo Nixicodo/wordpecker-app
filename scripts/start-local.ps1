@@ -50,6 +50,7 @@ if (Test-Path $codexConfigFile) {
 @"
 OPENAI_API_KEY=$openAiApiKey
 OPENAI_BASE_URL=$openAiBaseUrl
+OPENAI_MODEL=gpt-5.4
 ELEVENLABS_API_KEY=local-placeholder-key
 PEXELS_API_KEY=
 MONGODB_URL=mongodb://127.0.0.1:27017/wordpecker
