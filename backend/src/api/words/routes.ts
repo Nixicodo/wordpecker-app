@@ -7,6 +7,7 @@ import { wordAgentService } from './agent-service';
 import mongoose from 'mongoose';
 import { getUserLanguages } from '../../utils/getUserLanguages';
 import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
+import { assertMeaningEncoding } from '../../utils/meaningEncoding';
 import { 
   listIdSchema, 
   addWordSchema, 
@@ -44,7 +45,9 @@ const resolveDefinition = async (
   languages?: UserLanguages
 ) => {
   if (providedMeaning?.trim()) {
-    return providedMeaning.trim();
+    const normalizedMeaning = providedMeaning.trim();
+    assertMeaningEncoding(normalizedMeaning);
+    return normalizedMeaning;
   }
 
   let resolvedLanguages = languages;
@@ -56,12 +59,15 @@ const resolveDefinition = async (
     resolvedLanguages = await getUserLanguages(userId);
   }
 
-  return wordAgentService.generateDefinition(
+  const generatedMeaning = await wordAgentService.generateDefinition(
     value,
     listContext,
     resolvedLanguages.baseLanguage,
     resolvedLanguages.targetLanguage
   );
+
+  assertMeaningEncoding(generatedMeaning);
+  return generatedMeaning;
 };
 
 const addWordToList = async (listId: string, value: string, meaning: string) => {
