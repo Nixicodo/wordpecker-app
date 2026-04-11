@@ -63,6 +63,18 @@ const getDisplayListDescription = (description: string | undefined, isZh: boolea
   return listDescriptionZhMap[description] ?? description;
 };
 
+const formatAverageResponseTime = (value?: number) => {
+  if (!value) {
+    return '--';
+  }
+
+  if (value < 1000) {
+    return `${value}ms`;
+  }
+
+  return `${(value / 1000).toFixed(1)}s`;
+};
+
 export const Lists = () => {
   const isZh = detectUiLocale() === 'zh-CN';
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -241,6 +253,27 @@ export const Lists = () => {
                             <Badge colorScheme="blue" variant="subtle">Learning {list.learningCount || 0}</Badge>
                             <Badge colorScheme="green" variant="subtle">Review {list.reviewCount || 0}</Badge>
                           </SimpleGrid>
+                          {(list.recentReviewCount || 0) > 0 && (
+                            <Box mt={4} p={3} borderRadius="xl" bg="whiteAlpha.070" borderWidth="1px" borderColor="whiteAlpha.120">
+                              <Text fontSize="xs" color="gray.500" textTransform="uppercase" letterSpacing="0.1em" mb={2}>
+                                {isZh ? '最近复习画像' : 'Recent Review Signals'}
+                              </Text>
+                              <SimpleGrid columns={2} spacing={2}>
+                                <Badge colorScheme="purple" variant="subtle">
+                                  {isZh ? `最近 ${list.recentReviewCount} 题` : `Recent ${list.recentReviewCount}`}
+                                </Badge>
+                                <Badge colorScheme="cyan" variant="subtle">
+                                  {isZh ? `均时 ${formatAverageResponseTime(list.averageResponseTimeMs)}` : `Avg ${formatAverageResponseTime(list.averageResponseTimeMs)}`}
+                                </Badge>
+                                <Badge colorScheme="yellow" variant="subtle">
+                                  {isZh ? `提示 ${list.hintUsageRate || 0}%` : `Hint ${list.hintUsageRate || 0}%`}
+                                </Badge>
+                                <Badge colorScheme="pink" variant="subtle">
+                                  {`Hard+Again ${(list.hardRate || 0) + (list.againRate || 0)}%`}
+                                </Badge>
+                              </SimpleGrid>
+                            </Box>
+                          )}
                         </>
                       ) : (
                         <Box borderRadius="xl" bg="whiteAlpha.060" p={4}>

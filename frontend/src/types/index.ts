@@ -19,6 +19,11 @@ export interface WordList {
   reviewCount?: number;
   masteredCount?: number;
   retentionScore?: number;
+  recentReviewCount?: number;
+  averageResponseTimeMs?: number;
+  hintUsageRate?: number;
+  hardRate?: number;
+  againRate?: number;
   created_at: string;
   updated_at: string;
 }

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { createEmptyCard, fsrs, Rating, State, type Card, type Grade } from 'ts-fsrs';
 import { LearningState, ReviewRating, ReviewSource, type ILearningState } from '../api/learning-state/model';
-import { ReviewLog } from '../api/review-log/model';
+import { ReviewLog, type IReviewLog } from '../api/review-log/model';
 import { IWord, Word } from '../api/words/model';
 import { IWordList } from '../api/lists/model';
 import { ensureMistakeBook, isMistakeBookList } from './mistakeBook';
@@ -36,12 +36,24 @@ export type ScheduledWord = {
     retrievability: number;
     status: 'new' | 'learning' | 'review' | 'relearning';
     urgency: number;
+    behaviorRisk: number;
+    hintUsageRate: number;
+    averageResponseTimeMs?: number;
   };
 };
 
 type InitialSeed = {
   rating: Grade;
   repeat: number;
+};
+
+type ReviewBehaviorStats = {
+  recentReviewCount: number;
+  averageResponseTimeMs?: number;
+  hintUsageRate: number;
+  hardRate: number;
+  againRate: number;
+  behaviorRisk: number;
 };
 
 const ratingMap: Record<ReviewRating, Grade> = {
@@ -57,6 +69,18 @@ const stateNameMap: Record<State, ScheduledWord['state']['status']> = {
   [State.Review]: 'review',
   [State.Relearning]: 'relearning'
 };
+
+const RECENT_LOG_LIMIT = 400;
+const RECENT_LOGS_PER_WORD = 6;
+
+const emptyReviewBehaviorStats = (): ReviewBehaviorStats => ({
+  recentReviewCount: 0,
+  averageResponseTimeMs: undefined,
+  hintUsageRate: 0,
+  hardRate: 0,
+  againRate: 0,
+  behaviorRisk: 0
+});
 
 const buildSeedPlanFromLegacyPoint = (point: number): InitialSeed => {
   if (point >= 85) {
@@ -106,7 +130,64 @@ const buildInitialCardFromLegacyPoint = (point: number, now: Date) => {
   return card;
 };
 
-const computeUrgency = (state: ILearningState, retrievability: number, now: Date) => {
+const buildReviewBehaviorStats = (
+  logs: Array<Pick<IReviewLog, 'rating' | 'responseTimeMs' | 'usedHint'>>
+): ReviewBehaviorStats => {
+  if (!logs.length) {
+    return emptyReviewBehaviorStats();
+  }
+
+  const logsWithResponseTime = logs.filter((log) => typeof log.responseTimeMs === 'number');
+  const averageResponseTimeMs = logsWithResponseTime.length
+    ? Math.round(logsWithResponseTime.reduce((sum, log) => sum + (log.responseTimeMs || 0), 0) / logsWithResponseTime.length)
+    : undefined;
+  const hintUsageRate = logs.filter((log) => Boolean(log.usedHint)).length / logs.length;
+  const hardRate = logs.filter((log) => log.rating === 'hard').length / logs.length;
+  const againRate = logs.filter((log) => log.rating === 'again').length / logs.length;
+  const slowBoost = averageResponseTimeMs ? Math.min(1, Math.max(0, averageResponseTimeMs - 6000) / 12000) : 0;
+  const struggleBoost = Math.min(1, againRate + hardRate * 0.7);
+  const behaviorRisk = Math.min(1, slowBoost * 0.4 + hintUsageRate * 0.25 + struggleBoost * 0.35);
+
+  return {
+    recentReviewCount: logs.length,
+    averageResponseTimeMs,
+    hintUsageRate,
+    hardRate,
+    againRate,
+    behaviorRisk
+  };
+};
+
+const buildWordReviewBehaviorMap = async (userId: string, listId: string) => {
+  const recentLogs = await ReviewLog.find({ userId, listId })
+    .sort({ answeredAt: -1 })
+    .limit(RECENT_LOG_LIMIT)
+    .lean();
+
+  const groupedLogs = new Map<string, typeof recentLogs>();
+  for (const log of recentLogs) {
+    const wordId = log.wordId.toString();
+    const currentLogs = groupedLogs.get(wordId) || [];
+    if (currentLogs.length < RECENT_LOGS_PER_WORD) {
+      currentLogs.push(log);
+      groupedLogs.set(wordId, currentLogs);
+    }
+  }
+
+  const behaviorMap = new Map<string, ReviewBehaviorStats>();
+  for (const [wordId, logs] of groupedLogs.entries()) {
+    behaviorMap.set(wordId, buildReviewBehaviorStats(logs));
+  }
+
+  return { behaviorMap, recentLogs };
+};
+
+const computeUrgency = (
+  state: ILearningState,
+  retrievability: number,
+  now: Date,
+  behaviorStats: ReviewBehaviorStats
+) => {
   const overdueMs = Math.max(0, now.getTime() - state.dueAt.getTime());
   const overdueDays = overdueMs / (1000 * 60 * 60 * 24);
   const overdueBoost = Math.min(1, overdueDays / 7);
@@ -116,11 +197,12 @@ const computeUrgency = (state: ILearningState, retrievability: number, now: Date
   const difficultyBoost = Math.min(1, state.difficulty / 10);
 
   return (
-    forgettingRisk * 0.45 +
-    overdueBoost * 0.2 +
+    forgettingRisk * 0.38 +
+    overdueBoost * 0.18 +
     wrongBoost * 0.15 +
-    lowExposureBoost * 0.1 +
-    difficultyBoost * 0.1
+    lowExposureBoost * 0.09 +
+    difficultyBoost * 0.1 +
+    behaviorStats.behaviorRisk * 0.1
   );
 };
 
@@ -169,12 +251,16 @@ export const scheduleWordsForList = async (
   options?: { poolSize?: number }
 ) => {
   const now = new Date();
-  const states = await Promise.all(words.map((word) => ensureLearningState(userId, list._id.toString(), word)));
+  const [{ behaviorMap }, states] = await Promise.all([
+    buildWordReviewBehaviorMap(userId, list._id.toString()),
+    Promise.all(words.map((word) => ensureLearningState(userId, list._id.toString(), word)))
+  ]);
   const scheduled = words.map((word, index) => {
     const state = states[index];
     const membership = getMembership(word, list._id.toString());
     const retrievability = scheduler.get_retrievability(cardFromState(state), now, false);
-    const urgency = computeUrgency(state, retrievability, now);
+    const behaviorStats = behaviorMap.get(word._id.toString()) || emptyReviewBehaviorStats();
+    const urgency = computeUrgency(state, retrievability, now, behaviorStats);
 
     return {
       id: word._id.toString(),
@@ -191,7 +277,10 @@ export const scheduleWordsForList = async (
         consecutiveWrong: state.consecutiveWrong,
         retrievability,
         status: stateNameMap[state.state],
-        urgency
+        urgency,
+        behaviorRisk: behaviorStats.behaviorRisk,
+        hintUsageRate: behaviorStats.hintUsageRate,
+        averageResponseTimeMs: behaviorStats.averageResponseTimeMs
       }
     };
   });
@@ -270,7 +359,10 @@ export const settleReviewResults = async (
 };
 
 export const summarizeListProgress = async (userId: string, listId: string) => {
-  const states = await LearningState.find({ userId, listId }).lean();
+  const [states, recentLogs] = await Promise.all([
+    LearningState.find({ userId, listId }).lean(),
+    ReviewLog.find({ userId, listId }).sort({ answeredAt: -1 }).limit(RECENT_LOG_LIMIT).lean()
+  ]);
   const now = new Date();
 
   let dueCount = 0;
@@ -301,13 +393,20 @@ export const summarizeListProgress = async (userId: string, listId: string) => {
     }
   }
 
+  const reviewStats = buildReviewBehaviorStats(recentLogs);
+
   return {
     dueCount,
     newCount,
     learningCount,
     reviewCount,
     masteredCount,
-    retentionScore: states.length ? Math.round((retentionAccumulator / states.length) * 100) : 0
+    retentionScore: states.length ? Math.round((retentionAccumulator / states.length) * 100) : 0,
+    recentReviewCount: reviewStats.recentReviewCount,
+    averageResponseTimeMs: reviewStats.averageResponseTimeMs,
+    hintUsageRate: Math.round(reviewStats.hintUsageRate * 100),
+    hardRate: Math.round(reviewStats.hardRate * 100),
+    againRate: Math.round(reviewStats.againRate * 100)
   };
 };
 
