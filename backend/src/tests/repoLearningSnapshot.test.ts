@@ -1,4 +1,6 @@
 import fs from 'fs';
+import os from 'os';
+import path from 'path';
 import express from 'express';
 import request from 'supertest';
 import { connectDB, closeDB } from '../config/mongodb';
@@ -30,7 +32,8 @@ const emptySnapshot = {
 };
 
 describe('repository learning snapshot integration', () => {
-  const snapshotPath = getLearningSnapshotPath();
+  const originalSnapshotPathEnv = process.env.LEARNING_SNAPSHOT_PATH;
+  const snapshotPath = path.join(os.tmpdir(), `wordpecker-learning-snapshot-${process.pid}.json`);
   const app = express();
 
   app.use(express.json());
@@ -41,6 +44,7 @@ describe('repository learning snapshot integration', () => {
   app.use('/api/quiz', quizRoutes);
 
   beforeAll(async () => {
+    process.env.LEARNING_SNAPSHOT_PATH = snapshotPath;
     await connectDB(1, 100);
   });
 
@@ -65,6 +69,11 @@ describe('repository learning snapshot integration', () => {
       UserPreferences.deleteMany({})
     ]);
     await fs.promises.writeFile(snapshotPath, JSON.stringify(emptySnapshot, null, 2) + '\n', 'utf-8');
+    if (originalSnapshotPathEnv) {
+      process.env.LEARNING_SNAPSHOT_PATH = originalSnapshotPathEnv;
+    } else {
+      delete process.env.LEARNING_SNAPSHOT_PATH;
+    }
     await closeDB();
   });
 

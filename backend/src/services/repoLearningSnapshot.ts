@@ -93,9 +93,13 @@ type LearningSnapshot = {
   };
 };
 
-const snapshotPath = path.resolve(process.cwd(), 'data', 'learning-snapshot.json');
+const resolveSnapshotPath = () =>
+  process.env.LEARNING_SNAPSHOT_PATH
+    ? path.resolve(process.env.LEARNING_SNAPSHOT_PATH)
+    : path.resolve(process.cwd(), 'data', 'learning-snapshot.json');
 
 const ensureSnapshotDirectory = async () => {
+  const snapshotPath = resolveSnapshotPath();
   await fs.promises.mkdir(path.dirname(snapshotPath), { recursive: true });
 };
 
@@ -106,6 +110,7 @@ const serializeDateOrEpoch = (value?: Date | string | null) =>
   value ? new Date(value).toISOString() : new Date(0).toISOString();
 
 export const persistLearningSnapshot = async () => {
+  const snapshotPath = resolveSnapshotPath();
   const [lists, words, learningStates, reviewLogs, preferences] = await Promise.all([
     WordList.find().sort({ created_at: 1 }).lean(),
     Word.find().sort({ created_at: 1 }).lean(),
@@ -209,6 +214,7 @@ const databaseHasLearningData = async () => {
 };
 
 export const restoreLearningSnapshotIfNeeded = async () => {
+  const snapshotPath = resolveSnapshotPath();
   if (!fs.existsSync(snapshotPath)) {
     return false;
   }
@@ -313,4 +319,4 @@ export const restoreLearningSnapshotIfNeeded = async () => {
   return true;
 };
 
-export const getLearningSnapshotPath = () => snapshotPath;
+export const getLearningSnapshotPath = () => resolveSnapshotPath();
