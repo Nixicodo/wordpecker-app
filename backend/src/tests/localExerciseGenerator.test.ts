@@ -47,6 +47,26 @@ describe('generateLocalExercises', () => {
     expect(optionTexts.length).toBeGreaterThan(0);
   });
 
+  it('prefers extra distractors over reusing the same active batch words when enough extras exist', () => {
+    const extraOnlyDistractors = distractorPool.filter((word) => !words.some((activeWord) => activeWord.id === word.id));
+    const exercises = generateLocalExercises(words, extraOnlyDistractors, 'home', ['multiple_choice', 'multiple_choice', 'sentence_completion', 'true_false']);
+    const distractorOptionTexts = exercises.flatMap((exercise) =>
+      (exercise.options || []).filter((option) => option !== exercise.correctAnswer)
+    );
+
+    expect(distractorOptionTexts.some((option) => ['mesa', 'puerta', 'ventana', 'cocina'].includes(option))).toBe(true);
+    expect(distractorOptionTexts.some((option) => ['hola', 'adios', 'gracias', 'libro'].includes(option))).toBe(false);
+  });
+
+  it('falls back to merging active words back in only when extra distractors are too few', () => {
+    const tinyDistractorPool = [{ id: '5', value: 'mesa', meaning: 'table' }];
+    const exercises = generateLocalExercises(words, tinyDistractorPool, 'home', ['multiple_choice']);
+    const optionTexts = exercises.flatMap((exercise) => exercise.options || []);
+
+    expect(optionTexts).toContain('mesa');
+    expect(optionTexts.some((option) => ['adios', 'gracias', 'libro'].includes(option))).toBe(true);
+  });
+
   it('generates real matching exercises instead of degrading them to multiple choice', () => {
     const exercises = generateLocalExercises(words, distractorPool, 'library', ['matching']);
 

@@ -12,13 +12,14 @@ export function buildGenerationWordPool(
 ) {
   const scheduledWords = candidates.slice(0, activeCount);
   const scheduledWordIds = new Set(scheduledWords.map((word) => word.id));
-  const randomDistractors = shuffleArray(
+  const extraDistractors = shuffleArray(
     candidates.filter((word) => !scheduledWordIds.has(word.id))
   ).slice(0, Math.max(0, extraDistractorCount));
 
   return {
     scheduledWords,
-    generationPool: [...scheduledWords, ...randomDistractors]
+    extraDistractors,
+    generationPool: [...scheduledWords, ...extraDistractors]
   };
 }
 

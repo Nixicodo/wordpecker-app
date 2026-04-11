@@ -11,6 +11,7 @@ type GeneratorWord = {
 type ExerciseDirection = ExerciseType['direction'];
 
 const OPTION_LABELS = ['A', 'B', 'C', 'D'];
+const MIN_DISTRACTOR_COUNT = 3;
 
 function normalizeMeaning(meaning: string, fallbackWord: string): string {
   const trimmedMeaning = meaning.trim();
@@ -230,7 +231,9 @@ export function generateLocalExercises(
 ): ExerciseWithId[] {
   const availableTypes = (exerciseTypes.length ? exerciseTypes : ['multiple_choice', 'fill_blank', 'true_false'])
     .map(resolveType);
-  const distractorPool = distractorWords.length ? distractorWords : words;
+  const distractorPool = distractorWords.length >= MIN_DISTRACTOR_COUNT
+    ? distractorWords
+    : shuffleArray([...words, ...distractorWords]);
 
   return words.map((word, index) => {
     const type = availableTypes[index % availableTypes.length] ?? 'multiple_choice';

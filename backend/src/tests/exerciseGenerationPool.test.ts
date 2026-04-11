@@ -24,9 +24,11 @@ describe('buildGenerationWordPool', () => {
   }));
 
   it('keeps the first active words and appends random distractors from the remaining tree words', () => {
-    const { scheduledWords, generationPool } = buildGenerationWordPool(candidates, 5, 15);
+    const { scheduledWords, extraDistractors, generationPool } = buildGenerationWordPool(candidates, 5, 15);
 
     expect(scheduledWords).toHaveLength(5);
+    expect(extraDistractors).toHaveLength(15);
+    expect(extraDistractors.every((word) => !['1', '2', '3', '4', '5'].includes(word.id))).toBe(true);
     expect(generationPool).toHaveLength(20);
     expect(generationPool.slice(0, 5).map((word) => word.id)).toEqual(['1', '2', '3', '4', '5']);
     expect(generationPool.slice(5).every((word) => !['1', '2', '3', '4', '5'].includes(word.id))).toBe(true);

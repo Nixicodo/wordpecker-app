@@ -28,7 +28,7 @@ router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
     if (!list) return res.status(404).json({ message: 'List not found' });
 
     const userId = resolveUserId(req.headers['user-id']);
-    const [{ scheduledWords, generationPool }, questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
+    const [{ scheduledWords, extraDistractors }, questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
       selectGenerationWordPool(userId, listId),
       getQuestionTypes(userId),
       getUserLanguages(userId)
@@ -40,7 +40,7 @@ router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
 
     const questions = await quizAgentService.generateQuestions(
       scheduledWords.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
-      generationPool.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
+      extraDistractors.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
       list.context || 'General',
       questionTypes,
       baseLanguage,
@@ -67,7 +67,7 @@ router.post('/:listId/more', validate(listIdSchema), async (req, res) => {
     if (!list) return res.status(404).json({ message: 'List not found' });
 
     const userId = resolveUserId(req.headers['user-id']);
-    const [{ scheduledWords, generationPool }, questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
+    const [{ scheduledWords, extraDistractors }, questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
       selectGenerationWordPool(userId, listId),
       getQuestionTypes(userId),
       getUserLanguages(userId)
@@ -79,7 +79,7 @@ router.post('/:listId/more', validate(listIdSchema), async (req, res) => {
 
     const questions = await quizAgentService.generateQuestions(
       scheduledWords.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
-      generationPool.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
+      extraDistractors.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
       list.context || 'General',
       questionTypes,
       baseLanguage,
