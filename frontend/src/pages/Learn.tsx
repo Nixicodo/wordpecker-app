@@ -26,7 +26,7 @@ import {
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Exercise, WordList } from '../types';
+import { Exercise, ReviewSubmission, WordList } from '../types';
 import { ArrowBackIcon, CloseIcon, CheckCircleIcon, InfoIcon, StarIcon } from '@chakra-ui/icons';
 import { apiService } from '../services/api';
 import { QuestionRenderer } from '../components/QuestionRenderer';
@@ -103,7 +103,7 @@ export const Learn = () => {
   const [sessionProgress, setSessionProgress] = useState<any>(null);
   const [isValidating, setIsValidating] = useState(false);
   const [actualCorrectness, setActualCorrectness] = useState<boolean | null>(null);
-  const [learningResults, setLearningResults] = useState<Array<{wordId: string, correct: boolean}>>([]);
+  const [learningResults, setLearningResults] = useState<ReviewSubmission[]>([]);
   const [isUpdatingPoints, setIsUpdatingPoints] = useState(false);
 
   const fetchMoreExercises = useCallback(async (): Promise<Exercise[] | null> => {
@@ -213,7 +213,9 @@ export const Learn = () => {
       if (exercise.wordId) {
         setLearningResults(prev => [...prev, {
           wordId: exercise.wordId as string,
-          correct: isValid
+          correct: isValid,
+          rating: isValid ? 'good' : 'again',
+          questionType: exercise.type
         }]);
       }
     } catch (error) {
@@ -229,7 +231,9 @@ export const Learn = () => {
       if (exercise.wordId) {
         setLearningResults(prev => [...prev, {
           wordId: exercise.wordId as string,
-          correct: fallbackCorrect
+          correct: fallbackCorrect,
+          rating: fallbackCorrect ? 'good' : 'again',
+          questionType: exercise.type
         }]);
       }
     } finally {

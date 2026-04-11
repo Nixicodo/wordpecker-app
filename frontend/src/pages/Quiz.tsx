@@ -26,7 +26,7 @@ import {
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Question, WordList } from '../types';
+import { Question, ReviewSubmission, WordList } from '../types';
 import { ArrowBackIcon, CloseIcon, CheckCircleIcon, InfoIcon, StarIcon } from '@chakra-ui/icons';
 import { apiService } from '../services/api';
 import { QuestionRenderer } from '../components/QuestionRenderer';
@@ -101,7 +101,7 @@ export const Quiz = () => {
   const [sessionService, setSessionService] = useState<SessionService | null>(null);
   const [sessionProgress, setSessionProgress] = useState<any>(null);
   const [gameOver, setGameOver] = useState(false);
-  const [quizResults, setQuizResults] = useState<Array<{wordId: string, correct: boolean}>>([]);
+  const [quizResults, setQuizResults] = useState<ReviewSubmission[]>([]);
   const [isValidating, setIsValidating] = useState(false);
   const [actualCorrectness, setActualCorrectness] = useState<boolean | null>(null);
   const [isCompleted, setIsCompleted] = useState(false);
@@ -246,7 +246,9 @@ export const Quiz = () => {
 
         setQuizResults(prev => [...prev, {
           wordId: question.wordId || question.word,
-          correct: isValid
+          correct: isValid,
+          rating: isValid ? 'good' : 'again',
+          questionType: question.type
         }]);
 
         if (!isValid) {
@@ -269,7 +271,9 @@ export const Quiz = () => {
 
         setQuizResults(prev => [...prev, {
           wordId: question.wordId || question.word,
-          correct: fallbackCorrect
+          correct: fallbackCorrect,
+          rating: fallbackCorrect ? 'good' : 'again',
+          questionType: question.type
         }]);
 
         if (!fallbackCorrect) {

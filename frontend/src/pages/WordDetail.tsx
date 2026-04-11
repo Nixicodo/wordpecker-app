@@ -19,7 +19,6 @@ import {
   Center,
   IconButton,
   Flex,
-  Progress,
   Collapse,
   useToast,
   Image,
@@ -38,6 +37,7 @@ import {
 } from '@chakra-ui/react';
 import { FaArrowLeft, FaLightbulb, FaBookOpen, FaEye, FaEyeSlash, FaCamera, FaRobot, FaExchangeAlt, FaPlus } from 'react-icons/fa';
 import { apiService } from '../services/api';
+import { ProgressIndicator, deriveWordScore } from '../components/ProgressIndicator';
 import { WordDetail, SentenceExample, SimilarWordsResponse, WordList } from '../types';
 import PronunciationButton from '../components/PronunciationButton';
 
@@ -327,12 +327,13 @@ export function WordDetailPage() {
     }
   };
 
-  const getProgressColor = (learnedPoint: number) => {
-    if (learnedPoint >= 80) return 'green';
-    if (learnedPoint >= 60) return 'blue';
-    if (learnedPoint >= 40) return 'yellow';
-    return 'red';
-  };
+  const getContextScore = (context: { reviewCount: number; lapseCount: number; stability: number; dueAt?: string }) =>
+    deriveWordScore({
+      reviewCount: context.reviewCount,
+      lapseCount: context.lapseCount,
+      stability: context.stability,
+      dueAt: context.dueAt
+    });
 
   if (loading) {
     return (
@@ -476,22 +477,24 @@ export function WordDetailPage() {
                     </Text>
                   </VStack>
                   
-                  <VStack align="end" spacing={2} flexShrink={0}>
+                  <VStack align="end" spacing={2} flexShrink={0} minW="180px">
                     <Text fontSize="sm" color="gray.400" textAlign="right" fontWeight="medium">
-                      Progress
+                      Review State
                     </Text>
-                    <VStack spacing={1} align="end">
-                      <Text fontSize="sm" fontWeight="bold" color={getProgressColor(context.learnedPoint) + '.400'}>
-                        {context.learnedPoint}/100
-                      </Text>
-                      <Progress
-                        value={context.learnedPoint}
-                        colorScheme={getProgressColor(context.learnedPoint)}
-                        size="md"
-                        width="120px"
-                        borderRadius="full"
-                      />
-                    </VStack>
+                    <ProgressIndicator
+                      score={getContextScore(context)}
+                      size="sm"
+                      showLabel
+                      showBadge
+                    />
+                    <HStack spacing={2} wrap="wrap" justify="flex-end">
+                      <Badge colorScheme="blue" variant="subtle">Reviews {context.reviewCount}</Badge>
+                      <Badge colorScheme="orange" variant="subtle">Lapses {context.lapseCount}</Badge>
+                      <Badge colorScheme="teal" variant="subtle">Stability {context.stability.toFixed(1)}</Badge>
+                      {context.dueAt && new Date(context.dueAt).getTime() <= Date.now() && (
+                        <Badge colorScheme="red" variant="solid">Due now</Badge>
+                      )}
+                    </HStack>
                   </VStack>
                 </Flex>
               </CardBody>

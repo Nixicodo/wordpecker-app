@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { WordList, Word, Exercise, Question, Template, WordDetail, SentenceExample, UserPreferences, ExerciseTypePreferences, ImageDescriptionAnalysis, DescriptionExercise, VocabularyWordsResponse, WordDetailsResponse } from '../types';
+import { WordList, Word, Exercise, Question, Template, WordDetail, SentenceExample, UserPreferences, ExerciseTypePreferences, ImageDescriptionAnalysis, DescriptionExercise, VocabularyWordsResponse, WordDetailsResponse, ReviewSubmission, ScheduledWord } from '../types';
 
 // Generate or retrieve user ID
 const getUserId = () => {
@@ -41,20 +41,24 @@ type ApiResponse<T> = Promise<T>;
 // Response types
 interface LearnStartResponse {
   exercises: Exercise[];
+  scheduledWords?: ScheduledWord[];
 }
 
 interface LearnExercisesResponse {
   exercises: Exercise[];
+  scheduledWords?: ScheduledWord[];
 }
 
 interface QuizStartResponse {
   questions: Question[];
   total_questions: number;
+  scheduledWords?: ScheduledWord[];
 }
 
 interface QuizQuestionsResponse {
   questions: Question[];
   completed: boolean;
+  scheduledWords?: ScheduledWord[];
 }
 
 // API service for WordPecker app
@@ -90,16 +94,16 @@ export const apiService = {
     api.post(`/api/learn/${listId}/start`),
   getExercises: (listId: string): ApiResponse<LearnExercisesResponse> => 
     api.post(`/api/learn/${listId}/more`),
-  updateLearningLearnedPoints: (listId: string, results: Array<{wordId: string, correct: boolean}>): ApiResponse<{message: string}> =>
-    api.put(`/api/learn/${listId}/learned-points`, { results }),
+  updateLearningLearnedPoints: (listId: string, results: ReviewSubmission[]): ApiResponse<{message: string}> =>
+    api.put(`/api/learn/${listId}/reviews`, { results }),
 
   // Quiz
   startQuiz: (listId: string): ApiResponse<QuizStartResponse> => 
     api.post(`/api/quiz/${listId}/start`),
   getQuestions: (listId: string): ApiResponse<QuizQuestionsResponse> => 
     api.post(`/api/quiz/${listId}/more`),
-  updateLearnedPoints: (listId: string, results: Array<{wordId: string, correct: boolean}>): ApiResponse<{message: string}> =>
-    api.put(`/api/quiz/${listId}/learned-points`, { results }),
+  updateLearnedPoints: (listId: string, results: ReviewSubmission[]): ApiResponse<{message: string}> =>
+    api.put(`/api/quiz/${listId}/reviews`, { results }),
 
   // Templates
   getTemplates: (params?: {category?: string, difficulty?: string, search?: string, featured?: boolean}): ApiResponse<Template[]> => 

@@ -13,18 +13,28 @@ export interface WordList {
   kind?: 'custom' | 'mistake_book';
   systemKey?: string;
   wordCount?: number;
-  averageProgress?: number;
-  masteredWords?: number;
+  dueCount?: number;
+  newCount?: number;
+  learningCount?: number;
+  reviewCount?: number;
+  masteredCount?: number;
+  retentionScore?: number;
   created_at: string;
   updated_at: string;
 }
 
 export interface Word {
   id: string;
-  list_id: string;
+  list_id?: string;
   value: string;
   meaning: string;
-  learnedPoint: number;
+  dueAt?: string;
+  lastReviewedAt?: string;
+  reviewCount: number;
+  lapseCount: number;
+  stability: number;
+  difficulty: number;
+  status: number;
   created_at: string;
   updated_at: string;
 }
@@ -34,7 +44,13 @@ export interface WordContext {
   listName: string;
   listContext?: string;
   meaning: string;
-  learnedPoint: number;
+  sourceListIds: string[];
+  dueAt?: string;
+  lastReviewedAt?: string;
+  reviewCount: number;
+  lapseCount: number;
+  stability: number;
+  difficulty: number;
 }
 
 export interface WordDetail {
@@ -49,7 +65,7 @@ export interface SentenceExample {
   sentence: string;
   translation?: string | null;
   context_note?: string;
-  explanation?: string; // Keep for backward compatibility
+  explanation?: string;
 }
 
 export interface Exercise {
@@ -64,7 +80,6 @@ export interface Exercise {
   difficulty: 'easy' | 'medium' | 'hard';
   hint: string | null;
   feedback: string | null;
-  // For matching questions
   pairs: Array<{word: string; definition: string}> | null;
 }
 
@@ -80,8 +95,37 @@ export interface Question {
   difficulty: 'easy' | 'medium' | 'hard';
   hint: string | null;
   feedback: string | null;
-  // For matching questions
   pairs: Array<{word: string; definition: string}> | null;
+}
+
+export interface ScheduledWord {
+  id: string;
+  value: string;
+  meaning: string;
+  state: {
+    dueAt: string;
+    lastReviewedAt?: string;
+    stability: number;
+    difficulty: number;
+    reviewCount: number;
+    lapseCount: number;
+    consecutiveCorrect: number;
+    consecutiveWrong: number;
+    retrievability: number;
+    status: 'new' | 'learning' | 'review' | 'relearning';
+    urgency: number;
+  };
+}
+
+export type ReviewRating = 'again' | 'hard' | 'good' | 'easy';
+
+export interface ReviewSubmission {
+  wordId: string;
+  correct: boolean;
+  rating: ReviewRating;
+  questionType: string;
+  responseTimeMs?: number;
+  usedHint?: boolean;
 }
 
 export interface Template {
@@ -187,9 +231,9 @@ export interface LightReading {
   word_count: number;
   difficulty_level: string;
   theme: string;
-  highlighted_words: Array<{ 
-    word: string; 
-    definition: string; 
+  highlighted_words: Array<{
+    word: string;
+    definition: string;
     position: number | null;
   }>;
 }
