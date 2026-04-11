@@ -36,6 +36,7 @@ interface QuestionRendererProps {
   onAnswerChange: (answer: string) => void;
   isAnswered: boolean;
   isCorrect?: boolean | null;
+  onHintShown?: () => void;
 }
 
 export const QuestionRenderer: React.FC<QuestionRendererProps> = ({
@@ -43,7 +44,8 @@ export const QuestionRenderer: React.FC<QuestionRendererProps> = ({
   selectedAnswer,
   onAnswerChange,
   isAnswered,
-  isCorrect
+  isCorrect,
+  onHintShown
 }) => {
   const [showHint, setShowHint] = useState(false);
 
@@ -113,6 +115,14 @@ export const QuestionRenderer: React.FC<QuestionRendererProps> = ({
     }
   };
 
+  const toggleHint = () => {
+    if (!showHint) {
+      onHintShown?.();
+    }
+
+    setShowHint((prev) => !prev);
+  };
+
   return (
     <MotionBox
       initial={{ opacity: 0, y: 20 }}
@@ -137,7 +147,7 @@ export const QuestionRenderer: React.FC<QuestionRendererProps> = ({
               variant="outline"
               colorScheme="blue"
               size="sm"
-              onClick={() => setShowHint(!showHint)}
+              onClick={toggleHint}
             >
               {showHint ? UI.hideHint : UI.showHint}
             </Button>

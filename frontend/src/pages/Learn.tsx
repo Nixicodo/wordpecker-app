@@ -30,9 +30,11 @@ import { Exercise, ReviewSubmission, WordList } from '../types';
 import { ArrowBackIcon, CloseIcon, CheckCircleIcon, InfoIcon, StarIcon } from '@chakra-ui/icons';
 import { apiService } from '../services/api';
 import { QuestionRenderer } from '../components/QuestionRenderer';
+import { ReviewRatingPanel } from '../components/ReviewRatingPanel';
 import { SessionService } from '../services/sessionService';
 import { validateAnswer } from '../utils/answerValidation';
 import { usePrefetchedBatch } from '../hooks/usePrefetchedBatch';
+import { recommendReviewRating } from '../utils/reviewRating';
 
 const UI = {
   startErrorTitle: '\u542f\u52a8\u5b66\u4e60\u5931\u8d25',
@@ -105,6 +107,13 @@ export const Learn = () => {
   const [actualCorrectness, setActualCorrectness] = useState<boolean | null>(null);
   const [learningResults, setLearningResults] = useState<ReviewSubmission[]>([]);
   const [isUpdatingPoints, setIsUpdatingPoints] = useState(false);
+  const [usedHint, setUsedHint] = useState(false);
+  const [selectedRating, setSelectedRating] = useState<'again' | 'hard' | 'good' | 'easy'>('good');
+  const [recommendedRating, setRecommendedRating] = useState<'again' | 'hard' | 'good' | 'easy'>('good');
+  const [recommendationReason, setRecommendationReason] = useState('');
+  const [currentReview, setCurrentReview] = useState<ReviewSubmission | null>(null);
+  const [responseTimeMs, setResponseTimeMs] = useState(0);
+  const questionStartedAtRef = useRef(Date.now());
 
   const fetchMoreExercises = useCallback(async (): Promise<Exercise[] | null> => {
     if (!id) return null;
@@ -114,6 +123,34 @@ export const Learn = () => {
   }, [id]);
 
   const { prefetchNext, consumePrefetched } = usePrefetchedBatch(fetchMoreExercises);
+
+  const resetQuestionState = useCallback(() => {
+    setSelectedAnswer('');
+    setIsAnswered(false);
+    setActualCorrectness(null);
+    setUsedHint(false);
+    setCurrentReview(null);
+    setSelectedRating('good');
+    setRecommendedRating('good');
+    setRecommendationReason('');
+    setResponseTimeMs(0);
+    questionStartedAtRef.current = Date.now();
+  }, []);
+
+  const commitCurrentReview = useCallback(() => {
+    if (!currentReview) {
+      return;
+    }
+
+    setLearningResults((prev) => [
+      ...prev,
+      {
+        ...currentReview,
+        rating: selectedRating
+      }
+    ]);
+    setCurrentReview(null);
+  }, [currentReview, selectedRating]);
 
   useEffect(() => {
     const initLearn = async () => {
@@ -130,6 +167,7 @@ export const Learn = () => {
           const service = new SessionService(response.exercises);
           setSessionService(service);
           setSessionProgress(service.getCurrentProgress());
+          questionStartedAtRef.current = Date.now();
           hasInitializedRef.current = true;
         } else {
           throw new Error('Invalid response from server');
@@ -172,9 +210,8 @@ export const Learn = () => {
         const service = new SessionService(newExercises);
         setSessionService(service);
         setCurrentExercise(exercises.length);
-        setSelectedAnswer('');
-        setIsAnswered(false);
         setIsCompleted(false);
+        resetQuestionState();
         void prefetchNext();
         return true;
       }
@@ -199,42 +236,67 @@ export const Learn = () => {
 
     setIsValidating(true);
     const exercise = exercises[currentExercise];
+    const elapsedMs = Math.max(0, Date.now() - questionStartedAtRef.current);
 
     try {
       const isValid = await validateAnswer(selectedAnswer, exercise, list?.context);
+      const recommendation = recommendReviewRating({
+        isCorrect: isValid,
+        responseTimeMs: elapsedMs,
+        usedHint,
+        difficulty: exercise.difficulty
+      });
 
       setActualCorrectness(isValid);
       setIsAnswered(true);
+      setResponseTimeMs(elapsedMs);
+      setRecommendedRating(recommendation.rating);
+      setSelectedRating(recommendation.rating);
+      setRecommendationReason(recommendation.reason);
 
       if (sessionService) {
         sessionService.answerQuestion(selectedAnswer, exercise, isValid);
         setSessionProgress(sessionService.getCurrentProgress());
       }
       if (exercise.wordId) {
-        setLearningResults(prev => [...prev, {
+        setCurrentReview({
           wordId: exercise.wordId as string,
           correct: isValid,
-          rating: isValid ? 'good' : 'again',
-          questionType: exercise.type
-        }]);
+          rating: recommendation.rating,
+          questionType: exercise.type,
+          responseTimeMs: elapsedMs,
+          usedHint
+        });
       }
     } catch (error) {
       console.error('Error validating answer:', error);
       const fallbackCorrect = selectedAnswer === exercise.correctAnswer;
+      const recommendation = recommendReviewRating({
+        isCorrect: fallbackCorrect,
+        responseTimeMs: elapsedMs,
+        usedHint,
+        difficulty: exercise.difficulty
+      });
       setActualCorrectness(fallbackCorrect);
       setIsAnswered(true);
+      setResponseTimeMs(elapsedMs);
+      setRecommendedRating(recommendation.rating);
+      setSelectedRating(recommendation.rating);
+      setRecommendationReason(recommendation.reason);
 
       if (sessionService) {
         sessionService.answerQuestion(selectedAnswer, exercise, fallbackCorrect);
         setSessionProgress(sessionService.getCurrentProgress());
       }
       if (exercise.wordId) {
-        setLearningResults(prev => [...prev, {
+        setCurrentReview({
           wordId: exercise.wordId as string,
           correct: fallbackCorrect,
-          rating: fallbackCorrect ? 'good' : 'again',
-          questionType: exercise.type
-        }]);
+          rating: recommendation.rating,
+          questionType: exercise.type,
+          responseTimeMs: elapsedMs,
+          usedHint
+        });
       }
     } finally {
       setIsValidating(false);
@@ -273,6 +335,7 @@ export const Learn = () => {
   };
 
   const handleNext = async () => {
+    commitCurrentReview();
     const isLastExercise = currentExercise === exercises.length - 1;
 
     if (isLastExercise) {
@@ -289,9 +352,7 @@ export const Learn = () => {
     }
 
     setCurrentExercise(prev => prev + 1);
-    setSelectedAnswer('');
-    setIsAnswered(false);
-    setActualCorrectness(null);
+    resetQuestionState();
   };
 
   if (isLoading) {
@@ -412,6 +473,7 @@ export const Learn = () => {
           onAnswerChange={setSelectedAnswer}
           isAnswered={isAnswered}
           isCorrect={actualCorrectness}
+          onHintShown={() => setUsedHint(true)}
         />
 
         {isAnswered && (
@@ -437,6 +499,18 @@ export const Learn = () => {
                   : `${UI.correctAnswerPrefix}${exercise.correctAnswer}`}
             </Text>
           </MotionBox>
+        )}
+
+        {isAnswered && currentReview && (
+          <ReviewRatingPanel
+            isCorrect={currentReview.correct}
+            selectedRating={selectedRating}
+            recommendedRating={recommendedRating}
+            recommendationReason={recommendationReason}
+            responseTimeMs={responseTimeMs}
+            usedHint={usedHint}
+            onRatingChange={setSelectedRating}
+          />
         )}
 
         {isCompleted && sessionService && (
@@ -527,6 +601,22 @@ export const Learn = () => {
                       {`${sessionProgress?.stats.score} ${UI.points}`}
                     </Text>
                   </Text>
+                  {learningResults.length > 0 && (
+                    <HStack spacing={2} wrap="wrap" justify="center" pt={2}>
+                      <Badge colorScheme="red" variant="subtle">
+                        Again {learningResults.filter((result) => result.rating === 'again').length}
+                      </Badge>
+                      <Badge colorScheme="orange" variant="subtle">
+                        Hard {learningResults.filter((result) => result.rating === 'hard').length}
+                      </Badge>
+                      <Badge colorScheme="blue" variant="subtle">
+                        Good {learningResults.filter((result) => result.rating === 'good').length}
+                      </Badge>
+                      <Badge colorScheme="green" variant="subtle">
+                        Easy {learningResults.filter((result) => result.rating === 'easy').length}
+                      </Badge>
+                    </HStack>
+                  )}
                 </VStack>
               </CardBody>
             </Card>
@@ -593,10 +683,10 @@ export const Learn = () => {
                 transform: 'translateY(-2px)',
                 shadow: 'lg'
               }}
-              transition="all 0.2s"
-            >
-              {currentExercise === exercises.length - 1 ? UI.finishSession : UI.nextExercise}
-            </Button>
+                transition="all 0.2s"
+              >
+                {currentExercise === exercises.length - 1 ? UI.finishSession : UI.nextExercise}
+              </Button>
           )}
         </Flex>
       </MotionBox>

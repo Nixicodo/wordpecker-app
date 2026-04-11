@@ -30,9 +30,11 @@ import { Question, ReviewSubmission, WordList } from '../types';
 import { ArrowBackIcon, CloseIcon, CheckCircleIcon, InfoIcon, StarIcon } from '@chakra-ui/icons';
 import { apiService } from '../services/api';
 import { QuestionRenderer } from '../components/QuestionRenderer';
+import { ReviewRatingPanel } from '../components/ReviewRatingPanel';
 import { SessionService } from '../services/sessionService';
 import { validateAnswer } from '../utils/answerValidation';
 import { usePrefetchedBatch } from '../hooks/usePrefetchedBatch';
+import { recommendReviewRating } from '../utils/reviewRating';
 
 const UI = {
   startErrorTitle: '\u542f\u52a8\u6d4b\u9a8c\u5931\u8d25',
@@ -106,6 +108,13 @@ export const Quiz = () => {
   const [actualCorrectness, setActualCorrectness] = useState<boolean | null>(null);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isUpdatingPoints, setIsUpdatingPoints] = useState(false);
+  const [usedHint, setUsedHint] = useState(false);
+  const [selectedRating, setSelectedRating] = useState<'again' | 'hard' | 'good' | 'easy'>('good');
+  const [recommendedRating, setRecommendedRating] = useState<'again' | 'hard' | 'good' | 'easy'>('good');
+  const [recommendationReason, setRecommendationReason] = useState('');
+  const [currentReview, setCurrentReview] = useState<ReviewSubmission | null>(null);
+  const [responseTimeMs, setResponseTimeMs] = useState(0);
+  const questionStartedAtRef = useRef(Date.now());
 
   const fetchMoreQuestions = useCallback(async (): Promise<Question[] | null> => {
     if (!id) return null;
@@ -115,6 +124,34 @@ export const Quiz = () => {
   }, [id]);
 
   const { prefetchNext, consumePrefetched } = usePrefetchedBatch(fetchMoreQuestions);
+
+  const resetQuestionState = useCallback(() => {
+    setSelectedAnswer('');
+    setIsAnswered(false);
+    setActualCorrectness(null);
+    setUsedHint(false);
+    setCurrentReview(null);
+    setSelectedRating('good');
+    setRecommendedRating('good');
+    setRecommendationReason('');
+    setResponseTimeMs(0);
+    questionStartedAtRef.current = Date.now();
+  }, []);
+
+  const commitCurrentReview = useCallback(() => {
+    if (!currentReview) {
+      return;
+    }
+
+    setQuizResults((prev) => [
+      ...prev,
+      {
+        ...currentReview,
+        rating: selectedRating
+      }
+    ]);
+    setCurrentReview(null);
+  }, [currentReview, selectedRating]);
 
   useEffect(() => {
     const initQuiz = async () => {
@@ -132,6 +169,7 @@ export const Quiz = () => {
           const service = new SessionService(response.questions);
           setSessionService(service);
           setSessionProgress(service.getCurrentProgress());
+          questionStartedAtRef.current = Date.now();
           hasInitializedRef.current = true;
         } else {
           throw new Error('Invalid response from server');
@@ -206,9 +244,7 @@ export const Quiz = () => {
         if (startFromNewBatch) {
           setCurrentQuestion(firstNewQuestionIndex);
         }
-        setSelectedAnswer('');
-        setIsAnswered(false);
-        setActualCorrectness(null);
+        resetQuestionState();
         void prefetchNext();
         return true;
       }
@@ -233,23 +269,27 @@ export const Quiz = () => {
 
     setIsValidating(true);
     const question = questions[currentQuestion];
+    const elapsedMs = Math.max(0, Date.now() - questionStartedAtRef.current);
 
     try {
       const isValid = await validateAnswer(selectedAnswer, question, list?.context);
+      const recommendation = recommendReviewRating({
+        isCorrect: isValid,
+        responseTimeMs: elapsedMs,
+        usedHint,
+        difficulty: question.difficulty
+      });
 
       setActualCorrectness(isValid);
       setIsAnswered(true);
+      setResponseTimeMs(elapsedMs);
+      setRecommendedRating(recommendation.rating);
+      setSelectedRating(recommendation.rating);
+      setRecommendationReason(recommendation.reason);
 
       if (sessionService) {
         sessionService.answerQuestion(selectedAnswer, question, isValid);
         setSessionProgress(sessionService.getCurrentProgress());
-
-        setQuizResults(prev => [...prev, {
-          wordId: question.wordId || question.word,
-          correct: isValid,
-          rating: isValid ? 'good' : 'again',
-          questionType: question.type
-        }]);
 
         if (!isValid) {
           setLives(prev => {
@@ -261,20 +301,40 @@ export const Quiz = () => {
           });
         }
       }
+
+      setCurrentReview({
+        wordId: question.wordId || question.word,
+        correct: isValid,
+        rating: recommendation.rating,
+        questionType: question.type,
+        responseTimeMs: elapsedMs,
+        usedHint
+      });
     } catch (error) {
       console.error('Error validating answer:', error);
       if (sessionService) {
         const fallbackCorrect = sessionService.answerQuestion(selectedAnswer, question);
+        const recommendation = recommendReviewRating({
+          isCorrect: fallbackCorrect,
+          responseTimeMs: elapsedMs,
+          usedHint,
+          difficulty: question.difficulty
+        });
         setActualCorrectness(fallbackCorrect);
         setIsAnswered(true);
         setSessionProgress(sessionService.getCurrentProgress());
-
-        setQuizResults(prev => [...prev, {
+        setResponseTimeMs(elapsedMs);
+        setRecommendedRating(recommendation.rating);
+        setSelectedRating(recommendation.rating);
+        setRecommendationReason(recommendation.reason);
+        setCurrentReview({
           wordId: question.wordId || question.word,
           correct: fallbackCorrect,
-          rating: fallbackCorrect ? 'good' : 'again',
-          questionType: question.type
-        }]);
+          rating: recommendation.rating,
+          questionType: question.type,
+          responseTimeMs: elapsedMs,
+          usedHint
+        });
 
         if (!fallbackCorrect) {
           setLives(prev => {
@@ -292,6 +352,7 @@ export const Quiz = () => {
   };
 
   const handleNext = async () => {
+    commitCurrentReview();
     if (gameOver) {
       setIsCompleted(true);
       if (sessionService) {
@@ -326,9 +387,7 @@ export const Quiz = () => {
     }
 
     setCurrentQuestion(prev => prev + 1);
-    setSelectedAnswer('');
-    setIsAnswered(false);
-    setActualCorrectness(null);
+    resetQuestionState();
   };
 
   if (isLoading) {
@@ -453,6 +512,7 @@ export const Quiz = () => {
           onAnswerChange={setSelectedAnswer}
           isAnswered={isAnswered}
           isCorrect={actualCorrectness}
+          onHintShown={() => setUsedHint(true)}
         />
 
         {isAnswered && (
@@ -488,6 +548,18 @@ export const Quiz = () => {
               </VStack>
             )}
           </MotionBox>
+        )}
+
+        {isAnswered && currentReview && (
+          <ReviewRatingPanel
+            isCorrect={currentReview.correct}
+            selectedRating={selectedRating}
+            recommendedRating={recommendedRating}
+            recommendationReason={recommendationReason}
+            responseTimeMs={responseTimeMs}
+            usedHint={usedHint}
+            onRatingChange={setSelectedRating}
+          />
         )}
 
         {isCompleted && sessionService && (
@@ -578,6 +650,22 @@ export const Quiz = () => {
                       {`${sessionProgress?.stats.score} ${UI.points}`}
                     </Text>
                   </Text>
+                  {quizResults.length > 0 && (
+                    <HStack spacing={2} wrap="wrap" justify="center" pt={2}>
+                      <Badge colorScheme="red" variant="subtle">
+                        Again {quizResults.filter((result) => result.rating === 'again').length}
+                      </Badge>
+                      <Badge colorScheme="orange" variant="subtle">
+                        Hard {quizResults.filter((result) => result.rating === 'hard').length}
+                      </Badge>
+                      <Badge colorScheme="blue" variant="subtle">
+                        Good {quizResults.filter((result) => result.rating === 'good').length}
+                      </Badge>
+                      <Badge colorScheme="green" variant="subtle">
+                        Easy {quizResults.filter((result) => result.rating === 'easy').length}
+                      </Badge>
+                    </HStack>
+                  )}
                 </VStack>
               </CardBody>
             </Card>
