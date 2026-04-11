@@ -1,26 +1,25 @@
 import {
-  Text,
-  Button,
-  VStack,
   Box,
-  Stack,
+  Button,
   Grid,
-  GridItem
+  GridItem,
+  Stack,
+  Text,
+  VStack
 } from '@chakra-ui/react';
-import { useState, useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Exercise, Question } from '../../types';
 
 const UI = {
-  empty: '\u5f53\u524d\u6ca1\u6709\u53ef\u5339\u914d\u7684\u5185\u5bb9',
-  title: '\u5c06\u6bcf\u4e2a\u5355\u8bcd\u4e0e\u5bf9\u5e94\u91ca\u4e49\u914d\u5bf9\uff1a',
-  help: '\u7b2c\u4e00\u6b65\uff1a\u5148\u70b9\u4e00\u4e2a\u5355\u8bcd\u3002\u7b2c\u4e8c\u6b65\uff1a\u518d\u70b9\u5bf9\u5e94\u7684\u91ca\u4e49\u3002',
-  words: '\u5355\u8bcd\uff1a',
-  definitions: '\u91ca\u4e49\uff1a',
-  matched: '\u5df2\u914d\u5bf9',
-  matchedWith: '\u5df2\u914d\u5bf9\uff1a',
-  selectedPrefix: '\u5df2\u9009\u4e2d\uff1a',
-  selectedSuffix: '\uff0c\u73b0\u5728\u70b9\u51fb\u5b83\u5bf9\u5e94\u7684\u91ca\u4e49',
-  correctMatches: '\u6b63\u786e\u914d\u5bf9\uff1a',
+  empty: '当前没有可配对的内容',
+  title: '将每个单词与对应释义配对：',
+  help: '第一步：先点一个单词。第二步：再点对应的释义。',
+  words: '单词：',
+  definitions: '释义：',
+  matched: '已配对',
+  matchedWith: '已配对：',
+  selectedPrefix: '已选中：',
+  selectedSuffix: '，现在点击它对应的释义'
 };
 
 interface MatchingQuestionProps {
@@ -42,31 +41,31 @@ export const MatchingQuestion: React.FC<MatchingQuestionProps> = ({
 
   const shuffleArray = <T,>(array: T[]): T[] => {
     const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    for (let index = shuffled.length - 1; index > 0; index -= 1) {
+      const randomIndex = Math.floor(Math.random() * (index + 1));
+      [shuffled[index], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[index]];
     }
     return shuffled;
   };
 
-  const cleanText = (text: string): string => {
-    return text
+  const cleanText = (text: string): string => (
+    text
       .replace(/^[A-Za-z]\.\s*/, '')
       .replace(/^[0-9]+\.\s*/, '')
       .replace(/^\([A-Za-z]\)\s*/, '')
       .replace(/^\([0-9]+\)\s*/, '')
       .replace(/^[A-Za-z]\)\s*/, '')
       .replace(/^[0-9]+\)\s*/, '')
-      .trim();
-  };
+      .trim()
+  );
 
   const { shuffledWords, shuffledDefinitions } = useMemo(() => {
     if (!question.pairs || question.pairs.length === 0) {
       return { shuffledWords: [], shuffledDefinitions: [] };
     }
 
-    const words = question.pairs.map(p => cleanText(p.word));
-    const definitions = question.pairs.map(p => cleanText(p.definition));
+    const words = question.pairs.map((pair) => cleanText(pair.word));
+    const definitions = question.pairs.map((pair) => cleanText(pair.definition));
 
     return {
       shuffledWords: shuffleArray(words),
@@ -78,30 +77,33 @@ export const MatchingQuestion: React.FC<MatchingQuestionProps> = ({
     setSelectedWord(null);
     if (!selectedAnswer) {
       setMatchingAnswers({});
-    } else {
-      const answers = selectedAnswer.split('|').reduce((acc, pair) => {
-        const [word, definition] = pair.split(':');
-        if (word && definition) acc[word] = definition;
-        return acc;
-      }, {} as Record<string, string>);
-      setMatchingAnswers(answers);
+      return;
     }
+
+    const answers = selectedAnswer.split('|').reduce((accumulator, pair) => {
+      const [word, definition] = pair.split(':');
+      if (word && definition) {
+        accumulator[word] = definition;
+      }
+      return accumulator;
+    }, {} as Record<string, string>);
+    setMatchingAnswers(answers);
   }, [selectedAnswer, question.word]);
 
   const handleMatchingChange = (word: string, definition: string) => {
-    const newAnswers = { ...matchingAnswers };
+    const nextAnswers = { ...matchingAnswers };
 
-    Object.keys(newAnswers).forEach(key => {
-      if (newAnswers[key] === definition) {
-        delete newAnswers[key];
+    Object.keys(nextAnswers).forEach((key) => {
+      if (nextAnswers[key] === definition) {
+        delete nextAnswers[key];
       }
     });
 
-    newAnswers[word] = definition;
-    setMatchingAnswers(newAnswers);
+    nextAnswers[word] = definition;
+    setMatchingAnswers(nextAnswers);
 
-    const answerString = Object.entries(newAnswers)
-      .map(([w, d]) => `${w}:${d}`)
+    const answerString = Object.entries(nextAnswers)
+      .map(([currentWord, currentDefinition]) => `${currentWord}:${currentDefinition}`)
       .join('|');
     onAnswerChange(answerString);
   };
@@ -126,6 +128,7 @@ export const MatchingQuestion: React.FC<MatchingQuestionProps> = ({
             {shuffledWords.map((word) => {
               const isSelected = selectedWord === word;
               const isMatched = matchingAnswers[word];
+
               return (
                 <Button
                   key={word}
@@ -142,7 +145,7 @@ export const MatchingQuestion: React.FC<MatchingQuestionProps> = ({
                       setSelectedWord(isSelected ? null : word);
                     }
                   }}
-                  isDisabled={isAnswered || !!isMatched}
+                  isDisabled={isAnswered || Boolean(isMatched)}
                   _hover={{
                     bg: isAnswered || isMatched ? undefined : isSelected ? 'blue.500' : 'slate.600'
                   }}
@@ -161,7 +164,9 @@ export const MatchingQuestion: React.FC<MatchingQuestionProps> = ({
           <Stack spacing={2}>
             {shuffledDefinitions.map((definition) => {
               const isMatched = Object.values(matchingAnswers).includes(definition);
-              const matchedWord = Object.keys(matchingAnswers).find(key => matchingAnswers[key] === definition);
+              const matchedWord = Object.keys(matchingAnswers).find(
+                (key) => matchingAnswers[key] === definition
+              );
 
               return (
                 <Button
@@ -208,17 +213,6 @@ export const MatchingQuestion: React.FC<MatchingQuestionProps> = ({
             <strong>{selectedWord}</strong>
             {UI.selectedSuffix}
           </Text>
-        </Box>
-      )}
-
-      {isAnswered && (
-        <Box mt={4} p={4} bg="slate.800" borderRadius="md">
-          <Text fontWeight="bold" mb={2}>{UI.correctMatches}</Text>
-          {question.pairs?.map((pair, idx) => (
-            <Text key={idx} fontSize="sm" color="green.300">
-              {pair.word} {'->'} {pair.definition}
-            </Text>
-          ))}
         </Box>
       )}
     </VStack>

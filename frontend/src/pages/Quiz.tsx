@@ -29,7 +29,7 @@ import { motion } from 'framer-motion';
 import { Question, ReviewSubmission, WordList } from '../types';
 import { ArrowBackIcon, CloseIcon, CheckCircleIcon, InfoIcon, StarIcon } from '@chakra-ui/icons';
 import { apiService } from '../services/api';
-import { QuestionRenderer } from '../components/QuestionRenderer';
+import { QuestionAnsweredSupplement, QuestionRenderer } from '../components/QuestionRenderer';
 import { ReviewRatingPanel } from '../components/ReviewRatingPanel';
 import { SessionService } from '../services/sessionService';
 import { validateAnswer } from '../utils/answerValidation';
@@ -621,6 +621,12 @@ export const Quiz = () => {
             </Button>
           )}
         </Flex>
+
+        <QuestionAnsweredSupplement
+          question={question}
+          isAnswered={isAnswered}
+          isCorrect={actualCorrectness}
+        />
 
         {isAnswered && currentReview && (
           <ReviewRatingPanel
