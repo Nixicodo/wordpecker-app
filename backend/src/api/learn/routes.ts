@@ -30,18 +30,21 @@ router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
     if (!list) return res.status(404).json({ message: 'List not found' });
 
     const userId = resolveUserId(req.headers['user-id']);
-    const [selectedWords, exerciseTypes, { baseLanguage, targetLanguage }] = await Promise.all([
+    const [scheduledCandidates, exerciseTypes, { baseLanguage, targetLanguage }] = await Promise.all([
       selectScheduledWords(userId, listId, 5, 8),
       getExerciseTypes(userId),
       getUserLanguages(userId)
     ]);
 
-    if (!selectedWords.length) {
+    if (!scheduledCandidates.length) {
       return res.status(400).json({ message: 'List has no words' });
     }
 
+    const selectedWords = scheduledCandidates.slice(0, 5);
+
     const exercises = await learnAgentService.generateExercises(
-      selectedWords.map(({ id, value, meaning }) => ({ id, value, meaning })),
+      selectedWords.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
+      scheduledCandidates.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
       list.context || 'General',
       exerciseTypes,
       baseLanguage,
@@ -66,18 +69,21 @@ router.post('/:listId/more', validate(listIdSchema), async (req, res) => {
     if (!list) return res.status(404).json({ message: 'List not found' });
 
     const userId = resolveUserId(req.headers['user-id']);
-    const [selectedWords, exerciseTypes, { baseLanguage, targetLanguage }] = await Promise.all([
+    const [scheduledCandidates, exerciseTypes, { baseLanguage, targetLanguage }] = await Promise.all([
       selectScheduledWords(userId, listId, 5, 10),
       getExerciseTypes(userId),
       getUserLanguages(userId)
     ]);
 
-    if (!selectedWords.length) {
+    if (!scheduledCandidates.length) {
       return res.status(400).json({ message: 'List has no words' });
     }
 
+    const selectedWords = scheduledCandidates.slice(0, 5);
+
     const exercises = await learnAgentService.generateExercises(
-      selectedWords.map(({ id, value, meaning }) => ({ id, value, meaning })),
+      selectedWords.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
+      scheduledCandidates.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
       list.context || 'General',
       exerciseTypes,
       baseLanguage,

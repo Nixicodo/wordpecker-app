@@ -31,18 +31,21 @@ router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
     if (!list) return res.status(404).json({ message: 'List not found' });
 
     const userId = resolveUserId(req.headers['user-id']);
-    const [scheduledWords, questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
+    const [scheduledCandidates, questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
       selectScheduledWords(userId, listId, 5, 12),
       getQuestionTypes(userId),
       getUserLanguages(userId)
     ]);
 
-    if (!scheduledWords.length) {
+    if (!scheduledCandidates.length) {
       return res.status(400).json({ message: 'List has no words' });
     }
 
+    const scheduledWords = scheduledCandidates.slice(0, 5);
+
     const questions = await quizAgentService.generateQuestions(
-      scheduledWords.map(({ id, value, meaning }) => ({ id, value, meaning })),
+      scheduledWords.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
+      scheduledCandidates.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
       list.context || 'General',
       questionTypes,
       baseLanguage,
@@ -69,19 +72,20 @@ router.post('/:listId/more', validate(listIdSchema), async (req, res) => {
     if (!list) return res.status(404).json({ message: 'List not found' });
 
     const userId = resolveUserId(req.headers['user-id']);
-    const [scheduledWords, questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
+    const [scheduledCandidates, questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
       selectScheduledWords(userId, listId, 5, 12),
       getQuestionTypes(userId),
       getUserLanguages(userId)
     ]);
 
-    if (!scheduledWords.length) {
+    if (!scheduledCandidates.length) {
       return res.status(400).json({ message: 'List has no words' });
     }
 
-    const selected = shuffleArray([...scheduledWords]).slice(0, 5);
+    const selected = shuffleArray([...scheduledCandidates]).slice(0, 5);
     const questions = await quizAgentService.generateQuestions(
-      selected.map(({ id, value, meaning }) => ({ id, value, meaning })),
+      selected.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
+      scheduledCandidates.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
       list.context || 'General',
       questionTypes,
       baseLanguage,

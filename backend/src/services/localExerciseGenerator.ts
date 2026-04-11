@@ -5,6 +5,7 @@ type GeneratorWord = {
   id: string;
   value: string;
   meaning: string;
+  challengeScore?: number;
 };
 
 type ExerciseDirection = ExerciseType['direction'];
@@ -38,6 +39,21 @@ function selectDirection(index: number, type: ExerciseType['type']): ExerciseDir
   return index % 2 === 0 ? 'target_to_base' : 'base_to_target';
 }
 
+function upgradeDifficulty(
+  baseDifficulty: ExerciseWithId['difficulty'],
+  challengeScore = 0
+): ExerciseWithId['difficulty'] {
+  if (challengeScore >= 0.72) {
+    return 'hard';
+  }
+
+  if (challengeScore >= 0.45) {
+    return baseDifficulty === 'easy' ? 'medium' : baseDifficulty;
+  }
+
+  return baseDifficulty;
+}
+
 function buildMultipleChoice(
   word: GeneratorWord,
   allWords: GeneratorWord[],
@@ -58,7 +74,7 @@ function buildMultipleChoice(
       options,
       optionLabels: OPTION_LABELS.slice(0, options.length),
       correctAnswer: word.value,
-      difficulty: 'easy',
+      difficulty: upgradeDifficulty('easy', word.challengeScore),
       hint: `Look for the target-language word that expresses "${correctMeaning}".`,
       feedback: `"${word.value}" is the word that matches "${correctMeaning}" in this context.`,
       pairs: null,
@@ -76,7 +92,7 @@ function buildMultipleChoice(
     options,
     optionLabels: OPTION_LABELS.slice(0, options.length),
     correctAnswer: correctMeaning,
-    difficulty: 'easy',
+    difficulty: upgradeDifficulty('easy', word.challengeScore),
     hint: `Recall the base-language meaning of "${word.value}".`,
     feedback: `"${word.value}" matches "${correctMeaning}" in this context.`,
     pairs: null,
@@ -95,7 +111,7 @@ function buildFillBlank(word: GeneratorWord, context: string): ExerciseWithId {
     options: null,
     optionLabels: null,
     correctAnswer: word.value,
-    difficulty: 'easy',
+    difficulty: upgradeDifficulty('easy', word.challengeScore),
     hint: 'The answer is the vocabulary word itself.',
     feedback: `The correct word is "${word.value}".`,
     pairs: null,
@@ -125,7 +141,7 @@ function buildTrueFalse(
       options,
       optionLabels: OPTION_LABELS.slice(0, options.length),
       correctAnswer: isTrue ? 'True' : 'False',
-      difficulty: 'easy',
+      difficulty: upgradeDifficulty('easy', word.challengeScore),
       hint: `Check whether "${statementWord}" really means "${correctMeaning}".`,
       feedback: `"${word.value}" is the correct word for "${correctMeaning}".`,
       pairs: null,
@@ -145,7 +161,7 @@ function buildTrueFalse(
     options,
     optionLabels: OPTION_LABELS.slice(0, options.length),
     correctAnswer: isTrue ? 'True' : 'False',
-    difficulty: 'easy',
+    difficulty: upgradeDifficulty('easy', word.challengeScore),
     hint: `Recall the actual meaning of "${word.value}".`,
     feedback: `"${word.value}" means "${correctMeaning}".`,
     pairs: null,
@@ -165,7 +181,7 @@ function buildSentenceCompletion(word: GeneratorWord, allWords: GeneratorWord[],
     options,
     optionLabels: OPTION_LABELS.slice(0, options.length),
     correctAnswer: word.value,
-    difficulty: 'medium',
+    difficulty: upgradeDifficulty('medium', word.challengeScore),
     hint: `Choose the target-language word that best matches "${correctMeaning}".`,
     feedback: `The best choice here is "${word.value}".`,
     pairs: null,
@@ -182,11 +198,13 @@ function resolveType(rawType: string): ExerciseType['type'] {
 
 export function generateLocalExercises(
   words: GeneratorWord[],
+  distractorWords: GeneratorWord[],
   context: string,
   exerciseTypes: string[],
 ): ExerciseWithId[] {
   const availableTypes = (exerciseTypes.length ? exerciseTypes : ['multiple_choice', 'fill_blank', 'true_false'])
     .map(resolveType);
+  const distractorPool = distractorWords.length ? distractorWords : words;
 
   return words.map((word, index) => {
     const type = availableTypes[index % availableTypes.length] ?? 'multiple_choice';
@@ -196,12 +214,12 @@ export function generateLocalExercises(
       case 'fill_blank':
         return buildFillBlank(word, context);
       case 'true_false':
-        return buildTrueFalse(word, words, context, direction);
+        return buildTrueFalse(word, distractorPool, context, direction);
       case 'sentence_completion':
-        return buildSentenceCompletion(word, words, context);
+        return buildSentenceCompletion(word, distractorPool, context);
       case 'multiple_choice':
       default:
-        return buildMultipleChoice(word, words, context, direction);
+        return buildMultipleChoice(word, distractorPool, context, direction);
     }
   });
 }

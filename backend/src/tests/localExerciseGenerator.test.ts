@@ -7,9 +7,16 @@ describe('generateLocalExercises', () => {
     { id: '3', value: 'gracias', meaning: 'thank you' },
     { id: '4', value: 'libro', meaning: 'book' },
   ];
+  const distractorPool = [
+    ...words,
+    { id: '5', value: 'mesa', meaning: 'table' },
+    { id: '6', value: 'puerta', meaning: 'door' },
+    { id: '7', value: 'ventana', meaning: 'window' },
+    { id: '8', value: 'cocina', meaning: 'kitchen' },
+  ];
 
   it('mixes target_to_base and base_to_target for multiple choice fallback generation', () => {
-    const exercises = generateLocalExercises(words, 'travel', ['multiple_choice', 'multiple_choice', 'multiple_choice', 'multiple_choice']);
+    const exercises = generateLocalExercises(words, distractorPool, 'travel', ['multiple_choice', 'multiple_choice', 'multiple_choice', 'multiple_choice']);
 
     expect(exercises).toHaveLength(4);
     expect(exercises[0].direction).toBe('target_to_base');
@@ -21,7 +28,7 @@ describe('generateLocalExercises', () => {
   });
 
   it('keeps fill_blank and sentence_completion in base_to_target mode', () => {
-    const exercises = generateLocalExercises(words, 'study', ['fill_blank', 'sentence_completion']);
+    const exercises = generateLocalExercises(words, distractorPool, 'study', ['fill_blank', 'sentence_completion']);
 
     expect(exercises[0].type).toBe('fill_blank');
     expect(exercises[0].direction).toBe('base_to_target');
@@ -29,5 +36,26 @@ describe('generateLocalExercises', () => {
     expect(exercises[1].type).toBe('sentence_completion');
     expect(exercises[1].direction).toBe('base_to_target');
     expect(exercises[1].options).toContain('adios');
+  });
+
+  it('uses a larger distractor pool instead of only recycling the active batch', () => {
+    const exercises = generateLocalExercises(words, distractorPool, 'home', ['multiple_choice', 'multiple_choice', 'sentence_completion', 'true_false']);
+    const optionTexts = exercises
+      .flatMap((exercise) => exercise.options || [])
+      .filter((option) => ['mesa', 'puerta', 'ventana', 'cocina'].includes(option));
+
+    expect(optionTexts.length).toBeGreaterThan(0);
+  });
+
+  it('upgrades fallback difficulty when a word is behaviorally challenging', () => {
+    const challengingWords = [
+      { id: '1', value: 'hola', meaning: 'hello', challengeScore: 0.82 },
+      { id: '2', value: 'adios', meaning: 'goodbye', challengeScore: 0.15 },
+    ];
+
+    const exercises = generateLocalExercises(challengingWords, distractorPool, 'travel', ['multiple_choice', 'sentence_completion']);
+
+    expect(exercises[0].difficulty).toBe('hard');
+    expect(exercises[1].difficulty).toBe('medium');
   });
 });

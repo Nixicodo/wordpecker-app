@@ -20,7 +20,8 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string)
 
 export class QuizAgentService {
   private buildCacheKey(
-    words: Array<{id: string, value: string, meaning: string}>,
+    words: Array<{id: string, value: string, meaning: string, challengeScore?: number}>,
+    distractorWords: Array<{id: string, value: string, meaning: string, challengeScore?: number}>,
     context: string,
     questionTypes: string[],
     baseLanguage: string,
@@ -36,18 +37,38 @@ export class QuizAgentService {
         id: word.id,
         value: word.value,
         meaning: word.meaning,
+        challengeScore: word.challengeScore,
+      })),
+      distractorWords: distractorWords.map((word) => ({
+        id: word.id,
+        value: word.value,
+        meaning: word.meaning,
       })),
     });
   }
 
+  private adjustDifficulty(baseDifficulty: ExerciseWithId['difficulty'], challengeScore = 0): ExerciseWithId['difficulty'] {
+    if (challengeScore >= 0.72) {
+      return 'hard';
+    }
+
+    if (challengeScore >= 0.45) {
+      return baseDifficulty === 'easy' ? 'medium' : baseDifficulty;
+    }
+
+    return baseDifficulty;
+  }
+
   private async generateQuestionsWithAi(
-    words: Array<{id: string, value: string, meaning: string}>,
+    words: Array<{id: string, value: string, meaning: string, challengeScore?: number}>,
+    distractorWords: Array<{id: string, value: string, meaning: string, challengeScore?: number}>,
     context: string,
     questionTypes: string[],
     baseLanguage: string,
     targetLanguage: string,
   ): Promise<ExerciseWithId[]> {
     const wordsContext = words.map(w => `${w.value}: ${w.meaning}`).join('\n');
+    const distractorContext = distractorWords.map(w => `${w.value}: ${w.meaning}`).join('\n');
     const prompt = `Create quiz questions for these ${targetLanguage} vocabulary words for ${baseLanguage}-speaking learners:
 
 ${wordsContext}
@@ -59,7 +80,13 @@ Create exactly ${words.length} questions (one per word).
 Mix the directions across the set:
 - Some questions must be target_to_base, where the learner interprets the ${targetLanguage} word in ${baseLanguage}
 - Some questions must be base_to_target, where the learner sees a ${baseLanguage} meaning and identifies the ${targetLanguage} word
-Do not make every question the same direction.`;
+Do not make every question the same direction.
+
+Distractor candidate pool:
+${distractorContext}
+
+Do not keep recycling the exact same tiny option set across every question if the candidate pool allows more variation.
+Words with higher challenge scores should receive tougher phrasing, stronger distractors, or a higher difficulty label.`;
 
     const result = await withTimeout(
       generateStructuredResult<ExerciseResultType>({
@@ -92,26 +119,28 @@ Do not make every question the same direction.`;
       const matchingWord = words.find(w => w.value === exercise.word);
       return {
         ...exercise,
+        difficulty: this.adjustDifficulty(exercise.difficulty, matchingWord?.challengeScore),
         wordId: matchingWord?.id || null
       };
     });
   }
 
   async generateQuestions(
-    words: Array<{id: string, value: string, meaning: string}>, 
+    words: Array<{id: string, value: string, meaning: string, challengeScore?: number}>,
+    distractorWords: Array<{id: string, value: string, meaning: string, challengeScore?: number}>,
     context: string, 
     questionTypes: string[],
     baseLanguage: string,
     targetLanguage: string
   ): Promise<ExerciseWithId[]> {
-    const cacheKey = this.buildCacheKey(words, context, questionTypes, baseLanguage, targetLanguage);
+    const cacheKey = this.buildCacheKey(words, distractorWords, context, questionTypes, baseLanguage, targetLanguage);
 
     return generationCache.getOrCreate(cacheKey, async () => {
       try {
-        return await this.generateQuestionsWithAi(words, context, questionTypes, baseLanguage, targetLanguage);
+        return await this.generateQuestionsWithAi(words, distractorWords, context, questionTypes, baseLanguage, targetLanguage);
       } catch (error) {
         console.error('Quiz generation fell back to local generator:', error);
-        return generateLocalExercises(words, context, questionTypes);
+        return generateLocalExercises(words, distractorWords, context, questionTypes);
       }
     }, CACHE_TTL_MS);
   }

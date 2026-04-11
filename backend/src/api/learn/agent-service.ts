@@ -20,7 +20,8 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string)
 
 export class LearnAgentService {
   private buildCacheKey(
-    words: Array<{id: string, value: string, meaning: string}>,
+    words: Array<{id: string, value: string, meaning: string, challengeScore?: number}>,
+    distractorWords: Array<{id: string, value: string, meaning: string, challengeScore?: number}>,
     context: string,
     exerciseTypes: string[],
     baseLanguage: string,
@@ -36,18 +37,39 @@ export class LearnAgentService {
         id: word.id,
         value: word.value,
         meaning: word.meaning,
+        challengeScore: word.challengeScore,
+      })),
+      distractorWords: distractorWords.map((word) => ({
+        id: word.id,
+        value: word.value,
+        meaning: word.meaning,
       })),
     });
   }
 
+  private adjustDifficulty(baseDifficulty: ExerciseWithId['difficulty'], challengeScore = 0): ExerciseWithId['difficulty'] {
+    if (challengeScore >= 0.72) {
+      return baseDifficulty === 'easy' ? 'medium' : 'hard';
+    }
+
+    if (challengeScore >= 0.45) {
+      if (baseDifficulty === 'easy') return 'medium';
+      return baseDifficulty;
+    }
+
+    return baseDifficulty;
+  }
+
   private async generateExercisesWithAi(
-    words: Array<{id: string, value: string, meaning: string}>,
+    words: Array<{id: string, value: string, meaning: string, challengeScore?: number}>,
+    distractorWords: Array<{id: string, value: string, meaning: string, challengeScore?: number}>,
     context: string,
     exerciseTypes: string[],
     baseLanguage: string,
     targetLanguage: string,
   ): Promise<ExerciseWithId[]> {
     const wordsContext = words.map(w => `${w.value}: ${w.meaning}`).join('\n');
+    const distractorContext = distractorWords.map(w => `${w.value}: ${w.meaning}`).join('\n');
     const prompt = `Create learning exercises for these ${targetLanguage} vocabulary words for ${baseLanguage}-speaking learners:
 
 ${wordsContext}
@@ -59,7 +81,13 @@ Create exactly ${words.length} exercises (one per word).
 Mix the directions across the set:
 - Some exercises must be target_to_base, where the learner interprets the ${targetLanguage} word in ${baseLanguage}
 - Some exercises must be base_to_target, where the learner sees a ${baseLanguage} meaning and identifies the ${targetLanguage} word
-Do not make every exercise the same direction.`;
+Do not make every exercise the same direction.
+
+Distractor candidate pool:
+${distractorContext}
+
+When building multiple-choice style options, do not reuse the exact same tiny option pool for every question unless the candidate pool is genuinely too small.
+If a word appears behaviorally challenging, prefer a higher exercise difficulty and stronger distractors.`;
 
     const result = await withTimeout(
       generateStructuredResult<ExerciseResultType>({
@@ -92,26 +120,28 @@ Do not make every exercise the same direction.`;
       const matchingWord = words.find(w => w.value === exercise.word);
       return {
         ...exercise,
+        difficulty: this.adjustDifficulty(exercise.difficulty, matchingWord?.challengeScore),
         wordId: matchingWord?.id || null
       };
     });
   }
 
   async generateExercises(
-    words: Array<{id: string, value: string, meaning: string}>, 
+    words: Array<{id: string, value: string, meaning: string, challengeScore?: number}>,
+    distractorWords: Array<{id: string, value: string, meaning: string, challengeScore?: number}>,
     context: string, 
     exerciseTypes: string[], 
     baseLanguage: string, 
     targetLanguage: string
   ): Promise<ExerciseWithId[]> {
-    const cacheKey = this.buildCacheKey(words, context, exerciseTypes, baseLanguage, targetLanguage);
+    const cacheKey = this.buildCacheKey(words, distractorWords, context, exerciseTypes, baseLanguage, targetLanguage);
 
     return generationCache.getOrCreate(cacheKey, async () => {
       try {
-        return await this.generateExercisesWithAi(words, context, exerciseTypes, baseLanguage, targetLanguage);
+        return await this.generateExercisesWithAi(words, distractorWords, context, exerciseTypes, baseLanguage, targetLanguage);
       } catch (error) {
         console.error('Learn exercise generation fell back to local generator:', error);
-        return generateLocalExercises(words, context, exerciseTypes);
+        return generateLocalExercises(words, distractorWords, context, exerciseTypes);
       }
     }, CACHE_TTL_MS);
   }

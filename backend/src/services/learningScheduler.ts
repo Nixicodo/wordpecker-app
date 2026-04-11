@@ -36,6 +36,7 @@ export type ScheduledWord = {
     retrievability: number;
     status: 'new' | 'learning' | 'review' | 'relearning';
     urgency: number;
+    challengeScore: number;
     behaviorRisk: number;
     hintUsageRate: number;
     averageResponseTimeMs?: number;
@@ -182,6 +183,26 @@ const buildWordReviewBehaviorMap = async (userId: string, listId: string) => {
   return { behaviorMap, recentLogs };
 };
 
+const computeWordChallengeScore = (
+  state: ILearningState,
+  retrievability: number,
+  behaviorStats: ReviewBehaviorStats
+) => {
+  const forgettingRisk = 1 - retrievability;
+  const wrongPressure = Math.min(1, state.consecutiveWrong / 3);
+  const lowStabilityPressure = Math.max(0, 1 - Math.min(1, state.stability / 8));
+  const stateDifficultyPressure = Math.min(1, state.difficulty / 10);
+
+  return Math.min(
+    1,
+    forgettingRisk * 0.3 +
+      wrongPressure * 0.2 +
+      lowStabilityPressure * 0.15 +
+      stateDifficultyPressure * 0.15 +
+      behaviorStats.behaviorRisk * 0.2
+  );
+};
+
 const computeUrgency = (
   state: ILearningState,
   retrievability: number,
@@ -260,6 +281,7 @@ export const scheduleWordsForList = async (
     const membership = getMembership(word, list._id.toString());
     const retrievability = scheduler.get_retrievability(cardFromState(state), now, false);
     const behaviorStats = behaviorMap.get(word._id.toString()) || emptyReviewBehaviorStats();
+    const challengeScore = computeWordChallengeScore(state, retrievability, behaviorStats);
     const urgency = computeUrgency(state, retrievability, now, behaviorStats);
 
     return {
@@ -278,6 +300,7 @@ export const scheduleWordsForList = async (
         retrievability,
         status: stateNameMap[state.state],
         urgency,
+        challengeScore,
         behaviorRisk: behaviorStats.behaviorRisk,
         hintUsageRate: behaviorStats.hintUsageRate,
         averageResponseTimeMs: behaviorStats.averageResponseTimeMs
@@ -293,7 +316,7 @@ export const scheduleWordsForList = async (
     return pool.slice(0, count);
   }
 
-  return pool.slice(0, count);
+  return pool;
 };
 
 export const settleReviewResults = async (
