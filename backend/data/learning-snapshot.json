@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "exportedAt": "2026-04-11T14:12:41.809Z",
+  "exportedAt": "2026-04-11T14:33:05.098Z",
   "data": {
     "lists": [
       {
@@ -110,6 +110,16 @@
         "kind": "custom",
         "created_at": "2026-04-10T19:03:49.620Z",
         "updated_at": "2026-04-10T19:53:02.300Z"
+      },
+      {
+        "id": "69da5aa0cd758e5e9fc5aa8d",
+        "name": "错题本",
+        "description": "自动收集你在其他词树里答错过的单词，作为独立复习词树持续调度。",
+        "context": "Mistake review across all word trees",
+        "kind": "mistake_book",
+        "systemKey": "mistake-book",
+        "created_at": "2026-04-11T14:28:48.721Z",
+        "updated_at": "2026-04-11T14:28:48.721Z"
       }
     ],
     "words": [
@@ -116436,15 +116446,15 @@
         "userId": "local-ai-test-user",
         "exerciseTypes": {
           "multiple_choice": true,
-          "fill_blank": true,
+          "fill_blank": false,
           "matching": true,
-          "true_false": true,
-          "sentence_completion": false
+          "true_false": false,
+          "sentence_completion": true
         },
-        "baseLanguage": "Simplified Chinese",
-        "targetLanguage": "Latin American Spanish",
+        "baseLanguage": "简体中文",
+        "targetLanguage": "拉丁美洲西班牙语",
         "createdAt": "2026-04-10T10:44:25.656Z",
-        "updatedAt": "2026-04-10T20:01:55.677Z"
+        "updatedAt": "2026-04-11T14:33:05.039Z"
       }
     ]
   }
