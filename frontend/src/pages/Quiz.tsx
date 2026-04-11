@@ -305,6 +305,7 @@ export const Quiz = () => {
 
       setCurrentReview({
         wordId: question.wordId || question.word,
+        wordIds: question.wordIds,
         correct: isValid,
         rating: recommendation.rating,
         questionType: question.type,
@@ -331,6 +332,7 @@ export const Quiz = () => {
         setRecommendationReason(recommendation.reason);
         setCurrentReview({
           wordId: question.wordId || question.word,
+          wordIds: question.wordIds,
           correct: fallbackCorrect,
           rating: recommendation.rating,
           questionType: question.type,
@@ -517,41 +519,6 @@ export const Quiz = () => {
           onHintShown={() => setUsedHint(true)}
         />
 
-        {isAnswered && (
-          <MotionBox
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            mt={6}
-            p={4}
-            bg={actualCorrectness ? 'purple.900' : 'red.900'}
-            borderRadius="lg"
-            textAlign="center"
-          >
-            <Text color="white" fontSize={{ base: 'lg', md: 'xl' }} fontWeight="bold">
-              {actualCorrectness
-                ? `${UI.correctMessage}${combo > 2 ? UI.comboExcellent : combo > 1 ? UI.comboNice : ''}`
-                : UI.wrongMessage}
-            </Text>
-
-            {(gameOver || currentQuestion + 1 >= totalQuestions) && sessionService && (
-              <VStack mt={4} spacing={2}>
-                <Divider />
-                <Text color="white" fontSize="lg" fontWeight="bold">
-                  {gameOver ? UI.gameOver : UI.quizComplete}
-                </Text>
-                <HStack spacing={4}>
-                  <Text color="green.500">{`${UI.statCorrect}\uff1a${sessionProgress?.stats.correct}`}</Text>
-                  <Text color="red.300">{`${UI.statIncorrect}\uff1a${sessionProgress?.stats.incorrect}`}</Text>
-                  <Text color="purple.300">{`${UI.statBestStreak}\uff1a${sessionProgress?.stats.maxStreak}`}</Text>
-                </HStack>
-                <Text color="yellow.300" fontSize="sm">
-                  {sessionService.getInsights().join(' ')}
-                </Text>
-              </VStack>
-            )}
-          </MotionBox>
-        )}
-
         <Flex justify="center" mt={8} gap={4}>
           {!isAnswered ? (
             <Button
@@ -621,6 +588,41 @@ export const Quiz = () => {
             </Button>
           )}
         </Flex>
+
+        {isAnswered && (
+          <MotionBox
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            mt={6}
+            p={4}
+            bg={actualCorrectness ? 'purple.900' : 'red.900'}
+            borderRadius="lg"
+            textAlign="center"
+          >
+            <Text color="white" fontSize={{ base: 'lg', md: 'xl' }} fontWeight="bold">
+              {actualCorrectness
+                ? `${UI.correctMessage}${combo > 2 ? UI.comboExcellent : combo > 1 ? UI.comboNice : ''}`
+                : UI.wrongMessage}
+            </Text>
+
+            {(gameOver || currentQuestion + 1 >= totalQuestions) && sessionService && (
+              <VStack mt={4} spacing={2}>
+                <Divider />
+                <Text color="white" fontSize="lg" fontWeight="bold">
+                  {gameOver ? UI.gameOver : UI.quizComplete}
+                </Text>
+                <HStack spacing={4}>
+                  <Text color="green.500">{`${UI.statCorrect}\uff1a${sessionProgress?.stats.correct}`}</Text>
+                  <Text color="red.300">{`${UI.statIncorrect}\uff1a${sessionProgress?.stats.incorrect}`}</Text>
+                  <Text color="purple.300">{`${UI.statBestStreak}\uff1a${sessionProgress?.stats.maxStreak}`}</Text>
+                </HStack>
+                <Text color="yellow.300" fontSize="sm">
+                  {sessionService.getInsights().join(' ')}
+                </Text>
+              </VStack>
+            )}
+          </MotionBox>
+        )}
 
         <QuestionAnsweredSupplement
           question={question}

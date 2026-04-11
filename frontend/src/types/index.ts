@@ -76,6 +76,7 @@ export interface SentenceExample {
 export interface Exercise {
   word: string;
   wordId?: string | null;
+  wordIds?: string[];
   type: 'multiple_choice' | 'fill_blank' | 'matching' | 'true_false' | 'sentence_completion';
   direction: 'target_to_base' | 'base_to_target';
   question: string;
@@ -91,6 +92,7 @@ export interface Exercise {
 export interface Question {
   word: string;
   wordId?: string | null;
+  wordIds?: string[];
   type: 'multiple_choice' | 'fill_blank' | 'matching' | 'true_false' | 'sentence_completion';
   direction: 'target_to_base' | 'base_to_target';
   question: string;
@@ -126,6 +128,7 @@ export type ReviewRating = 'again' | 'hard' | 'good' | 'easy';
 
 export interface ReviewSubmission {
   wordId: string;
+  wordIds?: string[];
   correct: boolean;
   rating: ReviewRating;
   questionType: string;

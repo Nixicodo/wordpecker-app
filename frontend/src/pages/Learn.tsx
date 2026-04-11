@@ -262,6 +262,7 @@ export const Learn = () => {
       if (exercise.wordId) {
         setCurrentReview({
           wordId: exercise.wordId as string,
+          wordIds: exercise.wordIds,
           correct: isValid,
           rating: recommendation.rating,
           questionType: exercise.type,
@@ -293,6 +294,7 @@ export const Learn = () => {
       if (exercise.wordId) {
         setCurrentReview({
           wordId: exercise.wordId as string,
+          wordIds: exercise.wordIds,
           correct: fallbackCorrect,
           rating: recommendation.rating,
           questionType: exercise.type,
@@ -478,31 +480,6 @@ export const Learn = () => {
           onHintShown={() => setUsedHint(true)}
         />
 
-        {isAnswered && (
-          <MotionBox
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            mt={6}
-            p={4}
-            bg={actualCorrectness ? 'green.500' : '#FF4D4F'}
-            borderRadius="lg"
-            textAlign="center"
-          >
-            <Text color="white" fontSize={{ base: 'lg', md: 'xl' }} fontWeight="bold">
-              {actualCorrectness ? UI.correct : UI.incorrect}
-            </Text>
-            <Text color="white" mt={2} fontSize={{ base: 'sm', md: 'md' }}>
-              {actualCorrectness
-                ? sessionProgress?.stats?.streak > 1
-                  ? `${UI.streakMessage} ${sessionProgress.stats.streak} ${UI.streakSuffix}`
-                  : UI.goodJob
-                : exercise.type === 'fill_blank' || exercise.type === 'matching'
-                  ? UI.checkAbove
-                  : `${UI.correctAnswerPrefix}${exercise.correctAnswer}`}
-            </Text>
-          </MotionBox>
-        )}
-
         <Flex justify="center" mt={8} gap={4}>
           {!isAnswered ? (
             <Button
@@ -569,6 +546,31 @@ export const Learn = () => {
             </Button>
           )}
         </Flex>
+
+        {isAnswered && (
+          <MotionBox
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            mt={6}
+            p={4}
+            bg={actualCorrectness ? 'green.500' : '#FF4D4F'}
+            borderRadius="lg"
+            textAlign="center"
+          >
+            <Text color="white" fontSize={{ base: 'lg', md: 'xl' }} fontWeight="bold">
+              {actualCorrectness ? UI.correct : UI.incorrect}
+            </Text>
+            <Text color="white" mt={2} fontSize={{ base: 'sm', md: 'md' }}>
+              {actualCorrectness
+                ? sessionProgress?.stats?.streak > 1
+                  ? `${UI.streakMessage} ${sessionProgress.stats.streak} ${UI.streakSuffix}`
+                  : UI.goodJob
+                : exercise.type === 'fill_blank' || exercise.type === 'matching'
+                  ? UI.checkAbove
+                  : `${UI.correctAnswerPrefix}${exercise.correctAnswer}`}
+            </Text>
+          </MotionBox>
+        )}
 
         <QuestionAnsweredSupplement
           question={exercise}
