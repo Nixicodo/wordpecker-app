@@ -185,6 +185,153 @@ describe('repository learning snapshot integration', () => {
     expect(persistedSnapshot.data.reviewLogs[0].rating).toBe('good');
   });
 
+  it('syncs a word learning state across lists and seeds newly linked lists from the existing record', async () => {
+    const [listOneResponse, listTwoResponse] = await Promise.all([
+      request(app)
+        .post('/api/lists')
+        .send({
+          name: '词树一',
+          description: '源学习记录',
+          context: 'Tree one'
+        }),
+      request(app)
+        .post('/api/lists')
+        .send({
+          name: '词树二',
+          description: '同步后的学习记录',
+          context: 'Tree two'
+        })
+    ]);
+
+    expect(listOneResponse.status).toBe(201);
+    expect(listTwoResponse.status).toBe(201);
+
+    const listOneId = listOneResponse.body.id as string;
+    const listTwoId = listTwoResponse.body.id as string;
+
+    const addToFirstListResponse = await request(app)
+      .post(`/api/lists/${listOneId}/words`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        word: 'camino',
+        meaning: '道路'
+      });
+
+    expect(addToFirstListResponse.status).toBe(201);
+    const wordId = addToFirstListResponse.body.id as string;
+
+    const reviewInFirstListResponse = await request(app)
+      .put(`/api/quiz/${listOneId}/reviews`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        results: [{ wordId, correct: true, rating: 'good', questionType: 'multiple_choice' }]
+      });
+
+    expect(reviewInFirstListResponse.status).toBe(200);
+
+    const addToSecondListResponse = await request(app)
+      .post(`/api/lists/${listTwoId}/words`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        word: 'camino',
+        meaning: '路线'
+      });
+
+    expect(addToSecondListResponse.status).toBe(201);
+    expect(addToSecondListResponse.body.reviewCount).toBe(1);
+
+    const secondListStateAfterLink = await LearningState.findOne({
+      userId: 'snapshot-user',
+      wordId,
+      listId: listTwoId
+    }).lean();
+
+    expect(secondListStateAfterLink?.reviewCount).toBe(1);
+    expect(secondListStateAfterLink?.lastSource).toBe('quiz');
+
+    const reviewInSecondListResponse = await request(app)
+      .put(`/api/learn/${listTwoId}/reviews`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        results: [{ wordId, correct: true, rating: 'easy', questionType: 'fill_blank' }]
+      });
+
+    expect(reviewInSecondListResponse.status).toBe(200);
+
+    const [firstListState, secondListState] = await Promise.all([
+      LearningState.findOne({ userId: 'snapshot-user', wordId, listId: listOneId }).lean(),
+      LearningState.findOne({ userId: 'snapshot-user', wordId, listId: listTwoId }).lean()
+    ]);
+
+    expect(firstListState?.reviewCount).toBe(2);
+    expect(secondListState?.reviewCount).toBe(2);
+    expect(firstListState?.lastRating).toBe('easy');
+    expect(secondListState?.lastRating).toBe('easy');
+    expect(firstListState?.dueAt.toISOString()).toBe(secondListState?.dueAt.toISOString());
+  });
+
+  it('settles matching reviews for all words included in the same question', async () => {
+    const listResponse = await request(app)
+      .post('/api/lists')
+      .send({
+        name: '配对题结算词树',
+        description: '验证配对题按 4 个词结算',
+        context: 'Matching settlement'
+      });
+
+    expect(listResponse.status).toBe(201);
+    const listId = listResponse.body.id as string;
+
+    const seedWords = [
+      { word: 'uno', meaning: '一' },
+      { word: 'dos', meaning: '二' },
+      { word: 'tres', meaning: '三' },
+      { word: 'cuatro', meaning: '四' }
+    ];
+
+    const importedWordIds: string[] = [];
+    for (const seedWord of seedWords) {
+      const addWordResponse = await request(app)
+        .post(`/api/lists/${listId}/words`)
+        .set('user-id', 'snapshot-user')
+        .send(seedWord);
+
+      expect(addWordResponse.status).toBe(201);
+      importedWordIds.push(addWordResponse.body.id as string);
+    }
+
+    const settleMatchingResponse = await request(app)
+      .put(`/api/quiz/${listId}/reviews`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        results: [{
+          wordId: importedWordIds[0],
+          wordIds: importedWordIds,
+          correct: true,
+          rating: 'good',
+          questionType: 'matching'
+        }]
+      });
+
+    expect(settleMatchingResponse.status).toBe(200);
+
+    const states = await LearningState.find({
+      userId: 'snapshot-user',
+      wordId: { $in: importedWordIds },
+      listId
+    }).lean();
+    const logs = await ReviewLog.find({
+      userId: 'snapshot-user',
+      wordId: { $in: importedWordIds },
+      listId
+    }).lean();
+
+    expect(states).toHaveLength(4);
+    expect(states.every((state) => state.reviewCount === 1)).toBe(true);
+    expect(logs).toHaveLength(4);
+    expect(logs.every((log) => log.questionType === 'matching')).toBe(true);
+  });
+
   it('creates and exposes the mistake book as a dedicated system list', async () => {
     const mistakeBookResponse = await request(app)
       .get('/api/lists/mistake-book')
@@ -271,7 +418,7 @@ describe('repository learning snapshot integration', () => {
       listId: mistakeBookId
     }).lean();
 
-    expect(recoveredMistakeState?.reviewCount).toBe(1);
+    expect(recoveredMistakeState?.reviewCount).toBe(2);
     expect(recoveredMistakeState?.consecutiveWrong).toBe(0);
   });
 });

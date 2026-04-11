@@ -56,6 +56,9 @@ describe('generateLocalExercises', () => {
     expect(exercises[0].pairs).not.toBeNull();
     expect(exercises[0].pairs?.length).toBeGreaterThanOrEqual(3);
     expect(exercises[0].pairs?.some((pair) => pair.word === 'hola')).toBe(true);
+    expect(exercises[0].wordIds).toBeDefined();
+    expect(exercises[0].wordIds).toHaveLength(exercises[0].pairs?.length || 0);
+    expect(exercises[0].wordIds).toContain('1');
   });
 
   it('upgrades fallback difficulty when a word is behaviorally challenging', () => {

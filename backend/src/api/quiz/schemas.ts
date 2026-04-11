@@ -12,6 +12,7 @@ export const updatePointsSchema = {
   body: z.object({
     results: z.array(z.object({
       wordId: z.string().refine(val => mongoose.Types.ObjectId.isValid(val), 'Invalid word ID'),
+      wordIds: z.array(z.string().refine(val => mongoose.Types.ObjectId.isValid(val), 'Invalid word ID')).optional(),
       correct: z.boolean(),
       rating: z.enum(['again', 'hard', 'good', 'easy']).optional(),
       questionType: z.string().optional(),

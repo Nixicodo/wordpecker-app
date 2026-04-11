@@ -206,6 +206,7 @@ function buildMatching(word: GeneratorWord, allWords: GeneratorWord[], context: 
     direction: 'target_to_base',
     word: word.value,
     wordId: word.id,
+    wordIds: pairWords.map((pairWord) => pairWord.id),
     question: `In the "${context}" context, match each target-language word with its correct meaning.`,
     options: null,
     optionLabels: null,

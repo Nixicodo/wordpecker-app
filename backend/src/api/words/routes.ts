@@ -10,6 +10,7 @@ import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
 import { assertMeaningEncoding } from '../../utils/meaningEncoding';
 import { LearningState } from '../learning-state/model';
 import { resolveUserId } from '../../config/learning';
+import { ensureLearningState } from '../../services/learningScheduler';
 import {
   listIdSchema,
   addWordSchema,
@@ -27,7 +28,9 @@ const getMembership = (word: Pick<IWord, 'listMemberships'>, listId: string) =>
 
 const transformWord = async (word: IWord, listId: string, userId: string) => {
   const membership = getMembership(word, listId);
-  const state = await LearningState.findOne({ userId, wordId: word._id, listId }).lean();
+  const state = membership
+    ? await ensureLearningState(userId, listId, word)
+    : await LearningState.findOne({ userId, wordId: word._id, listId }).lean();
 
   return {
     id: word._id.toString(),
@@ -265,7 +268,7 @@ router.get('/word/:wordId', validate(wordIdSchema), async (req, res) => {
       word.listMemberships.map(async (membership) => {
         const [list, state] = await Promise.all([
           WordList.findById(membership.listId).lean(),
-          LearningState.findOne({ userId, wordId: word._id, listId: membership.listId }).lean()
+          ensureLearningState(userId, membership.listId.toString(), word)
         ]);
 
         return {

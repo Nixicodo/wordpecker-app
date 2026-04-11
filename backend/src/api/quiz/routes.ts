@@ -104,6 +104,7 @@ router.put('/:listId/reviews', validate(updatePointsSchema), async (req, res) =>
     const source = isMistakeBookList(list) ? 'mistake_review' : 'quiz';
     const results = req.body.results.map((result: any) => ({
       wordId: result.wordId,
+      wordIds: result.wordIds,
       correct: result.correct,
       rating: result.rating || (result.correct ? 'good' : 'again'),
       questionType: result.questionType || 'unknown',

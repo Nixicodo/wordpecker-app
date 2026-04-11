@@ -13,6 +13,7 @@ const scheduler = fsrs({
 
 export type ReviewSubmission = {
   wordId: string;
+  wordIds?: string[];
   rating: ReviewRating;
   correct: boolean;
   questionType: string;
@@ -230,6 +231,93 @@ const computeUrgency = (
 const getMembership = (word: Pick<IWord, '_id' | 'value' | 'listMemberships'>, listId: string) =>
   word.listMemberships.find((membership) => membership.listId.toString() === listId);
 
+const copyLearningMetrics = (
+  target: ILearningState,
+  source: Pick<
+    ILearningState,
+    | 'dueAt'
+    | 'lastReviewedAt'
+    | 'stability'
+    | 'difficulty'
+    | 'scheduledDays'
+    | 'elapsedDays'
+    | 'reps'
+    | 'lapses'
+    | 'learningSteps'
+    | 'state'
+    | 'reviewCount'
+    | 'lapseCount'
+    | 'consecutiveCorrect'
+    | 'consecutiveWrong'
+    | 'lastRating'
+    | 'lastSource'
+  >
+) => {
+  target.dueAt = source.dueAt;
+  target.lastReviewedAt = source.lastReviewedAt;
+  target.stability = source.stability;
+  target.difficulty = source.difficulty;
+  target.scheduledDays = source.scheduledDays;
+  target.elapsedDays = source.elapsedDays;
+  target.reps = source.reps;
+  target.lapses = source.lapses;
+  target.learningSteps = source.learningSteps;
+  target.state = source.state;
+  target.reviewCount = source.reviewCount;
+  target.lapseCount = source.lapseCount;
+  target.consecutiveCorrect = source.consecutiveCorrect;
+  target.consecutiveWrong = source.consecutiveWrong;
+  target.lastRating = source.lastRating;
+  target.lastSource = source.lastSource;
+};
+
+const syncLearningStateAcrossMemberships = async (
+  userId: string,
+  word: Pick<IWord, '_id' | 'listMemberships'>,
+  sourceState: ILearningState
+) => {
+  await Promise.all(
+    word.listMemberships.map(async (membership) => {
+      const targetListId = membership.listId.toString();
+      if (targetListId === sourceState.listId.toString()) {
+        return;
+      }
+
+      const mirroredState = await LearningState.findOneAndUpdate(
+        { userId, wordId: word._id, listId: membership.listId },
+        {
+          $set: {
+            dueAt: sourceState.dueAt,
+            lastReviewedAt: sourceState.lastReviewedAt,
+            stability: sourceState.stability,
+            difficulty: sourceState.difficulty,
+            scheduledDays: sourceState.scheduledDays,
+            elapsedDays: sourceState.elapsedDays,
+            reps: sourceState.reps,
+            lapses: sourceState.lapses,
+            learningSteps: sourceState.learningSteps,
+            state: sourceState.state,
+            reviewCount: sourceState.reviewCount,
+            lapseCount: sourceState.lapseCount,
+            consecutiveCorrect: sourceState.consecutiveCorrect,
+            consecutiveWrong: sourceState.consecutiveWrong,
+            lastRating: sourceState.lastRating,
+            lastSource: sourceState.lastSource
+          },
+          $setOnInsert: {
+            userId,
+            wordId: word._id,
+            listId: membership.listId
+          }
+        },
+        { upsert: true, new: true }
+      );
+
+      return mirroredState;
+    })
+  );
+};
+
 export const ensureLearningState = async (
   userId: string,
   listId: string,
@@ -237,6 +325,32 @@ export const ensureLearningState = async (
 ) => {
   let state = await LearningState.findOne({ userId, listId, wordId: word._id });
   if (state) {
+    return state;
+  }
+
+  const existingState = await LearningState.findOne({ userId, wordId: word._id }).sort({ updatedAt: -1 });
+  if (existingState) {
+    state = await LearningState.create({
+      userId,
+      wordId: word._id,
+      listId: new mongoose.Types.ObjectId(listId),
+      dueAt: existingState.dueAt,
+      lastReviewedAt: existingState.lastReviewedAt,
+      stability: existingState.stability,
+      difficulty: existingState.difficulty,
+      scheduledDays: existingState.scheduledDays,
+      elapsedDays: existingState.elapsedDays,
+      reps: existingState.reps,
+      lapses: existingState.lapses,
+      learningSteps: existingState.learningSteps,
+      state: existingState.state,
+      reviewCount: existingState.reviewCount,
+      lapseCount: existingState.lapseCount,
+      consecutiveCorrect: existingState.consecutiveCorrect,
+      consecutiveWrong: existingState.consecutiveWrong,
+      lastRating: existingState.lastRating,
+      lastSource: existingState.lastSource
+    });
     return state;
   }
 
@@ -327,8 +441,15 @@ export const settleReviewResults = async (
 ) => {
   const now = new Date();
   const isMistakeBook = isMistakeBookList(list);
+  const normalizedResults = results.flatMap((result) => {
+    const wordIds = Array.from(new Set([result.wordId, ...(result.wordIds || [])].filter(Boolean)));
+    return wordIds.map((wordId) => ({
+      ...result,
+      wordId
+    }));
+  });
 
-  await Promise.all(results.map(async (result) => {
+  await Promise.all(normalizedResults.map(async (result) => {
     const word = await Word.findById(result.wordId);
     if (!word) {
       return;
@@ -342,16 +463,24 @@ export const settleReviewResults = async (
     const state = await ensureLearningState(userId, list._id.toString(), word);
     const next = scheduler.next(cardFromState(state), now, ratingMap[result.rating]);
 
-    state.dueAt = next.card.due;
-    state.lastReviewedAt = next.card.last_review;
-    state.stability = next.card.stability;
-    state.difficulty = next.card.difficulty;
-    state.scheduledDays = next.card.scheduled_days;
-    state.elapsedDays = next.card.elapsed_days;
-    state.reps = next.card.reps;
-    state.lapses = next.card.lapses;
-    state.learningSteps = next.card.learning_steps;
-    state.state = next.card.state;
+    copyLearningMetrics(state, {
+      dueAt: next.card.due,
+      lastReviewedAt: next.card.last_review,
+      stability: next.card.stability,
+      difficulty: next.card.difficulty,
+      scheduledDays: next.card.scheduled_days,
+      elapsedDays: next.card.elapsed_days,
+      reps: next.card.reps,
+      lapses: next.card.lapses,
+      learningSteps: next.card.learning_steps,
+      state: next.card.state,
+      reviewCount: state.reviewCount,
+      lapseCount: state.lapseCount,
+      consecutiveCorrect: state.consecutiveCorrect,
+      consecutiveWrong: state.consecutiveWrong,
+      lastRating: state.lastRating,
+      lastSource: state.lastSource
+    });
     state.reviewCount += 1;
     state.lapseCount += result.correct ? 0 : 1;
     state.consecutiveCorrect = result.correct ? state.consecutiveCorrect + 1 : 0;
@@ -374,6 +503,8 @@ export const settleReviewResults = async (
         answeredAt: now
       })
     ]);
+
+    await syncLearningStateAcrossMemberships(userId, word, state);
 
     if (!result.correct && !isMistakeBook) {
       await addWordToMistakeBook(userId, list._id.toString(), word);

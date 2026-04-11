@@ -67,6 +67,7 @@ export class QuizAgentService {
     baseLanguage: string,
     targetLanguage: string,
   ): Promise<ExerciseWithId[]> {
+    const allKnownWords = [...words, ...distractorWords];
     const wordsContext = words.map(w => `${w.value}: ${w.meaning}`).join('\n');
     const distractorContext = distractorWords.map(w => `${w.value}: ${w.meaning}`).join('\n');
     const prompt = `Create quiz questions for these ${targetLanguage} vocabulary words for ${baseLanguage}-speaking learners:
@@ -117,10 +118,16 @@ Words with higher challenge scores should receive tougher phrasing, stronger dis
 
     return result.exercises.map(exercise => {
       const matchingWord = words.find(w => w.value === exercise.word);
+      const matchingWordIds = exercise.type === 'matching' && exercise.pairs
+        ? exercise.pairs
+            .map((pair) => allKnownWords.find((candidate) => candidate.value === pair.word)?.id)
+            .filter((id): id is string => Boolean(id))
+        : undefined;
       return {
         ...exercise,
         difficulty: this.adjustDifficulty(exercise.difficulty, matchingWord?.challengeScore),
-        wordId: matchingWord?.id || null
+        wordId: matchingWord?.id || null,
+        wordIds: matchingWordIds
       };
     });
   }

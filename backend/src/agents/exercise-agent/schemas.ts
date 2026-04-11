@@ -26,4 +26,4 @@ export type ExerciseResultType = z.infer<typeof ExerciseResult>;
 export type ExerciseType = z.infer<typeof Exercise>;
 
 // Type for exercises with wordId added after generation
-export type ExerciseWithId = ExerciseType & { wordId: string | null };
+export type ExerciseWithId = ExerciseType & { wordId: string | null; wordIds?: string[] };

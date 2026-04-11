@@ -21,4 +21,4 @@ export type QuizResultType = z.infer<typeof QuizResult>;
 export type QuestionType = z.infer<typeof Question>;
 
 // Type for questions with wordId added after generation
-export type QuestionWithId = QuestionType & { wordId: string | null };
+export type QuestionWithId = QuestionType & { wordId: string | null; wordIds?: string[] };
