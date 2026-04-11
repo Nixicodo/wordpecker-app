@@ -244,7 +244,8 @@ export const Learn = () => {
         isCorrect: isValid,
         responseTimeMs: elapsedMs,
         usedHint,
-        difficulty: exercise.difficulty
+        difficulty: exercise.difficulty,
+        questionType: exercise.type
       });
 
       setActualCorrectness(isValid);
@@ -275,7 +276,8 @@ export const Learn = () => {
         isCorrect: fallbackCorrect,
         responseTimeMs: elapsedMs,
         usedHint,
-        difficulty: exercise.difficulty
+        difficulty: exercise.difficulty,
+        questionType: exercise.type
       });
       setActualCorrectness(fallbackCorrect);
       setIsAnswered(true);
@@ -575,6 +577,7 @@ export const Learn = () => {
             recommendedRating={recommendedRating}
             recommendationReason={recommendationReason}
             responseTimeMs={responseTimeMs}
+            questionType={exercise.type}
             usedHint={usedHint}
             onRatingChange={setSelectedRating}
           />

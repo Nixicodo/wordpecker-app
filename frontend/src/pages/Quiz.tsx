@@ -277,7 +277,8 @@ export const Quiz = () => {
         isCorrect: isValid,
         responseTimeMs: elapsedMs,
         usedHint,
-        difficulty: question.difficulty
+        difficulty: question.difficulty,
+        questionType: question.type
       });
 
       setActualCorrectness(isValid);
@@ -318,7 +319,8 @@ export const Quiz = () => {
           isCorrect: fallbackCorrect,
           responseTimeMs: elapsedMs,
           usedHint,
-          difficulty: question.difficulty
+          difficulty: question.difficulty,
+          questionType: question.type
         });
         setActualCorrectness(fallbackCorrect);
         setIsAnswered(true);
@@ -627,6 +629,7 @@ export const Quiz = () => {
             recommendedRating={recommendedRating}
             recommendationReason={recommendationReason}
             responseTimeMs={responseTimeMs}
+            questionType={question.type}
             usedHint={usedHint}
             onRatingChange={setSelectedRating}
           />

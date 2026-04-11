@@ -8,7 +8,7 @@ import {
   useColorModeValue
 } from '@chakra-ui/react';
 import { ReviewRating } from '../types';
-import { formatResponseTime } from '../utils/reviewRating';
+import { formatResponseTime, getRatedResponseTimeMs } from '../utils/reviewRating';
 
 const ratingMeta: Array<{
   value: Exclude<ReviewRating, 'again'>;
@@ -27,6 +27,7 @@ interface ReviewRatingPanelProps {
   recommendedRating: ReviewRating;
   recommendationReason: string;
   responseTimeMs: number;
+  questionType: string;
   usedHint: boolean;
   onRatingChange: (rating: ReviewRating) => void;
 }
@@ -37,12 +38,15 @@ export const ReviewRatingPanel: React.FC<ReviewRatingPanelProps> = ({
   recommendedRating,
   recommendationReason,
   responseTimeMs,
+  questionType,
   usedHint,
   onRatingChange
 }) => {
   const panelBg = useColorModeValue('blackAlpha.50', 'whiteAlpha.70');
   const metricBg = useColorModeValue('white', 'whiteAlpha.120');
   const bodyColor = useColorModeValue('gray.600', 'gray.300');
+  const ratedResponseTimeMs = getRatedResponseTimeMs(responseTimeMs, questionType);
+  const isMatchingQuestion = questionType === 'matching';
 
   return (
     <Box
@@ -57,10 +61,15 @@ export const ReviewRatingPanel: React.FC<ReviewRatingPanelProps> = ({
         <Text fontWeight="bold" color={isCorrect ? 'green.300' : 'red.300'}>
           {isCorrect ? '这题算得怎么样？' : '这题会重新安排复习'}
         </Text>
-        <HStack spacing={2}>
+        <HStack spacing={2} wrap="wrap">
           <Badge bg={metricBg} color="inherit" borderRadius="full" px={3} py={1}>
-            耗时 {formatResponseTime(responseTimeMs)}
+            {isMatchingQuestion ? '折算耗时' : '耗时'} {formatResponseTime(ratedResponseTimeMs)}
           </Badge>
+          {isMatchingQuestion && (
+            <Badge bg={metricBg} color="inherit" borderRadius="full" px={3} py={1}>
+              配对题 / 2.5
+            </Badge>
+          )}
           <Badge
             colorScheme={usedHint ? 'yellow' : 'gray'}
             variant={usedHint ? 'solid' : 'subtle'}
