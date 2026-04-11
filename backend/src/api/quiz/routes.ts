@@ -8,6 +8,7 @@ import { quizAgentService } from './agent-service';
 import { shuffleArray } from '../../utils/arrayUtils';
 import { listIdSchema, updatePointsSchema } from './schemas';
 import { applyLearnedPointResults, selectWeakWords } from '../../services/learningProgress';
+import { getUserLanguages } from '../../utils/getUserLanguages';
 
 const router = Router();
 
@@ -34,11 +35,17 @@ router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
     if (!words.length) return res.status(400).json({ message: 'List has no words' });
 
     const prioritizedWords = selectWeakWords(words, listId, words.length);
-    const questionTypes = await getQuestionTypes(req.headers['user-id'] as string);
+    const userId = req.headers['user-id'] as string;
+    const [questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
+      getQuestionTypes(userId),
+      getUserLanguages(userId || 'default')
+    ]);
     const questions = await quizAgentService.generateQuestions(
       prioritizedWords.slice(0, 5),
       list.context || 'General',
-      questionTypes
+      questionTypes,
+      baseLanguage,
+      targetLanguage
     );
 
     res.json({
@@ -64,8 +71,18 @@ router.post('/:listId/more', validate(listIdSchema), async (req, res) => {
     if (!words.length) return res.status(400).json({ message: 'List has no words' });
 
     const selected = shuffleArray(selectWeakWords(words, listId, Math.min(words.length, 10))).slice(0, 5);
-    const questionTypes = await getQuestionTypes(req.headers['user-id'] as string);
-    const questions = await quizAgentService.generateQuestions(selected, list.context || 'General', questionTypes);
+    const userId = req.headers['user-id'] as string;
+    const [questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
+      getQuestionTypes(userId),
+      getUserLanguages(userId || 'default')
+    ]);
+    const questions = await quizAgentService.generateQuestions(
+      selected,
+      list.context || 'General',
+      questionTypes,
+      baseLanguage,
+      targetLanguage
+    );
 
     res.json({ questions });
   } catch (error) {

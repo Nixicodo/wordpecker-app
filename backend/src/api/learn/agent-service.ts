@@ -55,7 +55,11 @@ ${wordsContext}
 Learning Context: "${context}"
 
 Use these exercise types: ${exerciseTypes.join(', ')}
-Create exactly ${words.length} exercises (one per word).`;
+Create exactly ${words.length} exercises (one per word).
+Mix the directions across the set:
+- Some exercises must be target_to_base, where the learner interprets the ${targetLanguage} word in ${baseLanguage}
+- Some exercises must be base_to_target, where the learner sees a ${baseLanguage} meaning and identifies the ${targetLanguage} word
+Do not make every exercise the same direction.`;
 
     const result = await withTimeout(
       generateStructuredResult<ExerciseResultType>({
@@ -65,6 +69,7 @@ Create exactly ${words.length} exercises (one per word).`;
         schemaHint: `{
   "exercises": Array<{
     "type": "multiple_choice" | "fill_blank" | "true_false" | "sentence_completion" | "matching",
+    "direction": "target_to_base" | "base_to_target",
     "word": string,
     "question": string,
     "options": string[] | null,

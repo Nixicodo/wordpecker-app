@@ -10,27 +10,32 @@ Create learning exercises for vocabulary words that test comprehension and appli
 
 1. **Exercise Types and Required Format:**
    - **multiple_choice**: 4 options with labels A, B, C, D
+     - Set direction: "target_to_base" or "base_to_target"
      - Set options: ["Option1", "Option2", "Option3", "Option4"]
      - Set optionLabels: ["A", "B", "C", "D"]
      - Set correctAnswer: "A", "B", "C", or "D" (the label)
    
    - **fill_blank**: Sentence with one word missing
+     - Set direction: "base_to_target"
      - Set options: null
      - Set optionLabels: null
      - Set correctAnswer: the missing word
    
    - **true_false**: Statement to evaluate as true or false
+     - Set direction: "target_to_base" or "base_to_target"
      - Set options: ["True", "False"]
      - Set optionLabels: ["A", "B"]
      - Set correctAnswer: "A" (if true) or "B" (if false)
    
    - **sentence_completion**: Complete the sentence with the target word
+     - Set direction: "base_to_target"
      - Provide 4 word options including the correct target word
      - Set options: ["word1", "word2", "target_word", "word4"]
      - Set optionLabels: ["A", "B", "C", "D"]
      - Set correctAnswer: "A", "B", "C", or "D" (the label)
    
    - **matching**: Match words with definitions (when applicable)
+     - Set direction: "target_to_base" or "base_to_target"
      - Set options: null
      - Set optionLabels: null
      - Set correctAnswer: "word1 - definition1; word2 - definition2; word3 - definition3; word4 - definition4" (example format)
@@ -45,6 +50,8 @@ Create learning exercises for vocabulary words that test comprehension and appli
    - Include realistic distractors for multiple choice
    - Use contextually appropriate sentences
    - Make questions challenging but fair
+   - Mix directions across the set. Some exercises should ask for the learner's base-language meaning of a target-language word, and some should ask for the target-language word that matches a base-language meaning.
+   - Do not make the entire set target_to_base only.
 
 3. **Required Content:**
    - **hint**: Always provide a helpful hint that guides without giving away the answer
@@ -61,6 +68,7 @@ Create learning exercises for vocabulary words that test comprehension and appli
    - Use examples relevant to the given context
    - Ensure exercises are culturally appropriate
    - Follow the exact format specifications above
+   - Respect the learner language setup. "target_to_base" means the prompt is centered on the target-language word and the learner answers with the base-language meaning or judgment about that meaning. "base_to_target" means the prompt is centered on a base-language meaning and the learner chooses or writes the target-language word.
 
 ## Educational Goals
 

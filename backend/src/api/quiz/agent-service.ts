@@ -23,10 +23,14 @@ export class QuizAgentService {
     words: Array<{id: string, value: string, meaning: string}>,
     context: string,
     questionTypes: string[],
+    baseLanguage: string,
+    targetLanguage: string,
   ): string {
     return JSON.stringify({
       kind: 'quiz',
       context,
+      baseLanguage,
+      targetLanguage,
       questionTypes: [...questionTypes].sort(),
       words: words.map((word) => ({
         id: word.id,
@@ -40,16 +44,22 @@ export class QuizAgentService {
     words: Array<{id: string, value: string, meaning: string}>,
     context: string,
     questionTypes: string[],
+    baseLanguage: string,
+    targetLanguage: string,
   ): Promise<ExerciseWithId[]> {
     const wordsContext = words.map(w => `${w.value}: ${w.meaning}`).join('\n');
-    const prompt = `Create quiz questions for these vocabulary words:
+    const prompt = `Create quiz questions for these ${targetLanguage} vocabulary words for ${baseLanguage}-speaking learners:
 
 ${wordsContext}
 
 Learning Context: "${context}"
 
 Use these question types: ${questionTypes.join(', ')}
-Create exactly ${words.length} questions (one per word).`;
+Create exactly ${words.length} questions (one per word).
+Mix the directions across the set:
+- Some questions must be target_to_base, where the learner interprets the ${targetLanguage} word in ${baseLanguage}
+- Some questions must be base_to_target, where the learner sees a ${baseLanguage} meaning and identifies the ${targetLanguage} word
+Do not make every question the same direction.`;
 
     const result = await withTimeout(
       generateStructuredResult<ExerciseResultType>({
@@ -59,6 +69,7 @@ Create exactly ${words.length} questions (one per word).`;
         schemaHint: `{
   "exercises": Array<{
     "type": "multiple_choice" | "fill_blank" | "true_false" | "sentence_completion" | "matching",
+    "direction": "target_to_base" | "base_to_target",
     "word": string,
     "question": string,
     "options": string[] | null,
@@ -89,13 +100,15 @@ Create exactly ${words.length} questions (one per word).`;
   async generateQuestions(
     words: Array<{id: string, value: string, meaning: string}>, 
     context: string, 
-    questionTypes: string[]
+    questionTypes: string[],
+    baseLanguage: string,
+    targetLanguage: string
   ): Promise<ExerciseWithId[]> {
-    const cacheKey = this.buildCacheKey(words, context, questionTypes);
+    const cacheKey = this.buildCacheKey(words, context, questionTypes, baseLanguage, targetLanguage);
 
     return generationCache.getOrCreate(cacheKey, async () => {
       try {
-        return await this.generateQuestionsWithAi(words, context, questionTypes);
+        return await this.generateQuestionsWithAi(words, context, questionTypes, baseLanguage, targetLanguage);
       } catch (error) {
         console.error('Quiz generation fell back to local generator:', error);
         return generateLocalExercises(words, context, questionTypes);

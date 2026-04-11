@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const Question = z.object({
   type: z.enum(['multiple_choice', 'fill_blank', 'true_false', 'matching', 'sentence_completion']),
+  direction: z.enum(['target_to_base', 'base_to_target']).describe('Whether the question asks from target language to base language, or the reverse'),
   word: z.string().describe('The target word'),
   question: z.string().describe('The quiz question'),
   options: z.array(z.string()).nullable().describe('Answer options (null if not applicable)'),
