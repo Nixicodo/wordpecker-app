@@ -1,5 +1,21 @@
 const countMatches = (value: string, pattern: RegExp) => (value.match(pattern) || []).length;
 
+const PLACEHOLDER_MEANING_PATTERN = /^\?+[\uFF08(](.+)[\uFF09)]$/u;
+
+export const extractPlaceholderMeaningEnglish = (meaning?: string | null) => {
+  if (!meaning) {
+    return null;
+  }
+
+  const trimmed = meaning.trim();
+  if (!trimmed) {
+    return null;
+  }
+
+  const match = trimmed.match(PLACEHOLDER_MEANING_PATTERN);
+  return match?.[1]?.trim() || null;
+};
+
 export const isLikelyCorruptedMeaning = (meaning?: string | null) => {
   if (!meaning) {
     return false;
@@ -10,7 +26,11 @@ export const isLikelyCorruptedMeaning = (meaning?: string | null) => {
     return false;
   }
 
-  if (trimmed.includes('�')) {
+  if (PLACEHOLDER_MEANING_PATTERN.test(trimmed)) {
+    return true;
+  }
+
+  if (trimmed.includes('\uFFFD')) {
     return true;
   }
 
@@ -26,7 +46,7 @@ export const isLikelyCorruptedMeaning = (meaning?: string | null) => {
 
   const nonAsciiCount = countMatches(trimmed, /[^\x00-\x7F]/g);
   const hasRepeatedQuestionMarks = /\?{2,}/.test(trimmed);
-  const hasQuestionMarksAroundSeparators = /(\?\/|\/\?|\?\(|\)\?)/.test(trimmed);
+  const hasQuestionMarksAroundSeparators = /(\?\/|\/\?|\?[\(\uFF08]|[\)\uFF09]\?)/u.test(trimmed);
   const hasQuestionMarksNextToWords = /(?:^|[^A-Za-z])\?[A-Za-z]|[A-Za-z]\?(?:$|[^A-Za-z])/.test(trimmed);
 
   return (

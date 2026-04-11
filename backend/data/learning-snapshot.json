@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "exportedAt": "2026-04-11T16:36:37.846Z",
+  "exportedAt": "2026-04-11T16:42:05.967Z",
   "data": {
     "lists": [
       {
@@ -669,13 +669,13 @@
           },
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "??（family）",
+            "meaning": "家庭（family）",
             "addedAt": "2026-04-10T19:06:44.573Z",
-            "updatedAt": "2026-04-10T20:03:35.904Z"
+            "updatedAt": "2026-04-11T16:41:41.825Z"
           }
         ],
         "created_at": "2026-04-10T19:06:44.573Z",
-        "updated_at": "2026-04-11T14:12:36.032Z"
+        "updated_at": "2026-04-11T16:41:41.828Z"
       },
       {
         "id": "69d94a44bb9361c6f06754e1",
@@ -889,13 +889,13 @@
           },
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "??（world）",
+            "meaning": "世界（world）",
             "addedAt": "2026-04-10T19:06:44.615Z",
-            "updatedAt": "2026-04-10T20:04:44.447Z"
+            "updatedAt": "2026-04-11T16:41:41.837Z"
           }
         ],
         "created_at": "2026-04-10T19:06:44.615Z",
-        "updated_at": "2026-04-11T14:12:36.088Z"
+        "updated_at": "2026-04-11T16:41:41.837Z"
       },
       {
         "id": "69d94a44bb9361c6f0675518",
@@ -979,13 +979,13 @@
           },
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "??（word）",
+            "meaning": "单词（word）",
             "addedAt": "2026-04-10T19:06:44.625Z",
-            "updatedAt": "2026-04-10T20:04:44.454Z"
+            "updatedAt": "2026-04-11T16:41:41.839Z"
           }
         ],
         "created_at": "2026-04-10T19:06:44.625Z",
-        "updated_at": "2026-04-11T14:12:36.108Z"
+        "updated_at": "2026-04-11T16:41:41.839Z"
       },
       {
         "id": "69d94a44bb9361c6f067552a",
@@ -1095,13 +1095,13 @@
           },
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "??（question）",
+            "meaning": "问题（question）",
             "addedAt": "2026-04-10T19:06:44.639Z",
-            "updatedAt": "2026-04-10T20:04:44.462Z"
+            "updatedAt": "2026-04-11T16:41:41.841Z"
           }
         ],
         "created_at": "2026-04-10T19:06:44.639Z",
-        "updated_at": "2026-04-11T14:12:36.134Z"
+        "updated_at": "2026-04-11T16:41:41.841Z"
       },
       {
         "id": "69d94a44bb9361c6f0675549",
@@ -1115,13 +1115,13 @@
           },
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "??（answer）",
+            "meaning": "回答（answer）",
             "addedAt": "2026-04-10T19:06:44.646Z",
-            "updatedAt": "2026-04-10T20:04:44.463Z"
+            "updatedAt": "2026-04-11T16:41:41.842Z"
           }
         ],
         "created_at": "2026-04-10T19:06:44.646Z",
-        "updated_at": "2026-04-11T14:12:36.139Z"
+        "updated_at": "2026-04-11T16:41:41.843Z"
       },
       {
         "id": "69d94a44bb9361c6f067554c",
@@ -1321,13 +1321,13 @@
           },
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "??（university）",
+            "meaning": "大学（university）",
             "addedAt": "2026-04-10T19:06:44.679Z",
-            "updatedAt": "2026-04-10T20:04:44.483Z"
+            "updatedAt": "2026-04-11T16:41:41.844Z"
           }
         ],
         "created_at": "2026-04-10T19:06:44.679Z",
-        "updated_at": "2026-04-11T14:12:36.181Z"
+        "updated_at": "2026-04-11T16:41:41.844Z"
       },
       {
         "id": "69d94a44bb9361c6f067558b",
@@ -1397,13 +1397,13 @@
           },
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "??（visa）",
+            "meaning": "签证（visa）",
             "addedAt": "2026-04-10T19:06:44.687Z",
-            "updatedAt": "2026-04-10T20:04:44.489Z"
+            "updatedAt": "2026-04-11T16:41:41.845Z"
           }
         ],
         "created_at": "2026-04-10T19:06:44.687Z",
-        "updated_at": "2026-04-11T14:12:36.194Z"
+        "updated_at": "2026-04-11T16:41:41.846Z"
       },
       {
         "id": "69d9551b86b8d64047d17d16",
@@ -4791,13 +4791,13 @@
         "listMemberships": [
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "??（dad）",
+            "meaning": "爸爸（dad）",
             "addedAt": "2026-04-10T19:52:59.503Z",
-            "updatedAt": "2026-04-10T19:52:59.503Z"
+            "updatedAt": "2026-04-11T16:41:41.847Z"
           }
         ],
         "created_at": "2026-04-10T19:52:59.503Z",
-        "updated_at": "2026-04-11T14:12:36.839Z"
+        "updated_at": "2026-04-11T16:41:41.847Z"
       },
       {
         "id": "69d9551b86b8d64047d17f6a",
@@ -4805,13 +4805,13 @@
         "listMemberships": [
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "??（mom）",
+            "meaning": "妈妈（mom）",
             "addedAt": "2026-04-10T19:52:59.504Z",
-            "updatedAt": "2026-04-10T19:52:59.504Z"
+            "updatedAt": "2026-04-11T16:41:41.848Z"
           }
         ],
         "created_at": "2026-04-10T19:52:59.504Z",
-        "updated_at": "2026-04-11T14:12:36.841Z"
+        "updated_at": "2026-04-11T16:41:41.848Z"
       },
       {
         "id": "69d9551b86b8d64047d17f6d",
@@ -4819,13 +4819,13 @@
         "listMemberships": [
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "?（ticket）",
+            "meaning": "票（ticket）",
             "addedAt": "2026-04-10T19:52:59.506Z",
-            "updatedAt": "2026-04-10T19:52:59.506Z"
+            "updatedAt": "2026-04-11T16:41:41.849Z"
           }
         ],
         "created_at": "2026-04-10T19:52:59.506Z",
-        "updated_at": "2026-04-11T14:12:36.843Z"
+        "updated_at": "2026-04-11T16:41:41.849Z"
       },
       {
         "id": "69d9551b86b8d64047d17f70",
@@ -4833,13 +4833,13 @@
         "listMemberships": [
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "??（passport）",
+            "meaning": "护照（passport）",
             "addedAt": "2026-04-10T19:52:59.508Z",
-            "updatedAt": "2026-04-10T19:52:59.508Z"
+            "updatedAt": "2026-04-11T16:41:41.850Z"
           }
         ],
         "created_at": "2026-04-10T19:52:59.508Z",
-        "updated_at": "2026-04-11T14:12:36.845Z"
+        "updated_at": "2026-04-11T16:41:41.850Z"
       },
       {
         "id": "69d9551b86b8d64047d17f75",
@@ -4847,13 +4847,13 @@
         "listMemberships": [
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "??（map）",
+            "meaning": "地图（map）",
             "addedAt": "2026-04-10T19:52:59.511Z",
-            "updatedAt": "2026-04-10T19:52:59.511Z"
+            "updatedAt": "2026-04-11T16:41:41.851Z"
           }
         ],
         "created_at": "2026-04-10T19:52:59.511Z",
-        "updated_at": "2026-04-11T14:12:36.848Z"
+        "updated_at": "2026-04-11T16:41:41.851Z"
       },
       {
         "id": "69d9551b86b8d64047d17f7a",
@@ -4861,13 +4861,13 @@
         "listMemberships": [
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "??（doctor）",
+            "meaning": "医生（doctor）",
             "addedAt": "2026-04-10T19:52:59.513Z",
-            "updatedAt": "2026-04-10T19:52:59.513Z"
+            "updatedAt": "2026-04-11T16:41:41.852Z"
           }
         ],
         "created_at": "2026-04-10T19:52:59.513Z",
-        "updated_at": "2026-04-11T14:12:36.850Z"
+        "updated_at": "2026-04-11T16:41:41.852Z"
       },
       {
         "id": "69d9551b86b8d64047d17f7d",
@@ -4875,13 +4875,13 @@
         "listMemberships": [
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "??（pharmacy）",
+            "meaning": "药店（pharmacy）",
             "addedAt": "2026-04-10T19:52:59.515Z",
-            "updatedAt": "2026-04-10T19:52:59.515Z"
+            "updatedAt": "2026-04-11T16:41:41.853Z"
           }
         ],
         "created_at": "2026-04-10T19:52:59.515Z",
-        "updated_at": "2026-04-11T14:12:36.853Z"
+        "updated_at": "2026-04-11T16:41:41.853Z"
       },
       {
         "id": "69d9551b86b8d64047d17f80",
@@ -4889,13 +4889,13 @@
         "listMemberships": [
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "??（police）",
+            "meaning": "警察（police）",
             "addedAt": "2026-04-10T19:52:59.516Z",
-            "updatedAt": "2026-04-10T19:52:59.516Z"
+            "updatedAt": "2026-04-11T16:41:41.854Z"
           }
         ],
         "created_at": "2026-04-10T19:52:59.516Z",
-        "updated_at": "2026-04-11T14:12:36.856Z"
+        "updated_at": "2026-04-11T16:41:41.854Z"
       },
       {
         "id": "69d9551b86b8d64047d17f83",
@@ -4903,13 +4903,13 @@
         "listMemberships": [
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "??（airplane）",
+            "meaning": "飞机（airplane）",
             "addedAt": "2026-04-10T19:52:59.517Z",
-            "updatedAt": "2026-04-10T19:52:59.517Z"
+            "updatedAt": "2026-04-11T16:41:41.854Z"
           }
         ],
         "created_at": "2026-04-10T19:52:59.517Z",
-        "updated_at": "2026-04-11T14:12:36.858Z"
+        "updated_at": "2026-04-11T16:41:41.855Z"
       },
       {
         "id": "69d9551b86b8d64047d17f86",
@@ -4917,13 +4917,13 @@
         "listMemberships": [
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "???（bus）",
+            "meaning": "公交车（bus）",
             "addedAt": "2026-04-10T19:52:59.518Z",
-            "updatedAt": "2026-04-10T19:52:59.518Z"
+            "updatedAt": "2026-04-11T16:41:41.855Z"
           }
         ],
         "created_at": "2026-04-10T19:52:59.518Z",
-        "updated_at": "2026-04-11T14:12:36.861Z"
+        "updated_at": "2026-04-11T16:41:41.855Z"
       },
       {
         "id": "69d9551b86b8d64047d17f89",
@@ -4931,13 +4931,13 @@
         "listMemberships": [
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "???（taxi）",
+            "meaning": "出租车（taxi）",
             "addedAt": "2026-04-10T19:52:59.519Z",
-            "updatedAt": "2026-04-10T19:52:59.519Z"
+            "updatedAt": "2026-04-11T16:41:41.856Z"
           }
         ],
         "created_at": "2026-04-10T19:52:59.519Z",
-        "updated_at": "2026-04-11T14:12:36.863Z"
+        "updated_at": "2026-04-11T16:41:41.856Z"
       },
       {
         "id": "69d9551b86b8d64047d17f8c",
@@ -4945,13 +4945,13 @@
         "listMemberships": [
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "??（station）",
+            "meaning": "车站（station）",
             "addedAt": "2026-04-10T19:52:59.521Z",
-            "updatedAt": "2026-04-10T19:52:59.521Z"
+            "updatedAt": "2026-04-11T16:41:41.857Z"
           }
         ],
         "created_at": "2026-04-10T19:52:59.521Z",
-        "updated_at": "2026-04-11T14:12:36.865Z"
+        "updated_at": "2026-04-11T16:41:41.857Z"
       },
       {
         "id": "69d9551b86b8d64047d17f8f",
@@ -4959,13 +4959,13 @@
         "listMemberships": [
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "??（telephone）",
+            "meaning": "电话（telephone）",
             "addedAt": "2026-04-10T19:52:59.522Z",
-            "updatedAt": "2026-04-10T19:52:59.522Z"
+            "updatedAt": "2026-04-11T16:41:41.858Z"
           }
         ],
         "created_at": "2026-04-10T19:52:59.522Z",
-        "updated_at": "2026-04-11T14:12:36.867Z"
+        "updated_at": "2026-04-11T16:41:41.858Z"
       },
       {
         "id": "69d9551b86b8d64047d17f98",
@@ -4973,13 +4973,13 @@
         "listMemberships": [
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "??（photo）",
+            "meaning": "照片（photo）",
             "addedAt": "2026-04-10T19:52:59.528Z",
-            "updatedAt": "2026-04-10T19:52:59.528Z"
+            "updatedAt": "2026-04-11T16:41:41.859Z"
           }
         ],
         "created_at": "2026-04-10T19:52:59.528Z",
-        "updated_at": "2026-04-11T14:12:36.869Z"
+        "updated_at": "2026-04-11T16:41:41.859Z"
       },
       {
         "id": "69d9551b86b8d64047d17f9b",
@@ -4987,13 +4987,13 @@
         "listMemberships": [
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "??（music）",
+            "meaning": "音乐（music）",
             "addedAt": "2026-04-10T19:52:59.529Z",
-            "updatedAt": "2026-04-10T19:52:59.529Z"
+            "updatedAt": "2026-04-11T16:41:41.860Z"
           }
         ],
         "created_at": "2026-04-10T19:52:59.529Z",
-        "updated_at": "2026-04-11T14:12:36.871Z"
+        "updated_at": "2026-04-11T16:41:41.860Z"
       },
       {
         "id": "69d9551b86b8d64047d17f9e",
@@ -5001,13 +5001,13 @@
         "listMemberships": [
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "??（night）",
+            "meaning": "夜晚（night）",
             "addedAt": "2026-04-10T19:52:59.530Z",
-            "updatedAt": "2026-04-10T19:52:59.530Z"
+            "updatedAt": "2026-04-11T16:41:41.861Z"
           }
         ],
         "created_at": "2026-04-10T19:52:59.530Z",
-        "updated_at": "2026-04-11T14:12:36.873Z"
+        "updated_at": "2026-04-11T16:41:41.861Z"
       },
       {
         "id": "69d9551b86b8d64047d17fa1",
@@ -5015,13 +5015,13 @@
         "listMemberships": [
           {
             "listId": "69d9499325168ea64d2921bf",
-            "meaning": "??（week）",
+            "meaning": "星期（week）",
             "addedAt": "2026-04-10T19:52:59.532Z",
-            "updatedAt": "2026-04-10T19:52:59.532Z"
+            "updatedAt": "2026-04-11T16:41:41.861Z"
           }
         ],
         "created_at": "2026-04-10T19:52:59.532Z",
-        "updated_at": "2026-04-11T14:12:36.875Z"
+        "updated_at": "2026-04-11T16:41:41.862Z"
       },
       {
         "id": "69d9551b86b8d64047d17fa5",
