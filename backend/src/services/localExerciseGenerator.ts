@@ -188,11 +188,36 @@ function buildSentenceCompletion(word: GeneratorWord, allWords: GeneratorWord[],
   };
 }
 
-function resolveType(rawType: string): ExerciseType['type'] {
-  if (rawType === 'matching') {
-    return 'multiple_choice';
-  }
+function buildMatching(word: GeneratorWord, allWords: GeneratorWord[], context: string): ExerciseWithId {
+  const additionalPairs = shuffleArray(
+    allWords.filter((candidate) => candidate.id !== word.id)
+  ).slice(0, 3);
+  const pairWords = shuffleArray([word, ...additionalPairs]).slice(0, 4);
+  const pairs = pairWords.map((pairWord) => ({
+    word: pairWord.value,
+    definition: normalizeMeaning(pairWord.meaning, pairWord.value)
+  }));
+  const correctAnswer = pairs
+    .map((pair) => `${pair.word}:${pair.definition}`)
+    .join('|');
 
+  return {
+    type: 'matching',
+    direction: 'target_to_base',
+    word: word.value,
+    wordId: word.id,
+    question: `In the "${context}" context, match each target-language word with its correct meaning.`,
+    options: null,
+    optionLabels: null,
+    correctAnswer,
+    difficulty: upgradeDifficulty(pairWords.length >= 4 ? 'medium' : 'easy', word.challengeScore),
+    hint: 'Start with the pair you are most confident about, then eliminate the remaining definitions.',
+    feedback: `Review how "${word.value}" and the other words connect to their meanings in this context.`,
+    pairs,
+  };
+}
+
+function resolveType(rawType: string): ExerciseType['type'] {
   return rawType as ExerciseType['type'];
 }
 
@@ -217,6 +242,8 @@ export function generateLocalExercises(
         return buildTrueFalse(word, distractorPool, context, direction);
       case 'sentence_completion':
         return buildSentenceCompletion(word, distractorPool, context);
+      case 'matching':
+        return buildMatching(word, distractorPool, context);
       case 'multiple_choice':
       default:
         return buildMultipleChoice(word, distractorPool, context, direction);

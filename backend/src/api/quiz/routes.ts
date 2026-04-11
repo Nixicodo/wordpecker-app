@@ -5,22 +5,19 @@ import { UserPreferences } from '../preferences/model';
 import { QuestionType } from '../../types';
 import { quizAgentService } from './agent-service';
 import { listIdSchema, updatePointsSchema } from './schemas';
-import { applyReviewResults, selectScheduledWords } from '../../services/learningProgress';
+import { applyReviewResults } from '../../services/learningProgress';
 import { getUserLanguages } from '../../utils/getUserLanguages';
-import { shuffleArray } from '../../utils/arrayUtils';
 import { resolveUserId } from '../../config/learning';
 import { isMistakeBookList } from '../../services/mistakeBook';
 import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
+import { resolveEnabledQuestionTypes } from '../../services/exerciseTypePreferences';
+import { selectGenerationWordPool } from '../../services/exerciseGenerationPool';
 
 const router = Router();
 
 const getQuestionTypes = async (userId: string): Promise<QuestionType[]> => {
   const preferences = await UserPreferences.findOne({ userId });
-  return preferences
-    ? Object.entries(preferences.exerciseTypes)
-        .filter(([_, enabled]) => enabled)
-        .map(([type]) => type as QuestionType)
-    : ['multiple_choice', 'fill_blank', 'true_false', 'sentence_completion'];
+  return resolveEnabledQuestionTypes(preferences?.exerciseTypes);
 };
 
 router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
@@ -31,21 +28,19 @@ router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
     if (!list) return res.status(404).json({ message: 'List not found' });
 
     const userId = resolveUserId(req.headers['user-id']);
-    const [scheduledCandidates, questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
-      selectScheduledWords(userId, listId, 5, 12),
+    const [{ scheduledWords, generationPool }, questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
+      selectGenerationWordPool(userId, listId),
       getQuestionTypes(userId),
       getUserLanguages(userId)
     ]);
 
-    if (!scheduledCandidates.length) {
+    if (!scheduledWords.length) {
       return res.status(400).json({ message: 'List has no words' });
     }
 
-    const scheduledWords = scheduledCandidates.slice(0, 5);
-
     const questions = await quizAgentService.generateQuestions(
       scheduledWords.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
-      scheduledCandidates.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
+      generationPool.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
       list.context || 'General',
       questionTypes,
       baseLanguage,
@@ -72,27 +67,25 @@ router.post('/:listId/more', validate(listIdSchema), async (req, res) => {
     if (!list) return res.status(404).json({ message: 'List not found' });
 
     const userId = resolveUserId(req.headers['user-id']);
-    const [scheduledCandidates, questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
-      selectScheduledWords(userId, listId, 5, 12),
+    const [{ scheduledWords, generationPool }, questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
+      selectGenerationWordPool(userId, listId),
       getQuestionTypes(userId),
       getUserLanguages(userId)
     ]);
 
-    if (!scheduledCandidates.length) {
+    if (!scheduledWords.length) {
       return res.status(400).json({ message: 'List has no words' });
     }
 
-    const selected = shuffleArray([...scheduledCandidates]).slice(0, 5);
     const questions = await quizAgentService.generateQuestions(
-      selected.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
-      scheduledCandidates.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
+      scheduledWords.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
+      generationPool.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
       list.context || 'General',
       questionTypes,
       baseLanguage,
       targetLanguage
     );
-
-    res.json({ questions, scheduledWords: selected });
+    res.json({ questions, scheduledWords });
   } catch (error) {
     console.error('Error getting more questions:', error);
     res.status(500).json({ message: 'Error getting more questions' });

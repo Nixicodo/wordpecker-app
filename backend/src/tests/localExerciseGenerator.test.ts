@@ -47,6 +47,17 @@ describe('generateLocalExercises', () => {
     expect(optionTexts.length).toBeGreaterThan(0);
   });
 
+  it('generates real matching exercises instead of degrading them to multiple choice', () => {
+    const exercises = generateLocalExercises(words, distractorPool, 'library', ['matching']);
+
+    expect(exercises).toHaveLength(4);
+    expect(exercises[0].type).toBe('matching');
+    expect(exercises[0].options).toBeNull();
+    expect(exercises[0].pairs).not.toBeNull();
+    expect(exercises[0].pairs?.length).toBeGreaterThanOrEqual(3);
+    expect(exercises[0].pairs?.some((pair) => pair.word === 'hola')).toBe(true);
+  });
+
   it('upgrades fallback difficulty when a word is behaviorally challenging', () => {
     const challengingWords = [
       { id: '1', value: 'hola', meaning: 'hello', challengeScore: 0.82 },

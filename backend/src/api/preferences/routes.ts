@@ -3,6 +3,10 @@ import { validate } from 'echt';
 import { UserPreferences } from './model';
 import { updatePreferencesSchema } from './schemas';
 import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
+import {
+  DEFAULT_EXERCISE_TYPE_PREFERENCES,
+  resolveEnabledQuestionTypes
+} from '../../services/exerciseTypePreferences';
 
 const router = Router();
 
@@ -10,14 +14,6 @@ const getUserId = <T extends { headers: Record<string, any> }>(req: T) => {
   const userId = req.headers['user-id'] as string;
   if (!userId) throw new Error('User ID is required');
   return userId;
-};
-
-const defaultExerciseTypes = {
-  multiple_choice: true,
-  fill_blank: true,
-  matching: true,
-  true_false: true,
-  sentence_completion: true
 };
 
 router.get('/', async (req: Request, res: Response) => {
@@ -28,7 +24,7 @@ router.get('/', async (req: Request, res: Response) => {
     if (!preferences) {
       preferences = await UserPreferences.create({
         userId,
-        exerciseTypes: defaultExerciseTypes,
+        exerciseTypes: DEFAULT_EXERCISE_TYPE_PREFERENCES,
         baseLanguage: 'en',
         targetLanguage: 'en'
       });
@@ -36,7 +32,10 @@ router.get('/', async (req: Request, res: Response) => {
     }
 
     res.json({
-      exerciseTypes: preferences.exerciseTypes,
+      exerciseTypes: {
+        ...DEFAULT_EXERCISE_TYPE_PREFERENCES,
+        ...preferences.exerciseTypes
+      },
       baseLanguage: preferences.baseLanguage,
       targetLanguage: preferences.targetLanguage
     });
@@ -56,10 +55,13 @@ router.put('/', validate(updatePreferencesSchema), async (req, res) => {
       if (typeof exerciseTypes !== 'object') {
         return res.status(400).json({ error: 'Invalid exercise types' });
       }
-      if (Object.values(exerciseTypes).filter(Boolean).length === 0) {
+      if (resolveEnabledQuestionTypes(exerciseTypes).length === 0) {
         return res.status(400).json({ error: 'At least one exercise type must be enabled' });
       }
-      updateData.exerciseTypes = exerciseTypes;
+      updateData.exerciseTypes = {
+        ...DEFAULT_EXERCISE_TYPE_PREFERENCES,
+        ...exerciseTypes
+      };
     }
     
     if (baseLanguage) updateData.baseLanguage = baseLanguage;
@@ -73,7 +75,10 @@ router.put('/', validate(updatePreferencesSchema), async (req, res) => {
 
     await persistLearningSnapshot();
     res.json({
-      exerciseTypes: preferences.exerciseTypes,
+      exerciseTypes: {
+        ...DEFAULT_EXERCISE_TYPE_PREFERENCES,
+        ...preferences.exerciseTypes
+      },
       baseLanguage: preferences.baseLanguage,
       targetLanguage: preferences.targetLanguage
     });
