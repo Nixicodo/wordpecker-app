@@ -54,6 +54,7 @@ export interface Exercise {
   word: string;
   wordId?: string | null;
   type: 'multiple_choice' | 'fill_blank' | 'matching' | 'true_false' | 'sentence_completion';
+  direction: 'target_to_base' | 'base_to_target';
   question: string;
   options: string[] | null;
   optionLabels: string[] | null;
@@ -69,6 +70,7 @@ export interface Question {
   word: string;
   wordId?: string | null;
   type: 'multiple_choice' | 'fill_blank' | 'matching' | 'true_false' | 'sentence_completion';
+  direction: 'target_to_base' | 'base_to_target';
   question: string;
   options: string[] | null;
   optionLabels: string[] | null;

@@ -23,7 +23,7 @@ import {
   Icon,
   useColorModeValue
 } from '@chakra-ui/react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Question, WordList } from '../types';
@@ -32,6 +32,7 @@ import { apiService } from '../services/api';
 import { QuestionRenderer } from '../components/QuestionRenderer';
 import { SessionService } from '../services/sessionService';
 import { validateAnswer } from '../utils/answerValidation';
+import { usePrefetchedBatch } from '../hooks/usePrefetchedBatch';
 
 const UI = {
   startErrorTitle: '\u542f\u52a8\u6d4b\u9a8c\u5931\u8d25',
@@ -106,6 +107,15 @@ export const Quiz = () => {
   const [isCompleted, setIsCompleted] = useState(false);
   const [isUpdatingPoints, setIsUpdatingPoints] = useState(false);
 
+  const fetchMoreQuestions = useCallback(async (): Promise<Question[] | null> => {
+    if (!id) return null;
+
+    const response = await apiService.getQuestions(id);
+    return response?.questions ?? null;
+  }, [id]);
+
+  const { prefetchNext, consumePrefetched } = usePrefetchedBatch(fetchMoreQuestions);
+
   useEffect(() => {
     const initQuiz = async () => {
       if (!id || hasInitializedRef.current) return;
@@ -144,6 +154,12 @@ export const Quiz = () => {
     initQuiz();
   }, [id, list, navigate, toast]);
 
+  useEffect(() => {
+    if (!id || !questions.length || isCompleted || gameOver || currentQuestion + 1 >= totalQuestions) return;
+
+    void prefetchNext();
+  }, [id, questions.length, currentQuestion, totalQuestions, isCompleted, gameOver, prefetchNext]);
+
   const updateLearnedPoints = async () => {
     if (!id || quizResults.length === 0) {
       navigate(`/lists/${id}`);
@@ -175,21 +191,26 @@ export const Quiz = () => {
     }
   };
 
-  const loadMoreQuestions = async () => {
+  const loadMoreQuestions = async (startFromNewBatch = false) => {
     if (!id || !questions.length) return false;
 
     setIsLoading(true);
     try {
-      const response = await apiService.getQuestions(id);
+      const prefetchedQuestions = await consumePrefetched();
+      const nextQuestions = prefetchedQuestions ?? await fetchMoreQuestions();
 
-      if (response && response.questions && response.questions.length > 0) {
-        setQuestions(prev => [...prev, ...response.questions]);
+      if (nextQuestions && nextQuestions.length > 0) {
+        const firstNewQuestionIndex = questions.length;
+        setQuestions(prev => [...prev, ...nextQuestions]);
         setIsCompleted(false);
-        setCurrentQuestion(questions.length);
+        if (startFromNewBatch) {
+          setCurrentQuestion(firstNewQuestionIndex);
+        }
         setSelectedAnswer('');
         setIsAnswered(false);
         setActualCorrectness(null);
-        return !response.completed;
+        void prefetchNext();
+        return true;
       }
       return false;
     } catch (error: any) {
@@ -277,7 +298,6 @@ export const Quiz = () => {
 
     const isLastQuestion = currentQuestion === questions.length - 1;
     if (isLastQuestion && currentQuestion + 1 < totalQuestions) {
-      setIsLoading(true);
       const hasMoreQuestions = await loadMoreQuestions();
       if (!hasMoreQuestions && currentQuestion + 1 >= questions.length) {
         setIsCompleted(true);
@@ -599,7 +619,7 @@ export const Quiz = () => {
                 variant="solid"
                 colorScheme="blue"
                 size="lg"
-                onClick={loadMoreQuestions}
+                onClick={() => loadMoreQuestions(true)}
                 isLoading={isLoading}
                 loadingText={UI.loading}
                 _hover={{

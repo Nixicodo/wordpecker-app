@@ -23,7 +23,7 @@ import {
   Icon,
   useColorModeValue
 } from '@chakra-ui/react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Exercise, WordList } from '../types';
@@ -32,6 +32,7 @@ import { apiService } from '../services/api';
 import { QuestionRenderer } from '../components/QuestionRenderer';
 import { SessionService } from '../services/sessionService';
 import { validateAnswer } from '../utils/answerValidation';
+import { usePrefetchedBatch } from '../hooks/usePrefetchedBatch';
 
 const UI = {
   startErrorTitle: '\u542f\u52a8\u5b66\u4e60\u5931\u8d25',
@@ -105,6 +106,15 @@ export const Learn = () => {
   const [learningResults, setLearningResults] = useState<Array<{wordId: string, correct: boolean}>>([]);
   const [isUpdatingPoints, setIsUpdatingPoints] = useState(false);
 
+  const fetchMoreExercises = useCallback(async (): Promise<Exercise[] | null> => {
+    if (!id) return null;
+
+    const response = await apiService.getExercises(id);
+    return response?.exercises ?? null;
+  }, [id]);
+
+  const { prefetchNext, consumePrefetched } = usePrefetchedBatch(fetchMoreExercises);
+
   useEffect(() => {
     const initLearn = async () => {
       if (!id || hasInitializedRef.current) return;
@@ -142,15 +152,22 @@ export const Learn = () => {
     initLearn();
   }, [id, list, navigate, toast]);
 
+  useEffect(() => {
+    if (!id || !exercises.length || isCompleted) return;
+
+    void prefetchNext();
+  }, [id, exercises.length, isCompleted, prefetchNext]);
+
   const loadMoreExercises = async () => {
     if (!id || !exercises.length) return false;
 
     try {
       setIsLoading(true);
-      const response = await apiService.getExercises(id);
+      const prefetchedExercises = await consumePrefetched();
+      const nextExercises = prefetchedExercises ?? await fetchMoreExercises();
 
-      if (response && response.exercises && response.exercises.length > 0) {
-        const newExercises = [...exercises, ...response.exercises];
+      if (nextExercises && nextExercises.length > 0) {
+        const newExercises = [...exercises, ...nextExercises];
         setExercises(newExercises);
         const service = new SessionService(newExercises);
         setSessionService(service);
@@ -158,6 +175,7 @@ export const Learn = () => {
         setSelectedAnswer('');
         setIsAnswered(false);
         setIsCompleted(false);
+        void prefetchNext();
         return true;
       }
       return false;
