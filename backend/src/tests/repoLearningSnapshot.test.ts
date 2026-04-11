@@ -155,4 +155,84 @@ describe('repository learning snapshot integration', () => {
     const persistedSnapshot = JSON.parse(await fs.promises.readFile(snapshotPath, 'utf-8'));
     expect(persistedSnapshot.data.words[0].ownedByLists[0].learnedPoint).toBe(10);
   });
+
+  it('creates and exposes the mistake book as a dedicated system list', async () => {
+    const mistakeBookResponse = await request(app)
+      .get('/api/lists/mistake-book');
+
+    expect(mistakeBookResponse.status).toBe(200);
+    expect(mistakeBookResponse.body.kind).toBe('mistake_book');
+    expect(mistakeBookResponse.body.systemKey).toBe('mistake-book');
+
+    const listsResponse = await request(app)
+      .get('/api/lists');
+
+    expect(listsResponse.status).toBe(200);
+    expect(listsResponse.body).toHaveLength(0);
+  });
+
+  it('adds wrong answers into the mistake book and uses faster progress recovery there', async () => {
+    const listResponse = await request(app)
+      .post('/api/lists')
+      .send({
+        name: '错题来源词树',
+        description: '验证错题本自动收集',
+        context: 'Mistake source list'
+      });
+
+    expect(listResponse.status).toBe(201);
+    const listId = listResponse.body.id as string;
+
+    const addWordResponse = await request(app)
+      .post(`/api/lists/${listId}/words`)
+      .send({
+        word: 'resilient',
+        meaning: '有韧性的'
+      });
+
+    expect(addWordResponse.status).toBe(201);
+    const wordId = addWordResponse.body.id as string;
+
+    const wrongAnswerResponse = await request(app)
+      .put(`/api/quiz/${listId}/learned-points`)
+      .send({
+        results: [{ wordId, correct: false }]
+      });
+
+    expect(wrongAnswerResponse.status).toBe(200);
+
+    const mistakeBookResponse = await request(app)
+      .get('/api/lists/mistake-book');
+
+    expect(mistakeBookResponse.status).toBe(200);
+    expect(mistakeBookResponse.body.wordCount).toBe(1);
+
+    const mistakeBookId = mistakeBookResponse.body.id as string;
+    const mistakeWordsResponse = await request(app)
+      .get(`/api/lists/${mistakeBookId}/words`);
+
+    expect(mistakeWordsResponse.status).toBe(200);
+    expect(mistakeWordsResponse.body).toHaveLength(1);
+    expect(mistakeWordsResponse.body[0].value).toBe('resilient');
+    expect(mistakeWordsResponse.body[0].learnedPoint).toBe(0);
+
+    const wrongWord = await Word.findById(wordId).lean();
+    expect(wrongWord?.ownedByLists).toHaveLength(2);
+
+    const mistakeContext = wrongWord?.ownedByLists.find(context => context.listId.toString() === mistakeBookId);
+    expect(mistakeContext?.wrongCount).toBe(1);
+    expect(mistakeContext?.sourceListIds?.map(id => id.toString())).toContain(listId);
+
+    const recoverResponse = await request(app)
+      .put(`/api/learn/${mistakeBookId}/learned-points`)
+      .send({
+        results: [{ wordId, correct: true }]
+      });
+
+    expect(recoverResponse.status).toBe(200);
+
+    const recoveredWord = await Word.findById(wordId).lean();
+    const recoveredMistakeContext = recoveredWord?.ownedByLists.find(context => context.listId.toString() === mistakeBookId);
+    expect(recoveredMistakeContext?.learnedPoint).toBe(20);
+  });
 });

@@ -4,6 +4,9 @@ export interface IWordContext {
   listId: mongoose.Types.ObjectId;
   meaning: string;
   learnedPoint: number; // 0-100, higher means more learned
+  wrongCount?: number;
+  sourceListIds?: mongoose.Types.ObjectId[];
+  lastWrongAt?: Date;
 }
 
 export interface IWord extends Document {
@@ -30,6 +33,21 @@ const WordContextSchema = new Schema<IWordContext>({
     default: 0,
     min: 0,
     max: 100
+  },
+  wrongCount: {
+    type: Number,
+    default: 0,
+    min: 0
+  },
+  sourceListIds: {
+    type: [{
+      type: Schema.Types.ObjectId,
+      ref: 'WordList'
+    }],
+    default: []
+  },
+  lastWrongAt: {
+    type: Date
   }
 }, { _id: false });
 

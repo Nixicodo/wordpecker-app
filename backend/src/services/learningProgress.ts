@@ -1,5 +1,7 @@
 import { Word } from '../api/words/model';
 import { persistLearningSnapshot } from './repoLearningSnapshot';
+import { WordList } from '../api/lists/model';
+import { isMistakeBookList, recordMistakeWord } from './mistakeBook';
 
 type WordDocumentLike = {
   _id: { toString(): string };
@@ -37,6 +39,9 @@ export function selectWeakWords(words: WordDocumentLike[], listId: string, count
 }
 
 export async function applyLearnedPointResults(listId: string, results: LearnedPointResult[]) {
+  const list = await WordList.findById(listId).lean();
+  const isMistakeBook = isMistakeBookList(list);
+
   await Promise.all(results.map(async (result) => {
     const word = await Word.findById(result.wordId);
     if (!word) {
@@ -50,10 +55,14 @@ export async function applyLearnedPointResults(listId: string, results: LearnedP
 
     const current = context.learnedPoint || 0;
     context.learnedPoint = result.correct
-      ? Math.min(100, current + 10)
-      : Math.max(0, current - 5);
+      ? Math.min(100, current + (isMistakeBook ? 20 : 10))
+      : Math.max(0, current - (isMistakeBook ? 15 : 5));
 
     await word.save();
+
+    if (!result.correct && !isMistakeBook) {
+      await recordMistakeWord(listId, result.wordId);
+    }
   }));
 
   await persistLearningSnapshot();
