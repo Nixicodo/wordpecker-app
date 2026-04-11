@@ -105,18 +105,18 @@ router.post('/add-words', validate(addWordsSchema), async (req, res) => {
 
     const addedWords = [];
     for (const { word, meaning } of selectedWords) {
-      const existingWord = await Word.findOne({ value: word, 'ownedByLists.listId': targetList._id });
+      const existingWord = await Word.findOne({ value: word, 'listMemberships.listId': targetList._id });
       
       if (!existingWord) {
         let wordDoc = await Word.findOne({ value: word });
         
         if (wordDoc) {
-          wordDoc.ownedByLists.push({ listId: targetList._id, meaning, learnedPoint: 0 });
+          wordDoc.listMemberships.push({ listId: targetList._id, meaning, addedAt: new Date(), updatedAt: new Date() });
           await wordDoc.save();
         } else {
           await Word.create({
             value: word,
-            ownedByLists: [{ listId: targetList._id, meaning, learnedPoint: 0 }]
+            listMemberships: [{ listId: targetList._id, meaning, addedAt: new Date(), updatedAt: new Date() }]
           });
         }
         addedWords.push({ word, meaning });

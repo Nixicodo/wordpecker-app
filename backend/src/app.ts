@@ -7,6 +7,7 @@ import { openaiRateLimiter } from './middleware/rateLimiter';
 import { connectDB } from './config/mongodb';
 import { configureOpenAIAgents } from './agents';
 import { restoreLearningSnapshotIfNeeded } from './services/repoLearningSnapshot';
+import { migrateLegacyLearningDataIfNeeded } from './services/learningMigration';
 
 // Import routes
 import listRoutes from './api/lists/routes';
@@ -65,6 +66,10 @@ if (process.env.NODE_ENV !== 'test') {
     const restored = await restoreLearningSnapshotIfNeeded();
     if (restored) {
       console.log('Restored learning data from repository snapshot');
+    }
+    const migrated = await migrateLegacyLearningDataIfNeeded();
+    if (migrated) {
+      console.log('Migrated legacy learning data to the new scheduler model');
     }
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT} in ${environment.nodeEnv} mode`);

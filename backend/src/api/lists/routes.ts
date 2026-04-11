@@ -1,10 +1,12 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
 import { validate } from 'echt';
 import { WordList, IWordList } from './model';
 import { Word } from '../words/model';
 import { createListSchema, listParamsSchema, updateListSchema } from './schemas';
 import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
 import { ensureMistakeBook, isMistakeBookList } from '../../services/mistakeBook';
+import { summarizeListProgress } from '../../services/learningScheduler';
+import { resolveUserId } from '../../config/learning';
 
 const router = Router();
 
@@ -19,16 +21,14 @@ const transform = (list: IWordList) => ({
   updated_at: list.updated_at.toISOString()
 });
 
-const buildListSummary = async (list: IWordList) => {
-  const words = await Word.find({ 'ownedByLists.listId': list._id }).lean();
-  const contexts = words.map(w => w.ownedByLists.find(c => c.listId.toString() === list._id.toString()));
-  const progress = contexts.map(c => c?.learnedPoint || 0);
+const buildListSummary = async (list: IWordList, userId: string) => {
+  const wordCount = await Word.countDocuments({ 'listMemberships.listId': list._id });
+  const progress = await summarizeListProgress(userId, list._id.toString());
 
   return {
     ...transform(list),
-    wordCount: words.length,
-    averageProgress: words.length ? Math.round(progress.reduce((a, b) => a + b, 0) / words.length) : 0,
-    masteredWords: progress.filter(p => p >= 80).length
+    wordCount,
+    ...progress
   };
 };
 
@@ -44,18 +44,20 @@ router.post('/', validate(createListSchema), async (req, res) => {
 
 router.get('/', async (req, res) => {
   try {
+    const userId = resolveUserId(req.headers['user-id']);
     const lists = await WordList.find({ kind: { $ne: 'mistake_book' } }).sort({ created_at: -1 });
-    const data = await Promise.all(lists.map(buildListSummary));
+    const data = await Promise.all(lists.map((list) => buildListSummary(list, userId)));
     res.json(data);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching lists' });
   }
 });
 
-router.get('/mistake-book', async (_req, res) => {
+router.get('/mistake-book', async (req, res) => {
   try {
+    const userId = resolveUserId(req.headers['user-id']);
     const list = await ensureMistakeBook();
-    const summary = await buildListSummary(list);
+    const summary = await buildListSummary(list, userId);
     res.json(summary);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching mistake book' });
@@ -67,7 +69,7 @@ router.get('/:id', validate(listParamsSchema), async (req, res) => {
     const { id } = req.params;
     const list = await WordList.findById(id);
     if (!list) return res.status(404).json({ message: 'List not found' });
-    
+
     res.json(transform(list));
   } catch (error) {
     res.status(500).json({ message: 'Error fetching list' });
@@ -85,7 +87,7 @@ router.put('/:id', validate(updateListSchema), async (req, res) => {
 
     const list = await WordList.findByIdAndUpdate(id, req.body, { new: true });
     if (!list) return res.status(404).json({ message: 'List not found' });
-    
+
     await persistLearningSnapshot();
     res.json(transform(list));
   } catch (error) {
@@ -101,12 +103,15 @@ router.delete('/:id', validate(listParamsSchema), async (req, res) => {
     if (isMistakeBookList(existingList)) {
       return res.status(403).json({ message: 'Mistake book cannot be deleted' });
     }
-    
-    await Word.updateMany({ 'ownedByLists.listId': id }, { $pull: { ownedByLists: { listId: id } } });
-    await Word.deleteMany({ ownedByLists: { $size: 0 } });
+
+    await Word.updateMany(
+      { 'listMemberships.listId': id },
+      { $pull: { listMemberships: { listId: id } } }
+    );
+    await Word.deleteMany({ listMemberships: { $size: 0 } });
 
     await WordList.findByIdAndDelete(id);
-    
+
     await persistLearningSnapshot();
     res.status(204).send();
   } catch (error) {
@@ -114,4 +119,4 @@ router.delete('/:id', validate(listParamsSchema), async (req, res) => {
   }
 });
 
-export default router; 
+export default router;

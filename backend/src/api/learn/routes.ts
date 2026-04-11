@@ -1,21 +1,21 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
 import { validate } from 'echt';
 import { WordList } from '../lists/model';
-import { Word } from '../words/model';
 import { UserPreferences } from '../preferences/model';
 import { QuestionType } from '../../types';
 import { learnAgentService } from './agent-service';
 import { getUserLanguages } from '../../utils/getUserLanguages';
 import { listIdSchema, updatePointsSchema } from './schemas';
-import { applyLearnedPointResults, selectWeakWords } from '../../services/learningProgress';
+import { applyReviewResults, selectScheduledWords } from '../../services/learningProgress';
+import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
+import { resolveUserId } from '../../config/learning';
+import { isMistakeBookList } from '../../services/mistakeBook';
 
 const router = Router();
 
 const getExerciseTypes = async (userId: string): Promise<QuestionType[]> => {
-  if (!userId) return ['multiple_choice', 'fill_blank', 'true_false'];
-  
   const preferences = await UserPreferences.findOne({ userId });
-  return preferences 
+  return preferences
     ? Object.entries(preferences.exerciseTypes)
         .filter(([_, enabled]) => enabled)
         .map(([type]) => type as QuestionType)
@@ -25,32 +25,33 @@ const getExerciseTypes = async (userId: string): Promise<QuestionType[]> => {
 router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
   try {
     const { listId } = req.params;
-    const [list, words] = await Promise.all([
-      WordList.findById(listId).lean(),
-      Word.find({ 'ownedByLists.listId': listId }).lean()
-    ]);
+    const list = await WordList.findById(listId).lean();
 
     if (!list) return res.status(404).json({ message: 'List not found' });
-    if (!words.length) return res.status(400).json({ message: 'List has no words' });
 
-    const userId = req.headers['user-id'] as string;
+    const userId = resolveUserId(req.headers['user-id']);
     const [selectedWords, exerciseTypes, { baseLanguage, targetLanguage }] = await Promise.all([
-      selectWeakWords(words, listId),
+      selectScheduledWords(userId, listId, 5, 8),
       getExerciseTypes(userId),
-      getUserLanguages(userId || 'default')
+      getUserLanguages(userId)
     ]);
 
+    if (!selectedWords.length) {
+      return res.status(400).json({ message: 'List has no words' });
+    }
+
     const exercises = await learnAgentService.generateExercises(
-      selectedWords, 
-      list.context || 'General', 
-      exerciseTypes, 
-      baseLanguage, 
+      selectedWords.map(({ id, value, meaning }) => ({ id, value, meaning })),
+      list.context || 'General',
+      exerciseTypes,
+      baseLanguage,
       targetLanguage
     );
 
     res.json({
       exercises,
-      list: { id: list._id.toString(), name: list.name, context: list.context }
+      scheduledWords: selectedWords,
+      list: { id: list._id.toString(), name: list.name, context: list.context, kind: list.kind }
     });
   } catch (error) {
     res.status(500).json({ message: 'Error starting learning session' });
@@ -60,46 +61,61 @@ router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
 router.post('/:listId/more', validate(listIdSchema), async (req, res) => {
   try {
     const { listId } = req.params;
-    const [list, words] = await Promise.all([
-      WordList.findById(listId).lean(),
-      Word.find({ 'ownedByLists.listId': listId }).lean()
-    ]);
+    const list = await WordList.findById(listId).lean();
 
     if (!list) return res.status(404).json({ message: 'List not found' });
-    if (!words.length) return res.status(400).json({ message: 'List has no words' });
 
-    const userId = req.headers['user-id'] as string;
+    const userId = resolveUserId(req.headers['user-id']);
     const [selectedWords, exerciseTypes, { baseLanguage, targetLanguage }] = await Promise.all([
-      selectWeakWords(words, listId),
+      selectScheduledWords(userId, listId, 5, 10),
       getExerciseTypes(userId),
-      getUserLanguages(userId || 'default')
+      getUserLanguages(userId)
     ]);
 
+    if (!selectedWords.length) {
+      return res.status(400).json({ message: 'List has no words' });
+    }
+
     const exercises = await learnAgentService.generateExercises(
-      selectedWords, 
-      list.context || 'General', 
-      exerciseTypes, 
-      baseLanguage, 
+      selectedWords.map(({ id, value, meaning }) => ({ id, value, meaning })),
+      list.context || 'General',
+      exerciseTypes,
+      baseLanguage,
       targetLanguage
     );
 
-    res.json({ exercises });
+    res.json({ exercises, scheduledWords: selectedWords });
   } catch (error) {
     res.status(500).json({ message: 'Error getting more exercises' });
   }
 });
 
-router.put('/:listId/learned-points', validate(updatePointsSchema), async (req, res) => {
+router.put('/:listId/reviews', validate(updatePointsSchema), async (req, res) => {
   try {
     const { listId } = req.params;
-    const { results } = req.body;
+    const userId = resolveUserId(req.headers['user-id']);
+    const list = await WordList.findById(listId).lean();
+    if (!list) {
+      return res.status(404).json({ message: 'List not found' });
+    }
 
-    await applyLearnedPointResults(listId, results);
-    res.json({ message: 'Learned points updated successfully' });
+    const source = isMistakeBookList(list) ? 'mistake_review' : 'learn';
+    const results = req.body.results.map((result: any) => ({
+      wordId: result.wordId,
+      correct: result.correct,
+      rating: result.rating || (result.correct ? 'good' : 'again'),
+      questionType: result.questionType || 'unknown',
+      responseTimeMs: result.responseTimeMs,
+      usedHint: result.usedHint
+    }));
+
+    await applyReviewResults(userId, listId, source, results);
+    await persistLearningSnapshot();
+    res.json({ message: 'Review results updated successfully' });
   } catch (error) {
-    console.error('Error updating learned points after learning session:', error);
-    res.status(500).json({ message: 'Error updating learned points' });
+    console.error('Error updating review results after learning session:', error);
+    res.status(500).json({ message: 'Error updating review results' });
   }
 });
 
-export default router; 
+export default router;

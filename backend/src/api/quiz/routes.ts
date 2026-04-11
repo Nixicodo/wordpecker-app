@@ -1,20 +1,20 @@
 import { Router } from 'express';
 import { validate } from 'echt';
 import { WordList } from '../lists/model';
-import { Word } from '../words/model';
 import { UserPreferences } from '../preferences/model';
 import { QuestionType } from '../../types';
 import { quizAgentService } from './agent-service';
-import { shuffleArray } from '../../utils/arrayUtils';
 import { listIdSchema, updatePointsSchema } from './schemas';
-import { applyLearnedPointResults, selectWeakWords } from '../../services/learningProgress';
+import { applyReviewResults, selectScheduledWords } from '../../services/learningProgress';
 import { getUserLanguages } from '../../utils/getUserLanguages';
+import { shuffleArray } from '../../utils/arrayUtils';
+import { resolveUserId } from '../../config/learning';
+import { isMistakeBookList } from '../../services/mistakeBook';
+import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
 
 const router = Router();
 
 const getQuestionTypes = async (userId: string): Promise<QuestionType[]> => {
-  if (!userId) return ['multiple_choice', 'fill_blank', 'true_false', 'sentence_completion'];
-
   const preferences = await UserPreferences.findOne({ userId });
   return preferences
     ? Object.entries(preferences.exerciseTypes)
@@ -26,22 +26,23 @@ const getQuestionTypes = async (userId: string): Promise<QuestionType[]> => {
 router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
   try {
     const { listId } = req.params;
-    const [list, words] = await Promise.all([
-      WordList.findById(listId).lean(),
-      Word.find({ 'ownedByLists.listId': listId }).lean()
-    ]);
+    const list = await WordList.findById(listId).lean();
 
     if (!list) return res.status(404).json({ message: 'List not found' });
-    if (!words.length) return res.status(400).json({ message: 'List has no words' });
 
-    const prioritizedWords = selectWeakWords(words, listId, words.length);
-    const userId = req.headers['user-id'] as string;
-    const [questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
+    const userId = resolveUserId(req.headers['user-id']);
+    const [scheduledWords, questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
+      selectScheduledWords(userId, listId, 5, 12),
       getQuestionTypes(userId),
-      getUserLanguages(userId || 'default')
+      getUserLanguages(userId)
     ]);
+
+    if (!scheduledWords.length) {
+      return res.status(400).json({ message: 'List has no words' });
+    }
+
     const questions = await quizAgentService.generateQuestions(
-      prioritizedWords.slice(0, 5),
+      scheduledWords.map(({ id, value, meaning }) => ({ id, value, meaning })),
       list.context || 'General',
       questionTypes,
       baseLanguage,
@@ -50,8 +51,9 @@ router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
 
     res.json({
       questions,
-      total_questions: prioritizedWords.length,
-      list: { id: list._id.toString(), name: list.name, context: list.context }
+      total_questions: scheduledWords.length,
+      scheduledWords,
+      list: { id: list._id.toString(), name: list.name, context: list.context, kind: list.kind }
     });
   } catch (error) {
     console.error('Error starting quiz:', error);
@@ -62,45 +64,62 @@ router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
 router.post('/:listId/more', validate(listIdSchema), async (req, res) => {
   try {
     const { listId } = req.params;
-    const [list, words] = await Promise.all([
-      WordList.findById(listId).lean(),
-      Word.find({ 'ownedByLists.listId': listId }).lean()
-    ]);
+    const list = await WordList.findById(listId).lean();
 
     if (!list) return res.status(404).json({ message: 'List not found' });
-    if (!words.length) return res.status(400).json({ message: 'List has no words' });
 
-    const selected = shuffleArray(selectWeakWords(words, listId, Math.min(words.length, 10))).slice(0, 5);
-    const userId = req.headers['user-id'] as string;
-    const [questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
+    const userId = resolveUserId(req.headers['user-id']);
+    const [scheduledWords, questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
+      selectScheduledWords(userId, listId, 5, 12),
       getQuestionTypes(userId),
-      getUserLanguages(userId || 'default')
+      getUserLanguages(userId)
     ]);
+
+    if (!scheduledWords.length) {
+      return res.status(400).json({ message: 'List has no words' });
+    }
+
+    const selected = shuffleArray([...scheduledWords]).slice(0, 5);
     const questions = await quizAgentService.generateQuestions(
-      selected,
+      selected.map(({ id, value, meaning }) => ({ id, value, meaning })),
       list.context || 'General',
       questionTypes,
       baseLanguage,
       targetLanguage
     );
 
-    res.json({ questions });
+    res.json({ questions, scheduledWords: selected });
   } catch (error) {
     console.error('Error getting more questions:', error);
     res.status(500).json({ message: 'Error getting more questions' });
   }
 });
 
-router.put('/:listId/learned-points', validate(updatePointsSchema), async (req, res) => {
+router.put('/:listId/reviews', validate(updatePointsSchema), async (req, res) => {
   try {
     const { listId } = req.params;
-    const { results } = req.body;
+    const userId = resolveUserId(req.headers['user-id']);
+    const list = await WordList.findById(listId).lean();
+    if (!list) {
+      return res.status(404).json({ message: 'List not found' });
+    }
 
-    await applyLearnedPointResults(listId, results);
-    res.json({ message: 'Learned points updated successfully' });
+    const source = isMistakeBookList(list) ? 'mistake_review' : 'quiz';
+    const results = req.body.results.map((result: any) => ({
+      wordId: result.wordId,
+      correct: result.correct,
+      rating: result.rating || (result.correct ? 'good' : 'again'),
+      questionType: result.questionType || 'unknown',
+      responseTimeMs: result.responseTimeMs,
+      usedHint: result.usedHint
+    }));
+
+    await applyReviewResults(userId, listId, source, results);
+    await persistLearningSnapshot();
+    res.json({ message: 'Review results updated successfully' });
   } catch (error) {
-    console.error('Error updating learned points:', error);
-    res.status(500).json({ message: 'Error updating learned points' });
+    console.error('Error updating review results:', error);
+    res.status(500).json({ message: 'Error updating review results' });
   }
 });
 

@@ -8,25 +8,38 @@ import mongoose from 'mongoose';
 import { getUserLanguages } from '../../utils/getUserLanguages';
 import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
 import { assertMeaningEncoding } from '../../utils/meaningEncoding';
-import { 
-  listIdSchema, 
-  addWordSchema, 
+import { LearningState } from '../learning-state/model';
+import { resolveUserId } from '../../config/learning';
+import {
+  listIdSchema,
+  addWordSchema,
   bulkAddWordsSchema,
-  wordIdSchema, 
-  wordContextSchema, 
-  deleteWordSchema, 
-  validateAnswerSchema 
+  wordIdSchema,
+  wordContextSchema,
+  deleteWordSchema,
+  validateAnswerSchema
 } from './schemas';
 
 const router = Router();
 
-const transformWord = (word: IWord, listId: string) => {
-  const context = word.ownedByLists.find(ctx => ctx.listId.toString() === listId);
+const getMembership = (word: Pick<IWord, 'listMemberships'>, listId: string) =>
+  word.listMemberships.find((membership) => membership.listId.toString() === listId);
+
+const transformWord = async (word: IWord, listId: string, userId: string) => {
+  const membership = getMembership(word, listId);
+  const state = await LearningState.findOne({ userId, wordId: word._id, listId }).lean();
+
   return {
     id: word._id.toString(),
     value: word.value,
-    meaning: context?.meaning || '',
-    learnedPoint: context?.learnedPoint || 0,
+    meaning: membership?.meaning || '',
+    dueAt: state?.dueAt?.toISOString(),
+    lastReviewedAt: state?.lastReviewedAt?.toISOString(),
+    reviewCount: state?.reviewCount || 0,
+    lapseCount: state?.lapseCount || 0,
+    stability: state?.stability || 0,
+    difficulty: state?.difficulty || 0,
+    status: state?.state ?? 0,
     created_at: word.created_at.toISOString(),
     updated_at: word.updated_at.toISOString()
   };
@@ -52,10 +65,7 @@ const resolveDefinition = async (
 
   let resolvedLanguages = languages;
   if (!resolvedLanguages) {
-    const userId = req.headers['user-id'] as string;
-    if (!userId) {
-      throw new Error('User ID is required');
-    }
+    const userId = resolveUserId(req.headers['user-id']);
     resolvedLanguages = await getUserLanguages(userId);
   }
 
@@ -75,13 +85,14 @@ const addWordToList = async (listId: string, value: string, meaning: string) => 
   let word = await Word.findOne({ value: normalizedValue });
 
   if (word) {
-    if (word.ownedByLists.some(ctx => ctx.listId.toString() === listId)) {
+    if (word.listMemberships.some((membership) => membership.listId.toString() === listId)) {
       return { status: 'duplicate' as const, word };
     }
-    word.ownedByLists.push({
+    word.listMemberships.push({
       listId: new mongoose.Types.ObjectId(listId),
       meaning,
-      learnedPoint: 0
+      addedAt: new Date(),
+      updatedAt: new Date()
     });
     await word.save();
     return { status: 'linked' as const, word };
@@ -89,7 +100,12 @@ const addWordToList = async (listId: string, value: string, meaning: string) => 
 
   word = await Word.create({
     value: normalizedValue,
-    ownedByLists: [{ listId: new mongoose.Types.ObjectId(listId), meaning, learnedPoint: 0 }]
+    listMemberships: [{
+      listId: new mongoose.Types.ObjectId(listId),
+      meaning,
+      addedAt: new Date(),
+      updatedAt: new Date()
+    }]
   });
   return { status: 'created' as const, word };
 };
@@ -111,7 +127,7 @@ router.post('/:listId/words', validate(addWordSchema), async (req, res) => {
 
     await WordList.findByIdAndUpdate(listId, { updated_at: new Date() });
     await persistLearningSnapshot();
-    res.status(201).json({ ...transformWord(result.word, listId), _id: result.word._id });
+    res.status(201).json(await transformWord(result.word, listId, resolveUserId(req.headers['user-id'])));
   } catch (error) {
     res.status(500).json({ message: 'Internal server error' });
   }
@@ -125,19 +141,16 @@ router.post('/:listId/words/bulk', validate(bulkAddWordsSchema), async (req, res
     const list = await WordList.findById(listId).lean();
     if (!list) return res.status(404).json({ message: 'List not found' });
 
-    const needsGeneratedMeaning = words.some(item => !item.meaning?.trim());
-    const userId = req.headers['user-id'] as string | undefined;
+    const needsGeneratedMeaning = words.some((item) => !item.meaning?.trim());
+    const userId = resolveUserId(req.headers['user-id']);
     let languages: UserLanguages | undefined;
 
     if (needsGeneratedMeaning) {
-      if (!userId) {
-        return res.status(400).json({ message: 'User ID is required when meaning is missing' });
-      }
       languages = await getUserLanguages(userId);
     }
 
     const seen = new Set<string>();
-    const imported: Array<ReturnType<typeof transformWord>> = [];
+    const imported: Array<any> = [];
     const skipped: Array<{ word: string; reason: string }> = [];
     const failed: Array<{ word: string; reason: string }> = [];
 
@@ -164,7 +177,7 @@ router.post('/:listId/words/bulk', validate(bulkAddWordsSchema), async (req, res
           continue;
         }
 
-        imported.push(transformWord(result.word, listId));
+        imported.push(await transformWord(result.word, listId, userId));
       } catch (error) {
         const reason = error instanceof Error ? error.message : 'unknown_error';
         failed.push({ word: originalWord, reason });
@@ -195,8 +208,10 @@ router.post('/:listId/words/bulk', validate(bulkAddWordsSchema), async (req, res
 router.get('/:listId/words', validate(listIdSchema), async (req, res) => {
   try {
     const { listId } = req.params;
-    const words = await Word.find({ 'ownedByLists.listId': listId }).lean();
-    res.json(words.map(word => ({ ...transformWord(word as IWord, listId), _id: word._id })));
+    const userId = resolveUserId(req.headers['user-id']);
+    const words = await Word.find({ 'listMemberships.listId': listId });
+    const data = await Promise.all(words.map((word) => transformWord(word, listId, userId)));
+    res.json(data);
   } catch (error) {
     res.status(500).json({ message: 'Internal server error' });
   }
@@ -209,12 +224,14 @@ router.delete('/:listId/words/:wordId', validate(deleteWordSchema), async (req, 
     const word = await Word.findById(wordId);
     if (!word) return res.status(404).json({ message: 'Word not found' });
 
-    word.ownedByLists = word.ownedByLists.filter(ctx => ctx.listId.toString() !== listId);
-    
-    if (word.ownedByLists.length === 0) {
+    word.listMemberships = word.listMemberships.filter((membership) => membership.listId.toString() !== listId);
+
+    if (word.listMemberships.length === 0) {
       await Word.findByIdAndDelete(wordId);
+      await LearningState.deleteMany({ wordId });
     } else {
       await word.save();
+      await LearningState.deleteMany({ wordId, listId });
     }
 
     await WordList.findByIdAndUpdate(listId, { updated_at: new Date() });
@@ -228,8 +245,7 @@ router.delete('/:listId/words/:wordId', validate(deleteWordSchema), async (req, 
 router.post('/validate-answer', validate(validateAnswerSchema), async (req: any, res) => {
   try {
     const { userAnswer, correctAnswer, context } = req.body;
-    const userId = req.headers['user-id'] as string;
-    if (!userId) return res.status(400).json({ message: 'User ID is required' });
+    const userId = resolveUserId(req.headers['user-id']);
     const { baseLanguage, targetLanguage } = await getUserLanguages(userId);
     const result = await wordAgentService.validateAnswer(userAnswer, correctAnswer, context, baseLanguage, targetLanguage);
     res.json(result);
@@ -241,18 +257,29 @@ router.post('/validate-answer', validate(validateAnswerSchema), async (req: any,
 router.get('/word/:wordId', validate(wordIdSchema), async (req, res) => {
   try {
     const { wordId } = req.params;
+    const userId = resolveUserId(req.headers['user-id']);
     const word = await Word.findById(wordId).lean();
     if (!word) return res.status(404).json({ message: 'Word not found' });
 
     const contexts = await Promise.all(
-      word.ownedByLists.map(async (context) => {
-        const list = await WordList.findById(context.listId).lean();
+      word.listMemberships.map(async (membership) => {
+        const [list, state] = await Promise.all([
+          WordList.findById(membership.listId).lean(),
+          LearningState.findOne({ userId, wordId: word._id, listId: membership.listId }).lean()
+        ]);
+
         return {
-          listId: context.listId.toString(),
+          listId: membership.listId.toString(),
           listName: list?.name || 'Unknown List',
           listContext: list?.context,
-          meaning: context.meaning,
-          learnedPoint: context.learnedPoint
+          meaning: membership.meaning,
+          sourceListIds: membership.sourceListIds?.map((id) => id.toString()) || [],
+          dueAt: state?.dueAt?.toISOString(),
+          lastReviewedAt: state?.lastReviewedAt?.toISOString(),
+          reviewCount: state?.reviewCount || 0,
+          lapseCount: state?.lapseCount || 0,
+          stability: state?.stability || 0,
+          difficulty: state?.difficulty || 0
         };
       })
     );
@@ -275,17 +302,17 @@ router.post('/word/:wordId/sentences', validate(wordContextSchema), async (req, 
     const { contextIndex } = req.body;
 
     const word = await Word.findById(wordId).lean();
-    if (!word || contextIndex >= word.ownedByLists.length) {
+    if (!word || contextIndex >= word.listMemberships.length) {
       return res.status(404).json({ message: 'Word not found or invalid context' });
     }
 
-    const wordContext = word.ownedByLists[contextIndex];
-    const list = await WordList.findById(wordContext.listId).lean();
+    const membership = word.listMemberships[contextIndex];
+    const list = await WordList.findById(membership.listId).lean();
     const context = list?.context || 'General';
 
-    const userId = req.headers['user-id'] as string;
+    const userId = resolveUserId(req.headers['user-id']);
     const { baseLanguage, targetLanguage } = await getUserLanguages(userId);
-    const sentences = await wordAgentService.generateExamples(word.value, wordContext.meaning, context, baseLanguage, targetLanguage);
+    const sentences = await wordAgentService.generateExamples(word.value, membership.meaning, context, baseLanguage, targetLanguage);
 
     res.json({ examples: sentences });
   } catch (error) {
@@ -299,21 +326,21 @@ router.post('/word/:wordId/similar', openaiRateLimiter, validate(wordContextSche
     const { contextIndex } = req.body;
 
     const word = await Word.findById(wordId).lean();
-    if (!word || contextIndex >= word.ownedByLists.length) {
+    if (!word || contextIndex >= word.listMemberships.length) {
       return res.status(404).json({ message: 'Word not found or invalid context' });
     }
 
-    const wordContext = word.ownedByLists[contextIndex];
-    const list = await WordList.findById(wordContext.listId).lean();
+    const membership = word.listMemberships[contextIndex];
+    const list = await WordList.findById(membership.listId).lean();
     const context = list?.context || 'General';
 
-    const userId = req.headers['user-id'] as string;
+    const userId = resolveUserId(req.headers['user-id']);
     const { baseLanguage, targetLanguage } = await getUserLanguages(userId);
-    const similarWords = await wordAgentService.generateSimilarWords(word.value, wordContext.meaning, context, baseLanguage, targetLanguage);
+    const similarWords = await wordAgentService.generateSimilarWords(word.value, membership.meaning, context, baseLanguage, targetLanguage);
 
     res.json({
       word: word.value,
-      meaning: wordContext.meaning,
+      meaning: membership.meaning,
       context,
       similar_words: similarWords
     });
@@ -327,7 +354,7 @@ router.post('/:listId/light-reading', openaiRateLimiter, validate(listIdSchema),
     const { listId } = req.params;
 
     const [words, list] = await Promise.all([
-      Word.find({ 'ownedByLists.listId': listId }).lean(),
+      Word.find({ 'listMemberships.listId': listId }).lean(),
       WordList.findById(listId).lean()
     ]);
 
@@ -335,13 +362,12 @@ router.post('/:listId/light-reading', openaiRateLimiter, validate(listIdSchema),
       return res.status(400).json({ message: 'No words found in this list' });
     }
 
-    const userId = req.headers['user-id'] as string;
-    if (!userId) return res.status(400).json({ message: 'User ID is required' });
+    const userId = resolveUserId(req.headers['user-id']);
     const { baseLanguage, targetLanguage } = await getUserLanguages(userId);
 
-    const wordsForReading = words.map(word => {
-      const wordContext = word.ownedByLists.find(ctx => ctx.listId.toString() === listId);
-      return { value: word.value, meaning: wordContext?.meaning || '' };
+    const wordsForReading = words.map((word) => {
+      const membership = getMembership(word as IWord, listId);
+      return { value: word.value, meaning: membership?.meaning || '' };
     });
 
     const reading = await wordAgentService.generateLightReading(wordsForReading, list?.context || 'General', baseLanguage, targetLanguage);
@@ -351,4 +377,4 @@ router.post('/:listId/light-reading', openaiRateLimiter, validate(listIdSchema),
   }
 });
 
-export default router; 
+export default router;

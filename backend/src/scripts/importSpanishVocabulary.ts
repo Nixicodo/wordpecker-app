@@ -27,11 +27,11 @@ const clearManagedListContexts = async () => {
   }
 
   await Word.updateMany(
-    { 'ownedByLists.listId': { $in: managedIds } },
-    { $pull: { ownedByLists: { listId: { $in: managedIds } } } }
+    { 'listMemberships.listId': { $in: managedIds } },
+    { $pull: { listMemberships: { listId: { $in: managedIds } } } }
   );
 
-  await Word.deleteMany({ ownedByLists: { $size: 0 } });
+  await Word.deleteMany({ listMemberships: { $size: 0 } });
 };
 
 const upsertWordIntoList = async (listId: mongoose.Types.ObjectId, value: string, meaning: string) => {
@@ -41,28 +41,31 @@ const upsertWordIntoList = async (listId: mongoose.Types.ObjectId, value: string
   if (!existingWord) {
     await Word.create({
       value: normalizedValue,
-      ownedByLists: [
+      listMemberships: [
         {
           listId,
           meaning,
-          learnedPoint: 0
+          addedAt: new Date(),
+          updatedAt: new Date()
         }
       ]
     });
     return;
   }
 
-  const context = existingWord.ownedByLists.find((item) => item.listId.toString() === listId.toString());
-  if (context) {
-    context.meaning = meaning;
+  const membership = existingWord.listMemberships.find((item) => item.listId.toString() === listId.toString());
+  if (membership) {
+    membership.meaning = meaning;
+    membership.updatedAt = new Date();
     await existingWord.save();
     return;
   }
 
-  existingWord.ownedByLists.push({
+  existingWord.listMemberships.push({
     listId,
     meaning,
-    learnedPoint: 0
+    addedAt: new Date(),
+    updatedAt: new Date()
   });
   await existingWord.save();
 };

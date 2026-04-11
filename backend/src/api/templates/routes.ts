@@ -90,19 +90,21 @@ router.post('/:id/clone', validate(cloneTemplateSchema), async (req, res) => {
       let word = await Word.findOne({ value });
       
       if (word) {
-        word.ownedByLists.push({
+        word.listMemberships.push({
           listId: savedList._id,
           meaning: templateWord.meaning,
-          learnedPoint: 0
+          addedAt: new Date(),
+          updatedAt: new Date()
         });
         await word.save();
       } else {
         await Word.create({
           value,
-          ownedByLists: [{
+          listMemberships: [{
             listId: savedList._id,
             meaning: templateWord.meaning,
-            learnedPoint: 0
+            addedAt: new Date(),
+            updatedAt: new Date()
           }]
         });
       }
@@ -116,8 +118,12 @@ router.post('/:id/clone', validate(cloneTemplateSchema), async (req, res) => {
       description: savedList.description,
       context: savedList.context,
       wordCount: template.words.length,
-      averageProgress: 0,
-      masteredWords: 0,
+      dueCount: template.words.length,
+      newCount: template.words.length,
+      learningCount: 0,
+      reviewCount: 0,
+      masteredCount: 0,
+      retentionScore: 0,
       created_at: savedList.created_at.toISOString(),
       updated_at: savedList.updated_at.toISOString()
     });

@@ -3,6 +3,7 @@ import path from 'path';
 import { connectDB, closeDB } from '../config/mongodb';
 import { WordList } from '../api/lists/model';
 import { Word } from '../api/words/model';
+import { LearningState } from '../api/learning-state/model';
 import { persistLearningSnapshot } from '../services/repoLearningSnapshot';
 import { assertMeaningEncoding, isLikelyCorruptedMeaning } from '../utils/meaningEncoding';
 
@@ -160,13 +161,13 @@ const run = async () => {
       throw new Error(`List "${TARGET_LIST_NAME}" not found`);
     }
 
-    const words = await Word.find({ 'ownedByLists.listId': list._id });
+    const words = await Word.find({ 'listMemberships.listId': list._id });
     let repairedMeanings = 0;
     let repairedValues = 0;
     let mergedWords = 0;
 
     for (const word of words) {
-      const context = word.ownedByLists.find((item) => item.listId.toString() === list._id.toString());
+      const context = word.listMemberships.find((item) => item.listId.toString() === list._id.toString());
       if (!context) {
         continue;
       }
@@ -177,7 +178,7 @@ const run = async () => {
         ? resolveMeaning(
             originalValue,
             context.meaning,
-            word.ownedByLists
+            word.listMemberships
               .filter((item) => item.listId.toString() !== list._id.toString())
               .map((item) => item.meaning)
               .filter((meaning) => !isLikelyCorruptedMeaning(meaning))
@@ -197,23 +198,27 @@ const run = async () => {
       if (nextValue !== originalValue) {
         const duplicate = await Word.findOne({ value: nextValue, _id: { $ne: word._id } });
         if (duplicate) {
-          const duplicateContext = duplicate.ownedByLists.find((item) => item.listId.toString() === list._id.toString());
+          const duplicateContext = duplicate.listMemberships.find((item) => item.listId.toString() === list._id.toString());
           if (duplicateContext) {
             duplicateContext.meaning = finalMeaning;
+            duplicateContext.updatedAt = new Date();
           } else {
-            duplicate.ownedByLists.push({
+            duplicate.listMemberships.push({
               listId: list._id,
               meaning: finalMeaning,
-              learnedPoint: context.learnedPoint || 0
+              addedAt: new Date(),
+              updatedAt: new Date()
             });
           }
           await duplicate.save();
 
-          word.ownedByLists = word.ownedByLists.filter((item) => item.listId.toString() !== list._id.toString());
-          if (word.ownedByLists.length === 0) {
+          word.listMemberships = word.listMemberships.filter((item) => item.listId.toString() !== list._id.toString());
+          if (word.listMemberships.length === 0) {
             await Word.findByIdAndDelete(word._id);
+            await LearningState.deleteMany({ wordId: word._id });
           } else {
             await word.save();
+            await LearningState.deleteMany({ wordId: word._id, listId: list._id });
           }
 
           repairedValues += 1;
@@ -235,7 +240,7 @@ const run = async () => {
     await persistLearningSnapshot();
 
     const remainingCorrupted = await Word.countDocuments({
-      ownedByLists: {
+      listMemberships: {
         $elemMatch: {
           listId: list._id,
           meaning: /[?�]/

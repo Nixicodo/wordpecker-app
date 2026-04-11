@@ -32,19 +32,10 @@ router.post('/generate-words', openaiRateLimiter, validate(generateWordsSchema),
 
     const wordCount = Math.min(Math.max(parseInt(String(count)) || 10, 1), 20);
 
-    const existingWords = await Word.find({ 'ownedByLists.0': { $exists: true } })
-      .populate({
-        path: 'ownedByLists.listId',
-        match: { 
-          $or: [
-            { context: { $regex: context, $options: 'i' } },
-            { name: { $regex: context, $options: 'i' } }
-          ]
-        }
-      });
+    const existingWords = await Word.find({ 'listMemberships.0': { $exists: true } }).lean();
 
     const wordsToExclude = existingWords
-      .filter(word => word.ownedByLists.some((list: any) => list.listId !== null))
+      .filter(word => word.listMemberships.some((membership: any) => membership.listId !== null))
       .map(word => word.value.toLowerCase());
 
     const { baseLanguage, targetLanguage } = await getUserLanguages(validation.userId);

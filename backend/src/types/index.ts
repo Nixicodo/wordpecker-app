@@ -4,22 +4,26 @@ export interface WordList {
   description?: string;
   context?: string;
   wordCount?: number;
-  averageProgress?: number;
-  masteredWords?: number;
+  dueCount?: number;
+  newCount?: number;
+  learningCount?: number;
+  reviewCount?: number;
+  masteredCount?: number;
+  retentionScore?: number;
   created_at: string;
   updated_at: string;
 }
 
-export interface WordContext {
+export interface WordListMembership {
   listId: string;
   meaning: string;
-  learnedPoint: number;
+  sourceListIds?: string[];
 }
 
 export interface Word {
   id: string;
   value: string;
-  ownedByLists: WordContext[];
+  listMemberships: WordListMembership[];
   created_at: string;
   updated_at: string;
 }
@@ -32,9 +36,7 @@ export interface Exercise {
   labeled_options: Array<{label: string; text: string}> | null;
   correct_answer: string;
   correct_label: string | null;
-  // For matching questions
   pairs: Array<{word: string; definition: string}> | null;
-  // For fill-in-the-blank questions
   sentence: string | null;
   blank_position: number | null;
 }
@@ -47,9 +49,7 @@ export interface Question {
   labeled_options: Array<{label: string; text: string}> | null;
   correct_answer: string;
   correct_label: string | null;
-  // For matching questions
   pairs: Array<{word: string; definition: string}> | null;
-  // For fill-in-the-blank questions
   sentence: string | null;
   blank_position: number | null;
 }
@@ -116,4 +116,4 @@ export interface DescriptionExercise {
   analysis: ImageDescriptionAnalysis;
   recommended_words: VocabularyRecommendation[];
   created_at: string;
-} 
+}

@@ -1,69 +1,51 @@
 import { Word } from '../api/words/model';
-import { persistLearningSnapshot } from './repoLearningSnapshot';
 import { WordList } from '../api/lists/model';
-import { isMistakeBookList, recordMistakeWord } from './mistakeBook';
+import { scheduleWordsForList, settleReviewResults, type ReviewSubmission } from './learningScheduler';
 
 type WordDocumentLike = {
   _id: { toString(): string };
   value: string;
-  ownedByLists: Array<{
+  listMemberships: Array<{
     listId: { toString(): string };
     meaning?: string;
-    learnedPoint?: number;
   }>;
 };
 
-export type LearnedPointResult = {
-  wordId: string;
-  correct: boolean;
-};
-
 export function mapWordsWithProgress(words: WordDocumentLike[], listId: string) {
-  return words.map(word => {
-    const context = word.ownedByLists.find(ctx => ctx.listId.toString() === listId);
+  return words.map((word) => {
+    const membership = word.listMemberships.find((ctx) => ctx.listId.toString() === listId);
 
     return {
       id: word._id.toString(),
       value: word.value,
-      meaning: context?.meaning || '',
-      learnedPoint: context?.learnedPoint || 0
+      meaning: membership?.meaning || ''
     };
   });
 }
 
-export function selectWeakWords(words: WordDocumentLike[], listId: string, count = 5) {
-  return mapWordsWithProgress(words, listId)
-    .sort((a, b) => a.learnedPoint !== b.learnedPoint ? a.learnedPoint - b.learnedPoint : Math.random() - 0.5)
-    .slice(0, count)
-    .map(({ learnedPoint, ...word }) => word);
+export async function selectScheduledWords(userId: string, listId: string, count = 5, poolSize?: number) {
+  const [list, words] = await Promise.all([
+    WordList.findById(listId).lean(),
+    Word.find({ 'listMemberships.listId': listId }).lean()
+  ]);
+
+  if (!list) {
+    throw new Error('List not found');
+  }
+
+  return scheduleWordsForList(userId, list, words, count, { poolSize });
 }
 
-export async function applyLearnedPointResults(listId: string, results: LearnedPointResult[]) {
+export async function applyReviewResults(
+  userId: string,
+  listId: string,
+  source: 'learn' | 'quiz' | 'mistake_review',
+  results: ReviewSubmission[]
+) {
   const list = await WordList.findById(listId).lean();
-  const isMistakeBook = isMistakeBookList(list);
+  if (!list) {
+    throw new Error('List not found');
+  }
 
-  await Promise.all(results.map(async (result) => {
-    const word = await Word.findById(result.wordId);
-    if (!word) {
-      return;
-    }
-
-    const context = word.ownedByLists.find(ctx => ctx.listId.toString() === listId);
-    if (!context) {
-      return;
-    }
-
-    const current = context.learnedPoint || 0;
-    context.learnedPoint = result.correct
-      ? Math.min(100, current + (isMistakeBook ? 20 : 10))
-      : Math.max(0, current - (isMistakeBook ? 15 : 5));
-
-    await word.save();
-
-    if (!result.correct && !isMistakeBook) {
-      await recordMistakeWord(listId, result.wordId);
-    }
-  }));
-
-  await persistLearningSnapshot();
+  await settleReviewResults(userId, list, source, results);
 }
