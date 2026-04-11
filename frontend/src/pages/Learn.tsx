@@ -501,6 +501,73 @@ export const Learn = () => {
           </MotionBox>
         )}
 
+        <Flex justify="center" mt={8} gap={4}>
+          {!isAnswered ? (
+            <Button
+              variant="solid"
+              colorScheme="blue"
+              size="lg"
+              onClick={handleAnswer}
+              isDisabled={!selectedAnswer || isValidating}
+              isLoading={isValidating}
+              loadingText={UI.validating}
+              _hover={{
+                transform: 'translateY(-2px)',
+                shadow: 'lg'
+              }}
+              transition="all 0.2s"
+            >
+              {UI.submitAnswer}
+            </Button>
+          ) : isCompleted ? (
+            <>
+              <Button
+                variant="outline"
+                colorScheme="green"
+                size="lg"
+                onClick={updateLearnedPoints}
+                isLoading={isUpdatingPoints}
+                loadingText={UI.saving}
+                _hover={{
+                  transform: 'translateY(-2px)',
+                  shadow: 'lg'
+                }}
+                transition="all 0.2s"
+              >
+                {UI.saveAndComplete}
+              </Button>
+              <Button
+                variant="solid"
+                colorScheme="blue"
+                size="lg"
+                onClick={loadMoreExercises}
+                isLoading={isLoading}
+                _hover={{
+                  transform: 'translateY(-2px)',
+                  shadow: 'lg'
+                }}
+                transition="all 0.2s"
+              >
+                {UI.continueLearning}
+              </Button>
+            </>
+          ) : (
+            <Button
+              variant="solid"
+              colorScheme="green"
+              size="lg"
+              onClick={handleNext}
+              _hover={{
+                transform: 'translateY(-2px)',
+                shadow: 'lg'
+              }}
+              transition="all 0.2s"
+            >
+              {currentExercise === exercises.length - 1 ? UI.finishSession : UI.nextExercise}
+            </Button>
+          )}
+        </Flex>
+
         {isAnswered && currentReview && (
           <ReviewRatingPanel
             isCorrect={currentReview.correct}
@@ -623,72 +690,6 @@ export const Learn = () => {
           </MotionBox>
         )}
 
-        <Flex justify="center" mt={8} gap={4}>
-          {!isAnswered ? (
-            <Button
-              variant="solid"
-              colorScheme="blue"
-              size="lg"
-              onClick={handleAnswer}
-              isDisabled={!selectedAnswer || isValidating}
-              isLoading={isValidating}
-              loadingText={UI.validating}
-              _hover={{
-                transform: 'translateY(-2px)',
-                shadow: 'lg'
-              }}
-              transition="all 0.2s"
-            >
-              {UI.submitAnswer}
-            </Button>
-          ) : isCompleted ? (
-            <>
-              <Button
-                variant="outline"
-                colorScheme="green"
-                size="lg"
-                onClick={updateLearnedPoints}
-                isLoading={isUpdatingPoints}
-                loadingText={UI.saving}
-                _hover={{
-                  transform: 'translateY(-2px)',
-                  shadow: 'lg'
-                }}
-                transition="all 0.2s"
-              >
-                {UI.saveAndComplete}
-              </Button>
-              <Button
-                variant="solid"
-                colorScheme="blue"
-                size="lg"
-                onClick={loadMoreExercises}
-                isLoading={isLoading}
-                _hover={{
-                  transform: 'translateY(-2px)',
-                  shadow: 'lg'
-                }}
-                transition="all 0.2s"
-              >
-                {UI.continueLearning}
-              </Button>
-            </>
-          ) : (
-            <Button
-              variant="solid"
-              colorScheme="green"
-              size="lg"
-              onClick={handleNext}
-              _hover={{
-                transform: 'translateY(-2px)',
-                shadow: 'lg'
-              }}
-                transition="all 0.2s"
-              >
-                {currentExercise === exercises.length - 1 ? UI.finishSession : UI.nextExercise}
-              </Button>
-          )}
-        </Flex>
       </MotionBox>
     </MotionBox>
   );

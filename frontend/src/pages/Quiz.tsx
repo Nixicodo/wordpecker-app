@@ -550,6 +550,76 @@ export const Quiz = () => {
           </MotionBox>
         )}
 
+        <Flex justify="center" mt={8} gap={4}>
+          {!isAnswered ? (
+            <Button
+              variant="solid"
+              colorScheme="blue"
+              size="lg"
+              onClick={handleAnswer}
+              isDisabled={!selectedAnswer || isValidating}
+              isLoading={isValidating}
+              loadingText={UI.validating}
+              _hover={{
+                transform: 'translateY(-2px)',
+                shadow: 'lg'
+              }}
+              transition="all 0.2s"
+            >
+              {UI.submitAnswer}
+            </Button>
+          ) : isCompleted ? (
+            <>
+              <Button
+                variant="outline"
+                colorScheme="purple"
+                size="lg"
+                onClick={updateLearnedPoints}
+                isLoading={isUpdatingPoints}
+                loadingText={UI.saving}
+                _hover={{
+                  transform: 'translateY(-2px)',
+                  shadow: 'lg'
+                }}
+                transition="all 0.2s"
+              >
+                {UI.saveAndFinish}
+              </Button>
+              <Button
+                variant="solid"
+                colorScheme="blue"
+                size="lg"
+                onClick={() => loadMoreQuestions(true)}
+                isLoading={isLoading}
+                loadingText={UI.loading}
+                _hover={{
+                  transform: 'translateY(-2px)',
+                  shadow: 'lg'
+                }}
+                transition="all 0.2s"
+              >
+                {UI.continueQuiz}
+              </Button>
+            </>
+          ) : (
+            <Button
+              variant="solid"
+              colorScheme="purple"
+              size="lg"
+              onClick={handleNext}
+              isLoading={isLoading}
+              loadingText={UI.loading}
+              _hover={{
+                transform: 'translateY(-2px)',
+                shadow: 'lg'
+              }}
+              transition="all 0.2s"
+            >
+              {currentQuestion + 1 >= totalQuestions ? UI.finishQuiz : UI.nextQuestion}
+            </Button>
+          )}
+        </Flex>
+
         {isAnswered && currentReview && (
           <ReviewRatingPanel
             isCorrect={currentReview.correct}
@@ -672,75 +742,6 @@ export const Quiz = () => {
           </MotionBox>
         )}
 
-        <Flex justify="center" mt={8} gap={4}>
-          {!isAnswered ? (
-            <Button
-              variant="solid"
-              colorScheme="blue"
-              size="lg"
-              onClick={handleAnswer}
-              isDisabled={!selectedAnswer || isValidating}
-              isLoading={isValidating}
-              loadingText={UI.validating}
-              _hover={{
-                transform: 'translateY(-2px)',
-                shadow: 'lg'
-              }}
-              transition="all 0.2s"
-            >
-              {UI.submitAnswer}
-            </Button>
-          ) : isCompleted ? (
-            <>
-              <Button
-                variant="outline"
-                colorScheme="purple"
-                size="lg"
-                onClick={updateLearnedPoints}
-                isLoading={isUpdatingPoints}
-                loadingText={UI.saving}
-                _hover={{
-                  transform: 'translateY(-2px)',
-                  shadow: 'lg'
-                }}
-                transition="all 0.2s"
-              >
-                {UI.saveAndFinish}
-              </Button>
-              <Button
-                variant="solid"
-                colorScheme="blue"
-                size="lg"
-                onClick={() => loadMoreQuestions(true)}
-                isLoading={isLoading}
-                loadingText={UI.loading}
-                _hover={{
-                  transform: 'translateY(-2px)',
-                  shadow: 'lg'
-                }}
-                transition="all 0.2s"
-              >
-                {UI.continueQuiz}
-              </Button>
-            </>
-          ) : (
-            <Button
-              variant="solid"
-              colorScheme="purple"
-              size="lg"
-              onClick={handleNext}
-              isLoading={isLoading}
-              loadingText={UI.loading}
-              _hover={{
-                transform: 'translateY(-2px)',
-                shadow: 'lg'
-              }}
-              transition="all 0.2s"
-            >
-              {currentQuestion + 1 >= totalQuestions ? UI.finishQuiz : UI.nextQuestion}
-            </Button>
-          )}
-        </Flex>
       </MotionBox>
     </MotionBox>
   );
