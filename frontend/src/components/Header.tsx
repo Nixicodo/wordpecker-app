@@ -1,7 +1,7 @@
 import { Box, Container, Flex, Button, Icon, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import { GiTreeBranch, GiBookshelf } from 'react-icons/gi';
-import { FaFeatherAlt, FaCog, FaCamera, FaGraduationCap } from 'react-icons/fa';
+import { GiTreeBranch } from 'react-icons/gi';
+import { FaFeatherAlt, FaCog, FaCamera, FaGraduationCap, FaRegBookmark } from 'react-icons/fa';
 import { detectUiLocale } from '../i18n/ui';
 
 export const Header = () => {
@@ -13,7 +13,7 @@ export const Header = () => {
         <Flex h="16" alignItems="center" justifyContent="space-between">
           <Flex gap={6} align="center">
             <Link to="/lists">
-              <Button 
+              <Button
                 variant="ghost"
                 leftIcon={<Icon as={GiTreeBranch} color="green.500" />}
                 _hover={{
@@ -24,9 +24,9 @@ export const Header = () => {
               >
                 <Flex align="center" gap={1}>
                   <Text>{isZh ? '我的词树' : 'My Trees'}</Text>
-                  <Icon 
-                    as={FaFeatherAlt} 
-                    color="#FA8C16" 
+                  <Icon
+                    as={FaFeatherAlt}
+                    color="#FA8C16"
                     transform="rotate(-45deg)"
                     boxSize={3}
                     ml={-1}
@@ -35,21 +35,21 @@ export const Header = () => {
                 </Flex>
               </Button>
             </Link>
-            <Link to="/templates">
-              <Button 
+            <Link to="/mistakes">
+              <Button
                 variant="ghost"
-                leftIcon={<Icon as={GiBookshelf} color="#1890FF" />}
+                leftIcon={<Icon as={FaRegBookmark} color="#F56565" />}
                 _hover={{
                   transform: 'translateY(-2px)',
-                  color: '#1890FF'
+                  color: '#F56565'
                 }}
                 transition="all 0.2s"
               >
-                {isZh ? '模板库' : 'Templates'}
+                {isZh ? '错题本' : 'Mistake Book'}
               </Button>
             </Link>
             <Link to="/describe">
-              <Button 
+              <Button
                 variant="ghost"
                 leftIcon={<Icon as={FaCamera} color="#FA8C16" />}
                 _hover={{
@@ -62,7 +62,7 @@ export const Header = () => {
               </Button>
             </Link>
             <Link to="/learn-new-words">
-              <Button 
+              <Button
                 variant="ghost"
                 leftIcon={<Icon as={FaGraduationCap} color="#FA8C16" />}
                 _hover={{
@@ -75,7 +75,7 @@ export const Header = () => {
               </Button>
             </Link>
             <Link to="/settings">
-              <Button 
+              <Button
                 variant="ghost"
                 leftIcon={<Icon as={FaCog} color="gray.400" />}
                 _hover={{
@@ -90,11 +90,11 @@ export const Header = () => {
           </Flex>
           <Box>
             <Text color="green.500" fontWeight="bold">
-              {isZh ? 'WordPecker 西语学习' : 'WordPecker App'}
+              {isZh ? 'WordPecker 词汇学习' : 'WordPecker App'}
             </Text>
           </Box>
         </Flex>
       </Container>
     </Box>
   );
-}; 
+};

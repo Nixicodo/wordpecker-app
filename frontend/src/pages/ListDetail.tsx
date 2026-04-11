@@ -118,6 +118,7 @@ export const ListDetail = () => {
   const [lightReadingLevel, setLightReadingLevel] = useState<'beginner' | 'intermediate' | 'advanced'>('intermediate');
   const [generatingReading, setGeneratingReading] = useState(false);
   const [userPreferences, setUserPreferences] = useState<UserPreferences | null>(null);
+  const isMistakeBook = list?.kind === 'mistake_book';
   
   const { 
     isOpen: isReadingModalOpen, 
@@ -354,22 +355,24 @@ export const ListDetail = () => {
                 color="green.400"
                 style={{ animation: 'sparkle 3s ease infinite' }}
               />
-              {list.name}
+              {isMistakeBook ? '错题本' : list.name}
             </Heading>
           </Flex>
-          <IconButton
-            aria-label="删除词树"
-            icon={<DeleteIcon />}
-            variant="ghost"
-            colorScheme="red"
-            onClick={handleDeleteList}
-            size="lg"
-            _hover={{
-              bg: 'red.900',
-              transform: 'scale(1.1)'
-            }}
-            transition="all 0.2s"
-          />
+          {!isMistakeBook && (
+            <IconButton
+              aria-label="删除词树"
+              icon={<DeleteIcon />}
+              variant="ghost"
+              colorScheme="red"
+              onClick={handleDeleteList}
+              size="lg"
+              _hover={{
+                bg: 'red.900',
+                transform: 'scale(1.1)'
+              }}
+              transition="all 0.2s"
+            />
+          )}
         </Flex>
 
         {/* Overall Progress Section */}
@@ -387,7 +390,11 @@ export const ListDetail = () => {
           gap={4}
         >
           <Box maxW="container.md">
-            <Text color="gray.400" fontSize="lg">{list.description}</Text>
+            <Text color="gray.400" fontSize="lg">
+              {isMistakeBook
+                ? '这里会自动收集你在其他词树里答错过的单词。答对得越多，它们在后续练习里的出现频率就越低。'
+                : list.description}
+            </Text>
             {list.context && (
               <Text color="gray.500" fontSize="md" mt={2}>
                 {UI.contextPrefix} {list.context}
@@ -464,32 +471,36 @@ export const ListDetail = () => {
             >
               {UI.actionVoiceChat}
             </Button>
-            <Button
-              variant="outline"
-              colorScheme="green"
-              leftIcon={<FaFileImport />}
-              _hover={{
-                transform: 'translateY(-2px)',
-              }}
-              transition="all 0.2s"
-              size="lg"
-              onClick={onBulkImportOpen}
-            >
-              {UI.actionBulkImport}
-            </Button>
-            <Button 
-              variant="solid"
-              colorScheme="green"
-              leftIcon={<FaPlus />}
-              _hover={{ 
-                transform: 'translateY(-2px)',
-              }}
-              transition="all 0.2s"
-              size="lg"
-              onClick={onOpen}
-            >
-              {UI.actionAddWord}
-            </Button>
+            {!isMistakeBook && (
+              <Button
+                variant="outline"
+                colorScheme="green"
+                leftIcon={<FaFileImport />}
+                _hover={{
+                  transform: 'translateY(-2px)',
+                }}
+                transition="all 0.2s"
+                size="lg"
+                onClick={onBulkImportOpen}
+              >
+                {UI.actionBulkImport}
+              </Button>
+            )}
+            {!isMistakeBook && (
+              <Button 
+                variant="solid"
+                colorScheme="green"
+                leftIcon={<FaPlus />}
+                _hover={{ 
+                  transform: 'translateY(-2px)',
+                }}
+                transition="all 0.2s"
+                size="lg"
+                onClick={onOpen}
+              >
+                {UI.actionAddWord}
+              </Button>
+            )}
           </Flex>
         </Flex>
 
@@ -519,19 +530,21 @@ export const ListDetail = () => {
               <Text color="gray.400" fontSize="lg" textAlign="center">
                 {UI.emptyHint}
               </Text>
-              <Button
-                variant="outline"
-                colorScheme="green"
-                leftIcon={<FaPlus />}
-                onClick={onOpen}
-                size="lg"
-                _hover={{
-                  transform: 'translateY(-2px)',
-                }}
-                transition="all 0.2s"
-              >
-                {UI.emptyPrimaryButton}
-              </Button>
+              {!isMistakeBook && (
+                <Button
+                  variant="outline"
+                  colorScheme="green"
+                  leftIcon={<FaPlus />}
+                  onClick={onOpen}
+                  size="lg"
+                  _hover={{
+                    transform: 'translateY(-2px)',
+                  }}
+                  transition="all 0.2s"
+                >
+                  {UI.emptyPrimaryButton}
+                </Button>
+              )}
             </Flex>
           ) : (
             <Box p={4}>
@@ -601,21 +614,23 @@ export const ListDetail = () => {
                         }
                       }}
                     >
-                      <IconButton
-                        aria-label={UI.deleteWordAria}
-                        icon={<DeleteIcon />}
-                        variant="ghost"
-                        colorScheme="red"
-                        opacity={selectedWord === word.id ? 1 : 0}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteWord(word.id);
-                        }}
-                        _hover={{
-                          transform: 'scale(1.1)',
-                        }}
-                        transition="all 0.2s"
-                      />
+                      {!isMistakeBook && (
+                        <IconButton
+                          aria-label={UI.deleteWordAria}
+                          icon={<DeleteIcon />}
+                          variant="ghost"
+                          colorScheme="red"
+                          opacity={selectedWord === word.id ? 1 : 0}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteWord(word.id);
+                          }}
+                          _hover={{
+                            transform: 'scale(1.1)',
+                          }}
+                          transition="all 0.2s"
+                        />
+                      )}
                     </Box>
                   </Flex>
                 </MotionBox>

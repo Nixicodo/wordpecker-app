@@ -10,6 +10,8 @@ export interface WordList {
   name: string;
   description?: string;
   context?: string;
+  kind?: 'custom' | 'mistake_book';
+  systemKey?: string;
   wordCount?: number;
   averageProgress?: number;
   masteredWords?: number;

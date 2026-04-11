@@ -5,7 +5,6 @@ import { Lists } from './pages/Lists';
 import { ListDetail } from './pages/ListDetail';
 import { Learn } from './pages/Learn';
 import { Quiz } from './pages/Quiz';
-import { TemplateLibrary } from './pages/TemplateLibrary';
 import { WordDetailPage } from './pages/WordDetail';
 import { Settings } from './pages/Settings';
 import { ImageDescription } from './pages/ImageDescription';
@@ -14,6 +13,7 @@ import { WordLearningSession } from './pages/WordLearningSession';
 import { ReadingPage } from './pages/ReadingPage';
 import { VoiceChat } from './pages/VoiceChat';
 import { Header } from './components/Header';
+import { MistakeBook } from './pages/MistakeBook';
 
 function App() {
   return (
@@ -27,7 +27,7 @@ function App() {
             <Route path="/lists/:id" element={<ListDetail />} />
             <Route path="/learn/:id" element={<Learn />} />
             <Route path="/quiz/:id" element={<Quiz />} />
-            <Route path="/templates" element={<TemplateLibrary />} />
+            <Route path="/mistakes" element={<MistakeBook />} />
             <Route path="/words/:wordId" element={<WordDetailPage />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/describe" element={<ImageDescription />} />
