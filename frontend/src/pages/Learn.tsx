@@ -96,6 +96,22 @@ const collectSeenWordIds = (items: Exercise[]) => Array.from(new Set(
   ].filter((wordId): wordId is string => Boolean(wordId)))
 ));
 
+const getConfidencePanelWords = (exercise: Exercise) => {
+  if (exercise.exposedWords && exercise.exposedWords.length > 0) {
+    return exercise.exposedWords;
+  }
+
+  if (!exercise.wordId) {
+    return [];
+  }
+
+  return [{
+    id: exercise.wordId,
+    value: exercise.word,
+    meaning: ''
+  }];
+};
+
 type SessionProgressState = ReturnType<SessionService['getCurrentProgress']>;
 
 const getErrorMessage = (error: unknown, fallbackMessage: string) => {
@@ -638,7 +654,7 @@ export const Learn = () => {
 
         {isAnswered && (
           <QuestionConfidencePanel
-            words={exercise.exposedWords || []}
+            words={getConfidencePanelWords(exercise)}
             selectedWordIds={selfAssessedWordIds}
             onToggleWord={toggleSelfAssessedWord}
           />
