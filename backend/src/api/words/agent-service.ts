@@ -13,9 +13,42 @@ const examplesPrompt = fs.readFileSync(path.join(__dirname, '../../agents/exampl
 const similarWordsPrompt = fs.readFileSync(path.join(__dirname, '../../agents/similar-words-agent/prompt.md'), 'utf-8');
 const readingPrompt = fs.readFileSync(path.join(__dirname, '../../agents/reading-agent/prompt.md'), 'utf-8');
 
+export type DefinitionStyle = 'default' | 'compact_gloss';
+
+export const buildDefinitionUserPrompt = (
+  word: string,
+  context: string,
+  baseLanguage: string,
+  targetLanguage: string,
+  style: DefinitionStyle = 'default'
+) => {
+  const normalizedContext = context?.trim() || 'General language learning';
+
+  if (style === 'compact_gloss') {
+    return [
+      `Generate a very short learner-friendly gloss for the word "${word}".`,
+      `The word is in ${targetLanguage}, and the gloss must be in ${baseLanguage}.`,
+      `Context: "${normalizedContext}".`,
+      'Return exactly one concise line, not a paragraph.',
+      'Prefer the format: short base-language meaning + optional part of speech + English hint in parentheses.',
+      `Example target shape when base language is Chinese: "教堂（church）", "照片（photo / photograph）", "社区；街区（neighborhood / district）".`,
+      'Keep the base-language meaning to a few words only.',
+      'Do not add full-sentence explanations, usage notes, cultural background, examples, or extra punctuation beyond what the gloss needs.'
+    ].join(' ');
+  }
+
+  return `Generate a clear definition for the word "${word}" in the context of "${normalizedContext}". The word is in ${targetLanguage} and the definition should be in ${baseLanguage}.`;
+};
+
 export class WordAgentService {
-  async generateDefinition(word: string, context: string, baseLanguage: string, targetLanguage: string): Promise<string> {
-    const prompt = `Generate a clear definition for the word "${word}" in the context of "${context}". The word is in ${targetLanguage} and the definition should be in ${baseLanguage}.`;
+  async generateDefinition(
+    word: string,
+    context: string,
+    baseLanguage: string,
+    targetLanguage: string,
+    style: DefinitionStyle = 'default'
+  ): Promise<string> {
+    const prompt = buildDefinitionUserPrompt(word, context, baseLanguage, targetLanguage, style);
     const result = await generateStructuredResult<DefinitionResultType>({
       systemPrompt: definitionPrompt,
       userPrompt: prompt,

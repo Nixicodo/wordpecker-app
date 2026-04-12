@@ -53,12 +53,15 @@ type UserLanguages = {
   targetLanguage: string;
 };
 
+type DefinitionMode = 'default' | 'compact_gloss';
+
 const resolveDefinition = async (
   req: { headers: Record<string, string | string[] | undefined> },
   value: string,
   listContext: string,
   providedMeaning?: string,
-  languages?: UserLanguages
+  languages?: UserLanguages,
+  mode: DefinitionMode = 'default'
 ) => {
   if (providedMeaning?.trim()) {
     const normalizedMeaning = providedMeaning.trim();
@@ -76,7 +79,8 @@ const resolveDefinition = async (
     value,
     listContext,
     resolvedLanguages.baseLanguage,
-    resolvedLanguages.targetLanguage
+    resolvedLanguages.targetLanguage,
+    mode
   );
 
   assertMeaningEncoding(generatedMeaning);
@@ -172,7 +176,14 @@ router.post('/:listId/words/bulk', validate(bulkAddWordsSchema), async (req, res
       seen.add(normalizedWord);
 
       try {
-        const definition = await resolveDefinition(req, originalWord, list.context || '', item.meaning, languages);
+        const definition = await resolveDefinition(
+          req,
+          originalWord,
+          list.context || '',
+          item.meaning,
+          languages,
+          item.meaning?.trim() ? 'default' : 'compact_gloss'
+        );
         const result = await addWordToList(listId, originalWord, definition);
 
         if (result.status === 'duplicate') {
