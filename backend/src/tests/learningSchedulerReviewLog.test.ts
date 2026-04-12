@@ -6,7 +6,7 @@ import { Word } from '../api/words/model';
 import { LearningState } from '../api/learning-state/model';
 import { ReviewLog } from '../api/review-log/model';
 import listRoutes from '../api/lists/routes';
-import { ensureLearningState, summarizeListProgress } from '../services/learningScheduler';
+import { ensureLearningState, settleReviewResults, summarizeListProgress } from '../services/learningScheduler';
 import { selectScheduledWords } from '../services/learningProgress';
 
 describe('learning scheduler review log signals', () => {
@@ -235,5 +235,65 @@ describe('learning scheduler review log signals', () => {
     expect(response.body[0].hintUsageRate).toBe(33);
     expect(response.body[0].hardRate).toBe(33);
     expect(response.body[0].againRate).toBe(33);
+  });
+
+  it('treats self-assessed unfamiliar words as harder review signals', async () => {
+    const userId = 'self-assessment-user';
+    const list = await WordList.create({
+      name: 'Self Assessment',
+      description: 'Used to verify manual unfamiliar flags',
+      context: 'Testing',
+      kind: 'custom'
+    });
+
+    const [targetWord, distractorWord] = await Promise.all([
+      Word.create({
+        value: 'anchor',
+        listMemberships: [{
+          listId: list._id,
+          meaning: '锚点',
+          addedAt: new Date(),
+          updatedAt: new Date()
+        }]
+      }),
+      Word.create({
+        value: 'harbor',
+        listMemberships: [{
+          listId: list._id,
+          meaning: '港口',
+          addedAt: new Date(),
+          updatedAt: new Date()
+        }]
+      })
+    ]);
+
+    await Promise.all([
+      ensureLearningState(userId, list._id.toString(), targetWord),
+      ensureLearningState(userId, list._id.toString(), distractorWord)
+    ]);
+
+    await settleReviewResults(userId, list, 'learn', [{
+      wordId: targetWord._id.toString(),
+      correct: true,
+      rating: 'good',
+      questionType: 'multiple_choice',
+      selfAssessedWordIds: [distractorWord._id.toString()]
+    }]);
+
+    const distractorState = await LearningState.findOne({
+      userId,
+      wordId: distractorWord._id,
+      listId: list._id
+    }).lean();
+    const distractorLog = await ReviewLog.findOne({
+      userId,
+      wordId: distractorWord._id,
+      listId: list._id
+    }).lean();
+
+    expect(distractorState?.reviewCount).toBe(1);
+    expect(distractorState?.lastRating).toBe('hard');
+    expect(distractorLog?.rating).toBe('hard');
+    expect(distractorLog?.questionType).toBe('multiple_choice_self_assessment');
   });
 });

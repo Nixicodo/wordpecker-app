@@ -2,6 +2,7 @@ import { ExerciseResult, ExerciseResultType, ExerciseWithId } from '../../agents
 import { generateStructuredResult } from '../../services/structuredChat';
 import { generationCache } from '../../services/generationCache';
 import { generateLocalExercises } from '../../services/localExerciseGenerator';
+import { annotateGeneratedExercises } from '../../services/generatedExerciseMetadata';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -116,20 +117,12 @@ Words with higher challenge scores should receive tougher phrasing, stronger dis
       'Quiz generation timed out',
     );
 
-    return result.exercises.map(exercise => {
-      const matchingWord = words.find(w => w.value === exercise.word);
-      const matchingWordIds = exercise.type === 'matching' && exercise.pairs
-        ? exercise.pairs
-            .map((pair) => allKnownWords.find((candidate) => candidate.value === pair.word)?.id)
-            .filter((id): id is string => Boolean(id))
-        : undefined;
-      return {
-        ...exercise,
-        difficulty: this.adjustDifficulty(exercise.difficulty, matchingWord?.challengeScore),
-        wordId: matchingWord?.id || null,
-        wordIds: matchingWordIds
-      };
-    });
+    return annotateGeneratedExercises(
+      result.exercises,
+      words,
+      distractorWords,
+      (difficulty, challengeScore) => this.adjustDifficulty(difficulty, challengeScore)
+    );
   }
 
   async generateQuestions(

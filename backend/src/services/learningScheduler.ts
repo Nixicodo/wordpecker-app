@@ -14,6 +14,7 @@ const scheduler = fsrs({
 export type ReviewSubmission = {
   wordId: string;
   wordIds?: string[];
+  selfAssessedWordIds?: string[];
   rating: ReviewRating;
   correct: boolean;
   questionType: string;
@@ -63,6 +64,13 @@ const ratingMap: Record<ReviewRating, Grade> = {
   hard: Rating.Hard,
   good: Rating.Good,
   easy: Rating.Easy
+};
+
+const ratingSeverity: Record<ReviewRating, number> = {
+  easy: 0,
+  good: 1,
+  hard: 2,
+  again: 3
 };
 
 const stateNameMap: Record<State, ScheduledWord['state']['status']> = {
@@ -443,10 +451,33 @@ export const settleReviewResults = async (
   const isMistakeBook = isMistakeBookList(list);
   const normalizedResults = results.flatMap((result) => {
     const wordIds = Array.from(new Set([result.wordId, ...(result.wordIds || [])].filter(Boolean)));
-    return wordIds.map((wordId) => ({
+    const selfAssessedWordIds = Array.from(new Set((result.selfAssessedWordIds || []).filter(Boolean)));
+    const settledWordIdSet = new Set(wordIds);
+    const settleRating = (wordId: string): ReviewRating => (
+      selfAssessedWordIds.includes(wordId) && ratingSeverity[result.rating] < ratingSeverity.hard
+        ? 'hard'
+        : result.rating
+    );
+
+    const directResults = wordIds.map((wordId) => ({
       ...result,
-      wordId
+      wordId,
+      rating: settleRating(wordId)
     }));
+
+    const selfAssessmentResults = selfAssessedWordIds
+      .filter((wordId) => !settledWordIdSet.has(wordId))
+      .map((wordId) => ({
+        ...result,
+        wordId,
+        wordIds: undefined,
+        selfAssessedWordIds: undefined,
+        correct: true,
+        rating: 'hard' as ReviewRating,
+        questionType: `${result.questionType}_self_assessment`
+      }));
+
+    return [...directResults, ...selfAssessmentResults];
   });
 
   await Promise.all(normalizedResults.map(async (result) => {

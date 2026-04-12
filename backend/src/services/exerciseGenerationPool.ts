@@ -27,8 +27,14 @@ export async function selectGenerationWordPool(
   userId: string,
   listId: string,
   activeCount = ACTIVE_GENERATION_WORD_COUNT,
-  extraDistractorCount = EXTRA_DISTRACTOR_COUNT
+  extraDistractorCount = EXTRA_DISTRACTOR_COUNT,
+  excludedWordIds: string[] = []
 ) {
   const candidates = await selectScheduledWords(userId, listId, activeCount, Number.MAX_SAFE_INTEGER);
-  return buildGenerationWordPool(candidates, activeCount, extraDistractorCount);
+  const excludedWordIdSet = new Set(excludedWordIds);
+  const filteredCandidates = excludedWordIds.length
+    ? candidates.filter((candidate) => !excludedWordIdSet.has(candidate.id))
+    : candidates;
+
+  return buildGenerationWordPool(filteredCandidates, activeCount, extraDistractorCount);
 }

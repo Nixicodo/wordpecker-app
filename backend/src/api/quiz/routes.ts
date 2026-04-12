@@ -67,8 +67,12 @@ router.post('/:listId/more', validate(listIdSchema), async (req, res) => {
     if (!list) return res.status(404).json({ message: 'List not found' });
 
     const userId = resolveUserId(req.headers['user-id']);
+    const requestBody = req.body as { excludeWordIds?: unknown[] } | undefined;
+    const excludeWordIds = Array.isArray(requestBody?.excludeWordIds)
+      ? requestBody.excludeWordIds.filter((wordId: unknown): wordId is string => typeof wordId === 'string')
+      : [];
     const [{ scheduledWords, extraDistractors }, questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
-      selectGenerationWordPool(userId, listId),
+      selectGenerationWordPool(userId, listId, undefined, undefined, excludeWordIds),
       getQuestionTypes(userId),
       getUserLanguages(userId)
     ]);
@@ -108,6 +112,7 @@ router.put('/:listId/reviews', validate(updatePointsSchema), async (req, res) =>
       correct: result.correct,
       rating: result.rating || (result.correct ? 'good' : 'again'),
       questionType: result.questionType || 'unknown',
+      selfAssessedWordIds: result.selfAssessedWordIds,
       responseTimeMs: result.responseTimeMs,
       usedHint: result.usedHint
     }));

@@ -16,6 +16,7 @@ export const updatePointsSchema = {
       correct: z.boolean(),
       rating: z.enum(['again', 'hard', 'good', 'easy']).optional(),
       questionType: z.string().optional(),
+      selfAssessedWordIds: z.array(z.string().refine(val => mongoose.Types.ObjectId.isValid(val), 'Invalid word ID')).optional(),
       responseTimeMs: z.number().nonnegative().optional(),
       usedHint: z.boolean().optional()
     }))

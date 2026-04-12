@@ -33,4 +33,13 @@ describe('buildGenerationWordPool', () => {
     expect(generationPool.slice(0, 5).map((word) => word.id)).toEqual(['1', '2', '3', '4', '5']);
     expect(generationPool.slice(5).every((word) => !['1', '2', '3', '4', '5'].includes(word.id))).toBe(true);
   });
+
+  it('skips excluded words when building the next batch candidate pool', () => {
+    const excludedWordIds = new Set(['1', '2', '3', '4', '5']);
+    const filteredCandidates = candidates.filter((candidate) => !excludedWordIds.has(candidate.id));
+    const { scheduledWords, generationPool } = buildGenerationWordPool(filteredCandidates, 5, 15);
+
+    expect(scheduledWords.map((word) => word.id)).toEqual(['6', '7', '8', '9', '10']);
+    expect(generationPool.every((word) => !excludedWordIds.has(word.id))).toBe(true);
+  });
 });
