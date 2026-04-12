@@ -30,6 +30,7 @@ import { Question, ReviewSubmission, Word, WordList } from '../types';
 import { ArrowBackIcon, CloseIcon, CheckCircleIcon, InfoIcon, StarIcon } from '@chakra-ui/icons';
 import { apiService } from '../services/api';
 import { QuestionAnsweredSupplement, QuestionRenderer } from '../components/QuestionRenderer';
+import { QuestionConfidencePanel } from '../components/QuestionConfidencePanel';
 import { ReviewRatingPanel } from '../components/ReviewRatingPanel';
 import { SessionService } from '../services/sessionService';
 import { validateAnswer } from '../utils/answerValidation';
@@ -141,6 +142,7 @@ export const Quiz = () => {
   const [recommendationReason, setRecommendationReason] = useState('');
   const [currentReview, setCurrentReview] = useState<ReviewSubmission | null>(null);
   const [responseTimeMs, setResponseTimeMs] = useState(0);
+  const [selfAssessedWordIds, setSelfAssessedWordIds] = useState<string[]>([]);
   const questionStartedAtRef = useRef(Date.now());
   const summaryCardBg = useColorModeValue('white', 'gray.800');
   const summaryCardBorder = useColorModeValue('purple.200', 'purple.600');
@@ -170,6 +172,7 @@ export const Quiz = () => {
     setRecommendedRating('good');
     setRecommendationReason('');
     setResponseTimeMs(0);
+    setSelfAssessedWordIds([]);
     questionStartedAtRef.current = Date.now();
   }, []);
 
@@ -182,11 +185,20 @@ export const Quiz = () => {
       ...prev,
       {
         ...currentReview,
-        rating: selectedRating
+        rating: selectedRating,
+        selfAssessedWordIds
       }
     ]);
     setCurrentReview(null);
-  }, [currentReview, selectedRating]);
+  }, [currentReview, selectedRating, selfAssessedWordIds]);
+
+  const toggleSelfAssessedWord = useCallback((wordId: string) => {
+    setSelfAssessedWordIds((previousWordIds) => (
+      previousWordIds.includes(wordId)
+        ? previousWordIds.filter((currentWordId) => currentWordId !== wordId)
+        : [...previousWordIds, wordId]
+    ));
+  }, []);
 
   useEffect(() => {
     const initQuiz = async () => {
@@ -683,6 +695,14 @@ export const Quiz = () => {
             questionType={question.type}
             usedHint={usedHint}
             onRatingChange={setSelectedRating}
+          />
+        )}
+
+        {isAnswered && (
+          <QuestionConfidencePanel
+            words={resolvedQuestion.exposedWords || []}
+            selectedWordIds={selfAssessedWordIds}
+            onToggleWord={toggleSelfAssessedWord}
           />
         )}
 
