@@ -26,7 +26,7 @@ import {
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Exercise, ReviewSubmission, WordList } from '../types';
+import { Exercise, ReviewSubmission, Word, WordList } from '../types';
 import { ArrowBackIcon, CloseIcon, CheckCircleIcon, InfoIcon, StarIcon } from '@chakra-ui/icons';
 import { apiService } from '../services/api';
 import { QuestionAnsweredSupplement, QuestionRenderer } from '../components/QuestionRenderer';
@@ -36,6 +36,7 @@ import { SessionService } from '../services/sessionService';
 import { validateAnswer } from '../utils/answerValidation';
 import { usePrefetchedBatch } from '../hooks/usePrefetchedBatch';
 import { recommendReviewRating } from '../utils/reviewRating';
+import { resolveQuestionExposureWords } from '../utils/questionExposure';
 
 const UI = {
   startErrorTitle: '\u542f\u52a8\u5b66\u4e60\u5931\u8d25',
@@ -96,22 +97,6 @@ const collectSeenWordIds = (items: Exercise[]) => Array.from(new Set(
   ].filter((wordId): wordId is string => Boolean(wordId)))
 ));
 
-const getConfidencePanelWords = (exercise: Exercise) => {
-  if (exercise.exposedWords && exercise.exposedWords.length > 0) {
-    return exercise.exposedWords;
-  }
-
-  if (!exercise.wordId) {
-    return [];
-  }
-
-  return [{
-    id: exercise.wordId,
-    value: exercise.word,
-    meaning: ''
-  }];
-};
-
 type SessionProgressState = ReturnType<SessionService['getCurrentProgress']>;
 
 const getErrorMessage = (error: unknown, fallbackMessage: string) => {
@@ -137,6 +122,7 @@ export const Learn = () => {
   const hasInitializedRef = useRef(false);
 
   const [list, setList] = useState<WordList | null>(state?.list || null);
+  const [listWords, setListWords] = useState<Word[]>([]);
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [currentExercise, setCurrentExercise] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState('');
@@ -219,8 +205,12 @@ export const Learn = () => {
 
       try {
         setIsLoading(true);
-        const resolvedList = list ?? await apiService.getList(id);
+        const [resolvedList, resolvedWords] = await Promise.all([
+          list ?? apiService.getList(id),
+          apiService.getWords(id)
+        ]);
         setList(resolvedList);
+        setListWords(resolvedWords);
 
         const response = await apiService.startLearning(id);
         if (response && response.exercises) {
@@ -440,6 +430,10 @@ export const Learn = () => {
   }
 
   const exercise = exercises[currentExercise];
+  const resolvedExercise = {
+    ...exercise,
+    exposedWords: resolveQuestionExposureWords(exercise, listWords)
+  };
   const progress = ((currentExercise + 1) / exercises.length) * 100;
   const streak = sessionProgress?.stats.streak || 0;
   const score = sessionProgress?.stats.score || 0;
@@ -533,7 +527,7 @@ export const Learn = () => {
         py={6}
       >
         <QuestionRenderer
-          question={exercise}
+          question={resolvedExercise}
           selectedAnswer={selectedAnswer}
           onAnswerChange={setSelectedAnswer}
           isAnswered={isAnswered}
@@ -634,7 +628,7 @@ export const Learn = () => {
         )}
 
         <QuestionAnsweredSupplement
-          question={exercise}
+          question={resolvedExercise}
           isAnswered={isAnswered}
           isCorrect={actualCorrectness}
         />
@@ -654,7 +648,7 @@ export const Learn = () => {
 
         {isAnswered && (
           <QuestionConfidencePanel
-            words={getConfidencePanelWords(exercise)}
+            words={resolvedExercise.exposedWords || []}
             selectedWordIds={selfAssessedWordIds}
             onToggleWord={toggleSelfAssessedWord}
           />

@@ -47,6 +47,8 @@ interface QuestionAnsweredSupplementProps {
   isCorrect?: boolean | null;
 }
 
+const RELATED_WORDS_TITLE = '本题相关词汇：';
+
 export const QuestionAnsweredSupplement: React.FC<QuestionAnsweredSupplementProps> = ({
   question,
   isAnswered,
@@ -86,6 +88,19 @@ export const QuestionAnsweredSupplement: React.FC<QuestionAnsweredSupplementProp
           ))}
         </Box>
       )}
+
+      {(question.type === 'multiple_choice' || question.type === 'sentence_completion') &&
+        question.exposedWords &&
+        question.exposedWords.length > 0 && (
+          <Box p={4} bg="slate.800" borderRadius="md">
+            <Text fontWeight="bold" mb={2}>{RELATED_WORDS_TITLE}</Text>
+            {question.exposedWords.map((word) => (
+              <Text key={word.id} fontSize="sm" color="green.300">
+                {word.value} {'->'} {word.meaning || '释义解析中'}
+              </Text>
+            ))}
+          </Box>
+        )}
     </VStack>
   );
 };

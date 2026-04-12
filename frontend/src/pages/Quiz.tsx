@@ -26,7 +26,7 @@ import {
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Question, ReviewSubmission, WordList } from '../types';
+import { Question, ReviewSubmission, Word, WordList } from '../types';
 import { ArrowBackIcon, CloseIcon, CheckCircleIcon, InfoIcon, StarIcon } from '@chakra-ui/icons';
 import { apiService } from '../services/api';
 import { QuestionAnsweredSupplement, QuestionRenderer } from '../components/QuestionRenderer';
@@ -35,6 +35,7 @@ import { SessionService } from '../services/sessionService';
 import { validateAnswer } from '../utils/answerValidation';
 import { usePrefetchedBatch } from '../hooks/usePrefetchedBatch';
 import { recommendReviewRating } from '../utils/reviewRating';
+import { resolveQuestionExposureWords } from '../utils/questionExposure';
 
 const UI = {
   startErrorTitle: '\u542f\u52a8\u6d4b\u9a8c\u5931\u8d25',
@@ -118,6 +119,7 @@ export const Quiz = () => {
   const hasInitializedRef = useRef(false);
 
   const [list, setList] = useState<WordList | null>(state?.list || null);
+  const [listWords, setListWords] = useState<Word[]>([]);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState('');
@@ -192,8 +194,12 @@ export const Quiz = () => {
 
       try {
         setIsLoading(true);
-        const resolvedList = list ?? await apiService.getList(id);
+        const [resolvedList, resolvedWords] = await Promise.all([
+          list ?? apiService.getList(id),
+          apiService.getWords(id)
+        ]);
         setList(resolvedList);
+        setListWords(resolvedWords);
 
         const response = await apiService.startQuiz(id);
         if (response && response.questions && response.total_questions) {
@@ -447,6 +453,10 @@ export const Quiz = () => {
   }
 
   const question = questions[currentQuestion];
+  const resolvedQuestion = {
+    ...question,
+    exposedWords: resolveQuestionExposureWords(question, listWords)
+  };
   const progress = ((currentQuestion + 1) / totalQuestions) * 100;
   const combo = sessionProgress?.stats.streak || 0;
   const score = sessionProgress?.stats.score || 0;
@@ -544,7 +554,7 @@ export const Quiz = () => {
         py={6}
       >
         <QuestionRenderer
-          question={question}
+          question={resolvedQuestion}
           selectedAnswer={selectedAnswer}
           onAnswerChange={setSelectedAnswer}
           isAnswered={isAnswered}
@@ -658,7 +668,7 @@ export const Quiz = () => {
         )}
 
         <QuestionAnsweredSupplement
-          question={question}
+          question={resolvedQuestion}
           isAnswered={isAnswered}
           isCorrect={actualCorrectness}
         />

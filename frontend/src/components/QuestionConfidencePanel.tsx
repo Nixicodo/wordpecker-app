@@ -8,15 +8,10 @@ import {
   useColorModeValue
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-
-type ExposedWord = {
-  id: string;
-  value: string;
-  meaning: string;
-};
+import { ExposureWord } from '../utils/questionExposure';
 
 interface QuestionConfidencePanelProps {
-  words: ExposedWord[];
+  words: ExposureWord[];
   selectedWordIds: string[];
   onToggleWord: (wordId: string) => void;
 }
@@ -84,7 +79,7 @@ export const QuestionConfidencePanel: React.FC<QuestionConfidencePanelProps> = (
               <Box textAlign="left">
                 <Text fontWeight="bold">{word.value}</Text>
                 <Text fontSize="sm" opacity={0.85}>
-                  {word.meaning}
+                  {word.meaning || '释义解析中'}
                 </Text>
               </Box>
             </Button>
