@@ -3,6 +3,7 @@ import { useCallback, useRef } from 'react';
 export function usePrefetchedBatch<T>(fetchBatch: () => Promise<T[] | null>) {
   const prefetchedBatchRef = useRef<T[] | null>(null);
   const prefetchPromiseRef = useRef<Promise<T[] | null> | null>(null);
+  const prefetchedErrorRef = useRef<unknown>(null);
 
   const prefetchNext = useCallback(async (): Promise<T[] | null> => {
     if (prefetchedBatchRef.current) {
@@ -13,12 +14,17 @@ export function usePrefetchedBatch<T>(fetchBatch: () => Promise<T[] | null>) {
       return prefetchPromiseRef.current;
     }
 
+    prefetchedErrorRef.current = null;
+
     const promise = fetchBatch()
       .then((batch) => {
         prefetchedBatchRef.current = batch;
         return batch;
       })
-      .catch(() => null)
+      .catch((error) => {
+        prefetchedErrorRef.current = error;
+        throw error;
+      })
       .finally(() => {
         prefetchPromiseRef.current = null;
       });
@@ -32,6 +38,12 @@ export function usePrefetchedBatch<T>(fetchBatch: () => Promise<T[] | null>) {
       const batch = prefetchedBatchRef.current;
       prefetchedBatchRef.current = null;
       return batch;
+    }
+
+    if (prefetchedErrorRef.current) {
+      const error = prefetchedErrorRef.current;
+      prefetchedErrorRef.current = null;
+      throw error;
     }
 
     if (prefetchPromiseRef.current) {

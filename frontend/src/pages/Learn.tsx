@@ -115,6 +115,20 @@ const getErrorMessage = (error: unknown, fallbackMessage: string) => {
   return fallbackMessage;
 };
 
+const isNoMoreBatchError = (error: unknown) => {
+  if (
+    typeof error === 'object' &&
+    error !== null &&
+    'response' in error &&
+    typeof (error as { response?: unknown }).response === 'object'
+  ) {
+    const response = (error as { response?: { status?: unknown; data?: { message?: unknown } } }).response;
+    return response?.status === 400 && response.data?.message === 'List has no words';
+  }
+
+  return false;
+};
+
 export const Learn = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -130,6 +144,7 @@ export const Learn = () => {
   const [isAnswered, setIsAnswered] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [hasMoreExercises, setHasMoreExercises] = useState(true);
   const [sessionService, setSessionService] = useState<SessionService | null>(null);
   const [sessionProgress, setSessionProgress] = useState<SessionProgressState | null>(null);
   const [isValidating, setIsValidating] = useState(false);
@@ -152,13 +167,24 @@ export const Learn = () => {
   const summaryBodyColor = useColorModeValue('gray.700', 'gray.200');
 
   const fetchMoreExercises = useCallback(async (): Promise<Exercise[] | null> => {
-    if (!id) return null;
+    if (!id || !hasMoreExercises) return null;
 
-    const response = await apiService.getExercises(id, {
-      excludeWordIds: collectSeenWordIds(exercises)
-    });
-    return response?.exercises ?? null;
-  }, [exercises, id]);
+    try {
+      const response = await apiService.getExercises(id, {
+        excludeWordIds: collectSeenWordIds(exercises)
+      });
+      const nextExercises = response?.exercises ?? null;
+      setHasMoreExercises(Boolean(nextExercises?.length));
+      return nextExercises;
+    } catch (error) {
+      if (isNoMoreBatchError(error)) {
+        setHasMoreExercises(false);
+        return null;
+      }
+
+      throw error;
+    }
+  }, [exercises, hasMoreExercises, id]);
 
   const { prefetchNext, consumePrefetched } = usePrefetchedBatch(fetchMoreExercises);
 
@@ -264,10 +290,14 @@ export const Learn = () => {
   }, [id, list, navigate, toast]);
 
   useEffect(() => {
-    if (!id || !exercises.length || isCompleted) return;
+    if (!id || !exercises.length || isCompleted || !hasMoreExercises) return;
 
-    void prefetchNext();
-  }, [id, exercises.length, isCompleted, prefetchNext]);
+    void prefetchNext().catch((error) => {
+      if (isNoMoreBatchError(error)) {
+        setHasMoreExercises(false);
+      }
+    });
+  }, [id, exercises.length, isCompleted, hasMoreExercises, prefetchNext]);
 
   const loadMoreExercises = async () => {
     if (!id || !exercises.length) return false;
@@ -284,10 +314,12 @@ export const Learn = () => {
         setSessionService(service);
         setCurrentExercise(exercises.length);
         setIsCompleted(false);
+        setHasMoreExercises(true);
         resetQuestionState();
-        void prefetchNext();
         return true;
       }
+
+      setHasMoreExercises(false);
       return false;
     } catch (error: unknown) {
       console.error('Error loading more exercises:', error);
@@ -587,20 +619,22 @@ export const Learn = () => {
               >
                 {UI.saveAndComplete}
               </Button>
-              <Button
-                variant="solid"
-                colorScheme="blue"
-                size="lg"
-                onClick={loadMoreExercises}
-                isLoading={isLoading}
-                _hover={{
-                  transform: 'translateY(-2px)',
-                  shadow: 'lg'
-                }}
-                transition="all 0.2s"
-              >
-                {UI.continueLearning}
-              </Button>
+              {hasMoreExercises && (
+                <Button
+                  variant="solid"
+                  colorScheme="blue"
+                  size="lg"
+                  onClick={loadMoreExercises}
+                  isLoading={isLoading}
+                  _hover={{
+                    transform: 'translateY(-2px)',
+                    shadow: 'lg'
+                  }}
+                  transition="all 0.2s"
+                >
+                  {UI.continueLearning}
+                </Button>
+              )}
             </>
           ) : (
             <Button

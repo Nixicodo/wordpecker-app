@@ -113,6 +113,20 @@ const getErrorMessage = (error: unknown, fallbackMessage: string) => {
   return fallbackMessage;
 };
 
+const isNoMoreBatchError = (error: unknown) => {
+  if (
+    typeof error === 'object' &&
+    error !== null &&
+    'response' in error &&
+    typeof (error as { response?: unknown }).response === 'object'
+  ) {
+    const response = (error as { response?: { status?: unknown; data?: { message?: unknown } } }).response;
+    return response?.status === 400 && response.data?.message === 'List has no words';
+  }
+
+  return false;
+};
+
 export const Quiz = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -136,6 +150,7 @@ export const Quiz = () => {
   const [isValidating, setIsValidating] = useState(false);
   const [actualCorrectness, setActualCorrectness] = useState<boolean | null>(null);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [hasMoreQuestions, setHasMoreQuestions] = useState(true);
   const [isUpdatingPoints, setIsUpdatingPoints] = useState(false);
   const [usedHint, setUsedHint] = useState(false);
   const [selectedRating, setSelectedRating] = useState<'again' | 'hard' | 'good' | 'easy'>('good');
@@ -153,13 +168,24 @@ export const Quiz = () => {
   const summaryBodyColor = useColorModeValue('gray.700', 'gray.200');
 
   const fetchMoreQuestions = useCallback(async (): Promise<Question[] | null> => {
-    if (!id) return null;
+    if (!id || !hasMoreQuestions) return null;
 
-    const response = await apiService.getQuestions(id, {
-      excludeWordIds: collectSeenWordIds(questions)
-    });
-    return response?.questions ?? null;
-  }, [id, questions]);
+    try {
+      const response = await apiService.getQuestions(id, {
+        excludeWordIds: collectSeenWordIds(questions)
+      });
+      const nextQuestions = response?.questions ?? null;
+      setHasMoreQuestions(Boolean(nextQuestions?.length));
+      return nextQuestions;
+    } catch (error) {
+      if (isNoMoreBatchError(error)) {
+        setHasMoreQuestions(false);
+        return null;
+      }
+
+      throw error;
+    }
+  }, [hasMoreQuestions, id, questions]);
 
   const { prefetchNext, consumePrefetched } = usePrefetchedBatch(fetchMoreQuestions);
 
@@ -266,10 +292,14 @@ export const Quiz = () => {
   }, [id, list, navigate, toast]);
 
   useEffect(() => {
-    if (!id || !questions.length || isCompleted || gameOver || currentQuestion + 1 >= totalQuestions) return;
+    if (!id || !questions.length || isCompleted || gameOver || currentQuestion + 1 >= totalQuestions || !hasMoreQuestions) return;
 
-    void prefetchNext();
-  }, [id, questions.length, currentQuestion, totalQuestions, isCompleted, gameOver, prefetchNext]);
+    void prefetchNext().catch((error) => {
+      if (isNoMoreBatchError(error)) {
+        setHasMoreQuestions(false);
+      }
+    });
+  }, [id, questions.length, currentQuestion, totalQuestions, isCompleted, gameOver, hasMoreQuestions, prefetchNext]);
 
   const updateLearnedPoints = async () => {
     if (!id || quizResults.length === 0) {
@@ -309,13 +339,15 @@ export const Quiz = () => {
         const firstNewQuestionIndex = questions.length;
         setQuestions(prev => [...prev, ...nextQuestions]);
         setIsCompleted(false);
+        setHasMoreQuestions(true);
         if (startFromNewBatch) {
           setCurrentQuestion(firstNewQuestionIndex);
         }
         resetQuestionState();
-        void prefetchNext();
         return true;
       }
+
+      setHasMoreQuestions(false);
       return false;
     } catch (error: unknown) {
       console.error('Error loading more questions:', error);
@@ -626,21 +658,23 @@ export const Quiz = () => {
               >
                 {UI.saveAndFinish}
               </Button>
-              <Button
-                variant="solid"
-                colorScheme="blue"
-                size="lg"
-                onClick={() => loadMoreQuestions(true)}
-                isLoading={isLoading}
-                loadingText={UI.loading}
-                _hover={{
-                  transform: 'translateY(-2px)',
-                  shadow: 'lg'
-                }}
-                transition="all 0.2s"
-              >
-                {UI.continueQuiz}
-              </Button>
+              {hasMoreQuestions && (
+                <Button
+                  variant="solid"
+                  colorScheme="blue"
+                  size="lg"
+                  onClick={() => loadMoreQuestions(true)}
+                  isLoading={isLoading}
+                  loadingText={UI.loading}
+                  _hover={{
+                    transform: 'translateY(-2px)',
+                    shadow: 'lg'
+                  }}
+                  transition="all 0.2s"
+                >
+                  {UI.continueQuiz}
+                </Button>
+              )}
             </>
           ) : (
             <Button
