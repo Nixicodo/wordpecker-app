@@ -61,6 +61,7 @@ function buildMultipleChoice(
   context: string,
   direction: ExerciseDirection,
 ): ExerciseWithId {
+  void context;
   const correctMeaning = normalizeMeaning(word.meaning, word.value);
 
   if (direction === 'base_to_target') {
@@ -71,7 +72,7 @@ function buildMultipleChoice(
       direction,
       word: word.value,
       wordId: word.id,
-      question: `In the "${context}" context, which target-language word matches "${correctMeaning}"?`,
+      question: `哪个词最符合“${correctMeaning}”的意思？`,
       options,
       optionLabels: OPTION_LABELS.slice(0, options.length),
       correctAnswer: word.value,
@@ -89,7 +90,7 @@ function buildMultipleChoice(
     direction,
     word: word.value,
     wordId: word.id,
-    question: `In the "${context}" context, what is the closest meaning of "${word.value}"?`,
+    question: `“${word.value}”最接近的意思是什么？`,
     options,
     optionLabels: OPTION_LABELS.slice(0, options.length),
     correctAnswer: correctMeaning,
@@ -101,6 +102,7 @@ function buildMultipleChoice(
 }
 
 function buildFillBlank(word: GeneratorWord, context: string): ExerciseWithId {
+  void context;
   const correctMeaning = normalizeMeaning(word.meaning, word.value);
 
   return {
@@ -108,7 +110,7 @@ function buildFillBlank(word: GeneratorWord, context: string): ExerciseWithId {
     direction: 'base_to_target',
     word: word.value,
     wordId: word.id,
-    question: `Write the target-language word that means "${correctMeaning}" in the "${context}" context.`,
+    question: `请写出意思是“${correctMeaning}”的单词。`,
     options: null,
     optionLabels: null,
     correctAnswer: word.value,
@@ -125,6 +127,7 @@ function buildTrueFalse(
   context: string,
   direction: ExerciseDirection,
 ): ExerciseWithId {
+  void context;
   const correctMeaning = normalizeMeaning(word.meaning, word.value);
   const options = ['True', 'False'];
 
@@ -138,7 +141,7 @@ function buildTrueFalse(
       direction,
       word: word.value,
       wordId: word.id,
-      question: `True or false: in the "${context}" context, the word for "${correctMeaning}" is "${statementWord}".`,
+      question: `“${correctMeaning}”对应的单词是“${statementWord}”。对还是错？`,
       options,
       optionLabels: OPTION_LABELS.slice(0, options.length),
       correctAnswer: isTrue ? 'True' : 'False',
@@ -158,7 +161,7 @@ function buildTrueFalse(
     direction,
     word: word.value,
     wordId: word.id,
-    question: `True or false: in the "${context}" context, "${word.value}" means "${statementMeaning}".`,
+    question: `“${word.value}”的意思是“${statementMeaning}”。对还是错？`,
     options,
     optionLabels: OPTION_LABELS.slice(0, options.length),
     correctAnswer: isTrue ? 'True' : 'False',
@@ -170,6 +173,7 @@ function buildTrueFalse(
 }
 
 function buildSentenceCompletion(word: GeneratorWord, allWords: GeneratorWord[], context: string): ExerciseWithId {
+  void context;
   const options = shuffleArray([word.value, ...pickWordDistractors(allWords, word.id, 3)]);
   const correctMeaning = normalizeMeaning(word.meaning, word.value);
 
@@ -178,7 +182,7 @@ function buildSentenceCompletion(word: GeneratorWord, allWords: GeneratorWord[],
     direction: 'base_to_target',
     word: word.value,
     wordId: word.id,
-    question: `Context: "${context}". Which target-language word best completes a sentence expressing "${correctMeaning}"?`,
+    question: `哪个单词最适合补全表达“${correctMeaning}”的句子？`,
     options,
     optionLabels: OPTION_LABELS.slice(0, options.length),
     correctAnswer: word.value,
@@ -190,6 +194,7 @@ function buildSentenceCompletion(word: GeneratorWord, allWords: GeneratorWord[],
 }
 
 function buildMatching(word: GeneratorWord, allWords: GeneratorWord[], context: string): ExerciseWithId {
+  void context;
   const additionalPairs = shuffleArray(
     allWords.filter((candidate) => candidate.id !== word.id)
   ).slice(0, 3);
@@ -208,7 +213,7 @@ function buildMatching(word: GeneratorWord, allWords: GeneratorWord[], context: 
     word: word.value,
     wordId: word.id,
     wordIds: pairWords.map((pairWord) => pairWord.id),
-    question: `In the "${context}" context, match each target-language word with its correct meaning.`,
+    question: '请将每个单词与对应的意思正确配对。',
     options: null,
     optionLabels: null,
     correctAnswer,

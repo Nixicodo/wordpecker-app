@@ -92,4 +92,31 @@ describe('generateLocalExercises', () => {
     expect(exercises[0].difficulty).toBe('hard');
     expect(exercises[1].difficulty).toBe('medium');
   });
+
+  it('uses Chinese question text without the context prefix across exercise types', () => {
+    const exercises = generateLocalExercises(
+      words,
+      distractorPool,
+      'Mexican Spanish frequency vocabulary level 0 (Pre-A1)',
+      ['multiple_choice', 'fill_blank', 'true_false', 'sentence_completion', 'matching']
+    );
+
+    expect(exercises[0].question).toBe('“hola”最接近的意思是什么？');
+    expect(exercises[1].question).toBe('请写出意思是“goodbye”的单词。');
+    expect(exercises[2].question).not.toContain('context');
+    expect(exercises[2].question).not.toContain('Mexican Spanish frequency vocabulary level 0 (Pre-A1)');
+    expect(exercises[2].question).toMatch(/^“gracias”的意思是“.+”。对还是错？$/);
+    expect(exercises[3].question).toBe('哪个单词最适合补全表达“book”的句子？');
+  });
+
+  it('uses Chinese matching text without the context prefix', () => {
+    const exercises = generateLocalExercises(
+      words,
+      distractorPool,
+      'Mexican Spanish frequency vocabulary level 0 (Pre-A1)',
+      ['matching']
+    );
+
+    expect(exercises[0].question).toBe('请将每个单词与对应的意思正确配对。');
+  });
 });
