@@ -35,6 +35,7 @@ import { ReviewRatingPanel } from '../components/ReviewRatingPanel';
 import { SessionService } from '../services/sessionService';
 import { validateAnswer } from '../utils/answerValidation';
 import { usePrefetchedBatch } from '../hooks/usePrefetchedBatch';
+import { useBatchedReviewSync } from '../hooks/useBatchedReviewSync';
 import { recommendReviewRating } from '../utils/reviewRating';
 import { resolveQuestionExposureWords } from '../utils/questionExposure';
 
@@ -200,6 +201,27 @@ export const Quiz = () => {
     ));
   }, []);
 
+  const { isSyncing, pendingCount, syncPendingResults } = useBatchedReviewSync({
+    results: quizResults,
+    syncResults: (results) => {
+      if (!id) {
+        return Promise.resolve();
+      }
+
+      return apiService.updateLearnedPoints(id, results);
+    },
+    onSyncError: (error) => {
+      console.error('Error updating learned points:', error);
+      toast({
+        title: UI.progressSaveFailed,
+        description: UI.progressSaveFailedDescription,
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  });
+
   useEffect(() => {
     const initQuiz = async () => {
       if (!id || hasInitializedRef.current) return;
@@ -257,23 +279,18 @@ export const Quiz = () => {
 
     setIsUpdatingPoints(true);
     try {
-      await apiService.updateLearnedPoints(id, quizResults);
-      toast({
-        title: UI.progressSaved,
-        description: `${UI.progressSavedDescription} ${quizResults.length} ${UI.wordUnit}`,
-        status: 'success',
-        duration: 2000,
-        isClosable: true,
-      });
+      const synced = await syncPendingResults('final');
+      if (synced && pendingCount > 0) {
+        toast({
+          title: UI.progressSaved,
+          description: `${UI.progressSavedDescription} ${pendingCount} ${UI.wordUnit}`,
+          status: 'success',
+          duration: 2000,
+          isClosable: true,
+        });
+      }
     } catch (error: unknown) {
-      console.error('Error updating learned points:', error);
-      toast({
-        title: UI.progressSaveFailed,
-        description: UI.progressSaveFailedDescription,
-        status: 'warning',
-        duration: 3000,
-        isClosable: true,
-      });
+      console.error('Error finalizing learned points after quiz:', error);
     } finally {
       setIsUpdatingPoints(false);
       navigate(`/lists/${id}`);
@@ -599,7 +616,7 @@ export const Quiz = () => {
                 colorScheme="purple"
                 size="lg"
                 onClick={updateLearnedPoints}
-                isLoading={isUpdatingPoints}
+                isLoading={isUpdatingPoints || isSyncing}
                 loadingText={UI.saving}
                 _hover={{
                   transform: 'translateY(-2px)',

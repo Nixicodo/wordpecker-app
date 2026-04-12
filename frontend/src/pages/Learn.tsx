@@ -35,6 +35,7 @@ import { ReviewRatingPanel } from '../components/ReviewRatingPanel';
 import { SessionService } from '../services/sessionService';
 import { validateAnswer } from '../utils/answerValidation';
 import { usePrefetchedBatch } from '../hooks/usePrefetchedBatch';
+import { useBatchedReviewSync } from '../hooks/useBatchedReviewSync';
 import { recommendReviewRating } from '../utils/reviewRating';
 import { resolveQuestionExposureWords } from '../utils/questionExposure';
 
@@ -198,6 +199,27 @@ export const Learn = () => {
         : [...previousWordIds, wordId]
     ));
   }, []);
+
+  const { isSyncing, pendingCount, syncPendingResults } = useBatchedReviewSync({
+    results: learningResults,
+    syncResults: (results) => {
+      if (!id) {
+        return Promise.resolve();
+      }
+
+      return apiService.updateLearningLearnedPoints(id, results);
+    },
+    onSyncError: (error) => {
+      console.error('Error updating learned points after learning session:', error);
+      toast({
+        title: UI.progressSaveFailed,
+        description: UI.progressSaveFailedDescription,
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  });
 
   useEffect(() => {
     const initLearn = async () => {
@@ -366,23 +388,18 @@ export const Learn = () => {
 
     setIsUpdatingPoints(true);
     try {
-      await apiService.updateLearningLearnedPoints(id, learningResults);
-      toast({
-        title: UI.progressSaved,
-        description: `${UI.progressSavedDescription} ${learningResults.length} ${UI.wordUnit}`,
-        status: 'success',
-        duration: 2000,
-        isClosable: true,
-      });
+      const synced = await syncPendingResults('final');
+      if (synced && pendingCount > 0) {
+        toast({
+          title: UI.progressSaved,
+          description: `${UI.progressSavedDescription} ${pendingCount} ${UI.wordUnit}`,
+          status: 'success',
+          duration: 2000,
+          isClosable: true,
+        });
+      }
     } catch (error: unknown) {
-      console.error('Error updating learned points after learning session:', error);
-      toast({
-        title: UI.progressSaveFailed,
-        description: UI.progressSaveFailedDescription,
-        status: 'warning',
-        duration: 3000,
-        isClosable: true,
-      });
+      console.error('Error finalizing learned points after learning session:', error);
     } finally {
       setIsUpdatingPoints(false);
       navigate(`/lists/${id}`);
@@ -560,7 +577,7 @@ export const Learn = () => {
                 colorScheme="green"
                 size="lg"
                 onClick={updateLearnedPoints}
-                isLoading={isUpdatingPoints}
+                isLoading={isUpdatingPoints || isSyncing}
                 loadingText={UI.saving}
                 _hover={{
                   transform: 'translateY(-2px)',
