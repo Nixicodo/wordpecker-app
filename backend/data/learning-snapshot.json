@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "exportedAt": "2026-04-12T09:14:30.872Z",
+  "exportedAt": "2026-04-12T13:45:21.362Z",
   "data": {
     "lists": [
       {
@@ -10,7 +10,7 @@
         "context": "",
         "kind": "custom",
         "created_at": "2026-04-10T17:48:57.198Z",
-        "updated_at": "2026-04-10T20:04:44.490Z"
+        "updated_at": "2026-04-12T13:45:21.288Z"
       },
       {
         "id": "69d9499325168ea64d2921bf",
@@ -4010,10 +4010,16 @@
             "meaning": "生活（life）",
             "addedAt": "2026-04-10T19:52:59.434Z",
             "updatedAt": "2026-04-10T19:52:59.677Z"
+          },
+          {
+            "listId": "69d938089e96ddba245dc7d3",
+            "meaning": "生活",
+            "addedAt": "2026-04-12T13:45:21.236Z",
+            "updatedAt": "2026-04-12T13:45:21.236Z"
           }
         ],
         "created_at": "2026-04-10T19:52:59.434Z",
-        "updated_at": "2026-04-11T14:12:36.684Z"
+        "updated_at": "2026-04-12T13:45:21.237Z"
       },
       {
         "id": "69d9551b86b8d64047d17ede",
@@ -5551,10 +5557,16 @@
             "meaning": "贫穷的/差的/可怜的（poor）",
             "addedAt": "2026-04-10T19:52:59.571Z",
             "updatedAt": "2026-04-10T19:52:59.571Z"
+          },
+          {
+            "listId": "69d938089e96ddba245dc7d3",
+            "meaning": "穷困的",
+            "addedAt": "2026-04-12T13:45:21.209Z",
+            "updatedAt": "2026-04-12T13:45:21.209Z"
           }
         ],
         "created_at": "2026-04-10T19:52:59.571Z",
-        "updated_at": "2026-04-11T14:12:36.954Z"
+        "updated_at": "2026-04-12T13:45:21.214Z"
       },
       {
         "id": "69d9551b86b8d64047d17ff9",
@@ -16368,10 +16380,16 @@
             "meaning": "隐藏/躲藏（to hide）",
             "addedAt": "2026-04-10T19:53:00.721Z",
             "updatedAt": "2026-04-10T19:53:00.721Z"
+          },
+          {
+            "listId": "69d938089e96ddba245dc7d3",
+            "meaning": "隐瞒",
+            "addedAt": "2026-04-12T13:45:21.230Z",
+            "updatedAt": "2026-04-12T13:45:21.230Z"
           }
         ],
         "created_at": "2026-04-10T19:53:00.721Z",
-        "updated_at": "2026-04-11T14:12:38.557Z"
+        "updated_at": "2026-04-12T13:45:21.231Z"
       },
       {
         "id": "69d9551c86b8d64047d18979",
@@ -20611,10 +20629,16 @@
             "meaning": "回去/返回（墨西哥常用）（to return / go back (MX common)）",
             "addedAt": "2026-04-10T19:53:01.031Z",
             "updatedAt": "2026-04-10T19:53:01.031Z"
+          },
+          {
+            "listId": "69d938089e96ddba245dc7d3",
+            "meaning": "返回（return）",
+            "addedAt": "2026-04-12T13:45:21.258Z",
+            "updatedAt": "2026-04-12T13:45:21.258Z"
           }
         ],
         "created_at": "2026-04-10T19:53:01.031Z",
-        "updated_at": "2026-04-11T14:12:39.059Z"
+        "updated_at": "2026-04-12T13:45:21.258Z"
       },
       {
         "id": "69d9551d86b8d64047d18d24",
@@ -23471,10 +23495,16 @@
             "meaning": "街区（neighborhood）",
             "addedAt": "2026-04-10T19:53:01.254Z",
             "updatedAt": "2026-04-10T19:53:01.254Z"
+          },
+          {
+            "listId": "69d938089e96ddba245dc7d3",
+            "meaning": "名词。指城镇或城市中的一个区域、社区或街区。在拉丁美洲，它通常指代人们居住的特定邻里或地段，类似于中文里的“社区”、“街坊”或“居民区”。",
+            "addedAt": "2026-04-12T13:39:40.022Z",
+            "updatedAt": "2026-04-12T13:39:40.022Z"
           }
         ],
         "created_at": "2026-04-10T19:53:01.254Z",
-        "updated_at": "2026-04-11T14:12:39.408Z"
+        "updated_at": "2026-04-12T13:39:40.028Z"
       },
       {
         "id": "69d9551d86b8d64047d18fa1",
@@ -26105,10 +26135,16 @@
             "meaning": "作家（writer）",
             "addedAt": "2026-04-10T19:53:01.436Z",
             "updatedAt": "2026-04-10T19:53:01.436Z"
+          },
+          {
+            "listId": "69d938089e96ddba245dc7d3",
+            "meaning": "作家（writer）",
+            "addedAt": "2026-04-12T13:45:21.279Z",
+            "updatedAt": "2026-04-12T13:45:21.279Z"
           }
         ],
         "created_at": "2026-04-10T19:53:01.436Z",
-        "updated_at": "2026-04-11T14:12:39.708Z"
+        "updated_at": "2026-04-12T13:45:21.280Z"
       },
       {
         "id": "69d9551d86b8d64047d191f3",
@@ -44069,6 +44105,62 @@
         ],
         "created_at": "2026-04-10T19:53:02.567Z",
         "updated_at": "2026-04-11T14:12:41.759Z"
+      },
+      {
+        "id": "69dba1f11a943f64cfd33ab5",
+        "value": "decidir",
+        "listMemberships": [
+          {
+            "listId": "69d938089e96ddba245dc7d3",
+            "meaning": "决定（decide）",
+            "addedAt": "2026-04-12T13:45:21.224Z",
+            "updatedAt": "2026-04-12T13:45:21.224Z"
+          }
+        ],
+        "created_at": "2026-04-12T13:45:21.225Z",
+        "updated_at": "2026-04-12T13:45:21.225Z"
+      },
+      {
+        "id": "69dba1f11a943f64cfd33ac8",
+        "value": "el boleto de ida y vuelta",
+        "listMemberships": [
+          {
+            "listId": "69d938089e96ddba245dc7d3",
+            "meaning": "往返票（ida是ir）",
+            "addedAt": "2026-04-12T13:45:21.240Z",
+            "updatedAt": "2026-04-12T13:45:21.240Z"
+          }
+        ],
+        "created_at": "2026-04-12T13:45:21.241Z",
+        "updated_at": "2026-04-12T13:45:21.241Z"
+      },
+      {
+        "id": "69dba1f11a943f64cfd33acf",
+        "value": "disfurtar",
+        "listMemberships": [
+          {
+            "listId": "69d938089e96ddba245dc7d3",
+            "meaning": "享受（enjoy）",
+            "addedAt": "2026-04-12T13:45:21.245Z",
+            "updatedAt": "2026-04-12T13:45:21.245Z"
+          }
+        ],
+        "created_at": "2026-04-12T13:45:21.245Z",
+        "updated_at": "2026-04-12T13:45:21.245Z"
+      },
+      {
+        "id": "69dba1f11a943f64cfd33ae2",
+        "value": "creadores",
+        "listMemberships": [
+          {
+            "listId": "69d938089e96ddba245dc7d3",
+            "meaning": "创作者（creator）",
+            "addedAt": "2026-04-12T13:45:21.284Z",
+            "updatedAt": "2026-04-12T13:45:21.284Z"
+          }
+        ],
+        "created_at": "2026-04-12T13:45:21.285Z",
+        "updated_at": "2026-04-12T13:45:21.285Z"
       }
     ],
     "learningStates": [
@@ -117636,6 +117728,218 @@
         "lastSource": "learn",
         "createdAt": "2026-04-12T09:14:30.814Z",
         "updatedAt": "2026-04-12T09:14:30.815Z"
+      },
+      {
+        "userId": "local-ai-test-user",
+        "wordId": "69d9551d86b8d64047d18f9e",
+        "listId": "69d938089e96ddba245dc7d3",
+        "dueAt": "2026-04-11T14:12:39.407Z",
+        "stability": 0,
+        "difficulty": 0,
+        "scheduledDays": 0,
+        "elapsedDays": 0,
+        "reps": 0,
+        "lapses": 0,
+        "learningSteps": 0,
+        "state": 0,
+        "reviewCount": 0,
+        "lapseCount": 0,
+        "consecutiveCorrect": 0,
+        "consecutiveWrong": 1,
+        "lastRating": "hard",
+        "lastSource": "learn",
+        "createdAt": "2026-04-12T13:39:40.055Z",
+        "updatedAt": "2026-04-12T13:39:40.055Z"
+      },
+      {
+        "userId": "local-ai-test-user",
+        "wordId": "69d9551b86b8d64047d17ff6",
+        "listId": "69d938089e96ddba245dc7d3",
+        "dueAt": "2026-04-11T14:12:36.953Z",
+        "stability": 0,
+        "difficulty": 0,
+        "scheduledDays": 0,
+        "elapsedDays": 0,
+        "reps": 0,
+        "lapses": 0,
+        "learningSteps": 0,
+        "state": 0,
+        "reviewCount": 0,
+        "lapseCount": 0,
+        "consecutiveCorrect": 0,
+        "consecutiveWrong": 1,
+        "lastRating": "hard",
+        "lastSource": "learn",
+        "createdAt": "2026-04-12T13:45:21.222Z",
+        "updatedAt": "2026-04-12T13:45:21.222Z"
+      },
+      {
+        "userId": "local-ai-test-user",
+        "wordId": "69dba1f11a943f64cfd33ab5",
+        "listId": "69d938089e96ddba245dc7d3",
+        "dueAt": "2026-04-12T13:45:21.227Z",
+        "stability": 0,
+        "difficulty": 0,
+        "scheduledDays": 0,
+        "elapsedDays": 0,
+        "reps": 0,
+        "lapses": 0,
+        "learningSteps": 0,
+        "state": 0,
+        "reviewCount": 0,
+        "lapseCount": 0,
+        "consecutiveCorrect": 0,
+        "consecutiveWrong": 0,
+        "createdAt": "2026-04-12T13:45:21.228Z",
+        "updatedAt": "2026-04-12T13:45:21.228Z"
+      },
+      {
+        "userId": "local-ai-test-user",
+        "wordId": "69d9551c86b8d64047d18974",
+        "listId": "69d938089e96ddba245dc7d3",
+        "dueAt": "2026-04-11T14:12:38.556Z",
+        "stability": 0,
+        "difficulty": 0,
+        "scheduledDays": 0,
+        "elapsedDays": 0,
+        "reps": 0,
+        "lapses": 0,
+        "learningSteps": 0,
+        "state": 0,
+        "reviewCount": 0,
+        "lapseCount": 0,
+        "consecutiveCorrect": 0,
+        "consecutiveWrong": 1,
+        "lastRating": "hard",
+        "lastSource": "learn",
+        "createdAt": "2026-04-12T13:45:21.234Z",
+        "updatedAt": "2026-04-12T13:45:21.234Z"
+      },
+      {
+        "userId": "local-ai-test-user",
+        "wordId": "69d9551b86b8d64047d17edb",
+        "listId": "69d938089e96ddba245dc7d3",
+        "dueAt": "2026-04-11T14:12:36.683Z",
+        "stability": 0,
+        "difficulty": 0,
+        "scheduledDays": 0,
+        "elapsedDays": 0,
+        "reps": 0,
+        "lapses": 0,
+        "learningSteps": 0,
+        "state": 0,
+        "reviewCount": 0,
+        "lapseCount": 0,
+        "consecutiveCorrect": 0,
+        "consecutiveWrong": 1,
+        "lastRating": "hard",
+        "lastSource": "learn",
+        "createdAt": "2026-04-12T13:45:21.239Z",
+        "updatedAt": "2026-04-12T13:45:21.239Z"
+      },
+      {
+        "userId": "local-ai-test-user",
+        "wordId": "69dba1f11a943f64cfd33ac8",
+        "listId": "69d938089e96ddba245dc7d3",
+        "dueAt": "2026-04-12T13:45:21.244Z",
+        "stability": 0,
+        "difficulty": 0,
+        "scheduledDays": 0,
+        "elapsedDays": 0,
+        "reps": 0,
+        "lapses": 0,
+        "learningSteps": 0,
+        "state": 0,
+        "reviewCount": 0,
+        "lapseCount": 0,
+        "consecutiveCorrect": 0,
+        "consecutiveWrong": 0,
+        "createdAt": "2026-04-12T13:45:21.244Z",
+        "updatedAt": "2026-04-12T13:45:21.244Z"
+      },
+      {
+        "userId": "local-ai-test-user",
+        "wordId": "69dba1f11a943f64cfd33acf",
+        "listId": "69d938089e96ddba245dc7d3",
+        "dueAt": "2026-04-12T13:45:21.248Z",
+        "stability": 0,
+        "difficulty": 0,
+        "scheduledDays": 0,
+        "elapsedDays": 0,
+        "reps": 0,
+        "lapses": 0,
+        "learningSteps": 0,
+        "state": 0,
+        "reviewCount": 0,
+        "lapseCount": 0,
+        "consecutiveCorrect": 0,
+        "consecutiveWrong": 0,
+        "createdAt": "2026-04-12T13:45:21.249Z",
+        "updatedAt": "2026-04-12T13:45:21.249Z"
+      },
+      {
+        "userId": "local-ai-test-user",
+        "wordId": "69d9551d86b8d64047d18d21",
+        "listId": "69d938089e96ddba245dc7d3",
+        "dueAt": "2026-04-11T14:12:39.058Z",
+        "stability": 0,
+        "difficulty": 0,
+        "scheduledDays": 0,
+        "elapsedDays": 0,
+        "reps": 0,
+        "lapses": 0,
+        "learningSteps": 0,
+        "state": 0,
+        "reviewCount": 0,
+        "lapseCount": 0,
+        "consecutiveCorrect": 0,
+        "consecutiveWrong": 1,
+        "lastRating": "hard",
+        "lastSource": "learn",
+        "createdAt": "2026-04-12T13:45:21.277Z",
+        "updatedAt": "2026-04-12T13:45:21.277Z"
+      },
+      {
+        "userId": "local-ai-test-user",
+        "wordId": "69d9551d86b8d64047d191f0",
+        "listId": "69d938089e96ddba245dc7d3",
+        "dueAt": "2026-04-11T14:12:39.708Z",
+        "stability": 0,
+        "difficulty": 0,
+        "scheduledDays": 0,
+        "elapsedDays": 0,
+        "reps": 0,
+        "lapses": 0,
+        "learningSteps": 0,
+        "state": 0,
+        "reviewCount": 0,
+        "lapseCount": 0,
+        "consecutiveCorrect": 0,
+        "consecutiveWrong": 1,
+        "lastRating": "hard",
+        "lastSource": "learn",
+        "createdAt": "2026-04-12T13:45:21.283Z",
+        "updatedAt": "2026-04-12T13:45:21.283Z"
+      },
+      {
+        "userId": "local-ai-test-user",
+        "wordId": "69dba1f11a943f64cfd33ae2",
+        "listId": "69d938089e96ddba245dc7d3",
+        "dueAt": "2026-04-12T13:45:21.287Z",
+        "stability": 0,
+        "difficulty": 0,
+        "scheduledDays": 0,
+        "elapsedDays": 0,
+        "reps": 0,
+        "lapses": 0,
+        "learningSteps": 0,
+        "state": 0,
+        "reviewCount": 0,
+        "lapseCount": 0,
+        "consecutiveCorrect": 0,
+        "consecutiveWrong": 0,
+        "createdAt": "2026-04-12T13:45:21.287Z",
+        "updatedAt": "2026-04-12T13:45:21.287Z"
       }
     ],
     "reviewLogs": [
