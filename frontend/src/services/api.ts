@@ -61,6 +61,10 @@ interface QuizQuestionsResponse {
   scheduledWords?: ScheduledWord[];
 }
 
+interface MoreBatchRequest {
+  excludeWordIds?: string[];
+}
+
 // API service for WordPecker app
 export const apiService = {
   // Lists
@@ -92,16 +96,16 @@ export const apiService = {
   // Learning
   startLearning: (listId: string): ApiResponse<LearnStartResponse> => 
     api.post(`/api/learn/${listId}/start`),
-  getExercises: (listId: string): ApiResponse<LearnExercisesResponse> => 
-    api.post(`/api/learn/${listId}/more`),
+  getExercises: (listId: string, payload?: MoreBatchRequest): ApiResponse<LearnExercisesResponse> => 
+    api.post(`/api/learn/${listId}/more`, payload),
   updateLearningLearnedPoints: (listId: string, results: ReviewSubmission[]): ApiResponse<{message: string}> =>
     api.put(`/api/learn/${listId}/reviews`, { results }),
 
   // Quiz
   startQuiz: (listId: string): ApiResponse<QuizStartResponse> => 
     api.post(`/api/quiz/${listId}/start`),
-  getQuestions: (listId: string): ApiResponse<QuizQuestionsResponse> => 
-    api.post(`/api/quiz/${listId}/more`),
+  getQuestions: (listId: string, payload?: MoreBatchRequest): ApiResponse<QuizQuestionsResponse> => 
+    api.post(`/api/quiz/${listId}/more`, payload),
   updateLearnedPoints: (listId: string, results: ReviewSubmission[]): ApiResponse<{message: string}> =>
     api.put(`/api/quiz/${listId}/reviews`, { results }),
 

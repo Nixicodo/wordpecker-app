@@ -87,6 +87,12 @@ export interface Exercise {
   hint: string | null;
   feedback: string | null;
   pairs: Array<{word: string; definition: string}> | null;
+  exposedWordIds?: string[];
+  exposedWords?: Array<{
+    id: string;
+    value: string;
+    meaning: string;
+  }>;
 }
 
 export interface Question {
@@ -103,6 +109,12 @@ export interface Question {
   hint: string | null;
   feedback: string | null;
   pairs: Array<{word: string; definition: string}> | null;
+  exposedWordIds?: string[];
+  exposedWords?: Array<{
+    id: string;
+    value: string;
+    meaning: string;
+  }>;
 }
 
 export interface ScheduledWord {
@@ -129,6 +141,7 @@ export type ReviewRating = 'again' | 'hard' | 'good' | 'easy';
 export interface ReviewSubmission {
   wordId: string;
   wordIds?: string[];
+  selfAssessedWordIds?: string[];
   correct: boolean;
   rating: ReviewRating;
   questionType: string;

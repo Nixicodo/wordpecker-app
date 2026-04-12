@@ -30,6 +30,7 @@ import { Exercise, ReviewSubmission, WordList } from '../types';
 import { ArrowBackIcon, CloseIcon, CheckCircleIcon, InfoIcon, StarIcon } from '@chakra-ui/icons';
 import { apiService } from '../services/api';
 import { QuestionAnsweredSupplement, QuestionRenderer } from '../components/QuestionRenderer';
+import { QuestionConfidencePanel } from '../components/QuestionConfidencePanel';
 import { ReviewRatingPanel } from '../components/ReviewRatingPanel';
 import { SessionService } from '../services/sessionService';
 import { validateAnswer } from '../utils/answerValidation';
@@ -87,6 +88,31 @@ const fadeIn = {
 
 const MotionBox = motion(Box);
 
+const collectSeenWordIds = (items: Exercise[]) => Array.from(new Set(
+  items.flatMap((item) => [
+    item.wordId || null,
+    ...(item.wordIds || []),
+    ...(item.exposedWordIds || [])
+  ].filter((wordId): wordId is string => Boolean(wordId)))
+));
+
+type SessionProgressState = ReturnType<SessionService['getCurrentProgress']>;
+
+const getErrorMessage = (error: unknown, fallbackMessage: string) => {
+  if (
+    typeof error === 'object' &&
+    error !== null &&
+    'response' in error &&
+    typeof (error as { response?: unknown }).response === 'object' &&
+    (error as { response?: { data?: unknown } }).response?.data &&
+    typeof (error as { response?: { data?: { message?: unknown } } }).response?.data?.message === 'string'
+  ) {
+    return (error as { response?: { data?: { message?: string } } }).response?.data?.message || fallbackMessage;
+  }
+
+  return fallbackMessage;
+};
+
 export const Learn = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -102,7 +128,7 @@ export const Learn = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isCompleted, setIsCompleted] = useState(false);
   const [sessionService, setSessionService] = useState<SessionService | null>(null);
-  const [sessionProgress, setSessionProgress] = useState<any>(null);
+  const [sessionProgress, setSessionProgress] = useState<SessionProgressState | null>(null);
   const [isValidating, setIsValidating] = useState(false);
   const [actualCorrectness, setActualCorrectness] = useState<boolean | null>(null);
   const [learningResults, setLearningResults] = useState<ReviewSubmission[]>([]);
@@ -113,14 +139,23 @@ export const Learn = () => {
   const [recommendationReason, setRecommendationReason] = useState('');
   const [currentReview, setCurrentReview] = useState<ReviewSubmission | null>(null);
   const [responseTimeMs, setResponseTimeMs] = useState(0);
+  const [selfAssessedWordIds, setSelfAssessedWordIds] = useState<string[]>([]);
   const questionStartedAtRef = useRef(Date.now());
+  const summaryCardBg = useColorModeValue('white', 'gray.800');
+  const summaryCardBorder = useColorModeValue('green.200', 'green.600');
+  const summaryTitleColor = useColorModeValue('gray.800', 'white');
+  const summaryLabelColor = useColorModeValue('gray.600', 'gray.400');
+  const summaryHelpColor = useColorModeValue('gray.500', 'gray.400');
+  const summaryBodyColor = useColorModeValue('gray.700', 'gray.200');
 
   const fetchMoreExercises = useCallback(async (): Promise<Exercise[] | null> => {
     if (!id) return null;
 
-    const response = await apiService.getExercises(id);
+    const response = await apiService.getExercises(id, {
+      excludeWordIds: collectSeenWordIds(exercises)
+    });
     return response?.exercises ?? null;
-  }, [id]);
+  }, [exercises, id]);
 
   const { prefetchNext, consumePrefetched } = usePrefetchedBatch(fetchMoreExercises);
 
@@ -134,6 +169,7 @@ export const Learn = () => {
     setRecommendedRating('good');
     setRecommendationReason('');
     setResponseTimeMs(0);
+    setSelfAssessedWordIds([]);
     questionStartedAtRef.current = Date.now();
   }, []);
 
@@ -146,11 +182,20 @@ export const Learn = () => {
       ...prev,
       {
         ...currentReview,
-        rating: selectedRating
+        rating: selectedRating,
+        selfAssessedWordIds
       }
     ]);
     setCurrentReview(null);
-  }, [currentReview, selectedRating]);
+  }, [currentReview, selectedRating, selfAssessedWordIds]);
+
+  const toggleSelfAssessedWord = useCallback((wordId: string) => {
+    setSelfAssessedWordIds((previousWordIds) => (
+      previousWordIds.includes(wordId)
+        ? previousWordIds.filter((currentWordId) => currentWordId !== wordId)
+        : [...previousWordIds, wordId]
+    ));
+  }, []);
 
   useEffect(() => {
     const initLearn = async () => {
@@ -172,11 +217,11 @@ export const Learn = () => {
         } else {
           throw new Error('Invalid response from server');
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error('Error initializing learning session:', error);
         toast({
           title: UI.startErrorTitle,
-          description: error.response?.data?.message || UI.startErrorDescription,
+          description: getErrorMessage(error, UI.startErrorDescription),
           status: 'error',
           duration: 5000,
           isClosable: true,
@@ -216,11 +261,11 @@ export const Learn = () => {
         return true;
       }
       return false;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error loading more exercises:', error);
       toast({
         title: UI.loadMoreErrorTitle,
-        description: error.response?.data?.message || UI.loadMoreErrorDescription,
+        description: getErrorMessage(error, UI.loadMoreErrorDescription),
         status: 'error',
         duration: 5000,
         isClosable: true,
@@ -323,7 +368,7 @@ export const Learn = () => {
         duration: 2000,
         isClosable: true,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error updating learned points after learning session:', error);
       toast({
         title: UI.progressSaveFailed,
@@ -562,8 +607,8 @@ export const Learn = () => {
             </Text>
             <Text color="white" mt={2} fontSize={{ base: 'sm', md: 'md' }}>
               {actualCorrectness
-                ? sessionProgress?.stats?.streak > 1
-                  ? `${UI.streakMessage} ${sessionProgress.stats.streak} ${UI.streakSuffix}`
+                ? streak > 1
+                  ? `${UI.streakMessage} ${streak} ${UI.streakSuffix}`
                   : UI.goodJob
                 : exercise.type === 'fill_blank' || exercise.type === 'matching'
                   ? UI.checkAbove
@@ -591,6 +636,14 @@ export const Learn = () => {
           />
         )}
 
+        {isAnswered && (
+          <QuestionConfidencePanel
+            words={exercise.exposedWords || []}
+            selectedWordIds={selfAssessedWordIds}
+            onToggleWord={toggleSelfAssessedWord}
+          />
+        )}
+
         {isCompleted && sessionService && (
           <MotionBox
             initial={{ opacity: 0, y: 20 }}
@@ -598,15 +651,15 @@ export const Learn = () => {
             mt={6}
           >
             <Card
-              bg={useColorModeValue('white', 'gray.800')}
-              borderColor={useColorModeValue('green.200', 'green.600')}
+              bg={summaryCardBg}
+              borderColor={summaryCardBorder}
               borderWidth="2px"
               shadow="xl"
             >
               <CardHeader pb={2}>
                 <HStack spacing={3} justify="center">
                   <Icon as={CheckCircleIcon} color="green.500" boxSize={8} />
-                  <Text fontSize="2xl" fontWeight="bold" color={useColorModeValue('gray.800', 'white')}>
+                  <Text fontSize="2xl" fontWeight="bold" color={summaryTitleColor}>
                     {UI.sessionComplete}
                   </Text>
                 </HStack>
@@ -614,7 +667,7 @@ export const Learn = () => {
               <CardBody pt={2}>
                 <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6} mb={4}>
                   <Stat textAlign="center">
-                    <StatLabel color={useColorModeValue('gray.600', 'gray.400')}>
+                    <StatLabel color={summaryLabelColor}>
                       <HStack justify="center" spacing={1}>
                         <CheckCircleIcon color="green.500" />
                         <Text>{UI.statCorrect}</Text>
@@ -623,13 +676,13 @@ export const Learn = () => {
                     <StatNumber color="green.500" fontSize="3xl">
                       {sessionProgress?.stats.correct}
                     </StatNumber>
-                    <StatHelpText color={useColorModeValue('gray.500', 'gray.400')}>
+                    <StatHelpText color={summaryHelpColor}>
                       {UI.wellDone}
                     </StatHelpText>
                   </Stat>
 
                   <Stat textAlign="center">
-                    <StatLabel color={useColorModeValue('gray.600', 'gray.400')}>
+                    <StatLabel color={summaryLabelColor}>
                       <HStack justify="center" spacing={1}>
                         <InfoIcon color="orange.500" />
                         <Text>{UI.statIncorrect}</Text>
@@ -638,13 +691,13 @@ export const Learn = () => {
                     <StatNumber color="orange.500" fontSize="3xl">
                       {sessionProgress?.stats.incorrect}
                     </StatNumber>
-                    <StatHelpText color={useColorModeValue('gray.500', 'gray.400')}>
+                    <StatHelpText color={summaryHelpColor}>
                       {UI.keepPracticing}
                     </StatHelpText>
                   </Stat>
 
                   <Stat textAlign="center">
-                    <StatLabel color={useColorModeValue('gray.600', 'gray.400')}>
+                    <StatLabel color={summaryLabelColor}>
                       <HStack justify="center" spacing={1}>
                         <StarIcon color="purple.500" />
                         <Text>{UI.statBestStreak}</Text>
@@ -653,7 +706,7 @@ export const Learn = () => {
                     <StatNumber color="purple.500" fontSize="3xl">
                       {sessionProgress?.stats.maxStreak}
                     </StatNumber>
-                    <StatHelpText color={useColorModeValue('gray.500', 'gray.400')}>
+                    <StatHelpText color={summaryHelpColor}>
                       {UI.feelingGood}
                     </StatHelpText>
                   </Stat>
@@ -662,7 +715,7 @@ export const Learn = () => {
                 <Divider mb={4} />
 
                 <VStack spacing={2}>
-                  <Text fontSize="lg" fontWeight="semibold" color={useColorModeValue('gray.700', 'gray.200')}>
+                  <Text fontSize="lg" fontWeight="semibold" color={summaryBodyColor}>
                     {UI.summary}
                   </Text>
                   <HStack spacing={2} wrap="wrap" justify="center">
@@ -673,7 +726,7 @@ export const Learn = () => {
                     ))}
                   </HStack>
 
-                  <Text fontSize="sm" color={useColorModeValue('gray.600', 'gray.400')} textAlign="center" mt={2}>
+                  <Text fontSize="sm" color={summaryHelpColor} textAlign="center" mt={2}>
                     {UI.finalScore}
                     <Text as="span" fontWeight="bold" color="blue.500">
                       {`${sessionProgress?.stats.score} ${UI.points}`}
