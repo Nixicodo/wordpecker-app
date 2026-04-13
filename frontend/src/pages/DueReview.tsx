@@ -99,7 +99,12 @@ export const DueReview = () => {
   const wordCount = list?.wordCount ?? 0;
 
   return (
-    <Container maxW="container.lg" py={{ base: 6, md: 10 }} px={{ base: 4, md: 6 }}>
+    <Container
+      maxW="container.lg"
+      py={{ base: 6, md: 10 }}
+      px={{ base: 4, md: 6 }}
+      data-testid="due-review-page"
+    >
       <VStack spacing={6} align="stretch" position="relative" zIndex={1}>
         <Box
           position="relative"
@@ -184,6 +189,7 @@ export const DueReview = () => {
               </Center>
             ) : errorMessage ? (
               <Box
+                data-testid="due-review-error"
                 borderRadius="2xl"
                 borderWidth="1px"
                 borderColor="red.300"
@@ -266,6 +272,7 @@ export const DueReview = () => {
                   <HStack spacing={3} mt={5} flexWrap="wrap">
                     {list && (
                       <Button
+                        data-testid="due-review-start-link"
                         as={RouterLink}
                         to={`/learn/${list.id}`}
                         state={{ list }}
@@ -279,6 +286,7 @@ export const DueReview = () => {
                     )}
                     {list && (
                       <Button
+                        data-testid="due-review-list-link"
                         as={RouterLink}
                         to={`/lists/${list.id}`}
                         state={{ list }}
