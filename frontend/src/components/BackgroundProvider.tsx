@@ -1,5 +1,24 @@
-import { ArrowForwardIcon, DeleteIcon, RepeatIcon } from '@chakra-ui/icons';
-import { Box, Button, HStack, Spinner, Text, VStack, useToast } from '@chakra-ui/react';
+import {
+  ArrowForwardIcon,
+  CopyIcon,
+  DeleteIcon,
+  RepeatIcon
+} from '@chakra-ui/icons';
+import {
+  Box,
+  Button,
+  HStack,
+  IconButton,
+  Select,
+  Slider,
+  SliderFilledTrack,
+  SliderThumb,
+  SliderTrack,
+  Spinner,
+  Text,
+  VStack,
+  useToast
+} from '@chakra-ui/react';
 import {
   PropsWithChildren,
   createContext,
@@ -13,8 +32,19 @@ import {
 import { apiService, resolveApiUrl } from '../services/api';
 import { BackgroundAsset } from '../types';
 
-const AUTO_ROTATE_MS = 60_000;
+const DEFAULT_INTERVAL_MS = 60_000;
+const DEFAULT_BACKGROUND_OPACITY = 72;
 const CURRENT_BACKGROUND_STORAGE_KEY = 'wordpecker-current-background-id';
+const BACKGROUND_OPACITY_STORAGE_KEY = 'wordpecker-background-opacity';
+const BACKGROUND_INTERVAL_STORAGE_KEY = 'wordpecker-background-interval-ms';
+
+const INTERVAL_OPTIONS = [
+  { label: '30 秒', value: 30_000 },
+  { label: '1 分钟', value: 60_000 },
+  { label: '2 分钟', value: 120_000 },
+  { label: '5 分钟', value: 300_000 },
+  { label: '10 分钟', value: 600_000 }
+] as const;
 
 interface BackgroundContextValue {
   currentBackground: BackgroundAsset | null;
@@ -37,6 +67,16 @@ const normalizeBackground = (background: BackgroundAsset | null) => (
     : null
 );
 
+const readStoredNumber = (key: string, fallbackValue: number) => {
+  const storedValue = localStorage.getItem(key);
+  if (!storedValue) {
+    return fallbackValue;
+  }
+
+  const parsedValue = Number.parseInt(storedValue, 10);
+  return Number.isFinite(parsedValue) ? parsedValue : fallbackValue;
+};
+
 export const BackgroundProvider = ({ children }: PropsWithChildren) => {
   const toast = useToast();
   const [currentBackground, setCurrentBackground] = useState<BackgroundAsset | null>(null);
@@ -44,6 +84,8 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
   const [isReady, setIsReady] = useState(false);
   const [isSwitching, setIsSwitching] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [backgroundOpacity, setBackgroundOpacity] = useState(DEFAULT_BACKGROUND_OPACITY);
+  const [rotationIntervalMs, setRotationIntervalMs] = useState(DEFAULT_INTERVAL_MS);
   const hasLoadedRef = useRef(false);
   const currentBackgroundRef = useRef<BackgroundAsset | null>(null);
 
@@ -119,8 +161,8 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
       toast({
         title: '壁纸已删除',
         description: nextBackground
-          ? `已删除 ${deletingBackground.name}，并切换到下一张壁纸。`
-          : `已删除 ${deletingBackground.name}，当前背景库已空。`,
+          ? `已删除 ${deletingBackground.folder || deletingBackground.name}，并切换到下一张壁纸。`
+          : `已删除 ${deletingBackground.folder || deletingBackground.name}，当前背景库已空。`,
         status: 'success',
         duration: 2500,
         isClosable: true
@@ -139,12 +181,59 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
     }
   }, [requestBackground, toast]);
 
+  const handleCopyPath = useCallback(async () => {
+    if (!currentBackground) {
+      return;
+    }
+
+    const folderPath = currentBackground.folder
+      ? `backgrounds/${currentBackground.folder}`
+      : 'backgrounds';
+
+    try {
+      await navigator.clipboard.writeText(folderPath);
+      toast({
+        title: '路径已复制',
+        description: folderPath,
+        status: 'success',
+        duration: 1800,
+        isClosable: true
+      });
+    } catch (error) {
+      console.error('Failed to copy background path:', error);
+      toast({
+        title: '复制失败',
+        description: '浏览器未能复制路径，请稍后重试。',
+        status: 'error',
+        duration: 2500,
+        isClosable: true
+      });
+    }
+  }, [currentBackground, toast]);
+
+  const handleOpacityChange = useCallback((value: number) => {
+    setBackgroundOpacity(value);
+    localStorage.setItem(BACKGROUND_OPACITY_STORAGE_KEY, String(value));
+  }, []);
+
+  const handleIntervalChange = useCallback((value: string) => {
+    const parsedValue = Number.parseInt(value, 10);
+    if (!Number.isFinite(parsedValue)) {
+      return;
+    }
+
+    setRotationIntervalMs(parsedValue);
+    localStorage.setItem(BACKGROUND_INTERVAL_STORAGE_KEY, String(parsedValue));
+  }, []);
+
   useEffect(() => {
     if (hasLoadedRef.current) {
       return;
     }
 
     hasLoadedRef.current = true;
+    setBackgroundOpacity(readStoredNumber(BACKGROUND_OPACITY_STORAGE_KEY, DEFAULT_BACKGROUND_OPACITY));
+    setRotationIntervalMs(readStoredNumber(BACKGROUND_INTERVAL_STORAGE_KEY, DEFAULT_INTERVAL_MS));
 
     const loadBackground = async () => {
       const savedBackgroundId = localStorage.getItem(CURRENT_BACKGROUND_STORAGE_KEY);
@@ -165,10 +254,10 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
 
     const timer = window.setInterval(() => {
       cycleBackground('timer');
-    }, AUTO_ROTATE_MS);
+    }, rotationIntervalMs);
 
     return () => window.clearInterval(timer);
-  }, [cycleBackground, totalBackgrounds]);
+  }, [cycleBackground, rotationIntervalMs, totalBackgrounds]);
 
   const value = useMemo<BackgroundContextValue>(() => ({
     currentBackground,
@@ -191,13 +280,14 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
           bgSize="cover"
           bgPosition="center"
           bgRepeat="no-repeat"
+          opacity={backgroundOpacity / 100}
           pointerEvents="none"
         />
         <Box
           position="fixed"
           inset={0}
           zIndex={0}
-          bg="linear-gradient(135deg, rgba(2,6,23,0.56) 0%, rgba(15,23,42,0.34) 42%, rgba(2,6,23,0.66) 100%)"
+          bg="linear-gradient(135deg, rgba(2,6,23,0.48) 0%, rgba(15,23,42,0.28) 42%, rgba(2,6,23,0.60) 100%)"
           pointerEvents="none"
         />
 
@@ -220,6 +310,7 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
             bg="rgba(9, 14, 28, 0.78)"
             border="1px solid rgba(255, 255, 255, 0.14)"
             boxShadow="0 22px 50px rgba(0, 0, 0, 0.28)"
+            minW={{ base: '280px', md: '320px' }}
           >
             {!isReady ? (
               <HStack spacing={3}>
@@ -232,13 +323,66 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
                   <Text fontSize="xs" color="whiteAlpha.700" textTransform="uppercase" letterSpacing="0.18em">
                     Background
                   </Text>
-                  <Text fontSize="sm" color="white" fontWeight="semibold" noOfLines={1}>
-                    {currentBackground.folder || currentBackground.name}
-                  </Text>
-                  <Text fontSize="xs" color="whiteAlpha.700" noOfLines={1}>
-                    {currentBackground.name} · {totalBackgrounds} 张可用
+                  <HStack spacing={2} align="center">
+                    <Text fontSize="sm" color="white" fontWeight="semibold" noOfLines={1} flex="1">
+                      {currentBackground.folder || 'backgrounds'}
+                    </Text>
+                    <IconButton
+                      aria-label="复制来源路径"
+                      icon={<CopyIcon />}
+                      size="xs"
+                      variant="ghost"
+                      color="whiteAlpha.900"
+                      _hover={{ bg: 'whiteAlpha.200' }}
+                      onClick={() => void handleCopyPath()}
+                    />
+                  </HStack>
+                  <Text fontSize="xs" color="whiteAlpha.700">
+                    {`${totalBackgrounds} 张可用`}
                   </Text>
                 </Box>
+
+                <VStack spacing={2} align="stretch">
+                  <Box>
+                    <HStack justify="space-between" mb={1}>
+                      <Text fontSize="xs" color="whiteAlpha.800">壁纸不透明度</Text>
+                      <Text fontSize="xs" color="green.200">{backgroundOpacity}%</Text>
+                    </HStack>
+                    <Slider
+                      aria-label="壁纸不透明度"
+                      value={backgroundOpacity}
+                      min={15}
+                      max={100}
+                      step={5}
+                      onChange={handleOpacityChange}
+                    >
+                      <SliderTrack bg="whiteAlpha.200">
+                        <SliderFilledTrack bg="green.300" />
+                      </SliderTrack>
+                      <SliderThumb boxSize={3} />
+                    </Slider>
+                  </Box>
+
+                  <Box>
+                    <Text fontSize="xs" color="whiteAlpha.800" mb={1}>随机切换间隔</Text>
+                    <Select
+                      size="sm"
+                      value={rotationIntervalMs}
+                      onChange={(event) => handleIntervalChange(event.target.value)}
+                      bg="whiteAlpha.120"
+                      borderColor="whiteAlpha.220"
+                      _hover={{ borderColor: 'whiteAlpha.300' }}
+                      _focus={{ borderColor: 'green.300', boxShadow: '0 0 0 1px #86efac' }}
+                    >
+                      {INTERVAL_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value} style={{ color: '#111827' }}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </Select>
+                  </Box>
+                </VStack>
+
                 <HStack spacing={2}>
                   <Button
                     leftIcon={<ArrowForwardIcon />}
@@ -250,6 +394,7 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
                     onClick={() => cycleBackground('manual')}
                     isDisabled={totalBackgrounds === 0}
                     isLoading={isSwitching}
+                    flex="1"
                   >
                     Next
                   </Button>
@@ -260,6 +405,7 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
                     variant="solid"
                     onClick={() => void deleteCurrentBackground()}
                     isLoading={isDeleting}
+                    flex="1"
                   >
                     Delete
                   </Button>
