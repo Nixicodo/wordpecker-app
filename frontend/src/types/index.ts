@@ -10,7 +10,7 @@ export interface WordList {
   name: string;
   description?: string;
   context?: string;
-  kind?: 'custom' | 'mistake_book';
+  kind?: 'custom' | 'mistake_book' | 'due_review';
   systemKey?: string;
   wordCount?: number;
   dueCount?: number;
@@ -24,6 +24,7 @@ export interface WordList {
   hintUsageRate?: number;
   hardRate?: number;
   againRate?: number;
+  sourceListCount?: number;
   created_at: string;
   updated_at: string;
 }
@@ -40,6 +41,10 @@ export interface Word {
   stability: number;
   difficulty: number;
   status: number;
+  sourceListId?: string;
+  sourceListIds?: string[];
+  sourceListName?: string;
+  sourceListNames?: string[];
   created_at: string;
   updated_at: string;
 }
@@ -121,6 +126,10 @@ export interface ScheduledWord {
   id: string;
   value: string;
   meaning: string;
+  sourceListId?: string;
+  sourceListIds?: string[];
+  sourceListName?: string;
+  sourceListNames?: string[];
   state: {
     dueAt: string;
     lastReviewedAt?: string;
@@ -142,11 +151,20 @@ export interface ReviewSubmission {
   wordId: string;
   wordIds?: string[];
   selfAssessedWordIds?: string[];
+  sourceListId?: string;
+  sourceListIdByWordId?: Record<string, string>;
   correct: boolean;
   rating: ReviewRating;
   questionType: string;
   responseTimeMs?: number;
   usedHint?: boolean;
+}
+
+export interface WordSourceInfo {
+  sourceListId?: string;
+  sourceListIds?: string[];
+  sourceListName?: string;
+  sourceListNames?: string[];
 }
 
 export interface Template {

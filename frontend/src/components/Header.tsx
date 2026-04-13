@@ -1,7 +1,7 @@
 import { Box, Container, Flex, Button, Icon, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { GiTreeBranch } from 'react-icons/gi';
-import { FaFeatherAlt, FaCog, FaCamera, FaGraduationCap, FaRegBookmark } from 'react-icons/fa';
+import { FaFeatherAlt, FaCog, FaCamera, FaGraduationCap, FaRegBookmark, FaClock } from 'react-icons/fa';
 import { detectUiLocale } from '../i18n/ui';
 
 export const Header = () => {
@@ -33,6 +33,19 @@ export const Header = () => {
                     mt={-2}
                   />
                 </Flex>
+              </Button>
+            </Link>
+            <Link to="/reviews">
+              <Button
+                variant="ghost"
+                leftIcon={<Icon as={FaClock} color="#F6AD55" />}
+                _hover={{
+                  transform: 'translateY(-2px)',
+                  color: '#F6AD55'
+                }}
+                transition="all 0.2s"
+              >
+                {isZh ? '\u5f85\u590d\u4e60' : 'Due Review'}
               </Button>
             </Link>
             <Link to="/mistakes">

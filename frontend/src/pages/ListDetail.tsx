@@ -31,7 +31,7 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { Word, WordList } from '../types';
 import { ArrowBackIcon, DeleteIcon } from '@chakra-ui/icons';
-import { FaGraduationCap, FaGamepad, FaPlus, FaBookOpen, FaMicrophone, FaFileImport } from 'react-icons/fa';
+import { FaGraduationCap, FaGamepad, FaPlus, FaBookOpen, FaMicrophone, FaFileImport, FaClock } from 'react-icons/fa';
 import { GiTreeBranch } from 'react-icons/gi';
 import { AddWordModal } from '../components/AddWordModal';
 import { BulkImportWordsModal } from '../components/BulkImportWordsModal';
@@ -54,6 +54,18 @@ const MotionBox = motion(Box);
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 }
+};
+
+const formatDueDate = (value?: string) => {
+  if (!value) {
+    return '';
+  }
+
+  return new Intl.DateTimeFormat('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).format(new Date(value));
 };
 
 const UI = {
@@ -118,6 +130,11 @@ export const ListDetail = () => {
   const [generatingReading, setGeneratingReading] = useState(false);
   const [userPreferences, setUserPreferences] = useState<UserPreferences | null>(null);
   const isMistakeBook = list?.kind === 'mistake_book';
+  const isDueReview = list?.kind === 'due_review';
+  const isSystemList = isMistakeBook || isDueReview;
+  const dueReviewSourceTreeCount = new Set(
+    words.flatMap((word) => word.sourceListIds || (word.sourceListId ? [word.sourceListId] : []))
+  ).size;
 
   const {
     isOpen: isReadingModalOpen,
@@ -322,11 +339,11 @@ export const ListDetail = () => {
               size="lg"
             />
             <Heading as="h1" size="xl" color="green.300" display="flex" alignItems="center" gap={2}>
-              <Icon as={GiTreeBranch} color="green.400" />
-              {isMistakeBook ? '错题本' : list.name}
+              <Icon as={isDueReview ? FaClock : GiTreeBranch} color={isDueReview ? 'orange.300' : 'green.400'} />
+              {isMistakeBook ? '错题本' : isDueReview ? '待复习' : list.name}
             </Heading>
           </Flex>
-          {!isMistakeBook && (
+          {!isSystemList && (
             <IconButton
               aria-label="删除词树"
               icon={<DeleteIcon />}
@@ -347,11 +364,23 @@ export const ListDetail = () => {
         <Flex justify="space-between" align="center" mb={6} direction={{ base: 'column', md: 'row' }} gap={4}>
           <Box maxW="container.md">
             <Text color="gray.300" fontSize="lg">
-              {isMistakeBook
+              {isDueReview
+                ? '这里会汇总所有计划复习日期不晚于今天的单词，你在这里的作答会直接回写到它们原本的词树进度。'
+                : isMistakeBook
                 ? '这里会自动收集你在其他词树里失手的词。现在它们按到期和脆弱程度重新排序。'
                 : list.description}
             </Text>
-            {list.context && (
+            {isDueReview && (
+              <HStack spacing={2} mt={3} wrap="wrap">
+                <Badge colorScheme="orange" variant="solid">
+                  {`今日应复习 ${words.length}`}
+                </Badge>
+                <Badge colorScheme="yellow" variant="subtle">
+                  {`来源词树 ${dueReviewSourceTreeCount}`}
+                </Badge>
+              </HStack>
+            )}
+            {list.context && !isDueReview && (
               <Text color="gray.500" fontSize="md" mt={2}>
                 {UI.contextPrefix} {list.context}
               </Text>
@@ -359,43 +388,49 @@ export const ListDetail = () => {
           </Box>
           <Flex gap={3} flexWrap="wrap" justify={{ base: 'center', md: 'flex-end' }}>
             <Button variant="ghost" leftIcon={<FaGraduationCap />} colorScheme="green" size="lg" isDisabled={words.length === 0} onClick={() => navigate(`/learn/${list.id}`, { state: { list } })}>
-              {UI.actionLearn}
+              {isDueReview ? '开始复习' : UI.actionLearn}
             </Button>
-            <Button variant="ghost" leftIcon={<FaGamepad />} colorScheme="orange" size="lg" isDisabled={words.length === 0} onClick={() => navigate(`/quiz/${list.id}`, { state: { list } })}>
-              {UI.actionQuiz}
-            </Button>
-            <Button variant="ghost" leftIcon={<FaBookOpen />} colorScheme="purple" size="lg" isDisabled={words.length === 0} onClick={onReadingModalOpen}>
-              {UI.actionLightReading}
-            </Button>
-            <Button
-              variant="ghost"
-              leftIcon={<FaMicrophone />}
-              colorScheme="blue"
-              size="lg"
-              isDisabled={words.length === 0}
-              onClick={() => navigate(`/voice-chat/${list.id}`, {
-                state: {
-                  config: {
-                    listId: list.id,
-                    listName: list.name,
-                    listContext: list.context,
-                    userLanguages: {
-                      baseLanguage: userPreferences?.baseLanguage || 'English',
-                      targetLanguage: userPreferences?.targetLanguage || 'English'
-                    }
-                  },
-                  listName: list.name
-                }
-              })}
-            >
-              {UI.actionVoiceChat}
-            </Button>
-            {!isMistakeBook && (
+            {!isDueReview && (
+              <Button variant="ghost" leftIcon={<FaGamepad />} colorScheme="orange" size="lg" isDisabled={words.length === 0} onClick={() => navigate(`/quiz/${list.id}`, { state: { list } })}>
+                {UI.actionQuiz}
+              </Button>
+            )}
+            {!isDueReview && (
+              <Button variant="ghost" leftIcon={<FaBookOpen />} colorScheme="purple" size="lg" isDisabled={words.length === 0} onClick={onReadingModalOpen}>
+                {UI.actionLightReading}
+              </Button>
+            )}
+            {!isDueReview && (
+              <Button
+                variant="ghost"
+                leftIcon={<FaMicrophone />}
+                colorScheme="blue"
+                size="lg"
+                isDisabled={words.length === 0}
+                onClick={() => navigate(`/voice-chat/${list.id}`, {
+                  state: {
+                    config: {
+                      listId: list.id,
+                      listName: list.name,
+                      listContext: list.context,
+                      userLanguages: {
+                        baseLanguage: userPreferences?.baseLanguage || 'English',
+                        targetLanguage: userPreferences?.targetLanguage || 'English'
+                      }
+                    },
+                    listName: list.name
+                  }
+                })}
+              >
+                {UI.actionVoiceChat}
+              </Button>
+            )}
+            {!isSystemList && (
               <Button variant="outline" colorScheme="green" leftIcon={<FaFileImport />} size="lg" onClick={onBulkImportOpen}>
                 {UI.actionBulkImport}
               </Button>
             )}
-            {!isMistakeBook && (
+            {!isSystemList && (
               <Button variant="solid" colorScheme="green" leftIcon={<FaPlus />} size="lg" onClick={onOpen}>
                 {UI.actionAddWord}
               </Button>
@@ -406,11 +441,13 @@ export const ListDetail = () => {
         <Box bg="linear-gradient(180deg, rgba(15,22,34,0.98), rgba(8,13,22,0.96))" borderRadius="2xl" borderWidth="1px" borderColor="whiteAlpha.120" overflow="hidden">
           {words.length === 0 ? (
             <Flex direction="column" align="center" gap={4} py={12} px={4}>
-              <Icon as={GiTreeBranch} boxSize={12} color="green.400" />
+              <Icon as={isDueReview ? FaClock : GiTreeBranch} boxSize={12} color={isDueReview ? 'orange.300' : 'green.400'} />
               <Text color="gray.400" fontSize="lg" textAlign="center">
-                {UI.emptyHint}
+                {isDueReview
+                  ? '今天暂时没有到期单词，可以先回到词树中学习新内容，或者稍后再来查看。'
+                  : UI.emptyHint}
               </Text>
-              {!isMistakeBook && (
+              {!isSystemList && (
                 <Button variant="outline" colorScheme="green" leftIcon={<FaPlus />} onClick={onOpen} size="lg">
                   {UI.emptyPrimaryButton}
                 </Button>
@@ -455,11 +492,21 @@ export const ListDetail = () => {
                           <Badge variant="subtle" colorScheme="blue">Reviews {word.reviewCount}</Badge>
                           <Badge variant="subtle" colorScheme="orange">Lapses {word.lapseCount}</Badge>
                           <Badge variant="subtle" colorScheme="teal">Stability {word.stability.toFixed(1)}</Badge>
+                          {isDueReview && word.sourceListNames?.map((sourceListName) => (
+                            <Badge key={`${word.id}-${sourceListName}`} variant="subtle" colorScheme="yellow">
+                              {sourceListName}
+                            </Badge>
+                          ))}
                         </HStack>
 
                         <Text color="gray.200" fontSize="md" mt={3} noOfLines={selectedWord === word.id ? undefined : 1}>
                           {word.meaning}
                         </Text>
+                        {isDueReview && word.dueAt && (
+                          <Text color="gray.400" fontSize="sm" mt={2}>
+                            {`计划复习日期：${formatDueDate(word.dueAt)}`}
+                          </Text>
+                        )}
                       </Box>
 
                       <Box
@@ -474,7 +521,7 @@ export const ListDetail = () => {
                           }
                         }}
                       >
-                        {!isMistakeBook && (
+                        {!isSystemList && (
                           <IconButton
                             aria-label={UI.deleteWordAria}
                             icon={<DeleteIcon />}

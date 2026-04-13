@@ -14,6 +14,7 @@ import { ReadingPage } from './pages/ReadingPage';
 import { VoiceChat } from './pages/VoiceChat';
 import { Header } from './components/Header';
 import { MistakeBook } from './pages/MistakeBook';
+import { DueReview } from './pages/DueReview';
 import { BackgroundProvider } from './components/BackgroundProvider';
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
               <Route path="/learn/:id" element={<Learn />} />
               <Route path="/quiz/:id" element={<Quiz />} />
               <Route path="/mistakes" element={<MistakeBook />} />
+              <Route path="/reviews" element={<DueReview />} />
               <Route path="/words/:wordId" element={<WordDetailPage />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/describe" element={<ImageDescription />} />

@@ -26,7 +26,7 @@ import {
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Exercise, ReviewSubmission, Word, WordList } from '../types';
+import { Exercise, ReviewSubmission, Word, WordList, WordSourceInfo } from '../types';
 import { ArrowBackIcon, CloseIcon, CheckCircleIcon, InfoIcon, StarIcon } from '@chakra-ui/icons';
 import { apiService } from '../services/api';
 import { QuestionAnsweredSupplement, QuestionRenderer } from '../components/QuestionRenderer';
@@ -99,6 +99,22 @@ const collectSeenWordIds = (items: Exercise[]) => Array.from(new Set(
   ].filter((wordId): wordId is string => Boolean(wordId)))
 ));
 
+const buildSourceListIdByWordId = (
+  exercise: Exercise,
+  wordSources: Record<string, WordSourceInfo>
+) => {
+  const entries = Array.from(new Set([
+    exercise.wordId || null,
+    ...(exercise.wordIds || []),
+    ...(exercise.exposedWordIds || [])
+  ].filter((wordId): wordId is string => Boolean(wordId)))).flatMap((wordId) => {
+    const sourceListId = wordSources[wordId]?.sourceListId;
+    return sourceListId ? [[wordId, sourceListId] as const] : [];
+  });
+
+  return entries.length ? Object.fromEntries(entries) : undefined;
+};
+
 const EXERCISE_PREFETCH_BUFFER_SIZE = 2;
 
 type SessionProgressState = ReturnType<SessionService['getCurrentProgress']>;
@@ -143,6 +159,7 @@ export const Learn = () => {
 
   const [list, setList] = useState<WordList | null>(state?.list || null);
   const [listWords, setListWords] = useState<Word[]>([]);
+  const [wordSources, setWordSources] = useState<Record<string, WordSourceInfo>>({});
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [currentExercise, setCurrentExercise] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState('');
@@ -183,6 +200,9 @@ export const Learn = () => {
       const response = await apiService.getExercises(id, {
         excludeWordIds
       });
+      if (response?.wordSources) {
+        setWordSources((prevSources) => ({ ...prevSources, ...response.wordSources }));
+      }
       return response?.exercises ?? null;
     } catch (error) {
       if (isNoMoreBatchError(error)) {
@@ -283,6 +303,7 @@ export const Learn = () => {
         const response = await apiService.startLearning(id);
         if (response && response.exercises) {
           setExercises(response.exercises);
+          setWordSources(response.wordSources || {});
           const service = new SessionService(response.exercises);
           setSessionService(service);
           setSessionProgress(service.getCurrentProgress());
@@ -383,9 +404,12 @@ export const Learn = () => {
         cycleBackground('correct-answer');
       }
       if (exercise.wordId) {
+        const sourceListIdByWordId = buildSourceListIdByWordId(exercise, wordSources);
         setCurrentReview({
           wordId: exercise.wordId as string,
           wordIds: exercise.wordIds,
+          sourceListId: wordSources[exercise.wordId]?.sourceListId,
+          sourceListIdByWordId,
           correct: isValid,
           rating: recommendation.rating,
           questionType: exercise.type,
@@ -418,9 +442,12 @@ export const Learn = () => {
         cycleBackground('correct-answer');
       }
       if (exercise.wordId) {
+        const sourceListIdByWordId = buildSourceListIdByWordId(exercise, wordSources);
         setCurrentReview({
           wordId: exercise.wordId as string,
           wordIds: exercise.wordIds,
+          sourceListId: wordSources[exercise.wordId]?.sourceListId,
+          sourceListIdByWordId,
           correct: fallbackCorrect,
           rating: recommendation.rating,
           questionType: exercise.type,

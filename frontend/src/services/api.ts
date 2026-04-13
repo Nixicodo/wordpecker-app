@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { WordList, Word, Exercise, Question, Template, WordDetail, SentenceExample, UserPreferences, ExerciseTypePreferences, ImageDescriptionAnalysis, DescriptionExercise, VocabularyWordsResponse, WordDetailsResponse, ReviewSubmission, ScheduledWord, BackgroundAsset } from '../types';
+import { WordList, Word, Exercise, Question, Template, WordDetail, SentenceExample, UserPreferences, ExerciseTypePreferences, ImageDescriptionAnalysis, DescriptionExercise, VocabularyWordsResponse, WordDetailsResponse, ReviewSubmission, ScheduledWord, BackgroundAsset, WordSourceInfo } from '../types';
 
 // Generate or retrieve user ID
 const getUserId = () => {
@@ -46,11 +46,13 @@ type ApiResponse<T> = Promise<T>;
 interface LearnStartResponse {
   exercises: Exercise[];
   scheduledWords?: ScheduledWord[];
+  wordSources?: Record<string, WordSourceInfo>;
 }
 
 interface LearnExercisesResponse {
   exercises: Exercise[];
   scheduledWords?: ScheduledWord[];
+  wordSources?: Record<string, WordSourceInfo>;
 }
 
 interface QuizStartResponse {
@@ -85,6 +87,7 @@ export const apiService = {
   getLists: (): ApiResponse<WordList[]> => api.get('/api/lists'),
   getList: (id: string): ApiResponse<WordList> => api.get(`/api/lists/${id}`),
   getMistakeBook: (): ApiResponse<WordList> => api.get('/api/lists/mistake-book'),
+  getDueReview: (): ApiResponse<WordList> => api.get('/api/lists/due-review'),
   createList: (data: Partial<WordList>): ApiResponse<WordList> => api.post('/api/lists', data),
   updateList: (id: string, data: Partial<WordList>): ApiResponse<WordList> => api.put(`/api/lists/${id}`, data),
   deleteList: async (listId: string): Promise<void> => {
