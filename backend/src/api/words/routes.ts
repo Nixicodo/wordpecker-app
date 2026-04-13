@@ -380,7 +380,7 @@ router.post('/:listId/light-reading', openaiRateLimiter, validate(listIdSchema),
     const { baseLanguage, targetLanguage } = await getUserLanguages(userId);
 
     const wordsForReading = words.map((word) => {
-      const membership = getMembership(word as IWord, listId);
+      const membership = getMembership({ listMemberships: word.listMemberships }, listId);
       return { value: word.value, meaning: membership?.meaning || '' };
     });
 

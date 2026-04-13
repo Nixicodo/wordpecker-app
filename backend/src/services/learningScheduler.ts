@@ -558,7 +558,18 @@ export const summarizeListProgress = async (userId: string, listId: string) => {
   let retentionAccumulator = 0;
 
   for (const state of states) {
-    const retrievability = scheduler.get_retrievability(cardFromState(state as ILearningState), now, false);
+    const retrievability = scheduler.get_retrievability(cardFromState({
+      dueAt: state.dueAt,
+      stability: state.stability,
+      difficulty: state.difficulty,
+      elapsedDays: state.elapsedDays,
+      scheduledDays: state.scheduledDays,
+      learningSteps: state.learningSteps,
+      reps: state.reps,
+      lapses: state.lapses,
+      state: state.state,
+      lastReviewedAt: state.lastReviewedAt
+    }), now, false);
     retentionAccumulator += retrievability;
 
     if (state.dueAt <= now) {
