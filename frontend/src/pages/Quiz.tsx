@@ -133,7 +133,7 @@ export const Quiz = () => {
   const { id } = useParams<{ id: string }>();
   const { state } = useLocation();
   const toast = useToast();
-  const { cycleBackground } = useBackgrounds();
+  const { cycleBackground, cardOpacity } = useBackgrounds();
   const hasInitializedRef = useRef(false);
 
   const [list, setList] = useState<WordList | null>(state?.list || null);
@@ -621,6 +621,7 @@ export const Quiz = () => {
         borderColor="purple.800"
         px={{ base: 4, md: 8 }}
         py={6}
+        bg={`rgba(15, 23, 42, ${(cardOpacity / 100).toFixed(2)})`}
       >
         <QuestionRenderer
           question={resolvedQuestion}

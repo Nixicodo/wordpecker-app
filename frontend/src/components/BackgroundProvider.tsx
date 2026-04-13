@@ -35,9 +35,11 @@ import { BackgroundAsset } from '../types';
 const DEFAULT_INTERVAL_MS = 60_000;
 const DEFAULT_BACKGROUND_OPACITY = 72;
 const DEFAULT_MASK_OPACITY = 48;
+const DEFAULT_CARD_OPACITY = 88;
 const CURRENT_BACKGROUND_STORAGE_KEY = 'wordpecker-current-background-id';
 const BACKGROUND_OPACITY_STORAGE_KEY = 'wordpecker-background-opacity';
 const BACKGROUND_MASK_OPACITY_STORAGE_KEY = 'wordpecker-background-mask-opacity';
+const BACKGROUND_CARD_OPACITY_STORAGE_KEY = 'wordpecker-background-card-opacity';
 const BACKGROUND_INTERVAL_STORAGE_KEY = 'wordpecker-background-interval-ms';
 
 const INTERVAL_OPTIONS = [
@@ -54,6 +56,7 @@ interface BackgroundContextValue {
   isReady: boolean;
   isSwitching: boolean;
   isDeleting: boolean;
+  cardOpacity: number;
   cycleBackground: (reason?: 'manual' | 'timer' | 'correct-answer') => void;
   deleteCurrentBackground: () => Promise<void>;
 }
@@ -88,6 +91,7 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [backgroundOpacity, setBackgroundOpacity] = useState(DEFAULT_BACKGROUND_OPACITY);
   const [maskOpacity, setMaskOpacity] = useState(DEFAULT_MASK_OPACITY);
+  const [cardOpacity, setCardOpacity] = useState(DEFAULT_CARD_OPACITY);
   const [rotationIntervalMs, setRotationIntervalMs] = useState(DEFAULT_INTERVAL_MS);
   const hasLoadedRef = useRef(false);
   const currentBackgroundRef = useRef<BackgroundAsset | null>(null);
@@ -224,6 +228,11 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
     localStorage.setItem(BACKGROUND_MASK_OPACITY_STORAGE_KEY, String(value));
   }, []);
 
+  const handleCardOpacityChange = useCallback((value: number) => {
+    setCardOpacity(value);
+    localStorage.setItem(BACKGROUND_CARD_OPACITY_STORAGE_KEY, String(value));
+  }, []);
+
   const handleIntervalChange = useCallback((value: string) => {
     const parsedValue = Number.parseInt(value, 10);
     if (!Number.isFinite(parsedValue)) {
@@ -242,6 +251,7 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
     hasLoadedRef.current = true;
     setBackgroundOpacity(readStoredNumber(BACKGROUND_OPACITY_STORAGE_KEY, DEFAULT_BACKGROUND_OPACITY));
     setMaskOpacity(readStoredNumber(BACKGROUND_MASK_OPACITY_STORAGE_KEY, DEFAULT_MASK_OPACITY));
+    setCardOpacity(readStoredNumber(BACKGROUND_CARD_OPACITY_STORAGE_KEY, DEFAULT_CARD_OPACITY));
     setRotationIntervalMs(readStoredNumber(BACKGROUND_INTERVAL_STORAGE_KEY, DEFAULT_INTERVAL_MS));
 
     const loadBackground = async () => {
@@ -276,9 +286,10 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
     isReady,
     isSwitching,
     isDeleting,
+    cardOpacity,
     cycleBackground,
     deleteCurrentBackground
-  }), [currentBackground, cycleBackground, deleteCurrentBackground, isDeleting, isReady, isSwitching, totalBackgrounds]);
+  }), [cardOpacity, currentBackground, cycleBackground, deleteCurrentBackground, isDeleting, isReady, isSwitching, totalBackgrounds]);
 
   return (
     <BackgroundContext.Provider value={value}>
@@ -298,7 +309,7 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
           position="fixed"
           inset={0}
           zIndex={0}
-          bg={`linear-gradient(135deg, rgba(2,6,23,${(overlayOpacity * 0.95).toFixed(2)}) 0%, rgba(15,23,42,${(overlayOpacity * 0.58).toFixed(2)}) 42%, rgba(2,6,23,${(overlayOpacity * 1.15).toFixed(2)}) 100%)`}
+          bg={`linear-gradient(135deg, rgba(2,6,23,${Math.min(overlayOpacity * 0.95, 1).toFixed(2)}) 0%, rgba(15,23,42,${Math.min(overlayOpacity * 0.58, 1).toFixed(2)}) 42%, rgba(2,6,23,${Math.min(overlayOpacity * 1.15, 1).toFixed(2)}) 100%)`}
           pointerEvents="none"
         />
 
@@ -389,6 +400,26 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
                     >
                       <SliderTrack bg="whiteAlpha.200">
                         <SliderFilledTrack bg="cyan.300" />
+                      </SliderTrack>
+                      <SliderThumb boxSize={3} />
+                    </Slider>
+                  </Box>
+
+                  <Box>
+                    <HStack justify="space-between" mb={1}>
+                      <Text fontSize="xs" color="whiteAlpha.800">卡片透明度</Text>
+                      <Text fontSize="xs" color="green.200">{cardOpacity}%</Text>
+                    </HStack>
+                    <Slider
+                      aria-label="卡片透明度"
+                      value={cardOpacity}
+                      min={35}
+                      max={100}
+                      step={5}
+                      onChange={handleCardOpacityChange}
+                    >
+                      <SliderTrack bg="whiteAlpha.200">
+                        <SliderFilledTrack bg="purple.300" />
                       </SliderTrack>
                       <SliderThumb boxSize={3} />
                     </Slider>

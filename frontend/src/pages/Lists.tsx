@@ -26,6 +26,7 @@ import { WordList } from '../types';
 import { apiService } from '../services/api';
 import { designTokens } from '../theme/design-system';
 import { detectUiLocale } from '../i18n/ui';
+import { useBackgrounds } from '../components/BackgroundProvider';
 
 const container = {
   hidden: { opacity: 0 },
@@ -77,6 +78,7 @@ const formatAverageResponseTime = (value?: number) => {
 
 export const Lists = () => {
   const isZh = detectUiLocale() === 'zh-CN';
+  const { cardOpacity } = useBackgrounds();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const [lists, setLists] = useState<WordList[]>([]);
@@ -209,7 +211,7 @@ export const Lists = () => {
                   p={5}
                   borderRadius="2xl"
                   minH="350px"
-                  bg="linear-gradient(180deg, rgba(16,23,36,0.98), rgba(8,14,24,0.95))"
+                  bg={`linear-gradient(180deg, rgba(16,23,36,${(cardOpacity / 100).toFixed(2)}), rgba(8,14,24,${Math.max((cardOpacity - 8) / 100, 0.2).toFixed(2)}))`}
                 >
                   <VStack spacing={4} h="full" align="stretch">
                     <Box>
