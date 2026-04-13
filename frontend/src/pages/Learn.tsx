@@ -34,10 +34,10 @@ import { QuestionConfidencePanel } from '../components/QuestionConfidencePanel';
 import { ReviewRatingPanel } from '../components/ReviewRatingPanel';
 import { SessionService } from '../services/sessionService';
 import { validateAnswer } from '../utils/answerValidation';
-import { usePrefetchedBatch } from '../hooks/usePrefetchedBatch';
 import { useBatchedReviewSync } from '../hooks/useBatchedReviewSync';
 import { recommendReviewRating } from '../utils/reviewRating';
 import { resolveQuestionExposureWords } from '../utils/questionExposure';
+import { BufferedBatchQueue } from '../utils/bufferedBatchQueue';
 
 const UI = {
   startErrorTitle: '\u542f\u52a8\u5b66\u4e60\u5931\u8d25',
@@ -98,6 +98,8 @@ const collectSeenWordIds = (items: Exercise[]) => Array.from(new Set(
   ].filter((wordId): wordId is string => Boolean(wordId)))
 ));
 
+const EXERCISE_PREFETCH_BUFFER_SIZE = 2;
+
 type SessionProgressState = ReturnType<SessionService['getCurrentProgress']>;
 
 const getErrorMessage = (error: unknown, fallbackMessage: string) => {
@@ -135,6 +137,7 @@ export const Learn = () => {
   const { state } = useLocation();
   const toast = useToast();
   const hasInitializedRef = useRef(false);
+  const bufferedExercisesRef = useRef<BufferedBatchQueue<Exercise> | null>(null);
 
   const [list, setList] = useState<WordList | null>(state?.list || null);
   const [listWords, setListWords] = useState<Word[]>([]);
@@ -166,27 +169,42 @@ export const Learn = () => {
   const summaryHelpColor = useColorModeValue('gray.500', 'gray.400');
   const summaryBodyColor = useColorModeValue('gray.700', 'gray.200');
 
-  const fetchMoreExercises = useCallback(async (): Promise<Exercise[] | null> => {
-    if (!id || !hasMoreExercises) return null;
+  const syncHasMoreExercises = useCallback(() => {
+    const queue = bufferedExercisesRef.current;
+    setHasMoreExercises(queue ? queue.hasBufferedBatches() || !queue.isExhausted() : false);
+  }, []);
+
+  const fetchMoreExercises = useCallback(async (excludeWordIds: string[]): Promise<Exercise[] | null> => {
+    if (!id) return null;
 
     try {
       const response = await apiService.getExercises(id, {
-        excludeWordIds: collectSeenWordIds(exercises)
+        excludeWordIds
       });
-      const nextExercises = response?.exercises ?? null;
-      setHasMoreExercises(Boolean(nextExercises?.length));
-      return nextExercises;
+      return response?.exercises ?? null;
     } catch (error) {
       if (isNoMoreBatchError(error)) {
-        setHasMoreExercises(false);
         return null;
       }
 
       throw error;
     }
-  }, [exercises, hasMoreExercises, id]);
+  }, [id]);
 
-  const { prefetchNext, consumePrefetched } = usePrefetchedBatch(fetchMoreExercises);
+  useEffect(() => {
+    bufferedExercisesRef.current = new BufferedBatchQueue<Exercise>({
+      fetchBatch: fetchMoreExercises,
+      collectIds: collectSeenWordIds,
+      bufferSize: EXERCISE_PREFETCH_BUFFER_SIZE,
+      onStateChange: syncHasMoreExercises
+    });
+    syncHasMoreExercises();
+
+    return () => {
+      bufferedExercisesRef.current?.dispose();
+      bufferedExercisesRef.current = null;
+    };
+  }, [fetchMoreExercises, syncHasMoreExercises]);
 
   const resetQuestionState = useCallback(() => {
     setSelectedAnswer('');
@@ -267,6 +285,7 @@ export const Learn = () => {
           setSessionService(service);
           setSessionProgress(service.getCurrentProgress());
           questionStartedAtRef.current = Date.now();
+          bufferedExercisesRef.current?.ensureBuffered(response.exercises);
           hasInitializedRef.current = true;
         } else {
           throw new Error('Invalid response from server');
@@ -289,23 +308,15 @@ export const Learn = () => {
     initLearn();
   }, [id, list, navigate, toast]);
 
-  useEffect(() => {
-    if (!id || !exercises.length || isCompleted || !hasMoreExercises) return;
-
-    void prefetchNext().catch((error) => {
-      if (isNoMoreBatchError(error)) {
-        setHasMoreExercises(false);
-      }
-    });
-  }, [id, exercises.length, isCompleted, hasMoreExercises, prefetchNext]);
-
   const loadMoreExercises = async () => {
     if (!id || !exercises.length) return false;
 
     try {
       setIsLoading(true);
-      const prefetchedExercises = await consumePrefetched();
-      const nextExercises = prefetchedExercises ?? await fetchMoreExercises();
+      const queue = bufferedExercisesRef.current;
+      const nextExercises = queue
+        ? await queue.consumeNext()
+        : await fetchMoreExercises(collectSeenWordIds(exercises));
 
       if (nextExercises && nextExercises.length > 0) {
         const newExercises = [...exercises, ...nextExercises];
@@ -314,12 +325,13 @@ export const Learn = () => {
         setSessionService(service);
         setCurrentExercise(exercises.length);
         setIsCompleted(false);
-        setHasMoreExercises(true);
+        queue?.ensureBuffered(newExercises);
+        syncHasMoreExercises();
         resetQuestionState();
         return true;
       }
 
-      setHasMoreExercises(false);
+      syncHasMoreExercises();
       return false;
     } catch (error: unknown) {
       console.error('Error loading more exercises:', error);
@@ -332,6 +344,7 @@ export const Learn = () => {
       });
       return false;
     } finally {
+      syncHasMoreExercises();
       setIsLoading(false);
     }
   };
