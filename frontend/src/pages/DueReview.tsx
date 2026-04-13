@@ -1,185 +1,315 @@
 import {
-  Badge,
   Box,
   Button,
   Center,
   Container,
-  Flex,
   Heading,
-  Icon,
-  SimpleGrid,
+  HStack,
   Spinner,
-  Stat,
-  StatLabel,
-  StatNumber,
   Text,
   VStack,
+  Badge,
+  SimpleGrid,
   useToast
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { FaClock, FaListUl, FaGraduationCap } from 'react-icons/fa';
+import { Link as RouterLink } from 'react-router-dom';
+import { FaBookOpen, FaClock, FaListUl, FaSitemap } from 'react-icons/fa';
 import { apiService } from '../services/api';
 import { WordList } from '../types';
 import { detectUiLocale } from '../i18n/ui';
 
-const MotionBox = motion(Box);
+const formatRetentionScore = (score?: number) => {
+  if (typeof score !== 'number' || Number.isNaN(score)) {
+    return '--';
+  }
 
-const fadeIn = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 }
+  return `${Math.round(score)}%`;
+};
+
+const formatUpdatedAt = (value?: string, locale?: string) => {
+  if (!value) {
+    return '--';
+  }
+
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) {
+    return '--';
+  }
+
+  return new Intl.DateTimeFormat(locale, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  }).format(parsed);
 };
 
 export const DueReview = () => {
-  const navigate = useNavigate();
-  const toast = useToast();
   const isZh = detectUiLocale() === 'zh-CN';
-
+  const locale = isZh ? 'zh-CN' : 'en-US';
+  const toast = useToast();
   const [list, setList] = useState<WordList | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    const loadDueReview = async () => {
+    let isMounted = true;
+
+    const fetchDueReview = async () => {
       try {
-        const dueReviewList = await apiService.getDueReview();
-        setList(dueReviewList);
+        setIsLoading(true);
+        setErrorMessage('');
+        const response = await apiService.getDueReview();
+        if (!isMounted) {
+          return;
+        }
+        setList(response);
       } catch (error) {
         console.error('Failed to load due review list:', error);
+        const message = isZh ? '待复习入口暂时无法加载，请稍后重试。' : 'Unable to load due review right now. Please try again later.';
+        if (!isMounted) {
+          return;
+        }
+        setErrorMessage(message);
         toast({
           title: isZh ? '加载待复习失败' : 'Failed to load due review',
-          description: isZh ? '请稍后重试' : 'Please try again later',
+          description: message,
           status: 'error',
-          duration: 5000,
+          duration: 4000,
           isClosable: true
         });
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
-    loadDueReview();
+    fetchDueReview();
+
+    return () => {
+      isMounted = false;
+    };
   }, [isZh, toast]);
 
-  if (isLoading) {
-    return (
-      <Center h="calc(100vh - 64px)" flexDirection="column" gap={4}>
-        <Spinner size="xl" color="orange.300" thickness="4px" />
-        <Text color="gray.300">
-          {isZh ? '正在汇总今天该复习的单词…' : 'Collecting today\'s review words...'}
-        </Text>
-      </Center>
-    );
-  }
-
-  if (!list) {
-    return (
-      <Center h="calc(100vh - 64px)" px={6}>
-        <VStack spacing={4}>
-          <Text color="gray.300">
-            {isZh ? '暂时无法打开待复习模块。' : 'Unable to open due review right now.'}
-          </Text>
-          <Button colorScheme="green" onClick={() => navigate('/lists')}>
-            {isZh ? '返回词树' : 'Back to Trees'}
-          </Button>
-        </VStack>
-      </Center>
-    );
-  }
-
-  const dueCount = list.dueCount || 0;
-  const sourceListCount = list.sourceListCount || 0;
-  const retentionScore = list.retentionScore || 0;
+  const dueCount = list?.dueCount ?? 0;
+  const sourceListCount = list?.sourceListCount ?? 0;
+  const wordCount = list?.wordCount ?? 0;
 
   return (
-    <Container maxW="container.lg" py={{ base: 8, md: 12 }} px={{ base: 4, md: 8 }}>
-      <MotionBox initial="hidden" animate="visible" variants={fadeIn} transition={{ duration: 0.45 }}>
+    <Container maxW="container.lg" py={{ base: 6, md: 10 }} px={{ base: 4, md: 6 }}>
+      <VStack spacing={6} align="stretch" position="relative" zIndex={1}>
         <Box
-          bg="linear-gradient(180deg, rgba(14,22,36,0.96), rgba(9,14,24,0.92))"
+          position="relative"
+          overflow="hidden"
           borderRadius="3xl"
           borderWidth="1px"
-          borderColor="whiteAlpha.160"
-          p={{ base: 6, md: 8 }}
-          boxShadow="2xl"
+          borderColor="orange.200"
+          bg="rgba(15, 23, 42, 0.92)"
+          boxShadow="0 24px 60px rgba(15, 23, 42, 0.38)"
+          px={{ base: 5, md: 8 }}
+          py={{ base: 6, md: 8 }}
         >
-          <Flex
-            direction={{ base: 'column', md: 'row' }}
-            justify="space-between"
-            align={{ base: 'flex-start', md: 'center' }}
-            gap={6}
-          >
-            <Box maxW="2xl">
-              <Badge colorScheme="orange" variant="solid" px={3} py={1} borderRadius="full" mb={4}>
-                {isZh ? '系统聚合复习' : 'System Review Queue'}
-              </Badge>
-              <Heading
-                as="h1"
-                size="2xl"
-                color="white"
-                display="flex"
-                alignItems="center"
-                gap={3}
-              >
-                <Icon as={FaClock} color="orange.300" />
-                {isZh ? '待复习' : 'Due Review'}
-              </Heading>
-              <Text mt={4} color="gray.300" fontSize="lg" lineHeight="1.8">
-                {dueCount > 0
-                  ? (isZh
-                    ? '这里汇总了所有计划复习日期不晚于今天的单词。你在这里完成的作答，会直接同步回它们原本所属的词树与学习状态。'
-                    : 'This queue aggregates every word whose scheduled review date is due on or before today, and every answer syncs back to its original tree.')
-                  : (isZh
-                    ? '今天暂时没有到期的复习任务。你可以先去词树里学习新单词，稍后再回来查看。'
-                    : 'There are no review items due today right now. You can learn new words first and come back later.')}
-              </Text>
-            </Box>
+          <Box
+            position="absolute"
+            top="-80px"
+            right="-60px"
+            w="240px"
+            h="240px"
+            borderRadius="full"
+            bg="radial-gradient(circle, rgba(251, 191, 36, 0.28), rgba(251, 191, 36, 0))"
+            pointerEvents="none"
+          />
 
-            <VStack align={{ base: 'stretch', md: 'flex-end' }} spacing={3} w={{ base: 'full', md: 'auto' }}>
-              <Button
-                leftIcon={<FaGraduationCap />}
-                colorScheme="green"
-                size="lg"
-                width={{ base: 'full', md: '220px' }}
-                isDisabled={dueCount === 0}
-                onClick={() => navigate(`/learn/${list.id}`, { state: { list } })}
-              >
-                {isZh ? '开始复习' : 'Start Review'}
-              </Button>
-              <Button
-                leftIcon={<FaListUl />}
-                variant="outline"
-                colorScheme="orange"
-                size="lg"
-                width={{ base: 'full', md: '220px' }}
-                onClick={() => navigate(`/lists/${list.id}`, { state: { list } })}
-              >
-                {isZh ? '查看复习清单' : 'View Queue'}
-              </Button>
-            </VStack>
-          </Flex>
+          <VStack align="stretch" spacing={6} position="relative" zIndex={1}>
+            <HStack justify="space-between" align={{ base: 'flex-start', md: 'center' }} flexDir={{ base: 'column', md: 'row' }} spacing={4}>
+              <VStack align="flex-start" spacing={3}>
+                <Badge
+                  px={3}
+                  py={1}
+                  borderRadius="full"
+                  colorScheme="orange"
+                  variant="solid"
+                  display="inline-flex"
+                  alignItems="center"
+                  gap={2}
+                >
+                  <FaClock />
+                  <Text>{isZh ? '待复习入口' : 'Due Review Hub'}</Text>
+                </Badge>
+                <Box>
+                  <Heading color="white" size="2xl" lineHeight="1.1">
+                    {isZh ? '今天该复习的单词都集中在这里' : 'Everything due today is gathered here'}
+                  </Heading>
+                  <Text mt={3} color="gray.300" fontSize={{ base: 'md', md: 'lg' }} maxW="2xl">
+                    {isZh
+                      ? '系统会聚合所有计划复习日期早于今天的单词，并沿用学习模式原本的复习与回写逻辑。你在这里答对或答错，都会同步更新到它们原本所属的词树。'
+                      : 'Words whose scheduled review date is earlier than today are aggregated here and still use the original learning pipeline.'}
+                  </Text>
+                </Box>
+              </VStack>
 
-          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4} mt={8}>
-            <Box bg="whiteAlpha.060" borderWidth="1px" borderColor="whiteAlpha.120" borderRadius="2xl" p={5}>
-              <Stat>
-                <StatLabel color="gray.400">{isZh ? '今日应复习' : 'Due Today'}</StatLabel>
-                <StatNumber color="orange.300">{dueCount}</StatNumber>
-              </Stat>
-            </Box>
-            <Box bg="whiteAlpha.060" borderWidth="1px" borderColor="whiteAlpha.120" borderRadius="2xl" p={5}>
-              <Stat>
-                <StatLabel color="gray.400">{isZh ? '来源词树' : 'Source Trees'}</StatLabel>
-                <StatNumber color="yellow.300">{sourceListCount}</StatNumber>
-              </Stat>
-            </Box>
-            <Box bg="whiteAlpha.060" borderWidth="1px" borderColor="whiteAlpha.120" borderRadius="2xl" p={5}>
-              <Stat>
-                <StatLabel color="gray.400">{isZh ? '当前保留率' : 'Retention'}</StatLabel>
-                <StatNumber color="green.300">{retentionScore}%</StatNumber>
-              </Stat>
-            </Box>
-          </SimpleGrid>
+              {list && (
+                <Box
+                  minW={{ base: 'full', md: '220px' }}
+                  borderRadius="2xl"
+                  borderWidth="1px"
+                  borderColor="whiteAlpha.200"
+                  bg="whiteAlpha.90"
+                  color="gray.900"
+                  px={5}
+                  py={4}
+                >
+                  <Text fontSize="xs" textTransform="uppercase" letterSpacing="0.14em" color="gray.500">
+                    {isZh ? '系统清单' : 'System list'}
+                  </Text>
+                  <Text mt={2} fontSize="xl" fontWeight="bold">
+                    {list.name}
+                  </Text>
+                  <Text mt={1} fontSize="sm" color="gray.600">
+                    {isZh ? `最近更新：${formatUpdatedAt(list.updated_at, locale)}` : `Updated: ${formatUpdatedAt(list.updated_at, locale)}`}
+                  </Text>
+                </Box>
+              )}
+            </HStack>
+
+            {isLoading ? (
+              <Center minH="260px">
+                <VStack spacing={4}>
+                  <Spinner size="xl" thickness="4px" color="orange.300" />
+                  <Text color="gray.300">{isZh ? '正在汇总待复习单词…' : 'Collecting due review words...'}</Text>
+                </VStack>
+              </Center>
+            ) : errorMessage ? (
+              <Box
+                borderRadius="2xl"
+                borderWidth="1px"
+                borderColor="red.300"
+                bg="rgba(127, 29, 29, 0.35)"
+                px={5}
+                py={5}
+              >
+                <Text color="white" fontWeight="bold" fontSize="lg">
+                  {isZh ? '待复习页面加载失败' : 'Due review failed to load'}
+                </Text>
+                <Text mt={2} color="red.100">
+                  {errorMessage}
+                </Text>
+                <Button
+                  mt={4}
+                  colorScheme="orange"
+                  variant="solid"
+                  onClick={() => window.location.reload()}
+                >
+                  {isZh ? '重新加载' : 'Reload'}
+                </Button>
+              </Box>
+            ) : (
+              <>
+                <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
+                  <Box borderRadius="2xl" bg="whiteAlpha.120" borderWidth="1px" borderColor="whiteAlpha.200" px={5} py={5}>
+                    <Text fontSize="sm" color="orange.100">{isZh ? '今日应复习' : 'Due now'}</Text>
+                    <Text mt={2} fontSize="4xl" lineHeight="1" fontWeight="bold" color="white">
+                      {dueCount}
+                    </Text>
+                    <Text mt={2} color="gray.300">
+                      {isZh ? '计划日期早于今天的单词数量' : 'Words scheduled before today'}
+                    </Text>
+                  </Box>
+
+                  <Box borderRadius="2xl" bg="whiteAlpha.120" borderWidth="1px" borderColor="whiteAlpha.200" px={5} py={5}>
+                    <Text fontSize="sm" color="orange.100">{isZh ? '来源词树' : 'Source trees'}</Text>
+                    <Text mt={2} fontSize="4xl" lineHeight="1" fontWeight="bold" color="white">
+                      {sourceListCount}
+                    </Text>
+                    <Text mt={2} color="gray.300">
+                      {isZh ? '这些待复习内容来自的原始词树数量' : 'Original trees contributing review items'}
+                    </Text>
+                  </Box>
+
+                  <Box borderRadius="2xl" bg="whiteAlpha.120" borderWidth="1px" borderColor="whiteAlpha.200" px={5} py={5}>
+                    <Text fontSize="sm" color="orange.100">{isZh ? '当前保留率' : 'Retention score'}</Text>
+                    <Text mt={2} fontSize="4xl" lineHeight="1" fontWeight="bold" color="white">
+                      {formatRetentionScore(list?.retentionScore)}
+                    </Text>
+                    <Text mt={2} color="gray.300">
+                      {isZh ? `系统清单总词数 ${wordCount}` : `Total words in this system list: ${wordCount}`}
+                    </Text>
+                  </Box>
+                </SimpleGrid>
+
+                <Box
+                  borderRadius="2xl"
+                  borderWidth="1px"
+                  borderColor={dueCount > 0 ? 'orange.200' : 'whiteAlpha.200'}
+                  bg={dueCount > 0 ? 'rgba(154, 52, 18, 0.24)' : 'whiteAlpha.090'}
+                  px={{ base: 5, md: 6 }}
+                  py={{ base: 5, md: 6 }}
+                >
+                  <Text color="white" fontWeight="bold" fontSize="xl">
+                    {dueCount > 0
+                      ? (isZh ? '可以开始复习了' : 'Ready to review')
+                      : (isZh ? '当前没有到期内容' : 'Nothing is due right now')}
+                  </Text>
+                  <Text mt={2} color="gray.200" maxW="3xl">
+                    {dueCount > 0
+                      ? (isZh
+                        ? '点击开始复习后，会直接进入学习模式。复习记录会按来源词树分别回写，不会变成一份孤立的数据。'
+                        : 'Starting review sends you into the shared learning flow and writes results back to each source tree.')
+                      : (isZh
+                        ? '系统已经把到今天为止需要复习的内容清空了。你仍然可以查看完整清单，确认它来自哪些词树。'
+                        : 'Everything due up to today has been cleared. You can still inspect the system list for details.')}
+                  </Text>
+
+                  <HStack spacing={3} mt={5} flexWrap="wrap">
+                    {list && (
+                      <Button
+                        as={RouterLink}
+                        to={`/learn/${list.id}`}
+                        state={{ list }}
+                        colorScheme="orange"
+                        leftIcon={<FaBookOpen />}
+                        size="lg"
+                        isDisabled={dueCount <= 0}
+                      >
+                        {isZh ? '开始复习' : 'Start review'}
+                      </Button>
+                    )}
+                    {list && (
+                      <Button
+                        as={RouterLink}
+                        to={`/lists/${list.id}`}
+                        state={{ list }}
+                        variant="outline"
+                        borderColor="whiteAlpha.500"
+                        color="white"
+                        _hover={{ bg: 'whiteAlpha.200' }}
+                        leftIcon={<FaListUl />}
+                        size="lg"
+                      >
+                        {isZh ? '查看清单' : 'View list'}
+                      </Button>
+                    )}
+                    <Button
+                      as={RouterLink}
+                      to="/lists"
+                      variant="ghost"
+                      color="gray.200"
+                      _hover={{ bg: 'whiteAlpha.160', color: 'white' }}
+                      leftIcon={<FaSitemap />}
+                      size="lg"
+                    >
+                      {isZh ? '返回词树' : 'Back to trees'}
+                    </Button>
+                  </HStack>
+                </Box>
+              </>
+            )}
+          </VStack>
         </Box>
-      </MotionBox>
+      </VStack>
     </Container>
   );
 };
