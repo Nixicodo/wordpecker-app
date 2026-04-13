@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { WordList, Word, Exercise, Question, Template, WordDetail, SentenceExample, UserPreferences, ExerciseTypePreferences, ImageDescriptionAnalysis, DescriptionExercise, VocabularyWordsResponse, WordDetailsResponse, ReviewSubmission, ScheduledWord } from '../types';
+import { WordList, Word, Exercise, Question, Template, WordDetail, SentenceExample, UserPreferences, ExerciseTypePreferences, ImageDescriptionAnalysis, DescriptionExercise, VocabularyWordsResponse, WordDetailsResponse, ReviewSubmission, ScheduledWord, BackgroundAsset } from '../types';
 
 // Generate or retrieve user ID
 const getUserId = () => {
@@ -63,6 +63,11 @@ interface QuizQuestionsResponse {
 
 interface MoreBatchRequest {
   excludeWordIds?: string[];
+}
+
+interface BackgroundListResponse {
+  backgrounds: BackgroundAsset[];
+  total: number;
 }
 
 // API service for WordPecker app
@@ -278,5 +283,10 @@ export const apiService = {
         targetLanguage: string;
       };
     };
-  }> => api.post('/api/voice/session', { listId })
+  }> => api.post('/api/voice/session', { listId }),
+
+  // Backgrounds
+  getBackgrounds: (): ApiResponse<BackgroundListResponse> => api.get('/api/backgrounds'),
+  deleteBackground: (id: string): ApiResponse<{ message: string; background: BackgroundAsset }> =>
+    api.delete(`/api/backgrounds/${id}`)
 }; 

@@ -38,6 +38,7 @@ import { useBatchedReviewSync } from '../hooks/useBatchedReviewSync';
 import { recommendReviewRating } from '../utils/reviewRating';
 import { resolveQuestionExposureWords } from '../utils/questionExposure';
 import { BufferedBatchQueue } from '../utils/bufferedBatchQueue';
+import { useBackgrounds } from '../components/BackgroundProvider';
 
 const UI = {
   startErrorTitle: '\u542f\u52a8\u5b66\u4e60\u5931\u8d25',
@@ -136,6 +137,7 @@ export const Learn = () => {
   const { id } = useParams<{ id: string }>();
   const { state } = useLocation();
   const toast = useToast();
+  const { cycleBackground } = useBackgrounds();
   const hasInitializedRef = useRef(false);
   const bufferedExercisesRef = useRef<BufferedBatchQueue<Exercise> | null>(null);
 
@@ -377,6 +379,9 @@ export const Learn = () => {
         sessionService.answerQuestion(selectedAnswer, exercise, isValid);
         setSessionProgress(sessionService.getCurrentProgress());
       }
+      if (isValid) {
+        cycleBackground('correct-answer');
+      }
       if (exercise.wordId) {
         setCurrentReview({
           wordId: exercise.wordId as string,
@@ -408,6 +413,9 @@ export const Learn = () => {
       if (sessionService) {
         sessionService.answerQuestion(selectedAnswer, exercise, fallbackCorrect);
         setSessionProgress(sessionService.getCurrentProgress());
+      }
+      if (fallbackCorrect) {
+        cycleBackground('correct-answer');
       }
       if (exercise.wordId) {
         setCurrentReview({

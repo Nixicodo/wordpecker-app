@@ -8,6 +8,7 @@ import { connectDB } from './config/mongodb';
 import { configureOpenAIAgents } from './agents';
 import { restoreLearningSnapshotIfNeeded } from './services/repoLearningSnapshot';
 import { migrateLegacyLearningDataIfNeeded } from './services/learningMigration';
+import { backgroundLibrary } from './services/backgroundLibrary';
 
 // Import routes
 import listRoutes from './api/lists/routes';
@@ -21,6 +22,7 @@ import vocabularyRoutes from './api/vocabulary/routes';
 import languageValidationRoutes from './api/language-validation/routes';
 import audioRoutes from './api/audio/routes';
 import voiceRoutes from './api/voice/routes';
+import backgroundRoutes from './api/backgrounds/routes';
 
 const app = express();
 
@@ -38,6 +40,18 @@ app.use('/api/language-validation', openaiRateLimiter);
 app.use('/api/audio', openaiRateLimiter); // Audio routes use ElevenLabs API
 app.use('/api/voice', openaiRateLimiter); // Voice routes use OpenAI Realtime API
 
+app.use(
+  '/backgrounds',
+  express.static(backgroundLibrary.getLibraryRoot(), {
+    fallthrough: false,
+    immutable: false,
+    maxAge: environment.nodeEnv === 'production' ? '1h' : 0,
+    setHeaders: (res) => {
+      res.setHeader('Cache-Control', 'public, max-age=3600');
+    }
+  })
+);
+
 // Routes
 app.use('/api/lists', listRoutes);
 app.use('/api/lists', wordRoutes);
@@ -50,6 +64,7 @@ app.use('/api/vocabulary', vocabularyRoutes);
 app.use('/api/language-validation', languageValidationRoutes);
 app.use('/api/audio', audioRoutes);
 app.use('/api/voice', voiceRoutes);
+app.use('/api/backgrounds', backgroundRoutes);
 
 // Error handling
 app.use(errorHandler);

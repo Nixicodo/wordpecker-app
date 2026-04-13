@@ -38,6 +38,7 @@ import { usePrefetchedBatch } from '../hooks/usePrefetchedBatch';
 import { useBatchedReviewSync } from '../hooks/useBatchedReviewSync';
 import { recommendReviewRating } from '../utils/reviewRating';
 import { resolveQuestionExposureWords } from '../utils/questionExposure';
+import { useBackgrounds } from '../components/BackgroundProvider';
 
 const UI = {
   startErrorTitle: '\u542f\u52a8\u6d4b\u9a8c\u5931\u8d25',
@@ -132,6 +133,7 @@ export const Quiz = () => {
   const { id } = useParams<{ id: string }>();
   const { state } = useLocation();
   const toast = useToast();
+  const { cycleBackground } = useBackgrounds();
   const hasInitializedRef = useRef(false);
 
   const [list, setList] = useState<WordList | null>(state?.list || null);
@@ -402,6 +404,9 @@ export const Quiz = () => {
           });
         }
       }
+      if (isValid) {
+        cycleBackground('correct-answer');
+      }
 
       setCurrentReview({
         wordId: question.wordId || question.word,
@@ -448,6 +453,9 @@ export const Quiz = () => {
             }
             return newLives;
           });
+        }
+        if (fallbackCorrect) {
+          cycleBackground('correct-answer');
         }
       }
     } finally {

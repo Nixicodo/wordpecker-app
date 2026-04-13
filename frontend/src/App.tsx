@@ -14,30 +14,33 @@ import { ReadingPage } from './pages/ReadingPage';
 import { VoiceChat } from './pages/VoiceChat';
 import { Header } from './components/Header';
 import { MistakeBook } from './pages/MistakeBook';
+import { BackgroundProvider } from './components/BackgroundProvider';
 
 function App() {
   return (
     <ChakraProvider theme={theme}>
-      <Router>
-        <Box bg="slate.900" minH="100vh" color="white">
-          <Header />
-          <Routes>
-            <Route path="/" element={<Navigate to="/lists" replace />} />
-            <Route path="/lists" element={<Lists />} />
-            <Route path="/lists/:id" element={<ListDetail />} />
-            <Route path="/learn/:id" element={<Learn />} />
-            <Route path="/quiz/:id" element={<Quiz />} />
-            <Route path="/mistakes" element={<MistakeBook />} />
-            <Route path="/words/:wordId" element={<WordDetailPage />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/describe" element={<ImageDescription />} />
-            <Route path="/learn-new-words" element={<GetNewWords />} />
-            <Route path="/learn-new-words/session" element={<WordLearningSession />} />
-            <Route path="/reading/:listId" element={<ReadingPage />} />
-            <Route path="/voice-chat/:listId" element={<VoiceChat />} />
-          </Routes>
-        </Box>
-      </Router>
+      <BackgroundProvider>
+        <Router>
+          <Box minH="100vh" color="white">
+            <Header />
+            <Routes>
+              <Route path="/" element={<Navigate to="/lists" replace />} />
+              <Route path="/lists" element={<Lists />} />
+              <Route path="/lists/:id" element={<ListDetail />} />
+              <Route path="/learn/:id" element={<Learn />} />
+              <Route path="/quiz/:id" element={<Quiz />} />
+              <Route path="/mistakes" element={<MistakeBook />} />
+              <Route path="/words/:wordId" element={<WordDetailPage />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/describe" element={<ImageDescription />} />
+              <Route path="/learn-new-words" element={<GetNewWords />} />
+              <Route path="/learn-new-words/session" element={<WordLearningSession />} />
+              <Route path="/reading/:listId" element={<ReadingPage />} />
+              <Route path="/voice-chat/:listId" element={<VoiceChat />} />
+            </Routes>
+          </Box>
+        </Router>
+      </BackgroundProvider>
     </ChakraProvider>
   );
 }

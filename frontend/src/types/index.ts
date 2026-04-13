@@ -258,3 +258,11 @@ export interface LightReading {
     position: number | null;
   }>;
 }
+
+export interface BackgroundAsset {
+  id: string;
+  name: string;
+  folder: string;
+  relativePath: string;
+  url: string;
+}
