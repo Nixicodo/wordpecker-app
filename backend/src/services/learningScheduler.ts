@@ -61,7 +61,7 @@ type ReviewBehaviorStats = {
 
 const ratingMap: Record<ReviewRating, Grade> = {
   again: Rating.Again,
-  hard: Rating.Hard,
+  hard: Rating.Again,
   good: Rating.Good,
   easy: Rating.Easy
 };

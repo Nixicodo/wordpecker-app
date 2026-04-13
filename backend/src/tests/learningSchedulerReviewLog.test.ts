@@ -296,4 +296,90 @@ describe('learning scheduler review log signals', () => {
     expect(distractorLog?.rating).toBe('hard');
     expect(distractorLog?.questionType).toBe('multiple_choice_self_assessment');
   });
+
+  it('schedules hard reviews with the same penalty as again', async () => {
+    const userId = 'hard-equals-again-user';
+    const list = await WordList.create({
+      name: 'Hard Equals Again',
+      description: 'Used to verify hard penalty matches again',
+      context: 'Testing',
+      kind: 'custom'
+    });
+
+    const [hardWord, againWord] = await Promise.all([
+      Word.create({
+        value: 'ridge',
+        listMemberships: [{
+          listId: list._id,
+          meaning: '灞辫剨',
+          addedAt: new Date(),
+          updatedAt: new Date()
+        }]
+      }),
+      Word.create({
+        value: 'valley',
+        listMemberships: [{
+          listId: list._id,
+          meaning: '灞辫胺',
+          addedAt: new Date(),
+          updatedAt: new Date()
+        }]
+      })
+    ]);
+
+    const [hardState, againState] = await Promise.all([
+      ensureLearningState(userId, list._id.toString(), hardWord),
+      ensureLearningState(userId, list._id.toString(), againWord)
+    ]);
+
+    const alignedDueAt = new Date('2026-04-10T10:00:00.000Z');
+    const alignedState = {
+      dueAt: alignedDueAt,
+      stability: 5,
+      difficulty: 5,
+      scheduledDays: 5,
+      elapsedDays: 5,
+      reps: 3,
+      lapses: 0,
+      learningSteps: 0,
+      state: 2,
+      reviewCount: 3,
+      lapseCount: 0,
+      consecutiveCorrect: 2,
+      consecutiveWrong: 0
+    };
+
+    await Promise.all([
+      LearningState.updateOne({ _id: hardState._id }, { $set: alignedState }),
+      LearningState.updateOne({ _id: againState._id }, { $set: alignedState })
+    ]);
+
+    await settleReviewResults(userId, list, 'quiz', [
+      {
+        wordId: hardWord._id.toString(),
+        correct: true,
+        rating: 'hard',
+        questionType: 'multiple_choice'
+      },
+      {
+        wordId: againWord._id.toString(),
+        correct: true,
+        rating: 'again',
+        questionType: 'multiple_choice'
+      }
+    ]);
+
+    const [hardAfter, againAfter] = await Promise.all([
+      LearningState.findOne({ userId, wordId: hardWord._id, listId: list._id }).lean(),
+      LearningState.findOne({ userId, wordId: againWord._id, listId: list._id }).lean()
+    ]);
+
+    expect(hardAfter?.dueAt.toISOString()).toBe(againAfter?.dueAt.toISOString());
+    expect(hardAfter?.stability).toBeCloseTo(againAfter?.stability || 0, 10);
+    expect(hardAfter?.difficulty).toBeCloseTo(againAfter?.difficulty || 0, 10);
+    expect(hardAfter?.state).toBe(againAfter?.state);
+    expect(hardAfter?.scheduledDays).toBe(againAfter?.scheduledDays);
+    expect(hardAfter?.lastRating).toBe('hard');
+    expect(againAfter?.lastRating).toBe('again');
+  });
 });
