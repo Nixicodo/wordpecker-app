@@ -44,4 +44,18 @@ describe('backgroundLibrary', () => {
     await expect(fs.access(path.join(directory, 'frame.webp'))).rejects.toThrow();
     await expect(fs.access(directory)).rejects.toThrow();
   });
+
+  it('returns a preferred or random background without returning the excluded id', async () => {
+    await fs.mkdir(path.join(tempRoot, 'set-a'), { recursive: true });
+    await fs.writeFile(path.join(tempRoot, 'set-a', 'one.jpg'), 'one');
+    await fs.writeFile(path.join(tempRoot, 'set-a', 'two.jpg'), 'two');
+
+    const backgrounds = await backgroundLibrary.list();
+    const preferred = await backgroundLibrary.getRandom({ preferredId: backgrounds[0].id });
+    const randomExcludingFirst = await backgroundLibrary.getRandom({ excludeId: backgrounds[0].id });
+
+    expect(preferred.total).toBe(2);
+    expect(preferred.background?.id).toBe(backgrounds[0].id);
+    expect(randomExcludingFirst.background?.id).toBe(backgrounds[1].id);
+  });
 });

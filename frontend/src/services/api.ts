@@ -15,6 +15,10 @@ const api = axios.create({
   },
 });
 
+export const resolveApiUrl = (resourcePath: string) => (
+  new URL(resourcePath, api.defaults.baseURL as string).toString()
+);
+
 // Add request interceptor to include user-id header
 api.interceptors.request.use(
   (config) => {
@@ -67,6 +71,11 @@ interface MoreBatchRequest {
 
 interface BackgroundListResponse {
   backgrounds: BackgroundAsset[];
+  total: number;
+}
+
+interface BackgroundRandomResponse {
+  background: BackgroundAsset | null;
   total: number;
 }
 
@@ -287,6 +296,8 @@ export const apiService = {
 
   // Backgrounds
   getBackgrounds: (): ApiResponse<BackgroundListResponse> => api.get('/api/backgrounds'),
+  getRandomBackground: (params?: { excludeId?: string; preferredId?: string }): ApiResponse<BackgroundRandomResponse> =>
+    api.get('/api/backgrounds/random', { params }),
   deleteBackground: (id: string): ApiResponse<{ message: string; background: BackgroundAsset }> =>
     api.delete(`/api/backgrounds/${id}`)
 }; 

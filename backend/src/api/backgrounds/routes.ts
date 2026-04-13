@@ -3,6 +3,18 @@ import { backgroundLibrary } from '../../services/backgroundLibrary';
 
 const router = Router();
 
+router.get('/random', async (req, res, next) => {
+  try {
+    const preferredId = typeof req.query.preferredId === 'string' ? req.query.preferredId : undefined;
+    const excludeId = typeof req.query.excludeId === 'string' ? req.query.excludeId : undefined;
+    const result = await backgroundLibrary.getRandom({ preferredId, excludeId });
+
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get('/', async (_req, res, next) => {
   try {
     const backgrounds = await backgroundLibrary.list();

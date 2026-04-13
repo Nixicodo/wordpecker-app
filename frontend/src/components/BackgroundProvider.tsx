@@ -1,17 +1,5 @@
-import {
-  ArrowForwardIcon,
-  DeleteIcon,
-  RepeatIcon
-} from '@chakra-ui/icons';
-import {
-  Box,
-  Button,
-  HStack,
-  Spinner,
-  Text,
-  VStack,
-  useToast
-} from '@chakra-ui/react';
+import { ArrowForwardIcon, DeleteIcon, RepeatIcon } from '@chakra-ui/icons';
+import { Box, Button, HStack, Spinner, Text, VStack, useToast } from '@chakra-ui/react';
 import {
   PropsWithChildren,
   createContext,
@@ -22,7 +10,7 @@ import {
   useRef,
   useState
 } from 'react';
-import { apiService } from '../services/api';
+import { apiService, resolveApiUrl } from '../services/api';
 import { BackgroundAsset } from '../types';
 
 const AUTO_ROTATE_MS = 60_000;
@@ -32,6 +20,7 @@ interface BackgroundContextValue {
   currentBackground: BackgroundAsset | null;
   totalBackgrounds: number;
   isReady: boolean;
+  isSwitching: boolean;
   isDeleting: boolean;
   cycleBackground: (reason?: 'manual' | 'timer' | 'correct-answer') => void;
   deleteCurrentBackground: () => Promise<void>;
@@ -39,32 +28,24 @@ interface BackgroundContextValue {
 
 const BackgroundContext = createContext<BackgroundContextValue | undefined>(undefined);
 
-const pickRandomBackground = (
-  backgrounds: BackgroundAsset[],
-  currentBackgroundId?: string | null
-) => {
-  if (backgrounds.length === 0) {
-    return null;
-  }
-
-  if (backgrounds.length === 1) {
-    return backgrounds[0];
-  }
-
-  const candidates = currentBackgroundId
-    ? backgrounds.filter((background) => background.id !== currentBackgroundId)
-    : backgrounds;
-
-  return candidates[Math.floor(Math.random() * candidates.length)] ?? backgrounds[0];
-};
+const normalizeBackground = (background: BackgroundAsset | null) => (
+  background
+    ? {
+        ...background,
+        url: resolveApiUrl(background.url)
+      }
+    : null
+);
 
 export const BackgroundProvider = ({ children }: PropsWithChildren) => {
   const toast = useToast();
-  const [backgrounds, setBackgrounds] = useState<BackgroundAsset[]>([]);
   const [currentBackground, setCurrentBackground] = useState<BackgroundAsset | null>(null);
+  const [totalBackgrounds, setTotalBackgrounds] = useState(0);
   const [isReady, setIsReady] = useState(false);
+  const [isSwitching, setIsSwitching] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const hasLoadedRef = useRef(false);
+  const currentBackgroundRef = useRef<BackgroundAsset | null>(null);
 
   const persistCurrentBackground = useCallback((background: BackgroundAsset | null) => {
     if (background) {
@@ -77,34 +58,69 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
 
   const applyBackground = useCallback((background: BackgroundAsset | null) => {
     setCurrentBackground(background);
+    currentBackgroundRef.current = background;
     persistCurrentBackground(background);
   }, [persistCurrentBackground]);
 
-  const cycleBackground = useCallback((_: 'manual' | 'timer' | 'correct-answer' = 'manual') => {
-    setCurrentBackground((previousBackground) => {
-      const nextBackground = pickRandomBackground(backgrounds, previousBackground?.id);
-      persistCurrentBackground(nextBackground);
+  const requestBackground = useCallback(async (options?: {
+    excludeId?: string;
+    preferredId?: string;
+    silent?: boolean;
+  }) => {
+    setIsSwitching(true);
+    try {
+      const response = await apiService.getRandomBackground({
+        excludeId: options?.excludeId,
+        preferredId: options?.preferredId
+      });
+
+      const nextBackground = normalizeBackground(response.background);
+      setTotalBackgrounds(response.total);
+      applyBackground(nextBackground);
       return nextBackground;
+    } catch (error) {
+      console.error('Failed to load background:', error);
+      if (!options?.silent) {
+        toast({
+          title: '背景加载失败',
+          description: '壁纸暂时不可用，页面会继续正常工作。',
+          status: 'warning',
+          duration: 2500,
+          isClosable: true
+        });
+      }
+      return null;
+    } finally {
+      setIsSwitching(false);
+    }
+  }, [applyBackground, toast]);
+
+  const cycleBackground = useCallback((_: 'manual' | 'timer' | 'correct-answer' = 'manual') => {
+    void requestBackground({
+      excludeId: currentBackgroundRef.current?.id
     });
-  }, [backgrounds, persistCurrentBackground]);
+  }, [requestBackground]);
 
   const deleteCurrentBackground = useCallback(async () => {
-    if (!currentBackground) {
+    if (!currentBackgroundRef.current) {
       return;
     }
 
+    const deletingBackground = currentBackgroundRef.current;
+
     setIsDeleting(true);
     try {
-      await apiService.deleteBackground(currentBackground.id);
-      const nextBackgrounds = backgrounds.filter((background) => background.id !== currentBackground.id);
-      const nextBackground = pickRandomBackground(nextBackgrounds, currentBackground.id);
-
-      setBackgrounds(nextBackgrounds);
-      applyBackground(nextBackground);
+      await apiService.deleteBackground(deletingBackground.id);
+      const nextBackground = await requestBackground({
+        excludeId: deletingBackground.id,
+        silent: true
+      });
 
       toast({
         title: '壁纸已删除',
-        description: `已从仓库中永久删除 ${currentBackground.name}`,
+        description: nextBackground
+          ? `已删除 ${deletingBackground.name}，并切换到下一张壁纸。`
+          : `已删除 ${deletingBackground.name}，当前背景库已空。`,
         status: 'success',
         duration: 2500,
         isClosable: true
@@ -121,7 +137,7 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
     } finally {
       setIsDeleting(false);
     }
-  }, [applyBackground, backgrounds, currentBackground, toast]);
+  }, [requestBackground, toast]);
 
   useEffect(() => {
     if (hasLoadedRef.current) {
@@ -130,34 +146,20 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
 
     hasLoadedRef.current = true;
 
-    const loadBackgrounds = async () => {
-      try {
-        const response = await apiService.getBackgrounds();
-        const nextBackgrounds = response.backgrounds;
-        const savedBackgroundId = localStorage.getItem(CURRENT_BACKGROUND_STORAGE_KEY);
-        const restoredBackground = nextBackgrounds.find((background) => background.id === savedBackgroundId) ?? null;
-
-        setBackgrounds(nextBackgrounds);
-        applyBackground(restoredBackground ?? pickRandomBackground(nextBackgrounds));
-      } catch (error) {
-        console.error('Failed to load backgrounds:', error);
-        toast({
-          title: '背景加载失败',
-          description: '壁纸库暂时不可用，页面会继续正常工作。',
-          status: 'warning',
-          duration: 3000,
-          isClosable: true
-        });
-      } finally {
-        setIsReady(true);
-      }
+    const loadBackground = async () => {
+      const savedBackgroundId = localStorage.getItem(CURRENT_BACKGROUND_STORAGE_KEY);
+      await requestBackground({
+        preferredId: savedBackgroundId ?? undefined,
+        silent: true
+      });
+      setIsReady(true);
     };
 
-    void loadBackgrounds();
-  }, [applyBackground, toast]);
+    void loadBackground();
+  }, [requestBackground]);
 
   useEffect(() => {
-    if (backgrounds.length <= 1) {
+    if (totalBackgrounds <= 1) {
       return;
     }
 
@@ -166,16 +168,17 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
     }, AUTO_ROTATE_MS);
 
     return () => window.clearInterval(timer);
-  }, [backgrounds.length, cycleBackground]);
+  }, [cycleBackground, totalBackgrounds]);
 
   const value = useMemo<BackgroundContextValue>(() => ({
     currentBackground,
-    totalBackgrounds: backgrounds.length,
+    totalBackgrounds,
     isReady,
+    isSwitching,
     isDeleting,
     cycleBackground,
     deleteCurrentBackground
-  }), [backgrounds.length, currentBackground, cycleBackground, deleteCurrentBackground, isDeleting, isReady]);
+  }), [currentBackground, cycleBackground, deleteCurrentBackground, isDeleting, isReady, isSwitching, totalBackgrounds]);
 
   return (
     <BackgroundContext.Provider value={value}>
@@ -188,15 +191,14 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
           bgSize="cover"
           bgPosition="center"
           bgRepeat="no-repeat"
-          transition="background-image 400ms ease, transform 600ms ease"
-          transform={currentBackground ? 'scale(1.02)' : undefined}
+          pointerEvents="none"
         />
         <Box
           position="fixed"
           inset={0}
           zIndex={0}
-          bg="linear-gradient(135deg, rgba(2,6,23,0.72) 0%, rgba(15,23,42,0.58) 45%, rgba(2,6,23,0.82) 100%)"
-          backdropFilter="blur(4px)"
+          bg="linear-gradient(135deg, rgba(2,6,23,0.74) 0%, rgba(15,23,42,0.56) 42%, rgba(2,6,23,0.82) 100%)"
+          pointerEvents="none"
         />
 
         <Box position="relative" zIndex={1}>
@@ -218,7 +220,6 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
             bg="rgba(9, 14, 28, 0.78)"
             border="1px solid rgba(255, 255, 255, 0.14)"
             boxShadow="0 22px 50px rgba(0, 0, 0, 0.28)"
-            backdropFilter="blur(14px)"
           >
             {!isReady ? (
               <HStack spacing={3}>
@@ -235,7 +236,7 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
                     {currentBackground.folder || currentBackground.name}
                   </Text>
                   <Text fontSize="xs" color="whiteAlpha.700" noOfLines={1}>
-                    {currentBackground.name} · {backgrounds.length} 张可用
+                    {currentBackground.name} · {totalBackgrounds} 张可用
                   </Text>
                 </Box>
                 <HStack spacing={2}>
@@ -247,7 +248,8 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
                     bg="whiteAlpha.180"
                     _hover={{ bg: 'whiteAlpha.260' }}
                     onClick={() => cycleBackground('manual')}
-                    isDisabled={backgrounds.length === 0}
+                    isDisabled={totalBackgrounds === 0}
+                    isLoading={isSwitching}
                   >
                     Next
                   </Button>
@@ -273,7 +275,8 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
                   color="white"
                   bg="whiteAlpha.180"
                   _hover={{ bg: 'whiteAlpha.260' }}
-                  onClick={() => void window.location.reload()}
+                  onClick={() => void requestBackground({ silent: true })}
+                  isLoading={isSwitching}
                 >
                   刷新背景库
                 </Button>
