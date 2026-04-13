@@ -10,7 +10,8 @@ import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
 import { assertMeaningEncoding } from '../../utils/meaningEncoding';
 import { LearningState } from '../learning-state/model';
 import { resolveUserId } from '../../config/learning';
-import { ensureLearningState } from '../../services/learningScheduler';
+import { ensureLearningState, selectDueReviewWords } from '../../services/learningScheduler';
+import { isDueReviewList } from '../../services/dueReview';
 import {
   listIdSchema,
   addWordSchema,
@@ -124,6 +125,9 @@ router.post('/:listId/words', validate(addWordSchema), async (req, res) => {
 
     const list = await WordList.findById(listId).lean();
     if (!list) return res.status(404).json({ message: 'List not found' });
+    if (isDueReviewList(list)) {
+      return res.status(403).json({ message: 'Due review list cannot be edited manually' });
+    }
 
     const definition = await resolveDefinition(req, value, list.context || '', providedMeaning);
     const result = await addWordToList(listId, value, definition);
@@ -147,6 +151,9 @@ router.post('/:listId/words/bulk', validate(bulkAddWordsSchema), async (req, res
 
     const list = await WordList.findById(listId).lean();
     if (!list) return res.status(404).json({ message: 'List not found' });
+    if (isDueReviewList(list)) {
+      return res.status(403).json({ message: 'Due review list cannot be edited manually' });
+    }
 
     const needsGeneratedMeaning = words.some((item) => !item.meaning?.trim());
     const userId = resolveUserId(req.headers['user-id']);
@@ -223,6 +230,42 @@ router.get('/:listId/words', validate(listIdSchema), async (req, res) => {
   try {
     const { listId } = req.params;
     const userId = resolveUserId(req.headers['user-id']);
+    const list = await WordList.findById(listId).lean();
+    if (!list) {
+      return res.status(404).json({ message: 'List not found' });
+    }
+
+    if (isDueReviewList(list)) {
+      const dueWords = await selectDueReviewWords(userId, Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
+      const data = dueWords.map((word) => ({
+        id: word.id,
+        value: word.value,
+        meaning: word.meaning,
+        dueAt: word.state.dueAt,
+        lastReviewedAt: word.state.lastReviewedAt,
+        reviewCount: word.state.reviewCount,
+        lapseCount: word.state.lapseCount,
+        stability: word.state.stability,
+        difficulty: word.state.difficulty,
+        status:
+          word.state.status === 'new'
+            ? 0
+            : word.state.status === 'learning'
+              ? 1
+              : word.state.status === 'review'
+                ? 2
+                : 3,
+        sourceListId: word.sourceListId,
+        sourceListIds: word.sourceListIds,
+        sourceListName: word.sourceListName,
+        sourceListNames: word.sourceListNames,
+        created_at: new Date(0).toISOString(),
+        updated_at: new Date(0).toISOString()
+      }));
+
+      return res.json(data);
+    }
+
     const words = await Word.find({ 'listMemberships.listId': listId });
     const data = await Promise.all(words.map((word) => transformWord(word, listId, userId)));
     res.json(data);
@@ -234,6 +277,11 @@ router.get('/:listId/words', validate(listIdSchema), async (req, res) => {
 router.delete('/:listId/words/:wordId', validate(deleteWordSchema), async (req, res) => {
   try {
     const { listId, wordId } = req.params;
+    const list = await WordList.findById(listId).lean();
+    if (!list) return res.status(404).json({ message: 'List not found' });
+    if (isDueReviewList(list)) {
+      return res.status(403).json({ message: 'Due review list cannot delete words' });
+    }
 
     const word = await Word.findById(wordId);
     if (!word) return res.status(404).json({ message: 'Word not found' });

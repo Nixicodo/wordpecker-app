@@ -5,8 +5,9 @@ import { Word } from '../words/model';
 import { createListSchema, listParamsSchema, updateListSchema } from './schemas';
 import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
 import { ensureMistakeBook, isMistakeBookList } from '../../services/mistakeBook';
-import { summarizeListProgress } from '../../services/learningScheduler';
+import { summarizeDueReviewProgress, summarizeListProgress } from '../../services/learningScheduler';
 import { resolveUserId } from '../../config/learning';
+import { ensureDueReviewList, isDueReviewList } from '../../services/dueReview';
 
 const router = Router();
 
@@ -32,6 +33,15 @@ const buildListSummary = async (list: IWordList, userId: string) => {
   };
 };
 
+const buildDueReviewSummary = async (list: IWordList, userId: string) => {
+  const progress = await summarizeDueReviewProgress(userId);
+
+  return {
+    ...transform(list),
+    ...progress
+  };
+};
+
 router.post('/', validate(createListSchema), async (req, res) => {
   try {
     const list = await WordList.create({ ...req.body, kind: 'custom' });
@@ -45,11 +55,22 @@ router.post('/', validate(createListSchema), async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const userId = resolveUserId(req.headers['user-id']);
-    const lists = await WordList.find({ kind: { $ne: 'mistake_book' } }).sort({ created_at: -1 });
+    const lists = await WordList.find({ kind: { $nin: ['mistake_book', 'due_review'] } }).sort({ created_at: -1 });
     const data = await Promise.all(lists.map((list) => buildListSummary(list, userId)));
     res.json(data);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching lists' });
+  }
+});
+
+router.get('/due-review', async (req, res) => {
+  try {
+    const userId = resolveUserId(req.headers['user-id']);
+    const list = await ensureDueReviewList();
+    const summary = await buildDueReviewSummary(list, userId);
+    res.json(summary);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching due review list' });
   }
 });
 
@@ -81,8 +102,8 @@ router.put('/:id', validate(updateListSchema), async (req, res) => {
     const { id } = req.params;
     const existingList = await WordList.findById(id);
     if (!existingList) return res.status(404).json({ message: 'List not found' });
-    if (isMistakeBookList(existingList)) {
-      return res.status(403).json({ message: 'Mistake book cannot be edited manually' });
+    if (isMistakeBookList(existingList) || isDueReviewList(existingList)) {
+      return res.status(403).json({ message: 'System review lists cannot be edited manually' });
     }
 
     const list = await WordList.findByIdAndUpdate(id, req.body, { new: true });
@@ -100,8 +121,8 @@ router.delete('/:id', validate(listParamsSchema), async (req, res) => {
     const { id } = req.params;
     const existingList = await WordList.findById(id);
     if (!existingList) return res.status(404).json({ message: 'List not found' });
-    if (isMistakeBookList(existingList)) {
-      return res.status(403).json({ message: 'Mistake book cannot be deleted' });
+    if (isMistakeBookList(existingList) || isDueReviewList(existingList)) {
+      return res.status(403).json({ message: 'System review lists cannot be deleted' });
     }
 
     await Word.updateMany(

@@ -12,6 +12,7 @@ import { resolveUserId } from '../../config/learning';
 import { isMistakeBookList } from '../../services/mistakeBook';
 import { resolveEnabledQuestionTypes } from '../../services/exerciseTypePreferences';
 import { selectGenerationWordPool } from '../../services/exerciseGenerationPool';
+import { isDueReviewList } from '../../services/dueReview';
 
 const router = Router();
 
@@ -19,6 +20,28 @@ const getExerciseTypes = async (userId: string): Promise<QuestionType[]> => {
   const preferences = await UserPreferences.findOne({ userId });
   return resolveEnabledQuestionTypes(preferences?.exerciseTypes);
 };
+
+const buildWordSources = (
+  words: Array<{
+    id: string;
+    sourceListId?: string;
+    sourceListIds?: string[];
+    sourceListName?: string;
+    sourceListNames?: string[];
+  }>
+) => Object.fromEntries(
+  words
+    .filter((word) => Boolean(word.sourceListId))
+    .map((word) => [
+      word.id,
+      {
+        sourceListId: word.sourceListId,
+        sourceListIds: word.sourceListIds,
+        sourceListName: word.sourceListName,
+        sourceListNames: word.sourceListNames
+      }
+    ])
+);
 
 router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
   try {
@@ -50,6 +73,7 @@ router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
     res.json({
       exercises,
       scheduledWords,
+      wordSources: buildWordSources([...scheduledWords, ...extraDistractors]),
       list: { id: list._id.toString(), name: list.name, context: list.context, kind: list.kind }
     });
   } catch (error) {
@@ -87,7 +111,11 @@ router.post('/:listId/more', validate(listIdSchema), async (req, res) => {
       baseLanguage,
       targetLanguage
     );
-    res.json({ exercises, scheduledWords });
+    res.json({
+      exercises,
+      scheduledWords,
+      wordSources: buildWordSources([...scheduledWords, ...extraDistractors])
+    });
   } catch (error) {
     res.status(500).json({ message: 'Error getting more exercises' });
   }
@@ -102,10 +130,12 @@ router.put('/:listId/reviews', validate(updatePointsSchema), async (req, res) =>
       return res.status(404).json({ message: 'List not found' });
     }
 
-    const source = isMistakeBookList(list) ? 'mistake_review' : 'learn';
+    const source = isDueReviewList(list) ? 'due_review' : isMistakeBookList(list) ? 'mistake_review' : 'learn';
     const results = req.body.results.map((result: any) => ({
       wordId: result.wordId,
       wordIds: result.wordIds,
+      sourceListId: result.sourceListId,
+      sourceListIdByWordId: result.sourceListIdByWordId,
       correct: result.correct,
       rating: result.rating || (result.correct ? 'good' : 'again'),
       questionType: result.questionType || 'unknown',

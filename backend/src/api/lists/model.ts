@@ -5,7 +5,7 @@ export interface IWordList extends Document {
   name: string;
   description?: string;
   context?: string;
-  kind: 'custom' | 'mistake_book';
+  kind: 'custom' | 'mistake_book' | 'due_review';
   systemKey?: string;
   created_at: Date;
   updated_at: Date;
@@ -28,7 +28,7 @@ const WordListSchema = new Schema<IWordList>({
   },
   kind: {
     type: String,
-    enum: ['custom', 'mistake_book'],
+    enum: ['custom', 'mistake_book', 'due_review'],
     default: 'custom'
   },
   systemKey: {

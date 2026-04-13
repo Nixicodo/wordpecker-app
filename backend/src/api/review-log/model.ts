@@ -35,7 +35,7 @@ const ReviewLogSchema = new Schema<IReviewLog>({
   },
   source: {
     type: String,
-    enum: ['learn', 'quiz', 'mistake_review'],
+    enum: ['learn', 'quiz', 'mistake_review', 'due_review'],
     required: true
   },
   questionType: {

@@ -1,6 +1,13 @@
 import { Word } from '../api/words/model';
 import { WordList } from '../api/lists/model';
-import { scheduleWordsForList, settleReviewResults, type ReviewSubmission } from './learningScheduler';
+import {
+  scheduleWordsForList,
+  selectDueReviewWords,
+  settleDueReviewResults,
+  settleReviewResults,
+  type ReviewSubmission
+} from './learningScheduler';
+import { isDueReviewList } from './dueReview';
 
 type WordDocumentLike = {
   _id: { toString(): string };
@@ -24,27 +31,34 @@ export function mapWordsWithProgress(words: WordDocumentLike[], listId: string) 
 }
 
 export async function selectScheduledWords(userId: string, listId: string, count = 5, poolSize?: number) {
-  const [list, words] = await Promise.all([
-    WordList.findById(listId).lean(),
-    Word.find({ 'listMemberships.listId': listId }).lean()
-  ]);
+  const list = await WordList.findById(listId).lean();
 
   if (!list) {
     throw new Error('List not found');
   }
 
+  if (isDueReviewList(list)) {
+    return selectDueReviewWords(userId, count, poolSize);
+  }
+
+  const words = await Word.find({ 'listMemberships.listId': listId }).lean();
   return scheduleWordsForList(userId, list, words, count, { poolSize });
 }
 
 export async function applyReviewResults(
   userId: string,
   listId: string,
-  source: 'learn' | 'quiz' | 'mistake_review',
+  source: 'learn' | 'quiz' | 'mistake_review' | 'due_review',
   results: ReviewSubmission[]
 ) {
   const list = await WordList.findById(listId).lean();
   if (!list) {
     throw new Error('List not found');
+  }
+
+  if (isDueReviewList(list)) {
+    await settleDueReviewResults(userId, source, results);
+    return;
   }
 
   await settleReviewResults(userId, list, source, results);

@@ -12,7 +12,7 @@ type SnapshotWordList = {
   name: string;
   description?: string;
   context?: string;
-  kind: 'custom' | 'mistake_book';
+  kind: 'custom' | 'mistake_book' | 'due_review';
   systemKey?: string;
   created_at: string;
   updated_at: string;

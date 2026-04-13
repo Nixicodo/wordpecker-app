@@ -186,22 +186,21 @@ describe('repository learning snapshot integration', () => {
   });
 
   it('syncs a word learning state across lists and seeds newly linked lists from the existing record', async () => {
-    const [listOneResponse, listTwoResponse] = await Promise.all([
-      request(app)
-        .post('/api/lists')
-        .send({
-          name: '词树一',
-          description: '源学习记录',
-          context: 'Tree one'
-        }),
-      request(app)
-        .post('/api/lists')
-        .send({
-          name: '词树二',
-          description: '同步后的学习记录',
-          context: 'Tree two'
-        })
-    ]);
+    const listOneResponse = await request(app)
+      .post('/api/lists')
+      .send({
+        name: '词树一',
+        description: '源学习记录',
+        context: 'Tree one'
+      });
+
+    const listTwoResponse = await request(app)
+      .post('/api/lists')
+      .send({
+        name: '词树二',
+        description: '同步后的学习记录',
+        context: 'Tree two'
+      });
 
     expect(listOneResponse.status).toBe(201);
     expect(listTwoResponse.status).toBe(201);
@@ -349,6 +348,23 @@ describe('repository learning snapshot integration', () => {
     expect(listsResponse.body).toHaveLength(0);
   });
 
+  it('creates and exposes the due review list as a dedicated system list', async () => {
+    const dueReviewResponse = await request(app)
+      .get('/api/lists/due-review')
+      .set('user-id', 'snapshot-user');
+
+    expect(dueReviewResponse.status).toBe(200);
+    expect(dueReviewResponse.body.kind).toBe('due_review');
+    expect(dueReviewResponse.body.systemKey).toBe('due-review');
+
+    const listsResponse = await request(app)
+      .get('/api/lists')
+      .set('user-id', 'snapshot-user');
+
+    expect(listsResponse.status).toBe(200);
+    expect(listsResponse.body).toHaveLength(0);
+  });
+
   it('adds wrong answers into the mistake book and schedules them for dedicated review', async () => {
     const listResponse = await request(app)
       .post('/api/lists')
@@ -420,5 +436,136 @@ describe('repository learning snapshot integration', () => {
 
     expect(recoveredMistakeState?.reviewCount).toBe(2);
     expect(recoveredMistakeState?.consecutiveWrong).toBe(0);
+  });
+
+  it('aggregates due review words across trees and settles reviews back to each source tree', async () => {
+    const listOneResponse = await request(app)
+      .post('/api/lists')
+      .send({
+        name: '待复习来源一',
+        description: '第一个来源词树',
+        context: 'Tree one'
+      });
+
+    const listTwoResponse = await request(app)
+      .post('/api/lists')
+      .send({
+        name: '待复习来源二',
+        description: '第二个来源词树',
+        context: 'Tree two'
+      });
+
+    expect(listOneResponse.status).toBe(201);
+    expect(listTwoResponse.status).toBe(201);
+
+    const listOneId = listOneResponse.body.id as string;
+    const listTwoId = listTwoResponse.body.id as string;
+
+    const wordOneResponse = await request(app)
+      .post(`/api/lists/${listOneId}/words`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        word: 'reviewable',
+        meaning: '可复习的'
+      });
+
+    const wordTwoResponse = await request(app)
+      .post(`/api/lists/${listTwoId}/words`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        word: 'traceback',
+        meaning: '回溯'
+      });
+
+    const futureWordResponse = await request(app)
+      .post(`/api/lists/${listTwoId}/words`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        word: 'tomorrow',
+        meaning: '明天'
+      });
+
+    expect(wordOneResponse.status).toBe(201);
+    expect(wordTwoResponse.status).toBe(201);
+    expect(futureWordResponse.status).toBe(201);
+
+    const wordOneId = wordOneResponse.body.id as string;
+    const wordTwoId = wordTwoResponse.body.id as string;
+    const futureWordId = futureWordResponse.body.id as string;
+
+    const now = new Date();
+    const dueToday = new Date(now.getTime() - 60 * 60 * 1000);
+    const dueTomorrow = new Date(now.getTime() + 36 * 60 * 60 * 1000);
+
+    await Promise.all([
+      LearningState.updateOne(
+        { userId: 'snapshot-user', wordId: wordOneId, listId: listOneId },
+        { $set: { dueAt: dueToday } }
+      ),
+      LearningState.updateOne(
+        { userId: 'snapshot-user', wordId: wordTwoId, listId: listTwoId },
+        { $set: { dueAt: dueToday } }
+      ),
+      LearningState.updateOne(
+        { userId: 'snapshot-user', wordId: futureWordId, listId: listTwoId },
+        { $set: { dueAt: dueTomorrow } }
+      )
+    ]);
+
+    const dueReviewResponse = await request(app)
+      .get('/api/lists/due-review')
+      .set('user-id', 'snapshot-user');
+
+    expect(dueReviewResponse.status).toBe(200);
+    expect(dueReviewResponse.body.wordCount).toBe(2);
+    expect(dueReviewResponse.body.sourceListCount).toBe(2);
+
+    const dueReviewId = dueReviewResponse.body.id as string;
+    const dueWordsResponse = await request(app)
+      .get(`/api/lists/${dueReviewId}/words`)
+      .set('user-id', 'snapshot-user');
+
+    expect(dueWordsResponse.status).toBe(200);
+    expect(dueWordsResponse.body).toHaveLength(2);
+    expect(dueWordsResponse.body.map((word: { id: string }) => word.id)).toEqual(
+      expect.arrayContaining([wordOneId, wordTwoId])
+    );
+    expect(dueWordsResponse.body.map((word: { id: string }) => word.id)).not.toContain(futureWordId);
+
+    const settleDueReviewResponse = await request(app)
+      .put(`/api/learn/${dueReviewId}/reviews`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        results: [{
+          wordId: wordOneId,
+          wordIds: [wordOneId, wordTwoId],
+          sourceListId: listOneId,
+          sourceListIdByWordId: {
+            [wordOneId]: listOneId,
+            [wordTwoId]: listTwoId
+          },
+          correct: true,
+          rating: 'good',
+          questionType: 'matching'
+        }]
+      });
+
+    expect(settleDueReviewResponse.status).toBe(200);
+
+    const [listOneState, listTwoState, dueReviewLogs] = await Promise.all([
+      LearningState.findOne({ userId: 'snapshot-user', wordId: wordOneId, listId: listOneId }).lean(),
+      LearningState.findOne({ userId: 'snapshot-user', wordId: wordTwoId, listId: listTwoId }).lean(),
+      ReviewLog.find({
+        userId: 'snapshot-user',
+        wordId: { $in: [wordOneId, wordTwoId] }
+      }).lean()
+    ]);
+
+    expect(listOneState?.reviewCount).toBe(1);
+    expect(listTwoState?.reviewCount).toBe(1);
+    expect(listOneState?.lastSource).toBe('due_review');
+    expect(listTwoState?.lastSource).toBe('due_review');
+    expect(dueReviewLogs).toHaveLength(2);
+    expect(dueReviewLogs.every((log) => log.source === 'due_review')).toBe(true);
   });
 });

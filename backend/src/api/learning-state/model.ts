@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 import { State } from 'ts-fsrs';
 
 export type ReviewRating = 'again' | 'hard' | 'good' | 'easy';
-export type ReviewSource = 'learn' | 'quiz' | 'mistake_review';
+export type ReviewSource = 'learn' | 'quiz' | 'mistake_review' | 'due_review';
 
 export interface ILearningState extends Document {
   _id: mongoose.Types.ObjectId;
@@ -121,7 +121,7 @@ const LearningStateSchema = new Schema<ILearningState>({
   },
   lastSource: {
     type: String,
-    enum: ['learn', 'quiz', 'mistake_review'],
+    enum: ['learn', 'quiz', 'mistake_review', 'due_review'],
     default: undefined
   }
 }, {

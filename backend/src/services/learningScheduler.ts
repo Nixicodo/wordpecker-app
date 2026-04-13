@@ -3,8 +3,9 @@ import { createEmptyCard, fsrs, Rating, State, type Card, type Grade } from 'ts-
 import { LearningState, ReviewRating, ReviewSource, type ILearningState } from '../api/learning-state/model';
 import { ReviewLog, type IReviewLog } from '../api/review-log/model';
 import { IWord, Word } from '../api/words/model';
-import { IWordList } from '../api/lists/model';
+import { IWordList, WordList } from '../api/lists/model';
 import { ensureMistakeBook, isMistakeBookList } from './mistakeBook';
+import { getDueReviewCutoff, isDueReviewList } from './dueReview';
 
 const scheduler = fsrs({
   enable_fuzz: false,
@@ -15,6 +16,8 @@ export type ReviewSubmission = {
   wordId: string;
   wordIds?: string[];
   selfAssessedWordIds?: string[];
+  sourceListId?: string;
+  sourceListIdByWordId?: Record<string, string>;
   rating: ReviewRating;
   correct: boolean;
   questionType: string;
@@ -26,6 +29,10 @@ export type ScheduledWord = {
   id: string;
   value: string;
   meaning: string;
+  sourceListId?: string;
+  sourceListIds?: string[];
+  sourceListName?: string;
+  sourceListNames?: string[];
   state: {
     dueAt: string;
     lastReviewedAt?: string;
@@ -57,6 +64,10 @@ type ReviewBehaviorStats = {
   hardRate: number;
   againRate: number;
   behaviorRisk: number;
+};
+
+type ExpandedReviewSubmission = Omit<ReviewSubmission, 'wordIds' | 'selfAssessedWordIds' | 'sourceListIdByWordId'> & {
+  sourceListId?: string;
 };
 
 const ratingMap: Record<ReviewRating, Grade> = {
@@ -168,8 +179,8 @@ const buildReviewBehaviorStats = (
   };
 };
 
-const buildWordReviewBehaviorMap = async (userId: string, listId: string) => {
-  const recentLogs = await ReviewLog.find({ userId, listId })
+const buildWordReviewBehaviorMap = async (userId: string, listId?: string) => {
+  const recentLogs = await ReviewLog.find(listId ? { userId, listId } : { userId })
     .sort({ answeredAt: -1 })
     .limit(RECENT_LOG_LIMIT)
     .lean();
@@ -191,6 +202,44 @@ const buildWordReviewBehaviorMap = async (userId: string, listId: string) => {
 
   return { behaviorMap, recentLogs };
 };
+
+const normalizeReviewResults = (results: ReviewSubmission[]): ExpandedReviewSubmission[] => results.flatMap((result) => {
+  const wordIds = Array.from(new Set([result.wordId, ...(result.wordIds || [])].filter(Boolean)));
+  const selfAssessedWordIds = Array.from(new Set((result.selfAssessedWordIds || []).filter(Boolean)));
+  const settledWordIdSet = new Set(wordIds);
+  const resolveSourceListId = (wordId: string) => result.sourceListIdByWordId?.[wordId] || result.sourceListId;
+  const settleRating = (wordId: string): ReviewRating => (
+    selfAssessedWordIds.includes(wordId) && ratingSeverity[result.rating] < ratingSeverity.hard
+      ? 'hard'
+      : result.rating
+  );
+
+  const directResults = wordIds.map((wordId) => ({
+    ...result,
+    wordId,
+    rating: settleRating(wordId),
+    sourceListId: resolveSourceListId(wordId),
+    wordIds: undefined,
+    selfAssessedWordIds: undefined,
+    sourceListIdByWordId: undefined
+  }));
+
+  const selfAssessmentResults = selfAssessedWordIds
+    .filter((wordId) => !settledWordIdSet.has(wordId))
+    .map((wordId) => ({
+      ...result,
+      wordId,
+      wordIds: undefined,
+      selfAssessedWordIds: undefined,
+      correct: true,
+      rating: 'hard' as ReviewRating,
+      questionType: `${result.questionType}_self_assessment`,
+      sourceListId: resolveSourceListId(wordId),
+      sourceListIdByWordId: undefined
+    }));
+
+  return [...directResults, ...selfAssessmentResults];
+});
 
 const computeWordChallengeScore = (
   state: ILearningState,
@@ -441,6 +490,178 @@ export const scheduleWordsForList = async (
   return pool;
 };
 
+const buildScheduledWordState = (
+  state: Pick<
+    ILearningState,
+    | 'dueAt'
+    | 'lastReviewedAt'
+    | 'stability'
+    | 'difficulty'
+    | 'reviewCount'
+    | 'lapseCount'
+    | 'consecutiveCorrect'
+    | 'consecutiveWrong'
+    | 'elapsedDays'
+    | 'scheduledDays'
+    | 'learningSteps'
+    | 'reps'
+    | 'lapses'
+    | 'state'
+  >,
+  now: Date,
+  behaviorStats: ReviewBehaviorStats
+) => {
+  const retrievability = scheduler.get_retrievability(cardFromState(state), now, false);
+  const challengeScore = computeWordChallengeScore(state as ILearningState, retrievability, behaviorStats);
+  const urgency = computeUrgency(state as ILearningState, retrievability, now, behaviorStats);
+
+  return {
+    dueAt: state.dueAt.toISOString(),
+    lastReviewedAt: state.lastReviewedAt?.toISOString(),
+    stability: state.stability,
+    difficulty: state.difficulty,
+    reviewCount: state.reviewCount,
+    lapseCount: state.lapseCount,
+    consecutiveCorrect: state.consecutiveCorrect,
+    consecutiveWrong: state.consecutiveWrong,
+    retrievability,
+    status: stateNameMap[state.state],
+    urgency,
+    challengeScore,
+    behaviorRisk: behaviorStats.behaviorRisk,
+    hintUsageRate: behaviorStats.hintUsageRate,
+    averageResponseTimeMs: behaviorStats.averageResponseTimeMs
+  };
+};
+
+const pickPreferredDueReviewSource = (
+  word: Pick<IWord, '_id' | 'value' | 'listMemberships'>,
+  candidateListIds: string[],
+  listsById: Map<string, Pick<IWordList, '_id' | 'name' | 'kind' | 'systemKey'>>
+) => {
+  const membershipListIds = word.listMemberships
+    .map((membership) => membership.listId.toString())
+    .filter((listId) => !isDueReviewList(listsById.get(listId)));
+  const eligibleListIds = Array.from(new Set(
+    candidateListIds.filter((listId) => membershipListIds.includes(listId))
+  ));
+
+  const preferredCustomListId = eligibleListIds.find((listId) => listsById.get(listId)?.kind === 'custom');
+  const preferredMistakeListId = eligibleListIds.find((listId) => isMistakeBookList(listsById.get(listId)));
+  const fallbackMembershipListId = membershipListIds.find((listId) => listsById.has(listId));
+  const sourceListId = preferredCustomListId || preferredMistakeListId || eligibleListIds[0] || fallbackMembershipListId;
+
+  if (!sourceListId) {
+    return null;
+  }
+
+  const sourceMembership = getMembership(word, sourceListId);
+  if (!sourceMembership) {
+    return null;
+  }
+
+  const sourceListIds = Array.from(new Set(
+    eligibleListIds.filter((listId) => listsById.has(listId))
+  ));
+  const sourceListNames = sourceListIds
+    .map((listId) => listsById.get(listId)?.name)
+    .filter((name): name is string => Boolean(name));
+
+  return {
+    meaning: sourceMembership.meaning,
+    sourceListId,
+    sourceListIds,
+    sourceListName: listsById.get(sourceListId)?.name,
+    sourceListNames
+  };
+};
+
+export const selectDueReviewWords = async (
+  userId: string,
+  count: number,
+  poolSize?: number,
+  excludedWordIds: string[] = []
+): Promise<ScheduledWord[]> => {
+  const now = new Date();
+  const cutoff = getDueReviewCutoff(now);
+  const dueStates = await LearningState.find({ userId, dueAt: { $lte: cutoff } })
+    .sort({ dueAt: 1, updatedAt: -1 })
+    .lean();
+
+  if (!dueStates.length) {
+    return [] as ScheduledWord[];
+  }
+
+  const [lists, words, { behaviorMap }] = await Promise.all([
+    WordList.find({ _id: { $in: Array.from(new Set(dueStates.map((state) => state.listId.toString()))) } })
+      .select('_id name kind systemKey')
+      .lean(),
+    Word.find({ _id: { $in: Array.from(new Set(dueStates.map((state) => state.wordId.toString()))) } }).lean(),
+    buildWordReviewBehaviorMap(userId)
+  ]);
+  const typedLists = lists as Array<Pick<IWordList, '_id' | 'name' | 'kind' | 'systemKey'>>;
+  const typedWords = words as Array<Pick<IWord, '_id' | 'value' | 'listMemberships'>>;
+
+  const listsById = new Map<string, Pick<IWordList, '_id' | 'name' | 'kind' | 'systemKey'>>(
+    typedLists.map((list) => [list._id.toString(), list])
+  );
+  const dueStatesByWordId = new Map<string, Array<(typeof dueStates)[number]>>();
+
+  for (const state of dueStates) {
+    const listId = state.listId.toString();
+    if (isDueReviewList(listsById.get(listId))) {
+      continue;
+    }
+
+    const wordId = state.wordId.toString();
+    const existingStates = dueStatesByWordId.get(wordId) || [];
+    existingStates.push(state);
+    dueStatesByWordId.set(wordId, existingStates);
+  }
+
+  const excludedWordIdSet = new Set(excludedWordIds);
+  const scheduled = typedWords.flatMap((word) => {
+    if (excludedWordIdSet.has(word._id.toString())) {
+      return [];
+    }
+
+    const candidateStates = dueStatesByWordId.get(word._id.toString()) || [];
+    if (!candidateStates.length) {
+      return [];
+    }
+
+    const source = pickPreferredDueReviewSource(
+      word,
+      candidateStates.map((state) => state.listId.toString()),
+      listsById
+    );
+    if (!source) {
+      return [];
+    }
+
+    const sourceState = candidateStates.find((state) => state.listId.toString() === source.sourceListId) || candidateStates[0];
+    const behaviorStats = behaviorMap.get(word._id.toString()) || emptyReviewBehaviorStats();
+
+    return [{
+      id: word._id.toString(),
+      value: word.value,
+      meaning: source.meaning,
+      sourceListId: source.sourceListId,
+      sourceListIds: source.sourceListIds,
+      sourceListName: source.sourceListName,
+      sourceListNames: source.sourceListNames,
+      state: buildScheduledWordState(sourceState, now, behaviorStats)
+    }];
+  });
+
+  const prioritized = scheduled.sort((a: ScheduledWord, b: ScheduledWord) => (
+    b.state.urgency - a.state.urgency ||
+    new Date(a.state.dueAt).getTime() - new Date(b.state.dueAt).getTime()
+  ));
+  const resolvedPoolSize = poolSize ?? count;
+  return prioritized.slice(0, Math.max(count, resolvedPoolSize));
+};
+
 export const settleReviewResults = async (
   userId: string,
   list: Pick<IWordList, '_id' | 'kind' | 'systemKey'>,
@@ -449,36 +670,7 @@ export const settleReviewResults = async (
 ) => {
   const now = new Date();
   const isMistakeBook = isMistakeBookList(list);
-  const normalizedResults = results.flatMap((result) => {
-    const wordIds = Array.from(new Set([result.wordId, ...(result.wordIds || [])].filter(Boolean)));
-    const selfAssessedWordIds = Array.from(new Set((result.selfAssessedWordIds || []).filter(Boolean)));
-    const settledWordIdSet = new Set(wordIds);
-    const settleRating = (wordId: string): ReviewRating => (
-      selfAssessedWordIds.includes(wordId) && ratingSeverity[result.rating] < ratingSeverity.hard
-        ? 'hard'
-        : result.rating
-    );
-
-    const directResults = wordIds.map((wordId) => ({
-      ...result,
-      wordId,
-      rating: settleRating(wordId)
-    }));
-
-    const selfAssessmentResults = selfAssessedWordIds
-      .filter((wordId) => !settledWordIdSet.has(wordId))
-      .map((wordId) => ({
-        ...result,
-        wordId,
-        wordIds: undefined,
-        selfAssessedWordIds: undefined,
-        correct: true,
-        rating: 'hard' as ReviewRating,
-        questionType: `${result.questionType}_self_assessment`
-      }));
-
-    return [...directResults, ...selfAssessmentResults];
-  });
+  const normalizedResults = normalizeReviewResults(results);
 
   await Promise.all(normalizedResults.map(async (result) => {
     const word = await Word.findById(result.wordId);
@@ -543,6 +735,52 @@ export const settleReviewResults = async (
   }));
 };
 
+export const settleDueReviewResults = async (
+  userId: string,
+  source: ReviewSource,
+  results: ReviewSubmission[]
+) => {
+  const normalizedResults = normalizeReviewResults(results);
+  if (!normalizedResults.length) {
+    return;
+  }
+
+  const sourceListIds = Array.from(new Set(
+    normalizedResults
+      .map((result) => result.sourceListId)
+      .filter((listId): listId is string => Boolean(listId))
+  ));
+
+  if (!sourceListIds.length) {
+    return;
+  }
+
+  const lists = (await WordList.find({ _id: { $in: sourceListIds } }).lean()) as Array<Pick<IWordList, '_id' | 'kind' | 'systemKey'>>;
+  const listsById = new Map<string, Pick<IWordList, '_id' | 'kind' | 'systemKey'>>(
+    lists.map((list) => [list._id.toString(), list])
+  );
+  const groupedResults = new Map<string, ExpandedReviewSubmission[]>();
+
+  for (const result of normalizedResults) {
+    if (!result.sourceListId || !listsById.has(result.sourceListId)) {
+      continue;
+    }
+
+    const currentResults = groupedResults.get(result.sourceListId) || [];
+    currentResults.push(result);
+    groupedResults.set(result.sourceListId, currentResults);
+  }
+
+  await Promise.all(Array.from(groupedResults.entries()).map(async ([sourceListId, grouped]) => {
+    const list = listsById.get(sourceListId);
+    if (!list) {
+      return;
+    }
+
+    await settleReviewResults(userId, list, source, grouped);
+  }));
+};
+
 export const summarizeListProgress = async (userId: string, listId: string) => {
   const [states, recentLogs] = await Promise.all([
     LearningState.find({ userId, listId }).lean(),
@@ -603,6 +841,52 @@ export const summarizeListProgress = async (userId: string, listId: string) => {
     hintUsageRate: Math.round(reviewStats.hintUsageRate * 100),
     hardRate: Math.round(reviewStats.hardRate * 100),
     againRate: Math.round(reviewStats.againRate * 100)
+  };
+};
+
+export const summarizeDueReviewProgress = async (userId: string) => {
+  const dueWords = await selectDueReviewWords(userId, Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
+
+  let newCount = 0;
+  let learningCount = 0;
+  let reviewCount = 0;
+  let masteredCount = 0;
+  let retentionAccumulator = 0;
+  const sourceListIds = new Set<string>();
+
+  for (const word of dueWords) {
+    retentionAccumulator += word.state.retrievability;
+
+    if (word.state.status === 'new') {
+      newCount += 1;
+    } else if (word.state.status === 'learning' || word.state.status === 'relearning') {
+      learningCount += 1;
+    } else {
+      reviewCount += 1;
+    }
+
+    if (
+      word.state.status === 'review' &&
+      word.state.retrievability >= 0.9 &&
+      word.state.consecutiveWrong === 0
+    ) {
+      masteredCount += 1;
+    }
+
+    for (const listId of word.sourceListIds || []) {
+      sourceListIds.add(listId);
+    }
+  }
+
+  return {
+    wordCount: dueWords.length,
+    dueCount: dueWords.length,
+    newCount,
+    learningCount,
+    reviewCount,
+    masteredCount,
+    sourceListCount: sourceListIds.size,
+    retentionScore: dueWords.length ? Math.round((retentionAccumulator / dueWords.length) * 100) : 0
   };
 };
 
