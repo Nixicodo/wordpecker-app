@@ -34,8 +34,10 @@ import { BackgroundAsset } from '../types';
 
 const DEFAULT_INTERVAL_MS = 60_000;
 const DEFAULT_BACKGROUND_OPACITY = 72;
+const DEFAULT_MASK_OPACITY = 48;
 const CURRENT_BACKGROUND_STORAGE_KEY = 'wordpecker-current-background-id';
 const BACKGROUND_OPACITY_STORAGE_KEY = 'wordpecker-background-opacity';
+const BACKGROUND_MASK_OPACITY_STORAGE_KEY = 'wordpecker-background-mask-opacity';
 const BACKGROUND_INTERVAL_STORAGE_KEY = 'wordpecker-background-interval-ms';
 
 const INTERVAL_OPTIONS = [
@@ -85,6 +87,7 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
   const [isSwitching, setIsSwitching] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [backgroundOpacity, setBackgroundOpacity] = useState(DEFAULT_BACKGROUND_OPACITY);
+  const [maskOpacity, setMaskOpacity] = useState(DEFAULT_MASK_OPACITY);
   const [rotationIntervalMs, setRotationIntervalMs] = useState(DEFAULT_INTERVAL_MS);
   const hasLoadedRef = useRef(false);
   const currentBackgroundRef = useRef<BackgroundAsset | null>(null);
@@ -211,9 +214,14 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
     }
   }, [currentBackground, toast]);
 
-  const handleOpacityChange = useCallback((value: number) => {
+  const handleBackgroundOpacityChange = useCallback((value: number) => {
     setBackgroundOpacity(value);
     localStorage.setItem(BACKGROUND_OPACITY_STORAGE_KEY, String(value));
+  }, []);
+
+  const handleMaskOpacityChange = useCallback((value: number) => {
+    setMaskOpacity(value);
+    localStorage.setItem(BACKGROUND_MASK_OPACITY_STORAGE_KEY, String(value));
   }, []);
 
   const handleIntervalChange = useCallback((value: string) => {
@@ -233,6 +241,7 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
 
     hasLoadedRef.current = true;
     setBackgroundOpacity(readStoredNumber(BACKGROUND_OPACITY_STORAGE_KEY, DEFAULT_BACKGROUND_OPACITY));
+    setMaskOpacity(readStoredNumber(BACKGROUND_MASK_OPACITY_STORAGE_KEY, DEFAULT_MASK_OPACITY));
     setRotationIntervalMs(readStoredNumber(BACKGROUND_INTERVAL_STORAGE_KEY, DEFAULT_INTERVAL_MS));
 
     const loadBackground = async () => {
@@ -258,6 +267,8 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
 
     return () => window.clearInterval(timer);
   }, [cycleBackground, rotationIntervalMs, totalBackgrounds]);
+
+  const overlayOpacity = Math.max(0, Math.min(maskOpacity / 100, 1));
 
   const value = useMemo<BackgroundContextValue>(() => ({
     currentBackground,
@@ -287,7 +298,7 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
           position="fixed"
           inset={0}
           zIndex={0}
-          bg="linear-gradient(135deg, rgba(2,6,23,0.48) 0%, rgba(15,23,42,0.28) 42%, rgba(2,6,23,0.60) 100%)"
+          bg={`linear-gradient(135deg, rgba(2,6,23,${(overlayOpacity * 0.95).toFixed(2)}) 0%, rgba(15,23,42,${(overlayOpacity * 0.58).toFixed(2)}) 42%, rgba(2,6,23,${(overlayOpacity * 1.15).toFixed(2)}) 100%)`}
           pointerEvents="none"
         />
 
@@ -354,10 +365,30 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
                       min={15}
                       max={100}
                       step={5}
-                      onChange={handleOpacityChange}
+                      onChange={handleBackgroundOpacityChange}
                     >
                       <SliderTrack bg="whiteAlpha.200">
                         <SliderFilledTrack bg="green.300" />
+                      </SliderTrack>
+                      <SliderThumb boxSize={3} />
+                    </Slider>
+                  </Box>
+
+                  <Box>
+                    <HStack justify="space-between" mb={1}>
+                      <Text fontSize="xs" color="whiteAlpha.800">蒙版不透明度</Text>
+                      <Text fontSize="xs" color="green.200">{maskOpacity}%</Text>
+                    </HStack>
+                    <Slider
+                      aria-label="蒙版不透明度"
+                      value={maskOpacity}
+                      min={0}
+                      max={100}
+                      step={5}
+                      onChange={handleMaskOpacityChange}
+                    >
+                      <SliderTrack bg="whiteAlpha.200">
+                        <SliderFilledTrack bg="cyan.300" />
                       </SliderTrack>
                       <SliderThumb boxSize={3} />
                     </Slider>
@@ -398,17 +429,15 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
                   >
                     Next
                   </Button>
-                  <Button
-                    leftIcon={<DeleteIcon />}
+                  <IconButton
+                    aria-label="删除当前壁纸"
+                    icon={<DeleteIcon />}
                     size="sm"
                     colorScheme="red"
                     variant="solid"
                     onClick={() => void deleteCurrentBackground()}
                     isLoading={isDeleting}
-                    flex="1"
-                  >
-                    Delete
-                  </Button>
+                  />
                 </HStack>
               </VStack>
             ) : (
