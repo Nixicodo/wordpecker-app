@@ -21,3 +21,7 @@ logs/
 *.sw?
 
 */audio-cache
+
+# Local wallpaper library; keep runtime assets out of Git history.
+backgrounds/*
+!backgrounds/README.local.md
