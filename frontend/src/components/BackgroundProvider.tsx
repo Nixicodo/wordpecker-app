@@ -197,7 +197,7 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
           position="fixed"
           inset={0}
           zIndex={0}
-          bg="linear-gradient(135deg, rgba(2,6,23,0.74) 0%, rgba(15,23,42,0.56) 42%, rgba(2,6,23,0.82) 100%)"
+          bg="linear-gradient(135deg, rgba(2,6,23,0.56) 0%, rgba(15,23,42,0.34) 42%, rgba(2,6,23,0.66) 100%)"
           pointerEvents="none"
         />
 

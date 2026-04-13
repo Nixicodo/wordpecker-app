@@ -48,6 +48,7 @@ app.use(
     maxAge: environment.nodeEnv === 'production' ? '1h' : 0,
     setHeaders: (res) => {
       res.setHeader('Cache-Control', 'public, max-age=3600');
+      res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
     }
   })
 );
