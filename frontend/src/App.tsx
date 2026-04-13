@@ -19,8 +19,8 @@ import { BackgroundProvider } from './components/BackgroundProvider';
 function App() {
   return (
     <ChakraProvider theme={theme}>
-      <BackgroundProvider>
-        <Router>
+      <Router>
+        <BackgroundProvider>
           <Box minH="100vh" color="white">
             <Header />
             <Routes>
@@ -39,8 +39,8 @@ function App() {
               <Route path="/voice-chat/:listId" element={<VoiceChat />} />
             </Routes>
           </Box>
-        </Router>
-      </BackgroundProvider>
+        </BackgroundProvider>
+      </Router>
     </ChakraProvider>
   );
 }

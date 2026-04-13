@@ -29,6 +29,8 @@ import {
   useRef,
   useState
 } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 import { apiService, resolveApiUrl } from '../services/api';
 import { BackgroundAsset } from '../types';
 
@@ -36,6 +38,7 @@ const DEFAULT_INTERVAL_MS = 60_000;
 const DEFAULT_BACKGROUND_OPACITY = 72;
 const DEFAULT_MASK_OPACITY = 48;
 const DEFAULT_CARD_OPACITY = 88;
+const BACKGROUND_CROSSFADE_DURATION_SECONDS = 1.5;
 const CURRENT_BACKGROUND_STORAGE_KEY = 'wordpecker-current-background-id';
 const BACKGROUND_OPACITY_STORAGE_KEY = 'wordpecker-background-opacity';
 const BACKGROUND_MASK_OPACITY_STORAGE_KEY = 'wordpecker-background-mask-opacity';
@@ -62,6 +65,7 @@ interface BackgroundContextValue {
 }
 
 const BackgroundContext = createContext<BackgroundContextValue | undefined>(undefined);
+const MotionBox = motion(Box);
 
 const normalizeBackground = (background: BackgroundAsset | null) => (
   background
@@ -82,7 +86,10 @@ const readStoredNumber = (key: string, fallbackValue: number) => {
   return Number.isFinite(parsedValue) ? parsedValue : fallbackValue;
 };
 
+const shouldPauseAutoRotation = (pathname: string) => /^\/(?:learn|quiz)\/[^/]+\/?$/.test(pathname);
+
 export const BackgroundProvider = ({ children }: PropsWithChildren) => {
+  const location = useLocation();
   const toast = useToast();
   const [currentBackground, setCurrentBackground] = useState<BackgroundAsset | null>(null);
   const [totalBackgrounds, setTotalBackgrounds] = useState(0);
@@ -95,6 +102,7 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
   const [rotationIntervalMs, setRotationIntervalMs] = useState(DEFAULT_INTERVAL_MS);
   const hasLoadedRef = useRef(false);
   const currentBackgroundRef = useRef<BackgroundAsset | null>(null);
+  const isAutoRotationPaused = shouldPauseAutoRotation(location.pathname);
 
   const persistCurrentBackground = useCallback((background: BackgroundAsset | null) => {
     if (background) {
@@ -144,11 +152,15 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
     }
   }, [applyBackground, toast]);
 
-  const cycleBackground = useCallback((_: 'manual' | 'timer' | 'correct-answer' = 'manual') => {
+  const cycleBackground = useCallback((reason: 'manual' | 'timer' | 'correct-answer' = 'manual') => {
+    if (reason === 'timer' && isAutoRotationPaused) {
+      return;
+    }
+
     void requestBackground({
       excludeId: currentBackgroundRef.current?.id
     });
-  }, [requestBackground]);
+  }, [isAutoRotationPaused, requestBackground]);
 
   const deleteCurrentBackground = useCallback(async () => {
     if (!currentBackgroundRef.current) {
@@ -267,7 +279,7 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
   }, [requestBackground]);
 
   useEffect(() => {
-    if (totalBackgrounds <= 1) {
+    if (isAutoRotationPaused || totalBackgrounds <= 1) {
       return;
     }
 
@@ -276,7 +288,7 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
     }, rotationIntervalMs);
 
     return () => window.clearInterval(timer);
-  }, [cycleBackground, rotationIntervalMs, totalBackgrounds]);
+  }, [cycleBackground, isAutoRotationPaused, rotationIntervalMs, totalBackgrounds]);
 
   const overlayOpacity = Math.max(0, Math.min(maskOpacity / 100, 1));
 
@@ -298,13 +310,30 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
           position="fixed"
           inset={0}
           zIndex={0}
-          bgImage={currentBackground ? `url("${currentBackground.url}")` : undefined}
-          bgSize="cover"
-          bgPosition="center"
-          bgRepeat="no-repeat"
-          opacity={backgroundOpacity / 100}
           pointerEvents="none"
-        />
+          overflow="hidden"
+        >
+          <AnimatePresence initial={false}>
+            {currentBackground ? (
+              <MotionBox
+                key={currentBackground.id}
+                position="absolute"
+                inset={0}
+                bgImage={`url("${currentBackground.url}")`}
+                bgSize="cover"
+                bgPosition="center"
+                bgRepeat="no-repeat"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: backgroundOpacity / 100 }}
+                exit={{ opacity: 0 }}
+                transition={{
+                  duration: BACKGROUND_CROSSFADE_DURATION_SECONDS,
+                  ease: 'easeInOut'
+                }}
+              />
+            ) : null}
+          </AnimatePresence>
+        </Box>
         <Box
           position="fixed"
           inset={0}
