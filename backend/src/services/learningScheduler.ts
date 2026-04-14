@@ -91,6 +91,10 @@ const stateNameMap: Record<State, ScheduledWord['state']['status']> = {
   [State.Relearning]: 'relearning'
 };
 
+const hasStartedReviewFlow = (
+  state: Pick<ILearningState, 'reviewCount' | 'state'>
+) => state.reviewCount > 0 && state.state !== State.New;
+
 const RECENT_LOG_LIMIT = 400;
 const RECENT_LOGS_PER_WORD = 6;
 
@@ -584,7 +588,11 @@ export const selectDueReviewWords = async (
 ): Promise<ScheduledWord[]> => {
   const now = new Date();
   const cutoff = getDueReviewCutoff(now);
-  const dueStates = await LearningState.find({ userId, dueAt: { $lte: cutoff } })
+  const dueStates = await LearningState.find({
+    userId,
+    dueAt: { $lte: cutoff },
+    reviewCount: { $gt: 0 }
+  })
     .sort({ dueAt: 1, updatedAt: -1 })
     .lean();
 
@@ -810,7 +818,7 @@ export const summarizeListProgress = async (userId: string, listId: string) => {
     }), now, false);
     retentionAccumulator += retrievability;
 
-    if (state.dueAt <= now) {
+    if (hasStartedReviewFlow(state) && state.dueAt <= now) {
       dueCount += 1;
     }
 

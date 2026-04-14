@@ -38,6 +38,7 @@ import { BulkImportWordsModal } from '../components/BulkImportWordsModal';
 import { ProgressIndicator, OverallProgress, deriveWordScore } from '../components/ProgressIndicator';
 import { apiService } from '../services/api';
 import { UserPreferences } from '../types';
+import { isDueForReview } from '../utils/reviewState';
 
 const generateColor = (word: string) => {
   const hue = word.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % 360;
@@ -481,7 +482,7 @@ export const ListDetail = () => {
                           <Badge colorScheme={word.status === 2 ? 'green' : word.status === 0 ? 'orange' : 'blue'} variant="subtle">
                             {statusLabelMap[word.status] || 'New'}
                           </Badge>
-                          {word.dueAt && new Date(word.dueAt).getTime() <= Date.now() && (
+                          {isDueForReview(word) && (
                             <Badge colorScheme="red" variant="solid">Due</Badge>
                           )}
                         </HStack>

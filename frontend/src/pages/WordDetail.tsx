@@ -38,6 +38,7 @@ import {
 import { FaArrowLeft, FaLightbulb, FaBookOpen, FaEye, FaEyeSlash, FaCamera, FaRobot, FaExchangeAlt, FaPlus } from 'react-icons/fa';
 import { apiService } from '../services/api';
 import { ProgressIndicator, deriveWordScore } from '../components/ProgressIndicator';
+import { isDueForReview } from '../utils/reviewState';
 import { WordDetail, SentenceExample, SimilarWordsResponse, WordList } from '../types';
 import PronunciationButton from '../components/PronunciationButton';
 
@@ -491,7 +492,7 @@ export function WordDetailPage() {
                       <Badge colorScheme="blue" variant="subtle">Reviews {context.reviewCount}</Badge>
                       <Badge colorScheme="orange" variant="subtle">Lapses {context.lapseCount}</Badge>
                       <Badge colorScheme="teal" variant="subtle">Stability {context.stability.toFixed(1)}</Badge>
-                      {context.dueAt && new Date(context.dueAt).getTime() <= Date.now() && (
+                      {isDueForReview(context) && (
                         <Badge colorScheme="red" variant="solid">Due now</Badge>
                       )}
                     </HStack>

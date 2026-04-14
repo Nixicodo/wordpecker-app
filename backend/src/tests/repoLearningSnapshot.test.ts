@@ -365,6 +365,46 @@ describe('repository learning snapshot integration', () => {
     expect(listsResponse.body).toHaveLength(0);
   });
 
+  it('keeps untouched new words out of due review counts', async () => {
+    const listResponse = await request(app)
+      .post('/api/lists')
+      .send({
+        name: 'New words only',
+        description: 'Verify untouched new words stay out of due review',
+        context: 'Fresh words'
+      });
+
+    expect(listResponse.status).toBe(201);
+    const listId = listResponse.body.id as string;
+
+    const addWordResponse = await request(app)
+      .post(`/api/lists/${listId}/words`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        word: 'untouched',
+        meaning: '未开始学习的'
+      });
+
+    expect(addWordResponse.status).toBe(201);
+
+    const listsResponse = await request(app)
+      .get('/api/lists')
+      .set('user-id', 'snapshot-user');
+
+    expect(listsResponse.status).toBe(200);
+    expect(listsResponse.body).toHaveLength(1);
+    expect(listsResponse.body[0].dueCount).toBe(0);
+    expect(listsResponse.body[0].newCount).toBe(1);
+
+    const dueReviewResponse = await request(app)
+      .get('/api/lists/due-review')
+      .set('user-id', 'snapshot-user');
+
+    expect(dueReviewResponse.status).toBe(200);
+    expect(dueReviewResponse.body.wordCount).toBe(0);
+    expect(dueReviewResponse.body.dueCount).toBe(0);
+  });
+
   it('adds wrong answers into the mistake book and schedules them for dedicated review', async () => {
     const listResponse = await request(app)
       .post('/api/lists')
@@ -493,6 +533,31 @@ describe('repository learning snapshot integration', () => {
     const wordTwoId = wordTwoResponse.body.id as string;
     const futureWordId = futureWordResponse.body.id as string;
 
+    const reviewOneResponse = await request(app)
+      .put(`/api/learn/${listOneId}/reviews`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        results: [{ wordId: wordOneId, correct: true, rating: 'good', questionType: 'fill_blank' }]
+      });
+
+    const reviewTwoResponse = await request(app)
+      .put(`/api/learn/${listTwoId}/reviews`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        results: [{ wordId: wordTwoId, correct: true, rating: 'good', questionType: 'fill_blank' }]
+      });
+
+    const reviewFutureResponse = await request(app)
+      .put(`/api/learn/${listTwoId}/reviews`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        results: [{ wordId: futureWordId, correct: true, rating: 'good', questionType: 'fill_blank' }]
+      });
+
+    expect(reviewOneResponse.status).toBe(200);
+    expect(reviewTwoResponse.status).toBe(200);
+    expect(reviewFutureResponse.status).toBe(200);
+
     const now = new Date();
     const dueToday = new Date(now.getTime() - 60 * 60 * 1000);
     const dueTomorrow = new Date(now.getTime() + 36 * 60 * 60 * 1000);
@@ -557,12 +622,13 @@ describe('repository learning snapshot integration', () => {
       LearningState.findOne({ userId: 'snapshot-user', wordId: wordTwoId, listId: listTwoId }).lean(),
       ReviewLog.find({
         userId: 'snapshot-user',
-        wordId: { $in: [wordOneId, wordTwoId] }
+        wordId: { $in: [wordOneId, wordTwoId] },
+        source: 'due_review'
       }).lean()
     ]);
 
-    expect(listOneState?.reviewCount).toBe(1);
-    expect(listTwoState?.reviewCount).toBe(1);
+    expect(listOneState?.reviewCount).toBe(2);
+    expect(listTwoState?.reviewCount).toBe(2);
     expect(listOneState?.lastSource).toBe('due_review');
     expect(listTwoState?.lastSource).toBe('due_review');
     expect(dueReviewLogs).toHaveLength(2);

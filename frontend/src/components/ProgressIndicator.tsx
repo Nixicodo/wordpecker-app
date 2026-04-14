@@ -1,5 +1,6 @@
 import { Box, Text, Progress, HStack, Badge, VStack, SimpleGrid } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
+import { isDueForReview } from '../utils/reviewState';
 
 const MotionBox = motion(Box);
 
@@ -144,7 +145,7 @@ const buildAggregateScore = (words: OverallProgressProps['words']) => {
 export const OverallProgress: React.FC<OverallProgressProps> = ({ words, size = 'md' }) => {
   const totalWords = words.length;
   const now = Date.now();
-  const dueWords = words.filter((word) => !word.dueAt || new Date(word.dueAt).getTime() <= now).length;
+  const dueWords = words.filter((word) => isDueForReview(word, now)).length;
   const newWords = words.filter((word) => word.reviewCount === 0 || word.status === 0).length;
   const learningWords = words.filter((word) => word.status === 1 || word.status === 3).length;
   const stableWords = words.filter((word) => word.status === 2 && word.lapseCount === 0 && word.stability >= 4).length;
@@ -205,9 +206,10 @@ export const deriveWordScore = (word: {
   reviewCount: number;
   lapseCount: number;
   stability: number;
+  status?: number;
   dueAt?: string;
 }) => {
   const now = Date.now();
-  const overduePenalty = word.dueAt && new Date(word.dueAt).getTime() <= now ? 18 : 0;
+  const overduePenalty = isDueForReview(word, now) ? 18 : 0;
   return clampScore(word.stability * 14 + word.reviewCount * 7 - word.lapseCount * 9 - overduePenalty);
 };

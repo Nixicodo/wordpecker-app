@@ -150,8 +150,8 @@ export const DueReview = () => {
                   </Heading>
                   <Text mt={3} color="gray.300" fontSize={{ base: 'md', md: 'lg' }} maxW="2xl">
                     {isZh
-                      ? '系统会聚合所有计划复习日期早于今天的单词，并沿用学习模式原本的复习与回写逻辑。你在这里答对或答错，都会同步更新到它们原本所属的词树。'
-                      : 'Words whose scheduled review date is earlier than today are aggregated here and still use the original learning pipeline.'}
+                      ? '这里会聚合所有已经进入复习流程、且计划日期不晚于今天的单词。你在这里答对或答错，都会同步回写到它们原本所属的词树。'
+                      : 'This hub only aggregates words that have already entered review flow and are due by today, while keeping the original learning pipeline intact.'}
                   </Text>
                 </Box>
               </VStack>
@@ -221,7 +221,7 @@ export const DueReview = () => {
                       {dueCount}
                     </Text>
                     <Text mt={2} color="gray.300">
-                      {isZh ? '计划日期早于今天的单词数量' : 'Words scheduled before today'}
+                      {isZh ? '已学过且计划日期不晚于今天的单词数量' : 'Reviewed words due by today'}
                     </Text>
                   </Box>
 
