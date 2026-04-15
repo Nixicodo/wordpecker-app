@@ -1,5 +1,7 @@
 import {
   ArrowForwardIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
   CopyIcon,
   DeleteIcon,
   RepeatIcon
@@ -100,6 +102,7 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
   const [maskOpacity, setMaskOpacity] = useState(DEFAULT_MASK_OPACITY);
   const [cardOpacity, setCardOpacity] = useState(DEFAULT_CARD_OPACITY);
   const [rotationIntervalMs, setRotationIntervalMs] = useState(DEFAULT_INTERVAL_MS);
+  const [isControlTrayExpanded, setIsControlTrayExpanded] = useState(false);
   const hasLoadedRef = useRef(false);
   const currentBackgroundRef = useRef<BackgroundAsset | null>(null);
   const isAutoRotationPaused = shouldPauseAutoRotation(location.pathname);
@@ -255,6 +258,10 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
     localStorage.setItem(BACKGROUND_INTERVAL_STORAGE_KEY, String(parsedValue));
   }, []);
 
+  const toggleControlTray = useCallback(() => {
+    setIsControlTrayExpanded((previousValue) => !previousValue);
+  }, []);
+
   useEffect(() => {
     if (hasLoadedRef.current) {
       return;
@@ -291,6 +298,18 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
   }, [cycleBackground, isAutoRotationPaused, rotationIntervalMs, totalBackgrounds]);
 
   const overlayOpacity = Math.max(0, Math.min(maskOpacity / 100, 1));
+  const traySurfaceStyles = {
+    borderRadius: '2xl',
+    bg: 'rgba(9, 14, 28, 0.78)',
+    border: '1px solid rgba(255, 255, 255, 0.14)',
+    boxShadow: '0 22px 50px rgba(0, 0, 0, 0.28)'
+  } as const;
+  const trayGhostActionStyles = {
+    color: 'white',
+    bg: 'whiteAlpha.180',
+    _hover: { bg: 'whiteAlpha.260' },
+    _active: { bg: 'whiteAlpha.300' }
+  } as const;
 
   const value = useMemo<BackgroundContextValue>(() => ({
     currentBackground,
@@ -354,170 +373,246 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
           align="stretch"
           spacing={3}
         >
-          <Box
-            px={4}
-            py={3}
-            borderRadius="2xl"
-            bg="rgba(9, 14, 28, 0.78)"
-            border="1px solid rgba(255, 255, 255, 0.14)"
-            boxShadow="0 22px 50px rgba(0, 0, 0, 0.28)"
-            minW={{ base: '280px', md: '320px' }}
-          >
-            {!isReady ? (
-              <HStack spacing={3}>
-                <Spinner size="sm" color="green.300" />
-                <Text fontSize="sm" color="whiteAlpha.900">正在装载背景库…</Text>
-              </HStack>
-            ) : currentBackground ? (
-              <VStack spacing={3} align="stretch">
-                <Box>
-                  <Text fontSize="xs" color="whiteAlpha.700" textTransform="uppercase" letterSpacing="0.18em">
-                    Background
-                  </Text>
-                  <HStack spacing={2} align="center">
-                    <Text fontSize="sm" color="white" fontWeight="semibold" noOfLines={1} flex="1">
-                      {currentBackground.folder || 'backgrounds'}
-                    </Text>
+          <AnimatePresence initial={false} mode="wait">
+            {isControlTrayExpanded ? (
+              <MotionBox
+                key="background-control-tray-expanded"
+                initial={{ opacity: 0, y: 12, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 12, scale: 0.96 }}
+                transition={{ duration: 0.18, ease: 'easeOut' }}
+              >
+                <Box
+                  px={4}
+                  py={3}
+                  minW={{ base: '280px', md: '320px' }}
+                  {...traySurfaceStyles}
+                >
+                  {!isReady ? (
+                    <HStack spacing={3} justify="space-between">
+                      <HStack spacing={3}>
+                        <Spinner size="sm" color="green.300" />
+                        <Text fontSize="sm" color="whiteAlpha.900">正在装载背景库…</Text>
+                      </HStack>
+                      <IconButton
+                        aria-label="收起背景控制托盘"
+                        icon={<ChevronDownIcon />}
+                        size="sm"
+                        variant="ghost"
+                        {...trayGhostActionStyles}
+                        onClick={toggleControlTray}
+                      />
+                    </HStack>
+                  ) : currentBackground ? (
+                    <VStack spacing={3} align="stretch">
+                      <Box>
+                        <Text fontSize="xs" color="whiteAlpha.700" textTransform="uppercase" letterSpacing="0.18em">
+                          Background
+                        </Text>
+                        <HStack spacing={2} align="center">
+                          <Text fontSize="sm" color="white" fontWeight="semibold" noOfLines={1} flex="1">
+                            {currentBackground.folder || 'backgrounds'}
+                          </Text>
+                          <IconButton
+                            aria-label="复制来源路径"
+                            icon={<CopyIcon />}
+                            size="xs"
+                            variant="ghost"
+                            color="whiteAlpha.900"
+                            _hover={{ bg: 'whiteAlpha.200' }}
+                            onClick={() => void handleCopyPath()}
+                          />
+                        </HStack>
+                        <Text fontSize="xs" color="whiteAlpha.700">
+                          {`${totalBackgrounds} 张可用`}
+                        </Text>
+                      </Box>
+
+                      <VStack spacing={2} align="stretch">
+                        <Box>
+                          <HStack justify="space-between" mb={1}>
+                            <Text fontSize="xs" color="whiteAlpha.800">壁纸不透明度</Text>
+                            <Text fontSize="xs" color="green.200">{backgroundOpacity}%</Text>
+                          </HStack>
+                          <Slider
+                            aria-label="壁纸不透明度"
+                            value={backgroundOpacity}
+                            min={15}
+                            max={100}
+                            step={5}
+                            onChange={handleBackgroundOpacityChange}
+                          >
+                            <SliderTrack bg="whiteAlpha.200">
+                              <SliderFilledTrack bg="green.300" />
+                            </SliderTrack>
+                            <SliderThumb boxSize={3} />
+                          </Slider>
+                        </Box>
+
+                        <Box>
+                          <HStack justify="space-between" mb={1}>
+                            <Text fontSize="xs" color="whiteAlpha.800">蒙版不透明度</Text>
+                            <Text fontSize="xs" color="green.200">{maskOpacity}%</Text>
+                          </HStack>
+                          <Slider
+                            aria-label="蒙版不透明度"
+                            value={maskOpacity}
+                            min={0}
+                            max={100}
+                            step={5}
+                            onChange={handleMaskOpacityChange}
+                          >
+                            <SliderTrack bg="whiteAlpha.200">
+                              <SliderFilledTrack bg="cyan.300" />
+                            </SliderTrack>
+                            <SliderThumb boxSize={3} />
+                          </Slider>
+                        </Box>
+
+                        <Box>
+                          <HStack justify="space-between" mb={1}>
+                            <Text fontSize="xs" color="whiteAlpha.800">卡片透明度</Text>
+                            <Text fontSize="xs" color="green.200">{cardOpacity}%</Text>
+                          </HStack>
+                          <Slider
+                            aria-label="卡片透明度"
+                            value={cardOpacity}
+                            min={35}
+                            max={100}
+                            step={5}
+                            onChange={handleCardOpacityChange}
+                          >
+                            <SliderTrack bg="whiteAlpha.200">
+                              <SliderFilledTrack bg="purple.300" />
+                            </SliderTrack>
+                            <SliderThumb boxSize={3} />
+                          </Slider>
+                        </Box>
+
+                        <Box>
+                          <Text fontSize="xs" color="whiteAlpha.800" mb={1}>随机切换间隔</Text>
+                          <Select
+                            size="sm"
+                            value={rotationIntervalMs}
+                            onChange={(event) => handleIntervalChange(event.target.value)}
+                            bg="whiteAlpha.120"
+                            borderColor="whiteAlpha.220"
+                            _hover={{ borderColor: 'whiteAlpha.300' }}
+                            _focus={{ borderColor: 'green.300', boxShadow: '0 0 0 1px #86efac' }}
+                          >
+                            {INTERVAL_OPTIONS.map((option) => (
+                              <option key={option.value} value={option.value} style={{ color: '#111827' }}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </Select>
+                        </Box>
+                      </VStack>
+
+                      <HStack spacing={2}>
+                        <Button
+                          leftIcon={<ArrowForwardIcon />}
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => cycleBackground('manual')}
+                          isDisabled={totalBackgrounds === 0}
+                          isLoading={isSwitching}
+                          flex="1"
+                          {...trayGhostActionStyles}
+                        >
+                          Next
+                        </Button>
+                        <IconButton
+                          aria-label="删除当前壁纸"
+                          icon={<DeleteIcon />}
+                          size="sm"
+                          colorScheme="red"
+                          variant="solid"
+                          onClick={() => void deleteCurrentBackground()}
+                          isDisabled={!currentBackground}
+                          isLoading={isDeleting}
+                        />
+                        <IconButton
+                          aria-label="收起背景控制托盘"
+                          icon={<ChevronDownIcon />}
+                          size="sm"
+                          variant="ghost"
+                          {...trayGhostActionStyles}
+                          onClick={toggleControlTray}
+                        />
+                      </HStack>
+                    </VStack>
+                  ) : (
+                    <VStack align="stretch" spacing={3}>
+                      <Text fontSize="sm" color="whiteAlpha.900">当前没有可用壁纸。</Text>
+                      <HStack spacing={2}>
+                        <Button
+                          leftIcon={<RepeatIcon />}
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => void requestBackground({ silent: true })}
+                          isLoading={isSwitching}
+                          flex="1"
+                          {...trayGhostActionStyles}
+                        >
+                          刷新背景库
+                        </Button>
+                        <IconButton
+                          aria-label="收起背景控制托盘"
+                          icon={<ChevronDownIcon />}
+                          size="sm"
+                          variant="ghost"
+                          {...trayGhostActionStyles}
+                          onClick={toggleControlTray}
+                        />
+                      </HStack>
+                    </VStack>
+                  )}
+                </Box>
+              </MotionBox>
+            ) : (
+              <MotionBox
+                key="background-control-tray-compact"
+                initial={{ opacity: 0, y: 12, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 12, scale: 0.96 }}
+                transition={{ duration: 0.18, ease: 'easeOut' }}
+              >
+                <Box px={3} py={3} {...traySurfaceStyles}>
+                  <HStack spacing={2}>
                     <IconButton
-                      aria-label="复制来源路径"
-                      icon={<CopyIcon />}
-                      size="xs"
+                      aria-label="下一张背景"
+                      icon={<ArrowForwardIcon />}
+                      size="sm"
                       variant="ghost"
-                      color="whiteAlpha.900"
-                      _hover={{ bg: 'whiteAlpha.200' }}
-                      onClick={() => void handleCopyPath()}
+                      onClick={() => cycleBackground('manual')}
+                      isDisabled={totalBackgrounds === 0}
+                      isLoading={isSwitching}
+                      {...trayGhostActionStyles}
+                    />
+                    <IconButton
+                      aria-label="删除当前壁纸"
+                      icon={<DeleteIcon />}
+                      size="sm"
+                      colorScheme="red"
+                      variant="solid"
+                      onClick={() => void deleteCurrentBackground()}
+                      isDisabled={!currentBackground}
+                      isLoading={isDeleting}
+                    />
+                    <IconButton
+                      aria-label="展开背景控制托盘"
+                      icon={<ChevronUpIcon />}
+                      size="sm"
+                      variant="ghost"
+                      {...trayGhostActionStyles}
+                      onClick={toggleControlTray}
                     />
                   </HStack>
-                  <Text fontSize="xs" color="whiteAlpha.700">
-                    {`${totalBackgrounds} 张可用`}
-                  </Text>
                 </Box>
-
-                <VStack spacing={2} align="stretch">
-                  <Box>
-                    <HStack justify="space-between" mb={1}>
-                      <Text fontSize="xs" color="whiteAlpha.800">壁纸不透明度</Text>
-                      <Text fontSize="xs" color="green.200">{backgroundOpacity}%</Text>
-                    </HStack>
-                    <Slider
-                      aria-label="壁纸不透明度"
-                      value={backgroundOpacity}
-                      min={15}
-                      max={100}
-                      step={5}
-                      onChange={handleBackgroundOpacityChange}
-                    >
-                      <SliderTrack bg="whiteAlpha.200">
-                        <SliderFilledTrack bg="green.300" />
-                      </SliderTrack>
-                      <SliderThumb boxSize={3} />
-                    </Slider>
-                  </Box>
-
-                  <Box>
-                    <HStack justify="space-between" mb={1}>
-                      <Text fontSize="xs" color="whiteAlpha.800">蒙版不透明度</Text>
-                      <Text fontSize="xs" color="green.200">{maskOpacity}%</Text>
-                    </HStack>
-                    <Slider
-                      aria-label="蒙版不透明度"
-                      value={maskOpacity}
-                      min={0}
-                      max={100}
-                      step={5}
-                      onChange={handleMaskOpacityChange}
-                    >
-                      <SliderTrack bg="whiteAlpha.200">
-                        <SliderFilledTrack bg="cyan.300" />
-                      </SliderTrack>
-                      <SliderThumb boxSize={3} />
-                    </Slider>
-                  </Box>
-
-                  <Box>
-                    <HStack justify="space-between" mb={1}>
-                      <Text fontSize="xs" color="whiteAlpha.800">卡片透明度</Text>
-                      <Text fontSize="xs" color="green.200">{cardOpacity}%</Text>
-                    </HStack>
-                    <Slider
-                      aria-label="卡片透明度"
-                      value={cardOpacity}
-                      min={35}
-                      max={100}
-                      step={5}
-                      onChange={handleCardOpacityChange}
-                    >
-                      <SliderTrack bg="whiteAlpha.200">
-                        <SliderFilledTrack bg="purple.300" />
-                      </SliderTrack>
-                      <SliderThumb boxSize={3} />
-                    </Slider>
-                  </Box>
-
-                  <Box>
-                    <Text fontSize="xs" color="whiteAlpha.800" mb={1}>随机切换间隔</Text>
-                    <Select
-                      size="sm"
-                      value={rotationIntervalMs}
-                      onChange={(event) => handleIntervalChange(event.target.value)}
-                      bg="whiteAlpha.120"
-                      borderColor="whiteAlpha.220"
-                      _hover={{ borderColor: 'whiteAlpha.300' }}
-                      _focus={{ borderColor: 'green.300', boxShadow: '0 0 0 1px #86efac' }}
-                    >
-                      {INTERVAL_OPTIONS.map((option) => (
-                        <option key={option.value} value={option.value} style={{ color: '#111827' }}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </Select>
-                  </Box>
-                </VStack>
-
-                <HStack spacing={2}>
-                  <Button
-                    leftIcon={<ArrowForwardIcon />}
-                    size="sm"
-                    variant="ghost"
-                    color="white"
-                    bg="whiteAlpha.180"
-                    _hover={{ bg: 'whiteAlpha.260' }}
-                    onClick={() => cycleBackground('manual')}
-                    isDisabled={totalBackgrounds === 0}
-                    isLoading={isSwitching}
-                    flex="1"
-                  >
-                    Next
-                  </Button>
-                  <IconButton
-                    aria-label="删除当前壁纸"
-                    icon={<DeleteIcon />}
-                    size="sm"
-                    colorScheme="red"
-                    variant="solid"
-                    onClick={() => void deleteCurrentBackground()}
-                    isLoading={isDeleting}
-                  />
-                </HStack>
-              </VStack>
-            ) : (
-              <VStack align="stretch" spacing={3}>
-                <Text fontSize="sm" color="whiteAlpha.900">当前没有可用壁纸。</Text>
-                <Button
-                  leftIcon={<RepeatIcon />}
-                  size="sm"
-                  variant="ghost"
-                  color="white"
-                  bg="whiteAlpha.180"
-                  _hover={{ bg: 'whiteAlpha.260' }}
-                  onClick={() => void requestBackground({ silent: true })}
-                  isLoading={isSwitching}
-                >
-                  刷新背景库
-                </Button>
-              </VStack>
+              </MotionBox>
             )}
-          </Box>
+          </AnimatePresence>
         </VStack>
       </Box>
     </BackgroundContext.Provider>
