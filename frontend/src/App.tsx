@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ChakraProvider, Box } from '@chakra-ui/react';
 import theme from './theme';
 import { Lists } from './pages/Lists';
@@ -16,6 +16,8 @@ import { Header } from './components/Header';
 import { MistakeBook } from './pages/MistakeBook';
 import { DueReview } from './pages/DueReview';
 import { BackgroundProvider } from './components/BackgroundProvider';
+import { DisciplineEntryRedirect } from './components/DisciplineEntryRedirect';
+import { ExplorationGate } from './components/ExplorationGate';
 
 function App() {
   return (
@@ -25,7 +27,7 @@ function App() {
           <Box minH="100vh" color="white">
             <Header />
             <Routes>
-              <Route path="/" element={<Navigate to="/lists" replace />} />
+              <Route path="/" element={<DisciplineEntryRedirect />} />
               <Route path="/lists" element={<Lists />} />
               <Route path="/lists/:id" element={<ListDetail />} />
               <Route path="/learn/:id" element={<Learn />} />
@@ -34,9 +36,30 @@ function App() {
               <Route path="/reviews" element={<DueReview />} />
               <Route path="/words/:wordId" element={<WordDetailPage />} />
               <Route path="/settings" element={<Settings />} />
-              <Route path="/describe" element={<ImageDescription />} />
-              <Route path="/learn-new-words" element={<GetNewWords />} />
-              <Route path="/learn-new-words/session" element={<WordLearningSession />} />
+              <Route
+                path="/describe"
+                element={(
+                  <ExplorationGate title="视觉花园">
+                    <ImageDescription />
+                  </ExplorationGate>
+                )}
+              />
+              <Route
+                path="/learn-new-words"
+                element={(
+                  <ExplorationGate title="发现新词">
+                    <GetNewWords />
+                  </ExplorationGate>
+                )}
+              />
+              <Route
+                path="/learn-new-words/session"
+                element={(
+                  <ExplorationGate title="发现新词">
+                    <WordLearningSession />
+                  </ExplorationGate>
+                )}
+              />
               <Route path="/reading/:listId" element={<ReadingPage />} />
               <Route path="/voice-chat/:listId" element={<VoiceChat />} />
             </Routes>

@@ -29,7 +29,8 @@ const UI = {
   hintPrefix: '提示：',
   feedbackPrefix: '讲解：',
   correctAnswerPrefix: '正确答案：',
-  correctMatches: '正确配对：'
+  correctMatches: '正确配对：',
+  relatedWordsTitle: '本题相关词汇：'
 };
 
 interface QuestionRendererProps {
@@ -46,8 +47,6 @@ interface QuestionAnsweredSupplementProps {
   isAnswered: boolean;
   isCorrect?: boolean | null;
 }
-
-const RELATED_WORDS_TITLE = '本题相关词汇：';
 
 export const QuestionAnsweredSupplement: React.FC<QuestionAnsweredSupplementProps> = ({
   question,
@@ -67,7 +66,7 @@ export const QuestionAnsweredSupplement: React.FC<QuestionAnsweredSupplementProp
         <Alert status="success" borderRadius="lg" bg={feedbackBg}>
           <AlertIcon />
           <Text color={feedbackColor} fontSize="sm">
-            {`${UI.feedbackPrefix} ${question.feedback}`}
+            {`${UI.feedbackPrefix}${question.feedback}`}
           </Text>
         </Alert>
       )}
@@ -93,7 +92,7 @@ export const QuestionAnsweredSupplement: React.FC<QuestionAnsweredSupplementProp
         question.exposedWords &&
         question.exposedWords.length > 0 && (
           <Box p={4} bg="slate.800" borderRadius="md">
-            <Text fontWeight="bold" mb={2}>{RELATED_WORDS_TITLE}</Text>
+            <Text fontWeight="bold" mb={2}>{UI.relatedWordsTitle}</Text>
             {question.exposedWords.map((word) => (
               <Text key={word.id} fontSize="sm" color="green.300">
                 {word.value} {'->'} {word.meaning || '释义解析中'}
@@ -184,7 +183,7 @@ export const QuestionRenderer: React.FC<QuestionRendererProps> = ({
       onHintShown?.();
     }
 
-    setShowHint((prev) => !prev);
+    setShowHint((previous) => !previous);
   };
 
   return (
@@ -223,7 +222,7 @@ export const QuestionRenderer: React.FC<QuestionRendererProps> = ({
             <Alert status="info" borderRadius="lg" bg={hintBg}>
               <AlertIcon />
               <Text color={hintColor} fontSize="sm">
-                {`${UI.hintPrefix} ${question.hint}`}
+                {`${UI.hintPrefix}${question.hint}`}
               </Text>
             </Alert>
           </Collapse>

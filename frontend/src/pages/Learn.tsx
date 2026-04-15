@@ -39,6 +39,7 @@ import { recommendReviewRating } from '../utils/reviewRating';
 import { resolveQuestionExposureWords } from '../utils/questionExposure';
 import { BufferedBatchQueue } from '../utils/bufferedBatchQueue';
 import { useBackgrounds } from '../components/BackgroundProvider';
+import { DisciplinedLearnSession } from '../components/DisciplinedLearnSession';
 
 const UI = {
   startErrorTitle: '\u542f\u52a8\u5b66\u4e60\u5931\u8d25',
@@ -523,6 +524,17 @@ export const Learn = () => {
           <Button variant="solid">{UI.backToLists}</Button>
         </Link>
       </Box>
+    );
+  }
+
+  if (list.kind === 'due_review') {
+    return (
+      <DisciplinedLearnSession
+        list={list}
+        listWords={listWords}
+        initialExercises={exercises}
+        initialWordSources={wordSources}
+      />
     );
   }
 

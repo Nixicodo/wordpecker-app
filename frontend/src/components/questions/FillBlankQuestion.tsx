@@ -39,8 +39,8 @@ export const FillBlankQuestion: React.FC<FillBlankQuestionProps> = ({
       </Text>
       <Input
         value={fillBlankAnswer}
-        onChange={(e) => handleFillBlankChange(e.target.value)}
-        placeholder="请在这里输入答案..."
+        onChange={(event) => handleFillBlankChange(event.target.value)}
+        placeholder="请在这里输入答案"
         size="lg"
         textAlign="center"
         bg="slate.700"

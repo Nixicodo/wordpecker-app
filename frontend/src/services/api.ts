@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { WordList, Word, Exercise, Question, Template, WordDetail, SentenceExample, UserPreferences, ExerciseTypePreferences, ImageDescriptionAnalysis, DescriptionExercise, VocabularyWordsResponse, WordDetailsResponse, ReviewSubmission, ScheduledWord, BackgroundAsset, WordSourceInfo } from '../types';
+import { WordList, Word, Exercise, Question, Template, WordDetail, SentenceExample, UserPreferences, ExerciseTypePreferences, ImageDescriptionAnalysis, DescriptionExercise, VocabularyWordsResponse, WordDetailsResponse, ReviewSubmission, ScheduledWord, BackgroundAsset, WordSourceInfo, DisciplineStatus } from '../types';
 
 // Generate or retrieve user ID
 const getUserId = () => {
@@ -88,6 +88,7 @@ export const apiService = {
   getList: (id: string): ApiResponse<WordList> => api.get(`/api/lists/${id}`),
   getMistakeBook: (): ApiResponse<WordList> => api.get('/api/lists/mistake-book'),
   getDueReview: (): ApiResponse<WordList> => api.get('/api/lists/due-review'),
+  getDisciplineStatus: (): ApiResponse<DisciplineStatus> => api.get('/api/lists/discipline-status'),
   createList: (data: Partial<WordList>): ApiResponse<WordList> => api.post('/api/lists', data),
   updateList: (id: string, data: Partial<WordList>): ApiResponse<WordList> => api.put(`/api/lists/${id}`, data),
   deleteList: async (listId: string): Promise<void> => {

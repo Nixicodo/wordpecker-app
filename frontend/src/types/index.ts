@@ -29,6 +29,17 @@ export interface WordList {
   updated_at: string;
 }
 
+export interface DisciplineStatus {
+  dueReviewListId: string;
+  dueCount: number;
+  backlog: number;
+  dailyNewWordLimit: number;
+  newWordsAddedToday: number;
+  remainingNewWordQuota: number;
+  entryState: 'open' | 'soft_locked' | 'hard_locked' | 'quota_reached';
+  canAccessExploration: boolean;
+}
+
 export interface Word {
   id: string;
   list_id?: string;

@@ -4,9 +4,11 @@ import { apiService } from '../services/api';
 export const validateAnswer = async (
   userAnswer: string, 
   question: Exercise | Question, 
-  context?: string
+  context?: string,
+  options?: { allowFallback?: boolean }
 ): Promise<boolean> => {
   if (!userAnswer || !question.correctAnswer) return false;
+  const allowFallback = options?.allowFallback ?? true;
 
   // Handle different question types
   switch (question.type) {
@@ -49,6 +51,9 @@ export const validateAnswer = async (
         return result.isValid;
       } catch (error) {
         console.error('Error validating fill-blank answer:', error);
+        if (!allowFallback) {
+          throw error;
+        }
         // Fallback to simple comparison
         return userAnswer.toLowerCase().trim() === question.correctAnswer.toLowerCase().trim();
       }
