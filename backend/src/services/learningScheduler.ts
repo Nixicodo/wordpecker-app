@@ -4,7 +4,7 @@ import { LearningState, ReviewRating, ReviewSource, type ILearningState } from '
 import { ReviewLog, type IReviewLog } from '../api/review-log/model';
 import { IWord, Word } from '../api/words/model';
 import { IWordList, WordList } from '../api/lists/model';
-import { ensureMistakeBook, isMistakeBookList } from './mistakeBook';
+import { isMistakeBookList } from './mistakeBook';
 import { getDueReviewCutoff, isDueReviewList } from './dueReview';
 
 const scheduler = fsrs({
@@ -677,7 +677,6 @@ export const settleReviewResults = async (
   results: ReviewSubmission[]
 ) => {
   const now = new Date();
-  const isMistakeBook = isMistakeBookList(list);
   const normalizedResults = normalizeReviewResults(results);
 
   await Promise.all(normalizedResults.map(async (result) => {
@@ -736,10 +735,6 @@ export const settleReviewResults = async (
     ]);
 
     await syncLearningStateAcrossMemberships(userId, word, state);
-
-    if (!result.correct && !isMistakeBook) {
-      await addWordToMistakeBook(userId, list._id.toString(), word);
-    }
   }));
 };
 
@@ -896,42 +891,6 @@ export const summarizeDueReviewProgress = async (userId: string) => {
     sourceListCount: sourceListIds.size,
     retentionScore: dueWords.length ? Math.round((retentionAccumulator / dueWords.length) * 100) : 0
   };
-};
-
-const addWordToMistakeBook = async (userId: string, sourceListId: string, word: IWord) => {
-  const mistakeBook = await ensureMistakeBook();
-  const sourceMembership = getMembership(word, sourceListId);
-  if (!sourceMembership) {
-    return;
-  }
-
-  const existingMembership = getMembership(word, mistakeBook._id.toString());
-  if (!existingMembership) {
-    word.listMemberships.push({
-      listId: mistakeBook._id,
-      meaning: sourceMembership.meaning,
-      sourceListIds: [new mongoose.Types.ObjectId(sourceListId)],
-      addedAt: new Date(),
-      updatedAt: new Date()
-    });
-  } else {
-    const sourceIds = new Set((existingMembership.sourceListIds || []).map((id) => id.toString()));
-    if (!sourceIds.has(sourceListId)) {
-      existingMembership.sourceListIds = [
-        ...(existingMembership.sourceListIds || []),
-        new mongoose.Types.ObjectId(sourceListId)
-      ];
-    }
-    existingMembership.meaning = sourceMembership.meaning;
-    existingMembership.updatedAt = new Date();
-  }
-
-  await word.save();
-
-  const mistakeState = await ensureLearningState(userId, mistakeBook._id.toString(), word);
-  mistakeState.dueAt = new Date();
-  mistakeState.consecutiveWrong += 1;
-  await mistakeState.save();
 };
 
 export const seedLearningStateFromLegacyPoint = async (

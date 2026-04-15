@@ -9,14 +9,20 @@ import { listIdSchema, updatePointsSchema } from './schemas';
 import { applyReviewResults } from '../../services/learningProgress';
 import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
 import { resolveUserId } from '../../config/learning';
-import { isMistakeBookList } from '../../services/mistakeBook';
-import { resolveEnabledQuestionTypes } from '../../services/exerciseTypePreferences';
+import {
+  resolveDisciplinedQuestionTypes,
+  resolveEnabledQuestionTypes
+} from '../../services/exerciseTypePreferences';
 import { selectGenerationWordPool } from '../../services/exerciseGenerationPool';
 import { isDueReviewList } from '../../services/dueReview';
 
 const router = Router();
 
-const getExerciseTypes = async (userId: string): Promise<QuestionType[]> => {
+const getExerciseTypes = async (userId: string, isDisciplinedReview: boolean): Promise<QuestionType[]> => {
+  if (isDisciplinedReview) {
+    return resolveDisciplinedQuestionTypes();
+  }
+
   const preferences = await UserPreferences.findOne({ userId });
   return resolveEnabledQuestionTypes(preferences?.exerciseTypes);
 };
@@ -51,9 +57,10 @@ router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
     if (!list) return res.status(404).json({ message: 'List not found' });
 
     const userId = resolveUserId(req.headers['user-id']);
+    const isDisciplinedReview = isDueReviewList(list);
     const [{ scheduledWords, extraDistractors }, exerciseTypes, { baseLanguage, targetLanguage }] = await Promise.all([
       selectGenerationWordPool(userId, listId),
-      getExerciseTypes(userId),
+      getExerciseTypes(userId, isDisciplinedReview),
       getUserLanguages(userId)
     ]);
 
@@ -89,13 +96,14 @@ router.post('/:listId/more', validate(listIdSchema), async (req, res) => {
     if (!list) return res.status(404).json({ message: 'List not found' });
 
     const userId = resolveUserId(req.headers['user-id']);
+    const isDisciplinedReview = isDueReviewList(list);
     const requestBody = req.body as { excludeWordIds?: unknown[] } | undefined;
     const excludeWordIds = Array.isArray(requestBody?.excludeWordIds)
       ? requestBody.excludeWordIds.filter((wordId: unknown): wordId is string => typeof wordId === 'string')
       : [];
     const [{ scheduledWords, extraDistractors }, exerciseTypes, { baseLanguage, targetLanguage }] = await Promise.all([
       selectGenerationWordPool(userId, listId, undefined, undefined, excludeWordIds),
-      getExerciseTypes(userId),
+      getExerciseTypes(userId, isDisciplinedReview),
       getUserLanguages(userId)
     ]);
 
@@ -130,7 +138,7 @@ router.put('/:listId/reviews', validate(updatePointsSchema), async (req, res) =>
       return res.status(404).json({ message: 'List not found' });
     }
 
-    const source = isDueReviewList(list) ? 'due_review' : isMistakeBookList(list) ? 'mistake_review' : 'learn';
+    const source = isDueReviewList(list) ? 'due_review' : 'learn';
     const results = req.body.results.map((result: any) => ({
       wordId: result.wordId,
       wordIds: result.wordIds,

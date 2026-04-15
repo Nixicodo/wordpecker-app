@@ -8,10 +8,10 @@ import { listIdSchema, updatePointsSchema } from './schemas';
 import { applyReviewResults } from '../../services/learningProgress';
 import { getUserLanguages } from '../../utils/getUserLanguages';
 import { resolveUserId } from '../../config/learning';
-import { isMistakeBookList } from '../../services/mistakeBook';
 import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
 import { resolveEnabledQuestionTypes } from '../../services/exerciseTypePreferences';
 import { selectGenerationWordPool } from '../../services/exerciseGenerationPool';
+import { isDueReviewList } from '../../services/dueReview';
 
 const router = Router();
 
@@ -26,6 +26,7 @@ router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
     const list = await WordList.findById(listId).lean();
 
     if (!list) return res.status(404).json({ message: 'List not found' });
+    if (isDueReviewList(list)) return res.status(403).json({ message: 'Due review must use disciplined learning mode' });
 
     const userId = resolveUserId(req.headers['user-id']);
     const [{ scheduledWords, extraDistractors }, questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
@@ -65,6 +66,7 @@ router.post('/:listId/more', validate(listIdSchema), async (req, res) => {
     const list = await WordList.findById(listId).lean();
 
     if (!list) return res.status(404).json({ message: 'List not found' });
+    if (isDueReviewList(list)) return res.status(403).json({ message: 'Due review must use disciplined learning mode' });
 
     const userId = resolveUserId(req.headers['user-id']);
     const requestBody = req.body as { excludeWordIds?: unknown[] } | undefined;
@@ -105,7 +107,7 @@ router.put('/:listId/reviews', validate(updatePointsSchema), async (req, res) =>
       return res.status(404).json({ message: 'List not found' });
     }
 
-    const source = isMistakeBookList(list) ? 'mistake_review' : 'quiz';
+    const source = 'quiz';
     const results = req.body.results.map((result: any) => ({
       wordId: result.wordId,
       wordIds: result.wordIds,

@@ -8,6 +8,10 @@ export const DEFAULT_QUESTION_TYPES: QuestionType[] = [
   'sentence_completion'
 ];
 
+export const DISCIPLINED_REVIEW_QUESTION_TYPES: QuestionType[] = [
+  'fill_blank'
+];
+
 export const DEFAULT_EXERCISE_TYPE_PREFERENCES: ExerciseTypePreferences = {
   multiple_choice: true,
   fill_blank: true,
@@ -29,4 +33,8 @@ export function resolveEnabledQuestionTypes(
     .map(([type]) => type as QuestionType);
 
   return enabledTypes.length ? enabledTypes : DEFAULT_QUESTION_TYPES;
+}
+
+export function resolveDisciplinedQuestionTypes(): QuestionType[] {
+  return [...DISCIPLINED_REVIEW_QUESTION_TYPES];
 }

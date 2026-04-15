@@ -331,21 +331,16 @@ describe('repository learning snapshot integration', () => {
     expect(logs.every((log) => log.questionType === 'matching')).toBe(true);
   });
 
-  it('creates and exposes the mistake book as a dedicated system list', async () => {
-    const mistakeBookResponse = await request(app)
-      .get('/api/lists/mistake-book')
+  it('reports discipline status for due-first review and daily new-word quota', async () => {
+    const statusResponse = await request(app)
+      .get('/api/lists/discipline-status')
       .set('user-id', 'snapshot-user');
 
-    expect(mistakeBookResponse.status).toBe(200);
-    expect(mistakeBookResponse.body.kind).toBe('mistake_book');
-    expect(mistakeBookResponse.body.systemKey).toBe('mistake-book');
-
-    const listsResponse = await request(app)
-      .get('/api/lists')
-      .set('user-id', 'snapshot-user');
-
-    expect(listsResponse.status).toBe(200);
-    expect(listsResponse.body).toHaveLength(0);
+    expect(statusResponse.status).toBe(200);
+    expect(statusResponse.body.entryState).toBe('open');
+    expect(statusResponse.body.dailyNewWordLimit).toBe(10);
+    expect(statusResponse.body.remainingNewWordQuota).toBe(10);
+    expect(statusResponse.body.dueCount).toBe(0);
   });
 
   it('creates and exposes the due review list as a dedicated system list', async () => {
@@ -405,7 +400,7 @@ describe('repository learning snapshot integration', () => {
     expect(dueReviewResponse.body.dueCount).toBe(0);
   });
 
-  it('adds wrong answers into the mistake book and schedules them for dedicated review', async () => {
+  it('keeps wrong answers inside due review instead of creating a separate mistake book', async () => {
     const listResponse = await request(app)
       .post('/api/lists')
       .send({
@@ -437,45 +432,47 @@ describe('repository learning snapshot integration', () => {
 
     expect(wrongAnswerResponse.status).toBe(200);
 
-    const mistakeBookResponse = await request(app)
-      .get('/api/lists/mistake-book')
-      .set('user-id', 'snapshot-user');
-
-    expect(mistakeBookResponse.status).toBe(200);
-    expect(mistakeBookResponse.body.wordCount).toBe(1);
-
-    const mistakeBookId = mistakeBookResponse.body.id as string;
-    const mistakeWordsResponse = await request(app)
-      .get(`/api/lists/${mistakeBookId}/words`)
-      .set('user-id', 'snapshot-user');
-
-    expect(mistakeWordsResponse.status).toBe(200);
-    expect(mistakeWordsResponse.body).toHaveLength(1);
-    expect(mistakeWordsResponse.body[0].value).toBe('resilient');
-
     const wrongWord = await Word.findById(wordId).lean();
-    expect(wrongWord?.listMemberships).toHaveLength(2);
+    expect(wrongWord?.listMemberships).toHaveLength(1);
 
-    const mistakeMembership = wrongWord?.listMemberships.find((membership) => membership.listId.toString() === mistakeBookId);
-    expect(mistakeMembership?.sourceListIds?.map((id) => id.toString())).toContain(listId);
+    const dueReviewResponse = await request(app)
+      .get('/api/lists/due-review')
+      .set('user-id', 'snapshot-user');
+
+    expect(dueReviewResponse.status).toBe(200);
+    expect(dueReviewResponse.body.wordCount).toBe(1);
+
+    const dueReviewId = dueReviewResponse.body.id as string;
+    const dueWordsResponse = await request(app)
+      .get(`/api/lists/${dueReviewId}/words`)
+      .set('user-id', 'snapshot-user');
+    expect(dueWordsResponse.status).toBe(200);
+    expect(dueWordsResponse.body).toHaveLength(1);
+    expect(dueWordsResponse.body[0].value).toBe('resilient');
 
     const recoverResponse = await request(app)
-      .put(`/api/learn/${mistakeBookId}/reviews`)
+      .put(`/api/learn/${dueReviewId}/reviews`)
       .set('user-id', 'snapshot-user')
       .send({
-        results: [{ wordId, correct: true, rating: 'good', questionType: 'fill_blank' }]
+        results: [{
+          wordId,
+          correct: true,
+          rating: 'good',
+          questionType: 'fill_blank',
+          sourceListId: listId
+        }]
       });
 
     expect(recoverResponse.status).toBe(200);
 
-    const recoveredMistakeState = await LearningState.findOne({
+    const recoveredSourceState = await LearningState.findOne({
       userId: 'snapshot-user',
       wordId,
-      listId: mistakeBookId
+      listId
     }).lean();
 
-    expect(recoveredMistakeState?.reviewCount).toBe(2);
-    expect(recoveredMistakeState?.consecutiveWrong).toBe(0);
+    expect(recoveredSourceState?.reviewCount).toBe(2);
+    expect(recoveredSourceState?.consecutiveWrong).toBe(0);
   });
 
   it('aggregates due review words across trees and settles reviews back to each source tree', async () => {

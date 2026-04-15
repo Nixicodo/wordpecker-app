@@ -8,6 +8,7 @@ import { ensureMistakeBook, isMistakeBookList } from '../../services/mistakeBook
 import { summarizeDueReviewProgress, summarizeListProgress } from '../../services/learningScheduler';
 import { resolveUserId } from '../../config/learning';
 import { ensureDueReviewList, isDueReviewList } from '../../services/dueReview';
+import { getDisciplineStatus } from '../../services/discipline';
 
 const router = Router();
 
@@ -71,6 +72,15 @@ router.get('/due-review', async (req, res) => {
     res.json(summary);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching due review list' });
+  }
+});
+
+router.get('/discipline-status', async (req, res) => {
+  try {
+    const status = await getDisciplineStatus(req.headers['user-id']);
+    res.json(status);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching discipline status' });
   }
 });
 
