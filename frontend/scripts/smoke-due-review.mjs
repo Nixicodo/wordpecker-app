@@ -10,6 +10,7 @@ const SUBMITTED_LABEL = '\u5df2\u63d0\u4ea4';
 const RESOLVED_LABEL = '\u5df2\u5b8c\u6210\u5ba1\u6838';
 const PENDING_LABEL = '\u5ba1\u6838\u4e2d';
 const INCORRECT_LABEL = '\u9519\u9898';
+const TOTAL_QUESTIONS_LABEL = '\u5171';
 
 const ensure = (condition, message) => {
   if (!condition) {
@@ -20,6 +21,8 @@ const ensure = (condition, message) => {
 const sleep = (ms) => new Promise((resolve) => {
   setTimeout(resolve, ms);
 });
+
+const containsCjk = (value) => /[\u3400-\u9fff]/u.test(value);
 
 const fetchDueReviewSnapshot = async () => {
   const response = await fetch(`${BACKEND_URL}/api/lists/due-review`, {
@@ -147,6 +150,12 @@ const waitForAuditCounts = async (page, {
   ), `audit counts submitted=${submitted} resolved=${resolved} pending=${pending} incorrect=${incorrect}`)
 );
 
+const waitForTotalQuestionCount = async (page, total, timeoutMs) => (
+  waitForBodyText(page, timeoutMs, (bodyText) => (
+    bodyText.includes(`${TOTAL_QUESTIONS_LABEL} ${total} \u9898`)
+  ), `total question count ${total}`)
+);
+
 const main = async () => {
   const snapshot = await fetchDueReviewSnapshot();
   const browser = await chromium.launch({ headless: true });
@@ -154,6 +163,7 @@ const main = async () => {
   const consoleErrors = [];
   const validationResponses = [];
   let startPayload = null;
+  const morePayloads = [];
 
   collectConsoleErrors(page, consoleErrors);
   page.on('response', async (response) => {
@@ -161,6 +171,10 @@ const main = async () => {
 
     if (/\/api\/learn\/[^/]+\/start$/.test(url)) {
       startPayload = await response.json();
+    }
+
+    if (/\/api\/learn\/[^/]+\/more$/.test(url)) {
+      morePayloads.push(await response.json());
     }
 
     if (url.endsWith('/api/lists/validate-answer')) {
@@ -218,6 +232,18 @@ const main = async () => {
     const fillBlankIndex = startPayload.exercises.findIndex((exercise) => exercise.type === 'fill_blank');
     ensure(fillBlankIndex >= 0, 'Due-review session did not contain any fill_blank exercise for AI validation');
 
+    const targetExercise = startPayload.exercises[fillBlankIndex];
+    ensure(
+      !containsCjk(targetExercise.question),
+      `Expected due-review question text to be in Spanish, got: ${targetExercise.question}`
+    );
+
+    await waitForTotalQuestionCount(page, 10, REVIEW_TIMEOUT_MS);
+    ensure(
+      morePayloads.length >= 1 && (morePayloads[0].exercises?.length || 0) > 0,
+      'Expected the due-review page to auto-load questions 6-10 while question 1 is active'
+    );
+
     const submitButton = page.getByRole('button', { name: SUBMIT_FOR_AUDIT_LABEL });
 
     for (let exerciseIndex = 0; exerciseIndex < fillBlankIndex; exerciseIndex += 1) {
@@ -225,19 +251,18 @@ const main = async () => {
       await answerExercise(page, exercise, { answerCorrectly: true });
       await submitButton.click();
       await waitForAuditCounts(page, {
-        submitted: `${exerciseIndex + 1}/${startPayload.exercises.length}`,
+        submitted: `${exerciseIndex + 1}/10`,
         resolved: `${exerciseIndex + 1}`,
         pending: '0',
         incorrect: '0'
       }, REVIEW_TIMEOUT_MS);
     }
 
-    const targetExercise = startPayload.exercises[fillBlankIndex];
     await answerExercise(page, targetExercise, { answerCorrectly: false });
     await submitButton.click();
 
     await waitForAuditCounts(page, {
-      submitted: `${fillBlankIndex + 1}/${startPayload.exercises.length}`,
+      submitted: `${fillBlankIndex + 1}/10`,
       resolved: `${fillBlankIndex}`,
       pending: '1',
       incorrect: '0'
@@ -256,11 +281,18 @@ const main = async () => {
     );
 
     await waitForAuditCounts(page, {
-      submitted: `${fillBlankIndex + 1}/${startPayload.exercises.length}`,
+      submitted: `${fillBlankIndex + 1}/10`,
       resolved: `${fillBlankIndex + 1}`,
       pending: '0',
       incorrect: '1'
     }, REVIEW_TIMEOUT_MS);
+
+    await page.getByRole('button', { name: '6', exact: true }).click();
+    await waitForTotalQuestionCount(page, 15, REVIEW_TIMEOUT_MS);
+    ensure(
+      morePayloads.length >= 2 && (morePayloads[1].exercises?.length || 0) > 0,
+      'Expected the due-review page to auto-load questions 11-15 when question 6 becomes active'
+    );
 
     if (consoleErrors.length > 0) {
       throw new Error(`Console errors detected:\n${consoleErrors.join('\n')}`);
@@ -277,8 +309,13 @@ const main = async () => {
         index: fillBlankIndex,
         type: targetExercise.type,
         word: targetExercise.word,
-        correctAnswer: targetExercise.correctAnswer
+        correctAnswer: targetExercise.correctAnswer,
+        question: targetExercise.question
       },
+      autoLoadedBatches: morePayloads.map((payload, index) => ({
+        batch: index + 1,
+        exerciseCount: payload.exercises?.length || 0
+      })),
       validationResponse,
       finalUrl: page.url()
     }, null, 2));

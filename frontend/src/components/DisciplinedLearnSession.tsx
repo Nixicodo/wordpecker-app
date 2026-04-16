@@ -26,6 +26,7 @@ import { apiService } from '../services/api';
 import { validateAnswer } from '../utils/answerValidation';
 import { recommendReviewRating } from '../utils/reviewRating';
 import { resolveQuestionExposureWords } from '../utils/questionExposure';
+import { BufferedBatchQueue } from '../utils/bufferedBatchQueue';
 
 type AuditState = {
   answer: string;
@@ -128,6 +129,8 @@ export const DisciplinedLearnSession = ({
   const isMountedRef = useRef(true);
   const questionStartedAtRef = useRef(Date.now());
   const validationQueueRef = useRef<Promise<void>>(Promise.resolve());
+  const bufferedExercisesRef = useRef<BufferedBatchQueue<Exercise> | null>(null);
+  const autoAppendWindowSizeRef = useRef(Math.max(1, initialExercises.length));
 
   const [exercises, setExercises] = useState(initialExercises);
   const [wordSources, setWordSources] = useState(initialWordSources);
@@ -136,6 +139,7 @@ export const DisciplinedLearnSession = ({
   const [isSaving, setIsSaving] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMoreExercises, setHasMoreExercises] = useState(true);
+  const [autoLoadError, setAutoLoadError] = useState('');
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -165,11 +169,113 @@ export const DisciplinedLearnSession = ({
     }
   }, [auditStates, currentIndex]);
 
+  const syncHasMoreExercises = useCallback(() => {
+    const queue = bufferedExercisesRef.current;
+    setHasMoreExercises(queue ? queue.hasBufferedBatches() || !queue.isExhausted() : false);
+  }, []);
+
+  const fetchMoreExercises = useCallback(async (excludeWordIds: string[]): Promise<Exercise[] | null> => {
+    try {
+      const response = await apiService.getExercises(list.id, {
+        excludeWordIds
+      });
+
+      if (response?.wordSources) {
+        setWordSources((previous) => ({ ...previous, ...response.wordSources }));
+      }
+
+      return response?.exercises ?? null;
+    } catch (error) {
+      if (isNoMoreBatchError(error)) {
+        return null;
+      }
+
+      throw error;
+    }
+  }, [list.id]);
+
+  useEffect(() => {
+    const queue = new BufferedBatchQueue<Exercise>({
+      fetchBatch: fetchMoreExercises,
+      collectIds: collectSeenWordIds,
+      bufferSize: 1,
+      onStateChange: syncHasMoreExercises
+    });
+
+    bufferedExercisesRef.current = queue;
+    queue.ensureBuffered(initialExercises);
+    syncHasMoreExercises();
+
+    return () => {
+      queue.dispose();
+      bufferedExercisesRef.current = null;
+    };
+  }, [fetchMoreExercises, initialExercises, syncHasMoreExercises]);
+
   const updateAuditState = useCallback((index: number, updater: (previous: AuditState) => AuditState) => {
     setAuditStates((previous) => previous.map((state, stateIndex) => (
       stateIndex === index ? updater(state) : state
     )));
   }, []);
+
+  const appendBufferedExercises = useCallback(async (
+    options?: { focusFirstNewQuestion?: boolean; clearAutoLoadError?: boolean }
+  ): Promise<boolean> => {
+    const queue = bufferedExercisesRef.current;
+    if (!queue || isLoadingMore) {
+      return false;
+    }
+
+    const focusFirstNewQuestion = options?.focusFirstNewQuestion ?? false;
+    const clearAutoLoadError = options?.clearAutoLoadError ?? false;
+
+    if (clearAutoLoadError) {
+      setAutoLoadError('');
+    }
+
+    try {
+      setIsLoadingMore(true);
+      const nextExercises = await queue.consumeNext();
+
+      if (!nextExercises?.length) {
+        syncHasMoreExercises();
+        return false;
+      }
+
+      let nextQuestionIndex = -1;
+      let updatedExercises: Exercise[] = [];
+
+      setExercises((previous) => {
+        nextQuestionIndex = previous.length;
+        updatedExercises = [...previous, ...nextExercises];
+        return updatedExercises;
+      });
+
+      queue.ensureBuffered(updatedExercises);
+      setAutoLoadError('');
+
+      if (focusFirstNewQuestion && nextQuestionIndex >= 0) {
+        setCurrentIndex(nextQuestionIndex);
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Failed to load more disciplined exercises:', error);
+      const message = getErrorMessage(error, '后续复习题加载失败，请稍后重试。');
+      setAutoLoadError(message);
+      toast({
+        title: '加载更多复习题失败',
+        description: message,
+        status: 'error',
+        duration: 4000,
+        isClosable: true
+      });
+      return false;
+    } finally {
+      setIsLoadingMore(false);
+      syncHasMoreExercises();
+    }
+  }, [isLoadingMore, syncHasMoreExercises, toast]);
 
   const markIncorrectQuestionViewed = useCallback((index: number) => {
     updateAuditState(index, (previous) => (
@@ -344,45 +450,24 @@ export const DisciplinedLearnSession = ({
   };
 
   const loadMoreExercises = async () => {
-    try {
-      setIsLoadingMore(true);
-      const response = await apiService.getExercises(list.id, {
-        excludeWordIds: collectSeenWordIds(exercises)
-      });
-
-      if (!response.exercises.length) {
-        setHasMoreExercises(false);
-        return;
-      }
-
-      setWordSources((previous) => ({ ...previous, ...(response.wordSources || {}) }));
-      setExercises((previous) => [...previous, ...response.exercises]);
-      setCurrentIndex(exercises.length);
-    } catch (error) {
-      if (isNoMoreBatchError(error)) {
-        setHasMoreExercises(false);
-        toast({
-          title: '当前 due 已经全部拉取完',
-          description: '没有更多待复习题目了。',
-          status: 'info',
-          duration: 3000,
-          isClosable: true
-        });
-        return;
-      }
-
-      console.error('Failed to load more disciplined exercises:', error);
-      toast({
-        title: '加载更多复习题失败',
-        description: getErrorMessage(error, '请稍后重试。'),
-        status: 'error',
-        duration: 4000,
-        isClosable: true
-      });
-    } finally {
-      setIsLoadingMore(false);
-    }
+    await appendBufferedExercises({
+      focusFirstNewQuestion: true,
+      clearAutoLoadError: true
+    });
   };
+
+  useEffect(() => {
+    if (isLoadingMore || !hasMoreExercises || autoLoadError) {
+      return;
+    }
+
+    const thresholdIndex = Math.max(0, exercises.length - autoAppendWindowSizeRef.current);
+    if (currentIndex < thresholdIndex) {
+      return;
+    }
+
+    void appendBufferedExercises();
+  }, [appendBufferedExercises, autoLoadError, currentIndex, exercises.length, hasMoreExercises, isLoadingMore]);
 
   const finalizeSession = async () => {
     if (pendingCount > 0 || failedCount > 0 || isSaving) {
@@ -407,7 +492,7 @@ export const DisciplinedLearnSession = ({
 
       toast({
         title: '纪律化复习已结算',
-        description: `已写回 ${results.length} 条复习结果到原始词树。`,
+        description: `已将 ${results.length} 条复习结果写回原始词树。`,
         status: 'success',
         duration: 3000,
         isClosable: true
@@ -469,7 +554,7 @@ export const DisciplinedLearnSession = ({
             学习中：{list.name}
           </Text>
           <Text mt={2} color="gray.300" lineHeight="1.8">
-            这里仅保留强证据题型。每次提交后先进入 AI 审核，审核完成后才会进入正式结算。
+            这里只保留强证据题型。每次提交后先进入 AI 审核，审核完成后才会进入正式结算。
           </Text>
           <HStack spacing={3} mt={3} flexWrap="wrap">
             <Badge colorScheme="orange" px={3} py={1} borderRadius="full">
@@ -484,6 +569,16 @@ export const DisciplinedLearnSession = ({
             <Badge colorScheme={incorrectCount > 0 ? 'red' : 'gray'} px={3} py={1} borderRadius="full">
               错题 {incorrectCount}
             </Badge>
+            {isLoadingMore && (
+              <Badge colorScheme="purple" px={3} py={1} borderRadius="full">
+                正在预加载后续题目
+              </Badge>
+            )}
+            {autoLoadError && (
+              <Badge colorScheme="red" variant="subtle" px={3} py={1} borderRadius="full">
+                后续题加载失败
+              </Badge>
+            )}
           </HStack>
         </Box>
 
@@ -554,13 +649,13 @@ export const DisciplinedLearnSession = ({
                     {hasMoreExercises && (
                       <Button
                         variant="outline"
-                        colorScheme="orange"
+                        colorScheme={autoLoadError ? 'red' : 'orange'}
                         size="lg"
                         onClick={loadMoreExercises}
                         isLoading={isLoadingMore}
                         loadingText="正在加载"
                       >
-                        继续加载下一组复习
+                        {autoLoadError ? '重试加载后续复习' : '继续加载下一组复习'}
                       </Button>
                     )}
                   </>
@@ -627,11 +722,18 @@ export const DisciplinedLearnSession = ({
           )}
         </Box>
 
+        {autoLoadError && (
+          <Alert status="warning" borderRadius="xl">
+            <AlertIcon />
+            <Text>{autoLoadError}</Text>
+          </Alert>
+        )}
+
         {failedCount > 0 && allSubmitted && (
           <Alert status="warning" borderRadius="xl">
             <AlertIcon />
             <Text>
-              还有 {failedCount} 题处于“判题失败”状态，必须重试完才能结算本轮 due review。
+              还有 {failedCount} 题处于“判题失败”状态，必须重试完成后才能结算本轮 due review。
             </Text>
           </Alert>
         )}
@@ -639,7 +741,7 @@ export const DisciplinedLearnSession = ({
         {!hasMoreExercises && allSubmitted && pendingCount === 0 && failedCount === 0 && (
           <HStack color="gray.400" spacing={2} justify="center">
             <WarningIcon />
-            <Text>当前待复习队列已经拉取完，没有更多题目可继续加载。</Text>
+            <Text>当前待复习队列已经拉取完毕，没有更多题目可继续加载。</Text>
           </HStack>
         )}
       </VStack>
