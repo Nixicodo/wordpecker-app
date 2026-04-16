@@ -46,6 +46,7 @@ type AuditState = {
   syncStatus: 'idle' | 'syncing' | 'synced' | 'failed';
   syncError: string;
   syncedSignature: string;
+  validationRetryCount: number;
 };
 
 const createAuditState = (): AuditState => ({
@@ -66,11 +67,19 @@ const createAuditState = (): AuditState => ({
   validationError: '',
   syncStatus: 'idle',
   syncError: '',
-  syncedSignature: ''
+  syncedSignature: '',
+  validationRetryCount: 0
 });
 
 const createSettlementKey = () => (
   globalThis.crypto?.randomUUID?.() || `settlement-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
+);
+
+const INITIAL_VALIDATION_RETRY_DELAY_MS = 2000;
+const MAX_VALIDATION_RETRY_DELAY_MS = 30000;
+
+const getValidationRetryDelayMs = (retryCount: number) => (
+  Math.min(MAX_VALIDATION_RETRY_DELAY_MS, INITIAL_VALIDATION_RETRY_DELAY_MS * (2 ** Math.max(0, retryCount - 1)))
 );
 
 const buildSettlementPayload = (state: AuditState): ReviewSubmission | null => (
@@ -157,7 +166,11 @@ export const DisciplinedLearnSession = ({
   const isMountedRef = useRef(true);
   const questionStartedAtRef = useRef(Date.now());
   const auditStatesRef = useRef<AuditState[]>(initialExercises.map(() => createAuditState()));
+  const runValidationRef = useRef<(exerciseIndex: number, answer: string, usedHint: boolean, responseTimeMs: number) => Promise<void>>(
+    async () => undefined
+  );
   const validationQueueRef = useRef<Promise<void>>(Promise.resolve());
+  const validationRetryTimeoutsRef = useRef(new Map<number, ReturnType<typeof setTimeout>>());
   const settlementQueueRef = useRef<Promise<void>>(Promise.resolve());
   const queuedSettlementIndexesRef = useRef(new Set<number>());
   const syncingSettlementIndexesRef = useRef(new Set<number>());
@@ -176,9 +189,12 @@ export const DisciplinedLearnSession = ({
 
   useEffect(() => {
     isMountedRef.current = true;
+    const validationRetryTimeouts = validationRetryTimeoutsRef.current;
 
     return () => {
       isMountedRef.current = false;
+      validationRetryTimeouts.forEach((timeoutId) => clearTimeout(timeoutId));
+      validationRetryTimeouts.clear();
     };
   }, []);
 
@@ -238,6 +254,14 @@ export const DisciplinedLearnSession = ({
     setAuditStates((previous) => previous.map((state, stateIndex) => (
       stateIndex === index ? updater(state) : state
     )));
+  }, []);
+
+  const clearValidationRetry = useCallback((index: number) => {
+    const timeoutId = validationRetryTimeoutsRef.current.get(index);
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      validationRetryTimeoutsRef.current.delete(index);
+    }
   }, []);
 
   const shouldSyncAuditState = useCallback((state: AuditState) => {
@@ -413,33 +437,52 @@ export const DisciplinedLearnSession = ({
     return -1;
   }, [auditStates]);
 
-  const currentState = auditStates[currentIndex] || createAuditState();
-  const currentExercise = exercises[currentIndex];
+  const queueValidation = useCallback((
+    exerciseIndex: number,
+    answer: string,
+    usedHint: boolean,
+    responseTimeMs: number
+  ) => {
+    validationQueueRef.current = validationQueueRef.current
+      .catch(() => undefined)
+      .then(() => runValidationRef.current(exerciseIndex, answer, usedHint, responseTimeMs));
+  }, []);
 
-  const timelineItems = useMemo(() => auditStates.map((state) => ({
-    status: state.status,
-    viewed: state.errorViewed
-  })), [auditStates]);
+  const scheduleValidationRetry = useCallback((
+    exerciseIndex: number,
+    answer: string,
+    usedHint: boolean,
+    responseTimeMs: number,
+    retryCount: number
+  ) => {
+    clearValidationRetry(exerciseIndex);
+    const retryDelayMs = getValidationRetryDelayMs(retryCount);
+    const timeoutId = setTimeout(() => {
+      validationRetryTimeoutsRef.current.delete(exerciseIndex);
+      if (!isMountedRef.current) {
+        return;
+      }
 
-  const submittedCount = auditStates.filter((state) => state.submitted).length;
-  const pendingCount = auditStates.filter((state) => state.status === 'pending').length;
-  const failedCount = auditStates.filter((state) => state.status === 'failed').length;
-  const incorrectCount = auditStates.filter((state) => state.status === 'incorrect').length;
-  const resolvedCount = auditStates.filter((state) => state.status === 'correct' || state.status === 'incorrect').length;
-  const syncedCount = auditStates.filter((state) => (
-    (state.status === 'correct' || state.status === 'incorrect') &&
-    !shouldSyncAuditState(state) &&
-    state.syncStatus === 'synced'
-  )).length;
-  const settlementSyncingCount = auditStates.filter((state) => state.syncStatus === 'syncing').length;
-  const settlementFailedCount = auditStates.filter((state) => state.syncStatus === 'failed').length;
-  const allSubmitted = auditStates.length > 0 && auditStates.every((state) => state.submitted);
-  const progress = exercises.length ? (submittedCount / exercises.length) * 100 : 0;
+      updateAuditState(exerciseIndex, (previous) => {
+        if (!previous.submitted || previous.status === 'correct' || previous.status === 'incorrect') {
+          return previous;
+        }
 
-  const resolvedExercise = currentExercise ? {
-    ...currentExercise,
-    exposedWords: resolveQuestionExposureWords(currentExercise, listWords)
-  } : null;
+        return {
+          ...previous,
+          status: 'pending',
+          validationError: previous.validationRetryCount > 0
+            ? `AI 判题已失败 ${previous.validationRetryCount} 次，正在自动重试……`
+            : ''
+        };
+      });
+
+      queueValidation(exerciseIndex, answer, usedHint, responseTimeMs);
+    }, retryDelayMs);
+
+    validationRetryTimeoutsRef.current.set(exerciseIndex, timeoutId);
+    return retryDelayMs;
+  }, [clearValidationRetry, queueValidation, updateAuditState]);
 
   const runValidation = useCallback(async (
     exerciseIndex: number,
@@ -483,6 +526,8 @@ export const DisciplinedLearnSession = ({
         return;
       }
 
+      clearValidationRetry(exerciseIndex);
+
       updateAuditState(exerciseIndex, (previous) => ({
         ...previous,
         status: isValid ? 'correct' : 'incorrect',
@@ -495,7 +540,8 @@ export const DisciplinedLearnSession = ({
         errorViewed: previous.errorViewed,
         syncStatus: 'idle',
         syncError: '',
-        syncedSignature: ''
+        syncedSignature: '',
+        validationRetryCount: 0
       }));
     } catch (error) {
       console.error('Async validation failed:', error);
@@ -503,28 +549,32 @@ export const DisciplinedLearnSession = ({
         return;
       }
 
+      const retryCount = (submittedState?.validationRetryCount ?? 0) + 1;
+      const retryDelayMs = scheduleValidationRetry(
+        exerciseIndex,
+        answer,
+        usedHint,
+        responseTimeMs,
+        retryCount
+      );
+      const retryDelaySeconds = Math.max(1, Math.ceil(retryDelayMs / 1000));
+
       updateAuditState(exerciseIndex, (previous) => ({
         ...previous,
         status: 'failed',
         correctness: null,
         review: undefined,
-        validationError: getErrorMessage(error, 'AI 判题失败，请重试当前题目。'),
+        validationError: `${getErrorMessage(error, 'AI 判题失败。')} 将在 ${retryDelaySeconds} 秒后自动重试（第 ${retryCount} 次）。`,
         syncStatus: 'idle',
         syncError: '',
-        syncedSignature: ''
+        syncedSignature: '',
+        validationRetryCount: retryCount
       }));
     }
-  }, [exercises, list.context, updateAuditState, wordSources]);
+  }, [clearValidationRetry, exercises, list.context, scheduleValidationRetry, updateAuditState, wordSources]);
 
-  const enqueueValidation = useCallback((
-    exerciseIndex: number,
-    answer: string,
-    usedHint: boolean,
-    responseTimeMs: number
-  ) => {
-    validationQueueRef.current = validationQueueRef.current
-      .catch(() => undefined)
-      .then(() => runValidation(exerciseIndex, answer, usedHint, responseTimeMs));
+  useEffect(() => {
+    runValidationRef.current = runValidation;
   }, [runValidation]);
 
   const handleSubmit = async () => {
@@ -549,10 +599,12 @@ export const DisciplinedLearnSession = ({
       answeredAt,
       syncStatus: 'idle',
       syncError: '',
-      syncedSignature: ''
+      syncedSignature: '',
+      validationRetryCount: 0
     }));
 
-    enqueueValidation(currentIndex, answer, usedHint, responseTimeMs);
+    clearValidationRetry(currentIndex);
+    queueValidation(currentIndex, answer, usedHint, responseTimeMs);
 
     const nextUnsubmittedIndex = findFirstIndex((state) => !state.submitted, currentIndex + 1);
     if (nextUnsubmittedIndex >= 0) {
@@ -565,19 +617,52 @@ export const DisciplinedLearnSession = ({
       return;
     }
 
+    clearValidationRetry(currentIndex);
     updateAuditState(currentIndex, (previous) => ({
       ...previous,
       status: 'pending',
       validationError: ''
     }));
 
-    enqueueValidation(
+    queueValidation(
       currentIndex,
       currentState.answer.trim(),
       currentState.usedHint,
       currentState.responseTimeMs
     );
   };
+
+  const currentState = auditStates[currentIndex] || createAuditState();
+  const currentExercise = exercises[currentIndex];
+
+  const timelineItems = useMemo(() => auditStates.map((state) => ({
+    status: state.status,
+    viewed: state.errorViewed
+  })), [auditStates]);
+
+  const submittedCount = auditStates.filter((state) => state.submitted).length;
+  const pendingCount = auditStates.filter((state) => state.status === 'pending').length;
+  const failedCount = auditStates.filter((state) => state.status === 'failed').length;
+  const incorrectCount = auditStates.filter((state) => state.status === 'incorrect').length;
+  const retryingCount = auditStates.filter((state) => (
+    state.validationRetryCount > 0 &&
+    (state.status === 'pending' || state.status === 'failed')
+  )).length;
+  const resolvedCount = auditStates.filter((state) => state.status === 'correct' || state.status === 'incorrect').length;
+  const syncedCount = auditStates.filter((state) => (
+    (state.status === 'correct' || state.status === 'incorrect') &&
+    !shouldSyncAuditState(state) &&
+    state.syncStatus === 'synced'
+  )).length;
+  const settlementSyncingCount = auditStates.filter((state) => state.syncStatus === 'syncing').length;
+  const settlementFailedCount = auditStates.filter((state) => state.syncStatus === 'failed').length;
+  const allSubmitted = auditStates.length > 0 && auditStates.every((state) => state.submitted);
+  const progress = exercises.length ? (submittedCount / exercises.length) * 100 : 0;
+
+  const resolvedExercise = currentExercise ? {
+    ...currentExercise,
+    exposedWords: resolveQuestionExposureWords(currentExercise, listWords)
+  } : null;
 
   const loadMoreExercises = async () => {
     await appendBufferedExercises({
@@ -777,6 +862,11 @@ export const DisciplinedLearnSession = ({
             <Badge colorScheme="blue" px={3} py={1} borderRadius="full">
               审核中 {pendingCount}
             </Badge>
+            {retryingCount > 0 && (
+              <Badge colorScheme="orange" variant="subtle" px={3} py={1} borderRadius="full">
+                自动重试中 {retryingCount}
+              </Badge>
+            )}
             <Badge colorScheme="teal" px={3} py={1} borderRadius="full">
               已后台结算 {syncedCount}
             </Badge>
@@ -891,7 +981,9 @@ export const DisciplinedLearnSession = ({
           {currentState.status === 'pending' && (
             <Alert status="info" borderRadius="lg" mt={6}>
               <AlertIcon />
-              <Text>这题已经提交，AI 正在做语义审核。你可以先切到别的题继续复习。</Text>
+              <Text>
+                {currentState.validationError || '这题已经提交，AI 正在做语义审核。你可以先切到别的题继续复习。'}
+              </Text>
             </Alert>
           )}
 
