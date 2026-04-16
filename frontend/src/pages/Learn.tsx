@@ -291,6 +291,7 @@ export const Learn = () => {
   useEffect(() => {
     const initLearn = async () => {
       if (!id || hasInitializedRef.current) return;
+      hasInitializedRef.current = true;
 
       try {
         setIsLoading(true);
@@ -310,11 +311,11 @@ export const Learn = () => {
           setSessionProgress(service.getCurrentProgress());
           questionStartedAtRef.current = Date.now();
           bufferedExercisesRef.current?.ensureBuffered(response.exercises);
-          hasInitializedRef.current = true;
         } else {
           throw new Error('Invalid response from server');
         }
       } catch (error: unknown) {
+        hasInitializedRef.current = false;
         console.error('Error initializing learning session:', error);
         toast({
           title: UI.startErrorTitle,

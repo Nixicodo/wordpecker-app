@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowBackIcon, WarningIcon } from '@chakra-ui/icons';
+import { ArrowBackIcon, CloseIcon, WarningIcon } from '@chakra-ui/icons';
 import { Exercise, ReviewSubmission, ReviewRating, Word, WordList, WordSourceInfo } from '../types';
 import { QuestionAnsweredSupplement, QuestionRenderer } from './QuestionRenderer';
 import { QuestionConfidencePanel } from './QuestionConfidencePanel';
@@ -130,7 +130,9 @@ export const DisciplinedLearnSession = ({
   const questionStartedAtRef = useRef(Date.now());
   const validationQueueRef = useRef<Promise<void>>(Promise.resolve());
   const bufferedExercisesRef = useRef<BufferedBatchQueue<Exercise> | null>(null);
-  const autoAppendWindowSizeRef = useRef(Math.max(1, initialExercises.length));
+  const isAppendingExercisesRef = useRef(false);
+  const nextAutoAppendIndexRef = useRef(0);
+  const inFlightAutoAppendIndexRef = useRef<number | null>(null);
 
   const [exercises, setExercises] = useState(initialExercises);
   const [wordSources, setWordSources] = useState(initialWordSources);
@@ -203,6 +205,9 @@ export const DisciplinedLearnSession = ({
     });
 
     bufferedExercisesRef.current = queue;
+    nextAutoAppendIndexRef.current = 0;
+    inFlightAutoAppendIndexRef.current = null;
+    isAppendingExercisesRef.current = false;
     queue.ensureBuffered(initialExercises);
     syncHasMoreExercises();
 
@@ -222,7 +227,7 @@ export const DisciplinedLearnSession = ({
     options?: { focusFirstNewQuestion?: boolean; clearAutoLoadError?: boolean }
   ): Promise<boolean> => {
     const queue = bufferedExercisesRef.current;
-    if (!queue || isLoadingMore) {
+    if (!queue || isAppendingExercisesRef.current) {
       return false;
     }
 
@@ -234,6 +239,7 @@ export const DisciplinedLearnSession = ({
     }
 
     try {
+      isAppendingExercisesRef.current = true;
       setIsLoadingMore(true);
       const nextExercises = await queue.consumeNext();
 
@@ -250,6 +256,10 @@ export const DisciplinedLearnSession = ({
         updatedExercises = [...previous, ...nextExercises];
         return updatedExercises;
       });
+
+      if (nextQuestionIndex >= 0) {
+        nextAutoAppendIndexRef.current = nextQuestionIndex;
+      }
 
       queue.ensureBuffered(updatedExercises);
       setAutoLoadError('');
@@ -272,10 +282,11 @@ export const DisciplinedLearnSession = ({
       });
       return false;
     } finally {
+      isAppendingExercisesRef.current = false;
       setIsLoadingMore(false);
       syncHasMoreExercises();
     }
-  }, [isLoadingMore, syncHasMoreExercises, toast]);
+  }, [syncHasMoreExercises, toast]);
 
   const markIncorrectQuestionViewed = useCallback((index: number) => {
     updateAuditState(index, (previous) => (
@@ -461,12 +472,18 @@ export const DisciplinedLearnSession = ({
       return;
     }
 
-    const thresholdIndex = Math.max(0, exercises.length - autoAppendWindowSizeRef.current);
-    if (currentIndex < thresholdIndex) {
+    const targetIndex = nextAutoAppendIndexRef.current;
+    if (currentIndex !== targetIndex || inFlightAutoAppendIndexRef.current === targetIndex) {
       return;
     }
 
-    void appendBufferedExercises();
+    inFlightAutoAppendIndexRef.current = targetIndex;
+    void appendBufferedExercises()
+      .finally(() => {
+        if (inFlightAutoAppendIndexRef.current === targetIndex) {
+          inFlightAutoAppendIndexRef.current = null;
+        }
+      });
   }, [appendBufferedExercises, autoLoadError, currentIndex, exercises.length, hasMoreExercises, isLoadingMore]);
 
   const finalizeSession = async () => {
@@ -535,12 +552,19 @@ export const DisciplinedLearnSession = ({
 
   return (
     <Box p={4}>
-      <Flex mb={4}>
+      <Flex mb={4} justify="space-between">
         <IconButton
           aria-label="返回上一页"
           icon={<ArrowBackIcon />}
           variant="ghost"
           onClick={() => navigate(-1)}
+          size="lg"
+        />
+        <IconButton
+          aria-label="退出复习"
+          icon={<CloseIcon />}
+          variant="ghost"
+          onClick={() => navigate(`/lists/${list.id}`)}
           size="lg"
         />
       </Flex>
