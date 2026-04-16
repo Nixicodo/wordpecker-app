@@ -20,20 +20,6 @@ export const Header = () => {
       <Container maxW="container.xl">
         <Flex h="16" alignItems="center" justifyContent="space-between" gap={6}>
           <Flex gap={4} align="center" flexWrap="wrap">
-            <Link to="/lists">
-              <Button
-                variant="ghost"
-                leftIcon={<Icon as={GiTreeBranch} color="green.500" />}
-                _hover={{ transform: 'translateY(-2px)', color: 'green.500' }}
-                transition="all 0.2s"
-              >
-                <Flex align="center" gap={1}>
-                  <Text>{isZh ? '我的词树' : 'My Trees'}</Text>
-                  <Icon as={FaFeatherAlt} color="#FA8C16" transform="rotate(-45deg)" boxSize={3} ml={-1} mt={-2} />
-                </Flex>
-              </Button>
-            </Link>
-
             <Link to="/reviews">
               <Button
                 variant="ghost"
@@ -47,6 +33,20 @@ export const Header = () => {
                     <EntryBadge label={`${status.dueCount}`} colorScheme="orange" />
                   )}
                 </HStack>
+              </Button>
+            </Link>
+
+            <Link to="/lists">
+              <Button
+                variant="ghost"
+                leftIcon={<Icon as={GiTreeBranch} color="green.500" />}
+                _hover={{ transform: 'translateY(-2px)', color: 'green.500' }}
+                transition="all 0.2s"
+              >
+                <Flex align="center" gap={1}>
+                  <Text>{isZh ? '我的词树' : 'My Trees'}</Text>
+                  <Icon as={FaFeatherAlt} color="#FA8C16" transform="rotate(-45deg)" boxSize={3} ml={-1} mt={-2} />
+                </Flex>
               </Button>
             </Link>
 

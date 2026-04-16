@@ -69,6 +69,7 @@ export class WordAgentService {
       schemaHint: `{"isValid": boolean, "explanation": string | null}`,
       temperature: 0.2,
       maxTokens: 300,
+      timeoutMs: 12000,
     });
   }
 

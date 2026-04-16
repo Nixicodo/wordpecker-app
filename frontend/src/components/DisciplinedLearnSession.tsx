@@ -127,6 +127,7 @@ export const DisciplinedLearnSession = ({
   const toast = useToast();
   const isMountedRef = useRef(true);
   const questionStartedAtRef = useRef(Date.now());
+  const validationQueueRef = useRef<Promise<void>>(Promise.resolve());
 
   const [exercises, setExercises] = useState(initialExercises);
   const [wordSources, setWordSources] = useState(initialWordSources);
@@ -282,6 +283,17 @@ export const DisciplinedLearnSession = ({
     }
   }, [exercises, list.context, updateAuditState, wordSources]);
 
+  const enqueueValidation = useCallback((
+    exerciseIndex: number,
+    answer: string,
+    usedHint: boolean,
+    responseTimeMs: number
+  ) => {
+    validationQueueRef.current = validationQueueRef.current
+      .catch(() => undefined)
+      .then(() => runValidation(exerciseIndex, answer, usedHint, responseTimeMs));
+  }, [runValidation]);
+
   const handleSubmit = async () => {
     if (!currentExercise || currentState.submitted || !currentState.answer.trim()) {
       return;
@@ -300,7 +312,7 @@ export const DisciplinedLearnSession = ({
       validationError: ''
     }));
 
-    void runValidation(currentIndex, answer, usedHint, responseTimeMs);
+    enqueueValidation(currentIndex, answer, usedHint, responseTimeMs);
 
     const nextUnsubmittedIndex = findFirstIndex((state) => !state.submitted, currentIndex + 1);
     if (nextUnsubmittedIndex >= 0) {
@@ -319,7 +331,7 @@ export const DisciplinedLearnSession = ({
       validationError: ''
     }));
 
-    void runValidation(
+    enqueueValidation(
       currentIndex,
       currentState.answer.trim(),
       currentState.usedHint,
