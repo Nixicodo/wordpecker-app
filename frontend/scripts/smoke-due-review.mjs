@@ -5,12 +5,21 @@ const BACKEND_URL = process.env.SMOKE_BACKEND_URL || 'http://localhost:3000';
 const USER_ID = process.env.SMOKE_USER_ID || 'local-ai-test-user';
 const REVIEW_TIMEOUT_MS = Number(process.env.SMOKE_REVIEW_TIMEOUT_MS || 20000);
 const LEARNING_LABEL_ZH = '\u5b66\u4e60\u4e2d\uff1a';
+const SUBMIT_FOR_AUDIT_LABEL = '\u63d0\u4ea4\u5e76\u8fdb\u5165\u5ba1\u6838';
+const SUBMITTED_LABEL = '\u5df2\u63d0\u4ea4';
+const RESOLVED_LABEL = '\u5df2\u5b8c\u6210\u5ba1\u6838';
+const PENDING_LABEL = '\u5ba1\u6838\u4e2d';
+const INCORRECT_LABEL = '\u9519\u9898';
 
 const ensure = (condition, message) => {
   if (!condition) {
     throw new Error(message);
   }
 };
+
+const sleep = (ms) => new Promise((resolve) => {
+  setTimeout(resolve, ms);
+});
 
 const fetchDueReviewSnapshot = async () => {
   const response = await fetch(`${BACKEND_URL}/api/lists/due-review`, {
@@ -39,50 +48,128 @@ const collectConsoleErrors = (page, sink) => {
 };
 
 const waitForLearningScreen = async (page, timeoutMs) => {
-  const startedAt = Date.now();
-
-  while (Date.now() - startedAt < timeoutMs) {
-    const bodyText = await page.locator('body').innerText();
-    if (bodyText.includes(LEARNING_LABEL_ZH) || bodyText.includes('Learning:')) {
-      return bodyText;
-    }
-    await page.waitForTimeout(500);
-  }
-
-  const finalBodyText = await page.locator('body').innerText();
-  throw new Error(
-    `Learning screen did not finish loading within ${timeoutMs}ms. Current text sample:\n${finalBodyText.slice(0, 800)}`
-  );
+  return waitForBodyText(page, timeoutMs, (bodyText) => (
+    bodyText.includes(LEARNING_LABEL_ZH) || bodyText.includes('Learning:')
+  ), 'learning screen');
 };
 
 const waitForDueReviewSummary = async (page, snapshot, timeoutMs) => {
+  return waitForBodyText(page, timeoutMs, (bodyText) => (
+    bodyText.includes(String(snapshot.dueCount)) && bodyText.includes(String(snapshot.sourceListCount))
+  ), 'due-review summary');
+};
+
+const waitForBodyText = async (page, timeoutMs, predicate, description) => {
   const startedAt = Date.now();
 
   while (Date.now() - startedAt < timeoutMs) {
     const bodyText = await page.locator('body').innerText();
-    const hasDueCount = bodyText.includes(String(snapshot.dueCount));
-    const hasSourceListCount = bodyText.includes(String(snapshot.sourceListCount));
-
-    if (hasDueCount && hasSourceListCount) {
+    if (predicate(bodyText)) {
       return bodyText;
     }
 
-    await page.waitForTimeout(300);
+    await sleep(250);
   }
 
   const finalBodyText = await page.locator('body').innerText();
   throw new Error(
-    `Due-review summary did not finish loading within ${timeoutMs}ms. Current text sample:\n${finalBodyText.slice(0, 800)}`
+    `${description} did not finish loading within ${timeoutMs}ms. Current text sample:\n${finalBodyText.slice(0, 1200)}`
   );
 };
+
+const cleanMatchingText = (text) => (
+  text
+    .replace(/^[A-Za-z]\.\s*/, '')
+    .replace(/^[0-9]+\.\s*/, '')
+    .replace(/^\([A-Za-z]\)\s*/, '')
+    .replace(/^\([0-9]+\)\s*/, '')
+    .replace(/^[A-Za-z]\)\s*/, '')
+    .replace(/^[0-9]+\)\s*/, '')
+    .trim()
+);
+
+const resolveCorrectLabel = (exercise) => {
+  if (!exercise.options || !exercise.optionLabels) {
+    return exercise.correctAnswer;
+  }
+
+  const answerIndex = exercise.options.indexOf(exercise.correctAnswer);
+  ensure(answerIndex >= 0, `Could not find correct answer "${exercise.correctAnswer}" in options`);
+  return exercise.optionLabels[answerIndex];
+};
+
+const answerExercise = async (page, exercise, { answerCorrectly }) => {
+  switch (exercise.type) {
+    case 'fill_blank':
+      await page.locator('input').fill(answerCorrectly ? exercise.correctAnswer : 'definitely_wrong_answer_12345');
+      break;
+    case 'multiple_choice':
+    case 'sentence_completion':
+    case 'true_false': {
+      const correctLabel = resolveCorrectLabel(exercise);
+      const candidateLabels = exercise.optionLabels && exercise.optionLabels.length > 0
+        ? exercise.optionLabels
+        : ['A', 'B'];
+      const selectedLabel = answerCorrectly
+        ? correctLabel
+        : candidateLabels.find((label) => label !== correctLabel);
+
+      ensure(Boolean(selectedLabel), `Could not determine an answer label for ${exercise.type}`);
+      await page.locator(`input[type="radio"][value="${selectedLabel}"]`).check({ force: true });
+      break;
+    }
+    case 'matching': {
+      ensure(Array.isArray(exercise.pairs) && exercise.pairs.length > 0, 'Matching exercise has no pairs');
+      for (const pair of exercise.pairs) {
+        const word = cleanMatchingText(pair.word);
+        const definition = cleanMatchingText(pair.definition);
+        await page.getByRole('button', { name: word, exact: true }).click();
+        await page.getByRole('button', { name: definition, exact: true }).click();
+      }
+      break;
+    }
+    default:
+      throw new Error(`Unsupported exercise type: ${exercise.type}`);
+  }
+};
+
+const waitForAuditCounts = async (page, {
+  submitted,
+  resolved,
+  pending,
+  incorrect
+}, timeoutMs) => (
+  waitForBodyText(page, timeoutMs, (bodyText) => (
+    bodyText.includes(`${SUBMITTED_LABEL} ${submitted}`) &&
+    bodyText.includes(`${RESOLVED_LABEL} ${resolved}`) &&
+    bodyText.includes(`${PENDING_LABEL} ${pending}`) &&
+    bodyText.includes(`${INCORRECT_LABEL} ${incorrect}`)
+  ), `audit counts submitted=${submitted} resolved=${resolved} pending=${pending} incorrect=${incorrect}`)
+);
 
 const main = async () => {
   const snapshot = await fetchDueReviewSnapshot();
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ viewport: { width: 1440, height: 1024 } });
   const consoleErrors = [];
+  const validationResponses = [];
+  let startPayload = null;
 
   collectConsoleErrors(page, consoleErrors);
+  page.on('response', async (response) => {
+    const url = response.url();
+
+    if (/\/api\/learn\/[^/]+\/start$/.test(url)) {
+      startPayload = await response.json();
+    }
+
+    if (url.endsWith('/api/lists/validate-answer')) {
+      validationResponses.push({
+        status: response.status(),
+        body: await response.json()
+      });
+    }
+  });
 
   try {
     await page.goto(`${FRONTEND_URL}/lists`, {
@@ -126,6 +213,55 @@ const main = async () => {
       `Learning screen does not show list name "${snapshot.name}"`
     );
 
+    await waitForBodyText(page, REVIEW_TIMEOUT_MS, () => Boolean(startPayload?.exercises?.length), 'learn start payload');
+
+    const fillBlankIndex = startPayload.exercises.findIndex((exercise) => exercise.type === 'fill_blank');
+    ensure(fillBlankIndex >= 0, 'Due-review session did not contain any fill_blank exercise for AI validation');
+
+    const submitButton = page.getByRole('button', { name: SUBMIT_FOR_AUDIT_LABEL });
+
+    for (let exerciseIndex = 0; exerciseIndex < fillBlankIndex; exerciseIndex += 1) {
+      const exercise = startPayload.exercises[exerciseIndex];
+      await answerExercise(page, exercise, { answerCorrectly: true });
+      await submitButton.click();
+      await waitForAuditCounts(page, {
+        submitted: `${exerciseIndex + 1}/${startPayload.exercises.length}`,
+        resolved: `${exerciseIndex + 1}`,
+        pending: '0',
+        incorrect: '0'
+      }, REVIEW_TIMEOUT_MS);
+    }
+
+    const targetExercise = startPayload.exercises[fillBlankIndex];
+    await answerExercise(page, targetExercise, { answerCorrectly: false });
+    await submitButton.click();
+
+    await waitForAuditCounts(page, {
+      submitted: `${fillBlankIndex + 1}/${startPayload.exercises.length}`,
+      resolved: `${fillBlankIndex}`,
+      pending: '1',
+      incorrect: '0'
+    }, REVIEW_TIMEOUT_MS);
+
+    await waitForBodyText(page, REVIEW_TIMEOUT_MS, () => validationResponses.length > 0, 'AI validation response');
+    const validationResponse = validationResponses.at(-1);
+
+    ensure(
+      validationResponse?.status === 200,
+      `Expected validate-answer to return 200, got ${validationResponse?.status ?? 'unknown'}`
+    );
+    ensure(
+      validationResponse?.body?.isValid === false,
+      `Expected wrong fill_blank answer to be rejected, got ${JSON.stringify(validationResponse?.body)}`
+    );
+
+    await waitForAuditCounts(page, {
+      submitted: `${fillBlankIndex + 1}/${startPayload.exercises.length}`,
+      resolved: `${fillBlankIndex + 1}`,
+      pending: '0',
+      incorrect: '1'
+    }, REVIEW_TIMEOUT_MS);
+
     if (consoleErrors.length > 0) {
       throw new Error(`Console errors detected:\n${consoleErrors.join('\n')}`);
     }
@@ -137,6 +273,13 @@ const main = async () => {
         dueCount: snapshot.dueCount,
         sourceListCount: snapshot.sourceListCount
       },
+      targetExercise: {
+        index: fillBlankIndex,
+        type: targetExercise.type,
+        word: targetExercise.word,
+        correctAnswer: targetExercise.correctAnswer
+      },
+      validationResponse,
       finalUrl: page.url()
     }, null, 2));
   } finally {

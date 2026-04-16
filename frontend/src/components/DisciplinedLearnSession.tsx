@@ -137,8 +137,12 @@ export const DisciplinedLearnSession = ({
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMoreExercises, setHasMoreExercises] = useState(true);
 
-  useEffect(() => () => {
-    isMountedRef.current = false;
+  useEffect(() => {
+    isMountedRef.current = true;
+
+    return () => {
+      isMountedRef.current = false;
+    };
   }, []);
 
   useEffect(() => {
