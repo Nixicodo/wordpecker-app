@@ -12,6 +12,8 @@ const PENDING_LABEL = '\u5ba1\u6838\u4e2d';
 const INCORRECT_LABEL = '\u9519\u9898';
 const TOTAL_QUESTIONS_LABEL = '\u5171';
 const EXIT_REVIEW_LABEL = '\u9000\u51fa\u590d\u4e60';
+const BACKGROUND_SETTLED_LABEL = '\u8fd9\u9053\u9898\u7684\u590d\u4e60\u6570\u636e\u5df2\u7ecf\u540e\u53f0\u7ed3\u7b97\u5b8c\u6210';
+const HARD_LABEL = 'Hard';
 
 const ensure = (condition, message) => {
   if (!condition) {
@@ -62,6 +64,43 @@ const fetchDueReviewSnapshot = async () => {
   }
 
   return response.json();
+};
+
+const fetchJson = async (path) => {
+  const response = await fetch(`${BACKEND_URL}${path}`, {
+    headers: {
+      'user-id': USER_ID
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${path}: ${response.status} ${response.statusText}`);
+  }
+
+  return response.json();
+};
+
+const getWordContext = async (wordId, listId) => {
+  const detail = await fetchJson(`/api/lists/word/${wordId}`);
+  const context = detail.contexts.find((item) => item.listId === listId);
+  ensure(Boolean(context), `Expected word ${wordId} to have context in list ${listId}`);
+  return context;
+};
+
+const waitForWordContext = async (wordId, listId, predicate, description, timeoutMs) => {
+  const startedAt = Date.now();
+
+  while (Date.now() - startedAt < timeoutMs) {
+    const context = await getWordContext(wordId, listId);
+    if (predicate(context)) {
+      return context;
+    }
+
+    await sleep(250);
+  }
+
+  const finalContext = await getWordContext(wordId, listId);
+  throw new Error(`${description} did not finish within ${timeoutMs}ms. Final context: ${JSON.stringify(finalContext)}`);
 };
 
 const collectConsoleErrors = (page, sink) => {
@@ -298,17 +337,72 @@ const main = async () => {
       }, REVIEW_TIMEOUT_MS);
     }
 
-    await answerExercise(page, targetExercise, { answerCorrectly: false });
+    const sourceListId = startPayload.wordSources?.[targetExercise.wordId]?.sourceListId;
+    ensure(Boolean(sourceListId), `Expected target exercise word ${targetExercise.wordId} to include a source list`);
+
+    const beforeSettlementContext = await getWordContext(targetExercise.wordId, sourceListId);
+
+    await answerExercise(page, targetExercise, { answerCorrectly: true });
     await submitButton.click();
 
     await waitForAuditCounts(page, {
       submitted: `${fillBlankIndex + 1}/10`,
-      resolved: `${fillBlankIndex}`,
+      resolved: `${fillBlankIndex + 1}`,
+      pending: '0',
+      incorrect: '0'
+    }, REVIEW_TIMEOUT_MS);
+
+    await page.getByRole('button', { name: `第 ${fillBlankIndex + 1} 题`, exact: true }).click();
+    await waitForBodyText(page, REVIEW_TIMEOUT_MS, (bodyText) => bodyText.includes(BACKGROUND_SETTLED_LABEL), 'background settlement success');
+    const settledContext = await waitForWordContext(
+      targetExercise.wordId,
+      sourceListId,
+      (context) => context.reviewCount === beforeSettlementContext.reviewCount + 1,
+      'background review settlement',
+      REVIEW_TIMEOUT_MS
+    );
+
+    await page.getByRole('button', { name: HARD_LABEL }).click();
+
+    const reSettledContext = await waitForWordContext(
+      targetExercise.wordId,
+      sourceListId,
+      (context) => (
+        context.reviewCount === settledContext.reviewCount &&
+        (context.dueAt !== settledContext.dueAt || context.difficulty !== settledContext.difficulty)
+      ),
+      'rating re-settlement',
+      REVIEW_TIMEOUT_MS
+    );
+
+    const invalidExerciseIndex = fillBlankIndex + 1;
+    ensure(
+      invalidExerciseIndex < startPayload.exercises.length,
+      'Due-review session does not have a second exercise to validate an incorrect answer'
+    );
+
+    const invalidExercise = startPayload.exercises[invalidExerciseIndex];
+    await page.getByRole('button', { name: `第 ${invalidExerciseIndex + 1} 题`, exact: true }).click();
+    await answerExercise(page, invalidExercise, { answerCorrectly: false });
+    await submitButton.click();
+
+    ensure(
+      settledContext.reviewCount === beforeSettlementContext.reviewCount + 1,
+      `Expected background settlement to increment reviewCount from ${beforeSettlementContext.reviewCount} to ${beforeSettlementContext.reviewCount + 1}, got ${settledContext.reviewCount}`
+    );
+    ensure(
+      reSettledContext.reviewCount === settledContext.reviewCount,
+      `Expected re-settlement to keep reviewCount at ${settledContext.reviewCount}, got ${reSettledContext.reviewCount}`
+    );
+
+    await waitForAuditCounts(page, {
+      submitted: `${invalidExerciseIndex + 1}/10`,
+      resolved: `${invalidExerciseIndex}`,
       pending: '1',
       incorrect: '0'
     }, REVIEW_TIMEOUT_MS);
 
-    await waitForBodyText(page, REVIEW_TIMEOUT_MS, () => validationResponses.length > 0, 'AI validation response');
+    await waitForBodyText(page, REVIEW_TIMEOUT_MS, () => validationResponses.length >= 2, 'AI validation response');
     const validationResponse = validationResponses.at(-1);
 
     ensure(
@@ -321,13 +415,13 @@ const main = async () => {
     );
 
     await waitForAuditCounts(page, {
-      submitted: `${fillBlankIndex + 1}/10`,
-      resolved: `${fillBlankIndex + 1}`,
+      submitted: `${invalidExerciseIndex + 1}/10`,
+      resolved: `${invalidExerciseIndex + 1}`,
       pending: '0',
       incorrect: '1'
     }, REVIEW_TIMEOUT_MS);
 
-    await page.getByRole('button', { name: '6', exact: true }).click();
+    await page.getByRole('button', { name: '第 6 题', exact: true }).click();
     await waitForTotalQuestionCount(page, 15, REVIEW_TIMEOUT_MS);
     ensure(
       distinctMorePayloads.length >= 2 && (distinctMorePayloads[1].exercises?.length || 0) > 0,
@@ -356,6 +450,16 @@ const main = async () => {
         word: targetExercise.word,
         correctAnswer: targetExercise.correctAnswer,
         question: targetExercise.question
+      },
+      backgroundSettlement: {
+        sourceListId,
+        reviewCountBefore: beforeSettlementContext.reviewCount,
+        reviewCountAfter: settledContext.reviewCount,
+        reviewCountAfterRatingChange: reSettledContext.reviewCount,
+        difficultyAfter: settledContext.difficulty,
+        difficultyAfterRatingChange: reSettledContext.difficulty,
+        dueAtAfter: settledContext.dueAt,
+        dueAtAfterRatingChange: reSettledContext.dueAt
       },
       autoLoadedBatches: distinctMorePayloads.map((payload, index) => ({
         batch: index + 1,

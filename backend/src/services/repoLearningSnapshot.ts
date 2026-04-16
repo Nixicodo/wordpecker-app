@@ -67,7 +67,26 @@ type SnapshotReviewLog = {
   correct: boolean;
   responseTimeMs?: number;
   usedHint?: boolean;
+  settlementKey?: string;
   answeredAt: string;
+  stateBefore?: {
+    dueAt: string;
+    lastReviewedAt?: string;
+    stability: number;
+    difficulty: number;
+    scheduledDays: number;
+    elapsedDays: number;
+    reps: number;
+    lapses: number;
+    learningSteps: number;
+    state: number;
+    reviewCount: number;
+    lapseCount: number;
+    consecutiveCorrect: number;
+    consecutiveWrong: number;
+    lastRating?: string;
+    lastSource?: string;
+  };
   createdAt: string;
   updatedAt: string;
 };
@@ -180,7 +199,26 @@ export const persistLearningSnapshot = async () => {
         correct: log.correct,
         responseTimeMs: log.responseTimeMs,
         usedHint: log.usedHint,
+        settlementKey: log.settlementKey,
         answeredAt: serializeDateOrEpoch(log.answeredAt),
+        stateBefore: log.stateBefore ? {
+          dueAt: serializeDateOrEpoch(log.stateBefore.dueAt),
+          lastReviewedAt: serializeDate(log.stateBefore.lastReviewedAt),
+          stability: log.stateBefore.stability,
+          difficulty: log.stateBefore.difficulty,
+          scheduledDays: log.stateBefore.scheduledDays,
+          elapsedDays: log.stateBefore.elapsedDays,
+          reps: log.stateBefore.reps,
+          lapses: log.stateBefore.lapses,
+          learningSteps: log.stateBefore.learningSteps,
+          state: log.stateBefore.state,
+          reviewCount: log.stateBefore.reviewCount,
+          lapseCount: log.stateBefore.lapseCount,
+          consecutiveCorrect: log.stateBefore.consecutiveCorrect,
+          consecutiveWrong: log.stateBefore.consecutiveWrong,
+          lastRating: log.stateBefore.lastRating,
+          lastSource: log.stateBefore.lastSource
+        } : undefined,
         createdAt: serializeDateOrEpoch(log.createdAt),
         updatedAt: serializeDateOrEpoch(log.updatedAt)
       })),
@@ -299,7 +337,26 @@ export const restoreLearningSnapshotIfNeeded = async () => {
       correct: log.correct,
       responseTimeMs: log.responseTimeMs,
       usedHint: log.usedHint,
+      settlementKey: log.settlementKey,
       answeredAt: new Date(log.answeredAt),
+      stateBefore: log.stateBefore ? {
+        dueAt: new Date(log.stateBefore.dueAt),
+        lastReviewedAt: log.stateBefore.lastReviewedAt ? new Date(log.stateBefore.lastReviewedAt) : undefined,
+        stability: log.stateBefore.stability,
+        difficulty: log.stateBefore.difficulty,
+        scheduledDays: log.stateBefore.scheduledDays,
+        elapsedDays: log.stateBefore.elapsedDays,
+        reps: log.stateBefore.reps,
+        lapses: log.stateBefore.lapses,
+        learningSteps: log.stateBefore.learningSteps,
+        state: log.stateBefore.state,
+        reviewCount: log.stateBefore.reviewCount,
+        lapseCount: log.stateBefore.lapseCount,
+        consecutiveCorrect: log.stateBefore.consecutiveCorrect,
+        consecutiveWrong: log.stateBefore.consecutiveWrong,
+        lastRating: log.stateBefore.lastRating,
+        lastSource: log.stateBefore.lastSource
+      } : undefined,
       createdAt: new Date(log.createdAt),
       updatedAt: new Date(log.updatedAt)
     })));

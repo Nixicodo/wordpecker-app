@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { createEmptyCard, fsrs, Rating, State, type Card, type Grade } from 'ts-fsrs';
 import { LearningState, ReviewRating, ReviewSource, type ILearningState } from '../api/learning-state/model';
-import { ReviewLog, type IReviewLog } from '../api/review-log/model';
+import { ReviewLog, type IReviewLog, type IReviewStateSnapshot } from '../api/review-log/model';
 import { IWord, Word } from '../api/words/model';
 import { IWordList, WordList } from '../api/lists/model';
 import { isMistakeBookList } from './mistakeBook';
@@ -23,6 +23,8 @@ export type ReviewSubmission = {
   questionType: string;
   responseTimeMs?: number;
   usedHint?: boolean;
+  settlementKey?: string;
+  answeredAt?: string;
 };
 
 export type ScheduledWord = {
@@ -68,6 +70,12 @@ type ReviewBehaviorStats = {
 
 type ExpandedReviewSubmission = Omit<ReviewSubmission, 'wordIds' | 'selfAssessedWordIds' | 'sourceListIdByWordId'> & {
   sourceListId?: string;
+};
+
+type ReviewResultGroup = {
+  settlementKey?: string;
+  answeredAt: Date;
+  results: ExpandedReviewSubmission[];
 };
 
 const ratingMap: Record<ReviewRating, Grade> = {
@@ -332,6 +340,70 @@ const copyLearningMetrics = (
   target.lastSource = source.lastSource;
 };
 
+const snapshotLearningState = (
+  state: Pick<
+    ILearningState,
+    | 'dueAt'
+    | 'lastReviewedAt'
+    | 'stability'
+    | 'difficulty'
+    | 'scheduledDays'
+    | 'elapsedDays'
+    | 'reps'
+    | 'lapses'
+    | 'learningSteps'
+    | 'state'
+    | 'reviewCount'
+    | 'lapseCount'
+    | 'consecutiveCorrect'
+    | 'consecutiveWrong'
+    | 'lastRating'
+    | 'lastSource'
+  >
+): IReviewStateSnapshot => ({
+  dueAt: state.dueAt,
+  lastReviewedAt: state.lastReviewedAt,
+  stability: state.stability,
+  difficulty: state.difficulty,
+  scheduledDays: state.scheduledDays,
+  elapsedDays: state.elapsedDays,
+  reps: state.reps,
+  lapses: state.lapses,
+  learningSteps: state.learningSteps,
+  state: state.state,
+  reviewCount: state.reviewCount,
+  lapseCount: state.lapseCount,
+  consecutiveCorrect: state.consecutiveCorrect,
+  consecutiveWrong: state.consecutiveWrong,
+  lastRating: state.lastRating,
+  lastSource: state.lastSource
+});
+
+const groupNormalizedResults = (results: ExpandedReviewSubmission[]): ReviewResultGroup[] => {
+  const grouped = new Map<string, ReviewResultGroup>();
+
+  results.forEach((result, index) => {
+    const answeredAt = result.answeredAt ? new Date(result.answeredAt) : new Date();
+    const groupKey = result.settlementKey
+      ? `settlement:${result.settlementKey}`
+      : `anonymous:${index}`;
+    const existingGroup = grouped.get(groupKey);
+
+    if (existingGroup) {
+      existingGroup.results.push(result);
+      return;
+    }
+
+    grouped.set(groupKey, {
+      settlementKey: result.settlementKey,
+      answeredAt,
+      results: [result]
+    });
+  });
+
+  return Array.from(grouped.values());
+};
+
 const syncLearningStateAcrossMemberships = async (
   userId: string,
   word: Pick<IWord, '_id' | 'listMemberships'>,
@@ -377,6 +449,71 @@ const syncLearningStateAcrossMemberships = async (
       return mirroredState;
     })
   );
+};
+
+const restoreWordStateFromSnapshot = async (
+  userId: string,
+  word: Pick<IWord, '_id' | 'listMemberships'>,
+  targetListId: string,
+  snapshot: IReviewStateSnapshot
+) => {
+  const restoredState = await ensureLearningState(userId, targetListId, word);
+  copyLearningMetrics(restoredState, snapshot);
+  await restoredState.save();
+  await syncLearningStateAcrossMemberships(userId, word, restoredState);
+};
+
+const revertSettlementGroup = async (
+  userId: string,
+  source: ReviewSource,
+  settlementKey: string
+) => {
+  const existingLogs = await ReviewLog.find({ userId, source, settlementKey }).lean();
+  if (!existingLogs.length) {
+    return;
+  }
+
+  const existingLogIds = existingLogs.map((log) => log._id);
+  const maxAnsweredAt = existingLogs.reduce((currentMax, log) => (
+    log.answeredAt > currentMax ? log.answeredAt : currentMax
+  ), existingLogs[0].answeredAt);
+  const affectedWordIds = Array.from(new Set(existingLogs.map((log) => log.wordId.toString())));
+
+  const laterLog = await ReviewLog.findOne({
+    userId,
+    wordId: { $in: affectedWordIds.map((wordId) => new mongoose.Types.ObjectId(wordId)) },
+    _id: { $nin: existingLogIds },
+    answeredAt: { $gt: maxAnsweredAt }
+  }).lean();
+
+  if (laterLog) {
+    throw new Error('Cannot revise this review result after newer reviews have been recorded.');
+  }
+
+  const words = await Word.find({
+    _id: { $in: affectedWordIds.map((wordId) => new mongoose.Types.ObjectId(wordId)) }
+  }).lean();
+  const wordsById = new Map(words.map((word) => [word._id.toString(), word]));
+
+  for (const log of existingLogs) {
+    if (!log.stateBefore) {
+      continue;
+    }
+
+    const word = wordsById.get(log.wordId.toString());
+    if (!word) {
+      continue;
+    }
+
+    await restoreWordStateFromSnapshot(
+      userId,
+      word,
+      log.listId.toString(),
+      log.stateBefore
+    );
+  }
+
+  await ReviewLog.deleteMany({ _id: { $in: existingLogIds } });
 };
 
 export const ensureLearningState = async (
@@ -676,66 +813,87 @@ export const settleReviewResults = async (
   source: ReviewSource,
   results: ReviewSubmission[]
 ) => {
-  const now = new Date();
   const normalizedResults = normalizeReviewResults(results);
+  const groupedResults = groupNormalizedResults(normalizedResults);
 
-  await Promise.all(normalizedResults.map(async (result) => {
-    const word = await Word.findById(result.wordId);
-    if (!word) {
-      return;
+  await applyGroupedReviewResultsToList(userId, list, source, groupedResults);
+};
+
+const applyGroupedReviewResultsToList = async (
+  userId: string,
+  list: Pick<IWordList, '_id' | 'kind' | 'systemKey'>,
+  source: ReviewSource,
+  groupedResults: ReviewResultGroup[],
+  options?: { skipSettlementRevert?: boolean }
+) => {
+  const skipSettlementRevert = options?.skipSettlementRevert ?? false;
+
+  for (const group of groupedResults) {
+    if (group.settlementKey && !skipSettlementRevert) {
+      await revertSettlementGroup(userId, source, group.settlementKey);
     }
 
-    const membership = getMembership(word, list._id.toString());
-    if (!membership) {
-      return;
+    for (const result of group.results) {
+      const word = await Word.findById(result.wordId);
+      if (!word) {
+        continue;
+      }
+
+      const membership = getMembership(word, list._id.toString());
+      if (!membership) {
+        continue;
+      }
+
+      const state = await ensureLearningState(userId, list._id.toString(), word);
+      const stateBefore = snapshotLearningState(state);
+      const next = scheduler.next(cardFromState(state), group.answeredAt, ratingMap[result.rating]);
+
+      copyLearningMetrics(state, {
+        dueAt: next.card.due,
+        lastReviewedAt: next.card.last_review,
+        stability: next.card.stability,
+        difficulty: next.card.difficulty,
+        scheduledDays: next.card.scheduled_days,
+        elapsedDays: next.card.elapsed_days,
+        reps: next.card.reps,
+        lapses: next.card.lapses,
+        learningSteps: next.card.learning_steps,
+        state: next.card.state,
+        reviewCount: state.reviewCount,
+        lapseCount: state.lapseCount,
+        consecutiveCorrect: state.consecutiveCorrect,
+        consecutiveWrong: state.consecutiveWrong,
+        lastRating: state.lastRating,
+        lastSource: state.lastSource
+      });
+      state.reviewCount += 1;
+      state.lapseCount += result.correct ? 0 : 1;
+      state.consecutiveCorrect = result.correct ? state.consecutiveCorrect + 1 : 0;
+      state.consecutiveWrong = result.correct ? 0 : state.consecutiveWrong + 1;
+      state.lastRating = result.rating;
+      state.lastSource = source;
+
+      await Promise.all([
+        state.save(),
+        ReviewLog.create({
+          userId,
+          wordId: word._id,
+          listId: list._id,
+          source,
+          questionType: result.questionType,
+          rating: result.rating,
+          correct: result.correct,
+          responseTimeMs: result.responseTimeMs,
+          usedHint: result.usedHint,
+          settlementKey: result.settlementKey,
+          answeredAt: group.answeredAt,
+          stateBefore
+        })
+      ]);
+
+      await syncLearningStateAcrossMemberships(userId, word, state);
     }
-
-    const state = await ensureLearningState(userId, list._id.toString(), word);
-    const next = scheduler.next(cardFromState(state), now, ratingMap[result.rating]);
-
-    copyLearningMetrics(state, {
-      dueAt: next.card.due,
-      lastReviewedAt: next.card.last_review,
-      stability: next.card.stability,
-      difficulty: next.card.difficulty,
-      scheduledDays: next.card.scheduled_days,
-      elapsedDays: next.card.elapsed_days,
-      reps: next.card.reps,
-      lapses: next.card.lapses,
-      learningSteps: next.card.learning_steps,
-      state: next.card.state,
-      reviewCount: state.reviewCount,
-      lapseCount: state.lapseCount,
-      consecutiveCorrect: state.consecutiveCorrect,
-      consecutiveWrong: state.consecutiveWrong,
-      lastRating: state.lastRating,
-      lastSource: state.lastSource
-    });
-    state.reviewCount += 1;
-    state.lapseCount += result.correct ? 0 : 1;
-    state.consecutiveCorrect = result.correct ? state.consecutiveCorrect + 1 : 0;
-    state.consecutiveWrong = result.correct ? 0 : state.consecutiveWrong + 1;
-    state.lastRating = result.rating;
-    state.lastSource = source;
-
-    await Promise.all([
-      state.save(),
-      ReviewLog.create({
-        userId,
-        wordId: word._id,
-        listId: list._id,
-        source,
-        questionType: result.questionType,
-        rating: result.rating,
-        correct: result.correct,
-        responseTimeMs: result.responseTimeMs,
-        usedHint: result.usedHint,
-        answeredAt: now
-      })
-    ]);
-
-    await syncLearningStateAcrossMemberships(userId, word, state);
-  }));
+  }
 };
 
 export const settleDueReviewResults = async (
@@ -744,12 +902,13 @@ export const settleDueReviewResults = async (
   results: ReviewSubmission[]
 ) => {
   const normalizedResults = normalizeReviewResults(results);
-  if (!normalizedResults.length) {
+  const groupedResults = groupNormalizedResults(normalizedResults);
+  if (!groupedResults.length) {
     return;
   }
 
   const sourceListIds = Array.from(new Set(
-    normalizedResults
+    groupedResults.flatMap((group) => group.results)
       .map((result) => result.sourceListId)
       .filter((listId): listId is string => Boolean(listId))
   ));
@@ -762,26 +921,45 @@ export const settleDueReviewResults = async (
   const listsById = new Map<string, Pick<IWordList, '_id' | 'kind' | 'systemKey'>>(
     lists.map((list) => [list._id.toString(), list])
   );
-  const groupedResults = new Map<string, ExpandedReviewSubmission[]>();
-
-  for (const result of normalizedResults) {
-    if (!result.sourceListId || !listsById.has(result.sourceListId)) {
-      continue;
+  for (const group of groupedResults) {
+    if (group.settlementKey) {
+      await revertSettlementGroup(userId, source, group.settlementKey);
     }
 
-    const currentResults = groupedResults.get(result.sourceListId) || [];
-    currentResults.push(result);
-    groupedResults.set(result.sourceListId, currentResults);
+    const groupedBySourceListId = new Map<string, ExpandedReviewSubmission[]>();
+
+    for (const result of group.results) {
+      if (!result.sourceListId || !listsById.has(result.sourceListId)) {
+        continue;
+      }
+
+      const currentResults = groupedBySourceListId.get(result.sourceListId) || [];
+      currentResults.push(result);
+      groupedBySourceListId.set(result.sourceListId, currentResults);
+    }
+
+    for (const [sourceListId, grouped] of groupedBySourceListId.entries()) {
+      const list = listsById.get(sourceListId);
+      if (!list) {
+        continue;
+      }
+
+      await applyGroupedReviewResultsToList(
+        userId,
+        list,
+        source,
+        [{
+          settlementKey: group.settlementKey,
+          answeredAt: group.answeredAt,
+          results: grouped.map((result) => ({
+            ...result,
+            answeredAt: group.answeredAt.toISOString()
+          }))
+        }],
+        { skipSettlementRevert: true }
+      );
+    }
   }
-
-  await Promise.all(Array.from(groupedResults.entries()).map(async ([sourceListId, grouped]) => {
-    const list = listsById.get(sourceListId);
-    if (!list) {
-      return;
-    }
-
-    await settleReviewResults(userId, list, source, grouped);
-  }));
 };
 
 export const summarizeListProgress = async (userId: string, listId: string) => {

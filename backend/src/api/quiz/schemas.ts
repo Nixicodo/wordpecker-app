@@ -22,7 +22,9 @@ export const updatePointsSchema = {
       questionType: z.string().optional(),
       selfAssessedWordIds: z.array(z.string().refine(val => mongoose.Types.ObjectId.isValid(val), 'Invalid word ID')).optional(),
       responseTimeMs: z.number().nonnegative().optional(),
-      usedHint: z.boolean().optional()
+      usedHint: z.boolean().optional(),
+      settlementKey: z.string().min(1).optional(),
+      answeredAt: z.string().datetime().optional()
     }))
   })
 };

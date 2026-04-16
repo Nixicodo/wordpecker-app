@@ -1,6 +1,25 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { ReviewRating, ReviewSource } from '../learning-state/model';
 
+export interface IReviewStateSnapshot {
+  dueAt: Date;
+  lastReviewedAt?: Date;
+  stability: number;
+  difficulty: number;
+  scheduledDays: number;
+  elapsedDays: number;
+  reps: number;
+  lapses: number;
+  learningSteps: number;
+  state: number;
+  reviewCount: number;
+  lapseCount: number;
+  consecutiveCorrect: number;
+  consecutiveWrong: number;
+  lastRating?: ReviewRating;
+  lastSource?: ReviewSource;
+}
+
 export interface IReviewLog extends Document {
   _id: mongoose.Types.ObjectId;
   userId: string;
@@ -12,10 +31,81 @@ export interface IReviewLog extends Document {
   correct: boolean;
   responseTimeMs?: number;
   usedHint?: boolean;
+  settlementKey?: string;
   answeredAt: Date;
+  stateBefore?: IReviewStateSnapshot;
   createdAt: Date;
   updatedAt: Date;
 }
+
+const ReviewStateSnapshotSchema = new Schema<IReviewStateSnapshot>({
+  dueAt: {
+    type: Date,
+    required: true
+  },
+  lastReviewedAt: {
+    type: Date,
+    default: undefined
+  },
+  stability: {
+    type: Number,
+    required: true
+  },
+  difficulty: {
+    type: Number,
+    required: true
+  },
+  scheduledDays: {
+    type: Number,
+    required: true
+  },
+  elapsedDays: {
+    type: Number,
+    required: true
+  },
+  reps: {
+    type: Number,
+    required: true
+  },
+  lapses: {
+    type: Number,
+    required: true
+  },
+  learningSteps: {
+    type: Number,
+    required: true
+  },
+  state: {
+    type: Number,
+    required: true
+  },
+  reviewCount: {
+    type: Number,
+    required: true
+  },
+  lapseCount: {
+    type: Number,
+    required: true
+  },
+  consecutiveCorrect: {
+    type: Number,
+    required: true
+  },
+  consecutiveWrong: {
+    type: Number,
+    required: true
+  },
+  lastRating: {
+    type: String,
+    enum: ['again', 'hard', 'good', 'easy'],
+    default: undefined
+  },
+  lastSource: {
+    type: String,
+    enum: ['learn', 'quiz', 'mistake_review', 'due_review'],
+    default: undefined
+  }
+}, { _id: false });
 
 const ReviewLogSchema = new Schema<IReviewLog>({
   userId: {
@@ -60,9 +150,18 @@ const ReviewLogSchema = new Schema<IReviewLog>({
     type: Boolean,
     default: undefined
   },
+  settlementKey: {
+    type: String,
+    trim: true,
+    default: undefined
+  },
   answeredAt: {
     type: Date,
     required: true
+  },
+  stateBefore: {
+    type: ReviewStateSnapshotSchema,
+    default: undefined
   }
 }, {
   timestamps: true
@@ -70,5 +169,14 @@ const ReviewLogSchema = new Schema<IReviewLog>({
 
 ReviewLogSchema.index({ userId: 1, listId: 1, answeredAt: -1 });
 ReviewLogSchema.index({ userId: 1, wordId: 1, answeredAt: -1 });
+ReviewLogSchema.index(
+  { userId: 1, source: 1, settlementKey: 1, wordId: 1, listId: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      settlementKey: { $exists: true, $type: 'string' }
+    }
+  }
+);
 
 export const ReviewLog = mongoose.model<IReviewLog>('ReviewLog', ReviewLogSchema);

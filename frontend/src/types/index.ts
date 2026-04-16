@@ -169,6 +169,8 @@ export interface ReviewSubmission {
   questionType: string;
   responseTimeMs?: number;
   usedHint?: boolean;
+  settlementKey?: string;
+  answeredAt?: string;
 }
 
 export interface WordSourceInfo {

@@ -40,8 +40,13 @@ type AuditState = {
   selectedRating: ReviewRating;
   recommendationReason: string;
   selfAssessedWordIds: string[];
+  settlementKey: string;
+  answeredAt: string;
   errorViewed: boolean;
   validationError: string;
+  syncStatus: 'idle' | 'syncing' | 'synced' | 'failed';
+  syncError: string;
+  syncedSignature: string;
 };
 
 const createAuditState = (): AuditState => ({
@@ -56,9 +61,33 @@ const createAuditState = (): AuditState => ({
   selectedRating: 'good',
   recommendationReason: '',
   selfAssessedWordIds: [],
+  settlementKey: '',
+  answeredAt: '',
   errorViewed: false,
-  validationError: ''
+  validationError: '',
+  syncStatus: 'idle',
+  syncError: '',
+  syncedSignature: ''
 });
+
+const createSettlementKey = () => (
+  globalThis.crypto?.randomUUID?.() || `settlement-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
+);
+
+const buildSettlementPayload = (state: AuditState): ReviewSubmission | null => (
+  state.review
+    ? {
+        ...state.review,
+        rating: state.selectedRating,
+        selfAssessedWordIds: [...state.selfAssessedWordIds].sort()
+      }
+    : null
+);
+
+const buildSettlementSignature = (state: AuditState) => {
+  const payload = buildSettlementPayload(state);
+  return payload ? JSON.stringify(payload) : '';
+};
 
 const isNoMoreBatchError = (error: unknown) => {
   if (
@@ -128,7 +157,11 @@ export const DisciplinedLearnSession = ({
   const toast = useToast();
   const isMountedRef = useRef(true);
   const questionStartedAtRef = useRef(Date.now());
+  const auditStatesRef = useRef<AuditState[]>(initialExercises.map(() => createAuditState()));
   const validationQueueRef = useRef<Promise<void>>(Promise.resolve());
+  const settlementQueueRef = useRef<Promise<void>>(Promise.resolve());
+  const queuedSettlementIndexesRef = useRef(new Set<number>());
+  const syncingSettlementIndexesRef = useRef(new Set<number>());
   const bufferedExercisesRef = useRef<BufferedBatchQueue<Exercise> | null>(null);
   const isAppendingExercisesRef = useRef(false);
   const nextAutoAppendIndexRef = useRef(0);
@@ -163,6 +196,10 @@ export const DisciplinedLearnSession = ({
       ];
     });
   }, [exercises.length]);
+
+  useEffect(() => {
+    auditStatesRef.current = auditStates;
+  }, [auditStates]);
 
   useEffect(() => {
     const currentState = auditStates[currentIndex];
@@ -222,6 +259,92 @@ export const DisciplinedLearnSession = ({
       stateIndex === index ? updater(state) : state
     )));
   }, []);
+
+  const shouldSyncAuditState = useCallback((state: AuditState) => {
+    if (!(state.status === 'correct' || state.status === 'incorrect')) {
+      return false;
+    }
+
+    const signature = buildSettlementSignature(state);
+    return Boolean(signature) && signature !== state.syncedSignature;
+  }, []);
+
+  const performSettlementSync = useCallback(async (index: number) => {
+    const state = auditStatesRef.current[index];
+    if (!state || !shouldSyncAuditState(state)) {
+      return;
+    }
+
+    const payload = buildSettlementPayload(state);
+    const signature = buildSettlementSignature(state);
+    if (!payload || !signature) {
+      return;
+    }
+
+    updateAuditState(index, (previous) => ({
+      ...previous,
+      syncStatus: 'syncing',
+      syncError: ''
+    }));
+
+    try {
+      await apiService.updateLearningLearnedPoints(list.id, [payload]);
+      if (!isMountedRef.current) {
+        return;
+      }
+
+      updateAuditState(index, (previous) => ({
+        ...previous,
+        syncStatus: buildSettlementSignature(previous) === signature ? 'synced' : 'idle',
+        syncError: '',
+        syncedSignature: signature
+      }));
+    } catch (error) {
+      console.error('Failed to sync disciplined review settlement:', error);
+      if (!isMountedRef.current) {
+        return;
+      }
+
+      const message = getErrorMessage(error, '后台结算失败，请稍后重试。');
+      updateAuditState(index, (previous) => ({
+        ...previous,
+        syncStatus: buildSettlementSignature(previous) === signature ? 'failed' : 'idle',
+        syncError: buildSettlementSignature(previous) === signature ? message : previous.syncError
+      }));
+    }
+  }, [list.id, shouldSyncAuditState, updateAuditState]);
+
+  const requestSettlementSync = useCallback((index: number) => {
+    if (queuedSettlementIndexesRef.current.has(index) || syncingSettlementIndexesRef.current.has(index)) {
+      return;
+    }
+
+    queuedSettlementIndexesRef.current.add(index);
+    settlementQueueRef.current = settlementQueueRef.current
+      .catch(() => undefined)
+      .then(async () => {
+        queuedSettlementIndexesRef.current.delete(index);
+        syncingSettlementIndexesRef.current.add(index);
+
+        try {
+          await performSettlementSync(index);
+        } finally {
+          syncingSettlementIndexesRef.current.delete(index);
+        }
+      });
+  }, [performSettlementSync]);
+
+  const flushSettlementSyncs = useCallback(async () => {
+    auditStatesRef.current.forEach((state, index) => {
+      if (shouldSyncAuditState(state)) {
+        requestSettlementSync(index);
+      }
+    });
+
+    await settlementQueueRef.current.catch(() => undefined);
+
+    return auditStatesRef.current.every((state) => !shouldSyncAuditState(state) && state.syncStatus !== 'failed');
+  }, [requestSettlementSync, shouldSyncAuditState]);
 
   const appendBufferedExercises = useCallback(async (
     options?: { focusFirstNewQuestion?: boolean; clearAutoLoadError?: boolean }
@@ -330,6 +453,13 @@ export const DisciplinedLearnSession = ({
   const failedCount = auditStates.filter((state) => state.status === 'failed').length;
   const incorrectCount = auditStates.filter((state) => state.status === 'incorrect').length;
   const resolvedCount = auditStates.filter((state) => state.status === 'correct' || state.status === 'incorrect').length;
+  const syncedCount = auditStates.filter((state) => (
+    (state.status === 'correct' || state.status === 'incorrect') &&
+    !shouldSyncAuditState(state) &&
+    state.syncStatus === 'synced'
+  )).length;
+  const settlementSyncingCount = auditStates.filter((state) => state.syncStatus === 'syncing').length;
+  const settlementFailedCount = auditStates.filter((state) => state.syncStatus === 'failed').length;
   const allSubmitted = auditStates.length > 0 && auditStates.every((state) => state.submitted);
   const progress = exercises.length ? (submittedCount / exercises.length) * 100 : 0;
 
@@ -345,6 +475,7 @@ export const DisciplinedLearnSession = ({
     responseTimeMs: number
   ) => {
     const exercise = exercises[exerciseIndex];
+    const submittedState = auditStatesRef.current[exerciseIndex];
     if (!exercise) {
       return;
     }
@@ -369,7 +500,9 @@ export const DisciplinedLearnSession = ({
             rating: recommendation.rating,
             questionType: exercise.type,
             responseTimeMs,
-            usedHint
+            usedHint,
+            settlementKey: submittedState?.settlementKey,
+            answeredAt: submittedState?.answeredAt
           } satisfies ReviewSubmission
         : undefined;
 
@@ -386,7 +519,10 @@ export const DisciplinedLearnSession = ({
         selectedRating: recommendation.rating,
         recommendationReason: recommendation.reason,
         validationError: '',
-        errorViewed: previous.errorViewed
+        errorViewed: previous.errorViewed,
+        syncStatus: 'idle',
+        syncError: '',
+        syncedSignature: ''
       }));
     } catch (error) {
       console.error('Async validation failed:', error);
@@ -399,7 +535,10 @@ export const DisciplinedLearnSession = ({
         status: 'failed',
         correctness: null,
         review: undefined,
-        validationError: getErrorMessage(error, 'AI 判题失败，请重试当前题目。')
+        validationError: getErrorMessage(error, 'AI 判题失败，请重试当前题目。'),
+        syncStatus: 'idle',
+        syncError: '',
+        syncedSignature: ''
       }));
     }
   }, [exercises, list.context, updateAuditState, wordSources]);
@@ -423,6 +562,8 @@ export const DisciplinedLearnSession = ({
     const responseTimeMs = Math.max(0, Date.now() - questionStartedAtRef.current);
     const answer = currentState.answer.trim();
     const usedHint = currentState.usedHint;
+    const answeredAt = new Date().toISOString();
+    const settlementKey = createSettlementKey();
 
     updateAuditState(currentIndex, (previous) => ({
       ...previous,
@@ -430,7 +571,12 @@ export const DisciplinedLearnSession = ({
       submitted: true,
       status: 'pending',
       responseTimeMs,
-      validationError: ''
+      validationError: '',
+      settlementKey,
+      answeredAt,
+      syncStatus: 'idle',
+      syncError: '',
+      syncedSignature: ''
     }));
 
     enqueueValidation(currentIndex, answer, usedHint, responseTimeMs);
@@ -486,30 +632,36 @@ export const DisciplinedLearnSession = ({
       });
   }, [appendBufferedExercises, autoLoadError, currentIndex, exercises.length, hasMoreExercises, isLoadingMore]);
 
+  useEffect(() => {
+    auditStates.forEach((state, index) => {
+      if (state.syncStatus === 'idle' && shouldSyncAuditState(state)) {
+        requestSettlementSync(index);
+      }
+    });
+  }, [auditStates, requestSettlementSync, shouldSyncAuditState]);
+
   const finalizeSession = async () => {
     if (pendingCount > 0 || failedCount > 0 || isSaving) {
       return;
     }
 
-    const results = auditStates.flatMap((state) => (
-      state.review
-        ? [{
-            ...state.review,
-            rating: state.selectedRating,
-            selfAssessedWordIds: state.selfAssessedWordIds
-          }]
-        : []
-    ));
-
     setIsSaving(true);
     try {
-      if (results.length > 0) {
-        await apiService.updateLearningLearnedPoints(list.id, results);
+      const allSettled = await flushSettlementSyncs();
+      if (!allSettled) {
+        toast({
+          title: '后台结算仍有失败项',
+          description: '请稍后重试，或先修改对应题目的评级后再触发重结算。',
+          status: 'error',
+          duration: 4000,
+          isClosable: true
+        });
+        return;
       }
 
       toast({
         title: '纪律化复习已结算',
-        description: `已将 ${results.length} 条复习结果写回原始词树。`,
+        description: `已将 ${resolvedCount} 道题的复习结果持续写回原始词树。`,
         status: 'success',
         duration: 3000,
         isClosable: true
@@ -578,7 +730,7 @@ export const DisciplinedLearnSession = ({
             学习中：{list.name}
           </Text>
           <Text mt={2} color="gray.300" lineHeight="1.8">
-            这里只保留强证据题型。每次提交后先进入 AI 审核，审核完成后才会进入正式结算。
+            这里只保留强证据题型。每次提交后先进入 AI 审核，审核完成后会自动在后台结算复习数据。
           </Text>
           <HStack spacing={3} mt={3} flexWrap="wrap">
             <Badge colorScheme="orange" px={3} py={1} borderRadius="full">
@@ -590,6 +742,19 @@ export const DisciplinedLearnSession = ({
             <Badge colorScheme="blue" px={3} py={1} borderRadius="full">
               审核中 {pendingCount}
             </Badge>
+            <Badge colorScheme="teal" px={3} py={1} borderRadius="full">
+              已后台结算 {syncedCount}
+            </Badge>
+            {settlementSyncingCount > 0 && (
+              <Badge colorScheme="cyan" px={3} py={1} borderRadius="full">
+                后台结算中 {settlementSyncingCount}
+              </Badge>
+            )}
+            {settlementFailedCount > 0 && (
+              <Badge colorScheme="red" variant="subtle" px={3} py={1} borderRadius="full">
+                后台结算失败 {settlementFailedCount}
+              </Badge>
+            )}
             <Badge colorScheme={incorrectCount > 0 ? 'red' : 'gray'} px={3} py={1} borderRadius="full">
               错题 {incorrectCount}
             </Badge>
@@ -666,9 +831,9 @@ export const DisciplinedLearnSession = ({
                       size="lg"
                       onClick={finalizeSession}
                       isLoading={isSaving}
-                      loadingText="正在结算"
+                      loadingText="正在检查后台结算"
                     >
-                      结算并返回词树
+                      完成并返回词树
                     </Button>
                     {hasMoreExercises && (
                       <Button
@@ -707,9 +872,30 @@ export const DisciplinedLearnSession = ({
               <AlertIcon />
               <Text>
                 {currentState.status === 'correct'
-                  ? 'AI 判定为正确，已经可以进入最终结算。'
+                  ? 'AI 判定为正确，系统会自动在后台结算这道题。'
                   : 'AI 判定为错误。你可以先看解析，再决定继续下一题。'}
               </Text>
+            </Alert>
+          )}
+
+          {(currentState.status === 'correct' || currentState.status === 'incorrect') && currentState.syncStatus === 'syncing' && (
+            <Alert status="info" borderRadius="lg" mt={4}>
+              <AlertIcon />
+              <Text>这道题的复习数据正在后台结算中，你可以继续做别的题。</Text>
+            </Alert>
+          )}
+
+          {(currentState.status === 'correct' || currentState.status === 'incorrect') && currentState.syncStatus === 'synced' && (
+            <Alert status="success" borderRadius="lg" mt={4}>
+              <AlertIcon />
+              <Text>这道题的复习数据已经后台结算完成。修改评级后会自动重新结算。</Text>
+            </Alert>
+          )}
+
+          {(currentState.status === 'correct' || currentState.status === 'incorrect') && currentState.syncStatus === 'failed' && (
+            <Alert status="warning" borderRadius="lg" mt={4}>
+              <AlertIcon />
+              <Text>{currentState.syncError || '这道题的后台结算失败了。修改评级后会再次触发重结算。'}</Text>
             </Alert>
           )}
 
@@ -728,7 +914,12 @@ export const DisciplinedLearnSession = ({
               responseTimeMs={currentState.responseTimeMs}
               questionType={currentExercise.type}
               usedHint={currentState.usedHint}
-              onRatingChange={(rating) => updateAuditState(currentIndex, (previous) => ({ ...previous, selectedRating: rating }))}
+              onRatingChange={(rating) => updateAuditState(currentIndex, (previous) => ({
+                ...previous,
+                selectedRating: rating,
+                syncStatus: 'idle',
+                syncError: ''
+              }))}
             />
           )}
 
@@ -740,7 +931,9 @@ export const DisciplinedLearnSession = ({
                 ...previous,
                 selfAssessedWordIds: previous.selfAssessedWordIds.includes(wordId)
                   ? previous.selfAssessedWordIds.filter((currentWordId) => currentWordId !== wordId)
-                  : [...previous.selfAssessedWordIds, wordId]
+                  : [...previous.selfAssessedWordIds, wordId],
+                syncStatus: 'idle',
+                syncError: ''
               }))}
             />
           )}

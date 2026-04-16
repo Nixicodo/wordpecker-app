@@ -382,4 +382,129 @@ describe('learning scheduler review log signals', () => {
     expect(hardAfter?.lastRating).toBe('hard');
     expect(againAfter?.lastRating).toBe('again');
   });
+
+  it('replaces an already-settled attempt instead of double-counting the same review', async () => {
+    const userId = 'replace-settlement-user';
+    const list = await WordList.create({
+      name: 'Replace Settlement',
+      description: 'Used to verify re-settlement stays idempotent',
+      context: 'Testing',
+      kind: 'custom'
+    });
+
+    const word = await Word.create({
+      value: 'brisa',
+      listMemberships: [{
+        listId: list._id,
+        meaning: '微风',
+        addedAt: new Date(),
+        updatedAt: new Date()
+      }]
+    });
+
+    await ensureLearningState(userId, list._id.toString(), word);
+
+    await settleReviewResults(userId, list, 'learn', [{
+      wordId: word._id.toString(),
+      correct: true,
+      rating: 'good',
+      questionType: 'fill_blank',
+      settlementKey: 'attempt-1',
+      answeredAt: '2026-04-16T10:00:00.000Z'
+    }]);
+
+    const stateAfterFirstSettlement = await LearningState.findOne({
+      userId,
+      wordId: word._id,
+      listId: list._id
+    }).lean();
+
+    await settleReviewResults(userId, list, 'learn', [{
+      wordId: word._id.toString(),
+      correct: true,
+      rating: 'hard',
+      questionType: 'fill_blank',
+      settlementKey: 'attempt-1',
+      answeredAt: '2026-04-16T10:00:00.000Z'
+    }]);
+
+    const [stateAfterReplacement, replacementLogs] = await Promise.all([
+      LearningState.findOne({ userId, wordId: word._id, listId: list._id }).lean(),
+      ReviewLog.find({ userId, wordId: word._id, listId: list._id }).lean()
+    ]);
+
+    expect(stateAfterFirstSettlement?.reviewCount).toBe(1);
+    expect(stateAfterReplacement?.reviewCount).toBe(1);
+    expect(stateAfterReplacement?.lastRating).toBe('hard');
+    expect(replacementLogs).toHaveLength(1);
+    expect(replacementLogs[0].rating).toBe('hard');
+    expect(replacementLogs[0].settlementKey).toBe('attempt-1');
+    expect(stateAfterReplacement?.dueAt.toISOString()).not.toBe(stateAfterFirstSettlement?.dueAt.toISOString());
+  });
+
+  it('removes stale self-assessment settlement effects when the same attempt is re-settled', async () => {
+    const userId = 'replace-self-assessment-user';
+    const list = await WordList.create({
+      name: 'Replace Self Assessment',
+      description: 'Used to verify stale self-assessment effects are rolled back',
+      context: 'Testing',
+      kind: 'custom'
+    });
+
+    const [targetWord, flaggedWord] = await Promise.all([
+      Word.create({
+        value: 'costa',
+        listMemberships: [{
+          listId: list._id,
+          meaning: '海岸',
+          addedAt: new Date(),
+          updatedAt: new Date()
+        }]
+      }),
+      Word.create({
+        value: 'playa',
+        listMemberships: [{
+          listId: list._id,
+          meaning: '海滩',
+          addedAt: new Date(),
+          updatedAt: new Date()
+        }]
+      })
+    ]);
+
+    await Promise.all([
+      ensureLearningState(userId, list._id.toString(), targetWord),
+      ensureLearningState(userId, list._id.toString(), flaggedWord)
+    ]);
+
+    await settleReviewResults(userId, list, 'learn', [{
+      wordId: targetWord._id.toString(),
+      correct: true,
+      rating: 'good',
+      questionType: 'fill_blank',
+      selfAssessedWordIds: [flaggedWord._id.toString()],
+      settlementKey: 'attempt-2',
+      answeredAt: '2026-04-16T11:00:00.000Z'
+    }]);
+
+    await settleReviewResults(userId, list, 'learn', [{
+      wordId: targetWord._id.toString(),
+      correct: true,
+      rating: 'good',
+      questionType: 'fill_blank',
+      settlementKey: 'attempt-2',
+      answeredAt: '2026-04-16T11:00:00.000Z'
+    }]);
+
+    const [targetState, flaggedState, flaggedLog] = await Promise.all([
+      LearningState.findOne({ userId, wordId: targetWord._id, listId: list._id }).lean(),
+      LearningState.findOne({ userId, wordId: flaggedWord._id, listId: list._id }).lean(),
+      ReviewLog.findOne({ userId, wordId: flaggedWord._id, listId: list._id }).lean()
+    ]);
+
+    expect(targetState?.reviewCount).toBe(1);
+    expect(flaggedState?.reviewCount).toBe(0);
+    expect(flaggedState?.lastRating).toBeUndefined();
+    expect(flaggedLog).toBeNull();
+  });
 });

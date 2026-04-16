@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { environment } from './environment';
+import { ReviewLog } from '../api/review-log/model';
 
 if (!environment.mongodbUrl) {
   throw new Error('Missing MongoDB configuration. Check MONGODB_URL in .env');
@@ -23,6 +24,7 @@ export const connectDB = async (retries = 5, delay = 5000) => {
       console.log(`Attempting to connect to MongoDB... (attempt ${i + 1}/${retries})`);
       await mongoose.connect(environment.mongodbUrl as string, mongoOptions);
       console.log('✅ Connected to MongoDB successfully');
+      await ReviewLog.syncIndexes();
       
       // Handle connection events
       mongoose.connection.on('error', (error) => {

@@ -154,7 +154,9 @@ router.put('/:listId/reviews', validate(updatePointsSchema), async (req, res) =>
       questionType: result.questionType || 'unknown',
       selfAssessedWordIds: result.selfAssessedWordIds,
       responseTimeMs: result.responseTimeMs,
-      usedHint: result.usedHint
+      usedHint: result.usedHint,
+      settlementKey: result.settlementKey,
+      answeredAt: result.answeredAt
     }));
 
     await applyReviewResults(userId, listId, source, results);

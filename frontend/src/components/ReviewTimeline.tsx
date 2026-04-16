@@ -83,6 +83,7 @@ export const ReviewTimeline = ({
             itemRefs.current[index] = element;
           }}
           onClick={() => onSelect(index)}
+          aria-label={`第 ${index + 1} 题`}
           borderRadius="full"
           minW="46px"
           h="46px"
