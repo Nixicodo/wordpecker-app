@@ -16,7 +16,14 @@ describe('generateLocalExercises', () => {
   ];
 
   it('mixes target_to_base and base_to_target for multiple choice fallback generation', () => {
-    const exercises = generateLocalExercises(words, distractorPool, 'travel', ['multiple_choice', 'multiple_choice', 'multiple_choice', 'multiple_choice']);
+    const exercises = generateLocalExercises(
+      words,
+      distractorPool,
+      'travel',
+      ['multiple_choice', 'multiple_choice', 'multiple_choice', 'multiple_choice'],
+      'Chinese',
+      'Spanish'
+    );
 
     expect(exercises).toHaveLength(4);
     expect(exercises[0].direction).toBe('target_to_base');
@@ -28,7 +35,14 @@ describe('generateLocalExercises', () => {
   });
 
   it('keeps fill_blank and sentence_completion in base_to_target mode', () => {
-    const exercises = generateLocalExercises(words, distractorPool, 'study', ['fill_blank', 'sentence_completion']);
+    const exercises = generateLocalExercises(
+      words,
+      distractorPool,
+      'study',
+      ['fill_blank', 'sentence_completion'],
+      'Chinese',
+      'Spanish'
+    );
 
     expect(exercises[0].type).toBe('fill_blank');
     expect(exercises[0].direction).toBe('base_to_target');
@@ -39,7 +53,14 @@ describe('generateLocalExercises', () => {
   });
 
   it('uses a larger distractor pool instead of only recycling the active batch', () => {
-    const exercises = generateLocalExercises(words, distractorPool, 'home', ['multiple_choice', 'multiple_choice', 'sentence_completion', 'true_false']);
+    const exercises = generateLocalExercises(
+      words,
+      distractorPool,
+      'home',
+      ['multiple_choice', 'multiple_choice', 'sentence_completion', 'true_false'],
+      'Chinese',
+      'Spanish'
+    );
     const optionTexts = exercises
       .flatMap((exercise) => exercise.options || [])
       .filter((option) => ['mesa', 'puerta', 'ventana', 'cocina'].includes(option));
@@ -49,7 +70,14 @@ describe('generateLocalExercises', () => {
 
   it('prefers extra distractors over reusing the same active batch words when enough extras exist', () => {
     const extraOnlyDistractors = distractorPool.filter((word) => !words.some((activeWord) => activeWord.id === word.id));
-    const exercises = generateLocalExercises(words, extraOnlyDistractors, 'home', ['multiple_choice', 'multiple_choice', 'sentence_completion', 'true_false']);
+    const exercises = generateLocalExercises(
+      words,
+      extraOnlyDistractors,
+      'home',
+      ['multiple_choice', 'multiple_choice', 'sentence_completion', 'true_false'],
+      'Chinese',
+      'Spanish'
+    );
     const distractorOptionTexts = exercises.flatMap((exercise) =>
       (exercise.options || []).filter((option) => option !== exercise.correctAnswer)
     );
@@ -60,7 +88,14 @@ describe('generateLocalExercises', () => {
 
   it('falls back to merging active words back in only when extra distractors are too few', () => {
     const tinyDistractorPool = [{ id: '5', value: 'mesa', meaning: 'table' }];
-    const exercises = generateLocalExercises(words, tinyDistractorPool, 'home', ['multiple_choice']);
+    const exercises = generateLocalExercises(
+      words,
+      tinyDistractorPool,
+      'home',
+      ['multiple_choice'],
+      'Chinese',
+      'Spanish'
+    );
     const optionTexts = exercises.flatMap((exercise) => exercise.options || []);
 
     expect(optionTexts).toContain('mesa');
@@ -68,7 +103,14 @@ describe('generateLocalExercises', () => {
   });
 
   it('generates real matching exercises instead of degrading them to multiple choice', () => {
-    const exercises = generateLocalExercises(words, distractorPool, 'library', ['matching']);
+    const exercises = generateLocalExercises(
+      words,
+      distractorPool,
+      'library',
+      ['matching'],
+      'Chinese',
+      'Spanish'
+    );
 
     expect(exercises).toHaveLength(4);
     expect(exercises[0].type).toBe('matching');
@@ -87,36 +129,50 @@ describe('generateLocalExercises', () => {
       { id: '2', value: 'adios', meaning: 'goodbye', challengeScore: 0.15 },
     ];
 
-    const exercises = generateLocalExercises(challengingWords, distractorPool, 'travel', ['multiple_choice', 'sentence_completion']);
+    const exercises = generateLocalExercises(
+      challengingWords,
+      distractorPool,
+      'travel',
+      ['multiple_choice', 'sentence_completion'],
+      'Chinese',
+      'Spanish'
+    );
 
     expect(exercises[0].difficulty).toBe('hard');
     expect(exercises[1].difficulty).toBe('medium');
   });
 
-  it('uses Chinese question text without the context prefix across exercise types', () => {
+  it('uses Spanish question text and Chinese helper copy for fallback exercises', () => {
     const exercises = generateLocalExercises(
       words,
       distractorPool,
       'Mexican Spanish frequency vocabulary level 0 (Pre-A1)',
-      ['multiple_choice', 'fill_blank', 'true_false', 'sentence_completion', 'matching']
+      ['multiple_choice', 'fill_blank', 'true_false', 'sentence_completion', 'matching'],
+      'Chinese',
+      'Spanish'
     );
 
-    expect(exercises[0].question).toBe('“hola”最接近的意思是什么？');
-    expect(exercises[1].question).toBe('请写出意思是“goodbye”的单词。');
-    expect(exercises[2].question).not.toContain('context');
-    expect(exercises[2].question).not.toContain('Mexican Spanish frequency vocabulary level 0 (Pre-A1)');
-    expect(exercises[2].question).toMatch(/^“gracias”的意思是“.+”。对还是错？$/);
-    expect(exercises[3].question).toBe('哪个单词最适合补全表达“book”的句子？');
+    expect(exercises[0].question).toBe('Que significa "hola"?');
+    expect(exercises[0].hint).toBe('\u63d0\u793a\uff1a\u5148\u56de\u5fc6"hola"\u7684\u4e2d\u6587\u542b\u4e49\u3002');
+    expect(exercises[1].question).toBe('Escribe la palabra en espanol que corresponde a "goodbye".');
+    expect(exercises[1].hint).toBe('\u63d0\u793a\uff1a\u56de\u5fc6\u4e0e"goodbye"\u5bf9\u5e94\u7684\u897f\u73ed\u7259\u8bed\u5355\u8bcd\u3002');
+    expect(exercises[2].question).toMatch(/^"gracias" significa ".+". Es verdadero o falso\?$/);
+    expect(exercises[2].options).toEqual(['Verdadero', 'Falso']);
+    expect(exercises[3].question).toBe('Que palabra en espanol completa mejor una frase relacionada con "book"?');
   });
 
-  it('uses Chinese matching text without the context prefix', () => {
+  it('uses Spanish matching copy without leaking the raw context string', () => {
     const exercises = generateLocalExercises(
       words,
       distractorPool,
       'Mexican Spanish frequency vocabulary level 0 (Pre-A1)',
-      ['matching']
+      ['matching'],
+      'Chinese',
+      'Spanish'
     );
 
-    expect(exercises[0].question).toBe('请将每个单词与对应的意思正确配对。');
+    expect(exercises[0].question).toBe('Relaciona cada palabra con su significado correcto.');
+    expect(exercises[0].question).not.toContain('context');
+    expect(exercises[0].question).not.toContain('Mexican Spanish frequency vocabulary level 0 (Pre-A1)');
   });
 });

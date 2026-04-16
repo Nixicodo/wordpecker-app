@@ -9,6 +9,7 @@ import * as path from 'path';
 const exercisePrompt = fs.readFileSync(path.join(__dirname, '../../agents/exercise-agent/prompt.md'), 'utf-8');
 const GENERATION_TIMEOUT_MS = 12000;
 const CACHE_TTL_MS = 15 * 60 * 1000;
+const EXERCISE_PROMPT_VERSION = 'target-language-question-v2';
 
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string): Promise<T> {
   return Promise.race([
@@ -30,6 +31,7 @@ export class LearnAgentService {
   ): string {
     return JSON.stringify({
       kind: 'learn',
+      promptVersion: EXERCISE_PROMPT_VERSION,
       context,
       baseLanguage,
       targetLanguage,
@@ -89,7 +91,13 @@ Distractor candidate pool:
 ${distractorContext}
 
 When building multiple-choice style options, do not reuse the exact same tiny option pool for every question unless the candidate pool is genuinely too small.
-If a word appears behaviorally challenging, prefer a higher exercise difficulty and stronger distractors.`;
+If a word appears behaviorally challenging, prefer a higher exercise difficulty and stronger distractors.
+
+Language-format requirements:
+- The visible "question" text must be written in ${targetLanguage}, not in ${baseLanguage}.
+- The "hint" and "feedback" should be written in ${baseLanguage}.
+- For base_to_target fill_blank exercises, use a natural ${targetLanguage} sentence or prompt and leave the answer slot blank in ${targetLanguage}.
+- Do not restate the full prompt in ${baseLanguage} inside the question body unless the source material itself requires it.`;
 
     const result = await withTimeout(
       generateStructuredResult<ExerciseResultType>({
@@ -141,7 +149,7 @@ If a word appears behaviorally challenging, prefer a higher exercise difficulty 
         return await this.generateExercisesWithAi(words, distractorWords, context, exerciseTypes, baseLanguage, targetLanguage);
       } catch (error) {
         console.error('Learn exercise generation fell back to local generator:', error);
-        return generateLocalExercises(words, distractorWords, context, exerciseTypes);
+        return generateLocalExercises(words, distractorWords, context, exerciseTypes, baseLanguage, targetLanguage);
       }
     }, CACHE_TTL_MS);
   }

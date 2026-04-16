@@ -57,6 +57,9 @@ Create learning exercises for vocabulary words that test comprehension and appli
    - **hint**: Always provide a helpful hint that guides without giving away the answer
    - **feedback**: Always provide positive feedback explaining why the answer is correct
    - Both should be educational and encouraging
+   - Write **question** in the learner's target language whenever possible
+   - Write **hint** and **feedback** in the learner's base language
+   - For `fill_blank` and `sentence_completion`, the visible sentence around the blank should stay in the target language instead of switching back to the base language
 
 4. **Difficulty Levels:**
    - **easy**: Basic recognition and simple context
