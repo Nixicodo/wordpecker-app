@@ -26,7 +26,6 @@ import { apiService } from '../services/api';
 import { validateAnswer } from '../utils/answerValidation';
 import { recommendReviewRating } from '../utils/reviewRating';
 import { resolveQuestionExposureWords } from '../utils/questionExposure';
-import { BufferedBatchQueue } from '../utils/bufferedBatchQueue';
 
 type AuditState = {
   answer: string;
@@ -162,7 +161,6 @@ export const DisciplinedLearnSession = ({
   const settlementQueueRef = useRef<Promise<void>>(Promise.resolve());
   const queuedSettlementIndexesRef = useRef(new Set<number>());
   const syncingSettlementIndexesRef = useRef(new Set<number>());
-  const bufferedExercisesRef = useRef<BufferedBatchQueue<Exercise> | null>(null);
   const isAppendingExercisesRef = useRef(false);
   const nextAutoAppendIndexRef = useRef(0);
   const inFlightAutoAppendIndexRef = useRef<number | null>(null);
@@ -208,11 +206,6 @@ export const DisciplinedLearnSession = ({
     }
   }, [auditStates, currentIndex]);
 
-  const syncHasMoreExercises = useCallback(() => {
-    const queue = bufferedExercisesRef.current;
-    setHasMoreExercises(queue ? queue.hasBufferedBatches() || !queue.isExhausted() : false);
-  }, []);
-
   const fetchMoreExercises = useCallback(async (excludeWordIds: string[]): Promise<Exercise[] | null> => {
     try {
       const response = await apiService.getExercises(list.id, {
@@ -234,25 +227,12 @@ export const DisciplinedLearnSession = ({
   }, [list.id]);
 
   useEffect(() => {
-    const queue = new BufferedBatchQueue<Exercise>({
-      fetchBatch: fetchMoreExercises,
-      collectIds: collectSeenWordIds,
-      bufferSize: 1,
-      onStateChange: syncHasMoreExercises
-    });
-
-    bufferedExercisesRef.current = queue;
     nextAutoAppendIndexRef.current = 0;
     inFlightAutoAppendIndexRef.current = null;
     isAppendingExercisesRef.current = false;
-    queue.ensureBuffered(initialExercises);
-    syncHasMoreExercises();
-
-    return () => {
-      queue.dispose();
-      bufferedExercisesRef.current = null;
-    };
-  }, [fetchMoreExercises, initialExercises, syncHasMoreExercises]);
+    setHasMoreExercises(true);
+    setAutoLoadError('');
+  }, [fetchMoreExercises, initialExercises]);
 
   const updateAuditState = useCallback((index: number, updater: (previous: AuditState) => AuditState) => {
     setAuditStates((previous) => previous.map((state, stateIndex) => (
@@ -349,8 +329,7 @@ export const DisciplinedLearnSession = ({
   const appendBufferedExercises = useCallback(async (
     options?: { focusFirstNewQuestion?: boolean; clearAutoLoadError?: boolean }
   ): Promise<boolean> => {
-    const queue = bufferedExercisesRef.current;
-    if (!queue || isAppendingExercisesRef.current) {
+    if (isAppendingExercisesRef.current) {
       return false;
     }
 
@@ -364,27 +343,22 @@ export const DisciplinedLearnSession = ({
     try {
       isAppendingExercisesRef.current = true;
       setIsLoadingMore(true);
-      const nextExercises = await queue.consumeNext();
+      const nextExercises = await fetchMoreExercises(collectSeenWordIds(exercises));
 
       if (!nextExercises?.length) {
-        syncHasMoreExercises();
+        setHasMoreExercises(false);
         return false;
       }
 
-      let nextQuestionIndex = -1;
-      let updatedExercises: Exercise[] = [];
-
-      setExercises((previous) => {
-        nextQuestionIndex = previous.length;
-        updatedExercises = [...previous, ...nextExercises];
-        return updatedExercises;
-      });
+      const nextQuestionIndex = exercises.length;
+      const updatedExercises = [...exercises, ...nextExercises];
+      setExercises(updatedExercises);
 
       if (nextQuestionIndex >= 0) {
         nextAutoAppendIndexRef.current = nextQuestionIndex;
       }
 
-      queue.ensureBuffered(updatedExercises);
+      setHasMoreExercises(true);
       setAutoLoadError('');
 
       if (focusFirstNewQuestion && nextQuestionIndex >= 0) {
@@ -407,9 +381,8 @@ export const DisciplinedLearnSession = ({
     } finally {
       isAppendingExercisesRef.current = false;
       setIsLoadingMore(false);
-      syncHasMoreExercises();
     }
-  }, [syncHasMoreExercises, toast]);
+  }, [exercises, fetchMoreExercises, toast]);
 
   const markIncorrectQuestionViewed = useCallback((index: number) => {
     updateAuditState(index, (previous) => (
@@ -681,6 +654,54 @@ export const DisciplinedLearnSession = ({
     }
   };
 
+  const endReviewEarly = async () => {
+    if (isSaving) {
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      await validationQueueRef.current.catch(() => undefined);
+      const allSettled = await flushSettlementSyncs();
+      if (!allSettled) {
+        toast({
+          title: '提前结束失败',
+          description: '已完成题目里仍有结算失败的记录，请稍后重试。',
+          status: 'error',
+          duration: 4000,
+          isClosable: true
+        });
+        return;
+      }
+
+      const unsettledCount = auditStatesRef.current.filter((state) => (
+        state.submitted && !(state.status === 'correct' || state.status === 'incorrect')
+      )).length;
+
+      toast({
+        title: '复习已提前结束',
+        description: unsettledCount > 0
+          ? `已结算当前已完成的 ${resolvedCount} 题，另有 ${unsettledCount} 题未完成审核或需重试，已跳过。`
+          : `已结算当前已完成的 ${resolvedCount} 题。`,
+        status: 'success',
+        duration: 4000,
+        isClosable: true
+      });
+      navigate(`/lists/${list.id}`);
+    } catch (error) {
+      console.error('Failed to end disciplined review early:', error);
+      toast({
+        title: '提前结束失败',
+        description: getErrorMessage(error, '请稍后重试。'),
+        status: 'error',
+        duration: 4000,
+        isClosable: true
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   if (!currentExercise || !resolvedExercise) {
     return (
       <Center h="calc(100vh - 64px)">
@@ -712,12 +733,26 @@ export const DisciplinedLearnSession = ({
           onClick={() => navigate(-1)}
           size="lg"
         />
+        <Button
+          aria-label="结束复习"
+          data-testid="end-review-button"
+          leftIcon={<CloseIcon />}
+          variant="outline"
+          colorScheme="orange"
+          onClick={endReviewEarly}
+          isLoading={isSaving}
+          loadingText="结算中"
+          size={{ base: 'sm', md: 'md' }}
+        >
+          结束复习
+        </Button>
         <IconButton
           aria-label="退出复习"
           icon={<CloseIcon />}
           variant="ghost"
-          onClick={() => navigate(`/lists/${list.id}`)}
+          onClick={endReviewEarly}
           size="lg"
+          display="none"
         />
       </Flex>
 

@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "smoke:due-review": "node ./scripts/smoke-due-review.mjs"
+    "smoke:due-review": "node ./scripts/smoke-due-review.mjs",
+    "smoke:due-review-window": "node ./scripts/smoke-due-review-window.mjs"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.2.4",

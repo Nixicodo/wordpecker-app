@@ -310,7 +310,9 @@ export const Learn = () => {
           setSessionService(service);
           setSessionProgress(service.getCurrentProgress());
           questionStartedAtRef.current = Date.now();
-          bufferedExercisesRef.current?.ensureBuffered(response.exercises);
+          if (resolvedList.kind !== 'due_review') {
+            bufferedExercisesRef.current?.ensureBuffered(response.exercises);
+          }
         } else {
           throw new Error('Invalid response from server');
         }
