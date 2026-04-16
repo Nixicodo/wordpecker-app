@@ -11,6 +11,7 @@ const RESOLVED_LABEL = '\u5df2\u5b8c\u6210\u5ba1\u6838';
 const PENDING_LABEL = '\u5ba1\u6838\u4e2d';
 const INCORRECT_LABEL = '\u9519\u9898';
 const TOTAL_QUESTIONS_LABEL = '\u5171';
+const EXIT_REVIEW_LABEL = '\u9000\u51fa\u590d\u4e60';
 
 const ensure = (condition, message) => {
   if (!condition) {
@@ -22,7 +23,32 @@ const sleep = (ms) => new Promise((resolve) => {
   setTimeout(resolve, ms);
 });
 
-const containsCjk = (value) => /[\u3400-\u9fff]/u.test(value);
+const looksLikeSpanishQuestion = (value) => /^(Escribe|Qué|Que|Relaciona|Completa|Verdadero|Falso)/i.test(value.trim());
+
+const exerciseSignature = (exercise) => JSON.stringify({
+  type: exercise.type,
+  wordId: exercise.wordId ?? null,
+  wordIds: exercise.wordIds ?? [],
+  word: exercise.word ?? null,
+  correctAnswer: exercise.correctAnswer ?? null,
+  question: exercise.question ?? null
+});
+
+const payloadSignature = (payload) => JSON.stringify(
+  (payload?.exercises ?? []).map(exerciseSignature)
+);
+
+const assertNoOverlapBetweenPayloads = (leftPayload, rightPayload, leftLabel, rightLabel) => {
+  const leftSignatures = new Set((leftPayload?.exercises ?? []).map(exerciseSignature));
+  const duplicatedExercises = (rightPayload?.exercises ?? []).filter((exercise) => (
+    leftSignatures.has(exerciseSignature(exercise))
+  ));
+
+  ensure(
+    duplicatedExercises.length === 0,
+    `Expected ${leftLabel} and ${rightLabel} to contain different exercises, but found duplicates: ${duplicatedExercises.map((exercise) => exercise.word || exercise.correctAnswer).join(', ')}`
+  );
+};
 
 const fetchDueReviewSnapshot = async () => {
   const response = await fetch(`${BACKEND_URL}/api/lists/due-review`, {
@@ -162,19 +188,25 @@ const main = async () => {
   const page = await browser.newPage({ viewport: { width: 1440, height: 1024 } });
   const consoleErrors = [];
   const validationResponses = [];
-  let startPayload = null;
-  const morePayloads = [];
+  const startPayloads = [];
+  const distinctMorePayloads = [];
+  const seenMorePayloads = new Set();
 
   collectConsoleErrors(page, consoleErrors);
   page.on('response', async (response) => {
     const url = response.url();
 
     if (/\/api\/learn\/[^/]+\/start$/.test(url)) {
-      startPayload = await response.json();
+      startPayloads.push(await response.json());
     }
 
     if (/\/api\/learn\/[^/]+\/more$/.test(url)) {
-      morePayloads.push(await response.json());
+      const payload = await response.json();
+      const signature = payloadSignature(payload);
+      if (!seenMorePayloads.has(signature)) {
+        seenMorePayloads.add(signature);
+        distinctMorePayloads.push(payload);
+      }
     }
 
     if (url.endsWith('/api/lists/validate-answer')) {
@@ -227,22 +259,30 @@ const main = async () => {
       `Learning screen does not show list name "${snapshot.name}"`
     );
 
-    await waitForBodyText(page, REVIEW_TIMEOUT_MS, () => Boolean(startPayload?.exercises?.length), 'learn start payload');
+    await waitForBodyText(page, REVIEW_TIMEOUT_MS, () => startPayloads.length > 0, 'learn start payload');
+
+    ensure(
+      startPayloads.length === 1,
+      `Expected due-review learn start to be requested once, got ${startPayloads.length}`
+    );
+
+    const [startPayload] = startPayloads;
 
     const fillBlankIndex = startPayload.exercises.findIndex((exercise) => exercise.type === 'fill_blank');
     ensure(fillBlankIndex >= 0, 'Due-review session did not contain any fill_blank exercise for AI validation');
 
     const targetExercise = startPayload.exercises[fillBlankIndex];
     ensure(
-      !containsCjk(targetExercise.question),
-      `Expected due-review question text to be in Spanish, got: ${targetExercise.question}`
+      looksLikeSpanishQuestion(targetExercise.question),
+      `Expected due-review question text to start with Spanish instructional copy, got: ${targetExercise.question}`
     );
 
     await waitForTotalQuestionCount(page, 10, REVIEW_TIMEOUT_MS);
     ensure(
-      morePayloads.length >= 1 && (morePayloads[0].exercises?.length || 0) > 0,
+      distinctMorePayloads.length >= 1 && (distinctMorePayloads[0].exercises?.length || 0) > 0,
       'Expected the due-review page to auto-load questions 6-10 while question 1 is active'
     );
+    assertNoOverlapBetweenPayloads(startPayload, distinctMorePayloads[0], 'questions 1-5', 'questions 6-10');
 
     const submitButton = page.getByRole('button', { name: SUBMIT_FOR_AUDIT_LABEL });
 
@@ -290,9 +330,14 @@ const main = async () => {
     await page.getByRole('button', { name: '6', exact: true }).click();
     await waitForTotalQuestionCount(page, 15, REVIEW_TIMEOUT_MS);
     ensure(
-      morePayloads.length >= 2 && (morePayloads[1].exercises?.length || 0) > 0,
+      distinctMorePayloads.length >= 2 && (distinctMorePayloads[1].exercises?.length || 0) > 0,
       'Expected the due-review page to auto-load questions 11-15 when question 6 becomes active'
     );
+    assertNoOverlapBetweenPayloads(startPayload, distinctMorePayloads[1], 'questions 1-5', 'questions 11-15');
+    assertNoOverlapBetweenPayloads(distinctMorePayloads[0], distinctMorePayloads[1], 'questions 6-10', 'questions 11-15');
+
+    await page.getByRole('button', { name: EXIT_REVIEW_LABEL }).click();
+    await page.waitForURL(new RegExp(`/lists/${snapshot.id}$`), { timeout: REVIEW_TIMEOUT_MS });
 
     if (consoleErrors.length > 0) {
       throw new Error(`Console errors detected:\n${consoleErrors.join('\n')}`);
@@ -312,7 +357,7 @@ const main = async () => {
         correctAnswer: targetExercise.correctAnswer,
         question: targetExercise.question
       },
-      autoLoadedBatches: morePayloads.map((payload, index) => ({
+      autoLoadedBatches: distinctMorePayloads.map((payload, index) => ({
         batch: index + 1,
         exerciseCount: payload.exercises?.length || 0
       })),

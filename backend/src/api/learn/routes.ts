@@ -14,6 +14,7 @@ import {
   resolveEnabledQuestionTypes
 } from '../../services/exerciseTypePreferences';
 import { selectGenerationWordPool } from '../../services/exerciseGenerationPool';
+import { resolveGenerationLanguages } from '../../services/generationLanguages';
 import { isDueReviewList } from '../../services/dueReview';
 
 const router = Router();
@@ -58,7 +59,7 @@ router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
 
     const userId = resolveUserId(req.headers['user-id']);
     const isDisciplinedReview = isDueReviewList(list);
-    const [{ scheduledWords, extraDistractors }, exerciseTypes, { baseLanguage, targetLanguage }] = await Promise.all([
+    const [{ scheduledWords, extraDistractors }, exerciseTypes, userLanguages] = await Promise.all([
       selectGenerationWordPool(userId, listId),
       getExerciseTypes(userId, isDisciplinedReview),
       getUserLanguages(userId)
@@ -67,6 +68,8 @@ router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
     if (!scheduledWords.length) {
       return res.status(400).json({ message: 'List has no words' });
     }
+
+    const { baseLanguage, targetLanguage } = resolveGenerationLanguages(userLanguages, scheduledWords);
 
     const exercises = await learnAgentService.generateExercises(
       scheduledWords.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
@@ -101,7 +104,7 @@ router.post('/:listId/more', validate(listIdSchema), async (req, res) => {
     const excludeWordIds = Array.isArray(requestBody?.excludeWordIds)
       ? requestBody.excludeWordIds.filter((wordId: unknown): wordId is string => typeof wordId === 'string')
       : [];
-    const [{ scheduledWords, extraDistractors }, exerciseTypes, { baseLanguage, targetLanguage }] = await Promise.all([
+    const [{ scheduledWords, extraDistractors }, exerciseTypes, userLanguages] = await Promise.all([
       selectGenerationWordPool(userId, listId, undefined, undefined, excludeWordIds),
       getExerciseTypes(userId, isDisciplinedReview),
       getUserLanguages(userId)
@@ -110,6 +113,8 @@ router.post('/:listId/more', validate(listIdSchema), async (req, res) => {
     if (!scheduledWords.length) {
       return res.status(400).json({ message: 'List has no words' });
     }
+
+    const { baseLanguage, targetLanguage } = resolveGenerationLanguages(userLanguages, scheduledWords);
 
     const exercises = await learnAgentService.generateExercises(
       scheduledWords.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),

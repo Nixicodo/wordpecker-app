@@ -15,6 +15,10 @@ import preferencesRoutes from '../api/preferences/routes';
 import learnRoutes from '../api/learn/routes';
 import quizRoutes from '../api/quiz/routes';
 import {
+  DEFAULT_BASE_LANGUAGE,
+  DEFAULT_TARGET_LANGUAGE
+} from '../api/preferences/defaults';
+import {
   getLearningSnapshotPath,
   restoreLearningSnapshotIfNeeded
 } from '../services/repoLearningSnapshot';
@@ -83,7 +87,7 @@ describe('repository learning snapshot integration', () => {
       .set('user-id', 'snapshot-user');
 
     expect(preferencesResponse.status).toBe(200);
-    expect(preferencesResponse.body.baseLanguage).toBe('en');
+    expect(preferencesResponse.body.baseLanguage).toBe(DEFAULT_BASE_LANGUAGE);
 
     const listResponse = await request(app)
       .post('/api/lists')
@@ -142,7 +146,7 @@ describe('repository learning snapshot integration', () => {
     expect(restoredList?.name).toBe('测试词单');
 
     const restoredPreferences = await UserPreferences.findOne({ userId: 'snapshot-user' }).lean();
-    expect(restoredPreferences?.targetLanguage).toBe('en');
+    expect(restoredPreferences?.targetLanguage).toBe(DEFAULT_TARGET_LANGUAGE);
 
     const restoredState = await LearningState.findOne({ userId: 'snapshot-user', wordId, listId }).lean();
     expect(restoredState?.reviewCount).toBe(1);

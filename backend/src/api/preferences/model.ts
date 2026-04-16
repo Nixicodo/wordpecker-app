@@ -1,5 +1,6 @@
 import { Schema, model, Document } from 'mongoose';
 import { ExerciseTypePreferences } from '../../types/index';
+import { DEFAULT_BASE_LANGUAGE, DEFAULT_TARGET_LANGUAGE } from './defaults';
 
 export interface IUserPreferences extends Document {
   userId: string;
@@ -27,12 +28,12 @@ const userPreferencesSchema = new Schema<IUserPreferences>({
   baseLanguage: {
     type: String,
     required: true,
-    default: 'en' // English as default base language
+    default: DEFAULT_BASE_LANGUAGE
   },
   targetLanguage: {
     type: String,
     required: true,
-    default: 'en' // English as default target language
+    default: DEFAULT_TARGET_LANGUAGE
   }
 }, {
   timestamps: true

@@ -11,6 +11,7 @@ import { resolveUserId } from '../../config/learning';
 import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
 import { resolveEnabledQuestionTypes } from '../../services/exerciseTypePreferences';
 import { selectGenerationWordPool } from '../../services/exerciseGenerationPool';
+import { resolveGenerationLanguages } from '../../services/generationLanguages';
 import { isDueReviewList } from '../../services/dueReview';
 
 const router = Router();
@@ -29,7 +30,7 @@ router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
     if (isDueReviewList(list)) return res.status(403).json({ message: 'Due review must use disciplined learning mode' });
 
     const userId = resolveUserId(req.headers['user-id']);
-    const [{ scheduledWords, extraDistractors }, questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
+    const [{ scheduledWords, extraDistractors }, questionTypes, userLanguages] = await Promise.all([
       selectGenerationWordPool(userId, listId),
       getQuestionTypes(userId),
       getUserLanguages(userId)
@@ -38,6 +39,8 @@ router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
     if (!scheduledWords.length) {
       return res.status(400).json({ message: 'List has no words' });
     }
+
+    const { baseLanguage, targetLanguage } = resolveGenerationLanguages(userLanguages, scheduledWords);
 
     const questions = await quizAgentService.generateQuestions(
       scheduledWords.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),
@@ -73,7 +76,7 @@ router.post('/:listId/more', validate(listIdSchema), async (req, res) => {
     const excludeWordIds = Array.isArray(requestBody?.excludeWordIds)
       ? requestBody.excludeWordIds.filter((wordId: unknown): wordId is string => typeof wordId === 'string')
       : [];
-    const [{ scheduledWords, extraDistractors }, questionTypes, { baseLanguage, targetLanguage }] = await Promise.all([
+    const [{ scheduledWords, extraDistractors }, questionTypes, userLanguages] = await Promise.all([
       selectGenerationWordPool(userId, listId, undefined, undefined, excludeWordIds),
       getQuestionTypes(userId),
       getUserLanguages(userId)
@@ -82,6 +85,8 @@ router.post('/:listId/more', validate(listIdSchema), async (req, res) => {
     if (!scheduledWords.length) {
       return res.status(400).json({ message: 'List has no words' });
     }
+
+    const { baseLanguage, targetLanguage } = resolveGenerationLanguages(userLanguages, scheduledWords);
 
     const questions = await quizAgentService.generateQuestions(
       scheduledWords.map(({ id, value, meaning, state }) => ({ id, value, meaning, challengeScore: state.challengeScore })),

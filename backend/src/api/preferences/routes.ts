@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { validate } from 'echt';
 import { UserPreferences } from './model';
+import { DEFAULT_BASE_LANGUAGE, DEFAULT_TARGET_LANGUAGE } from './defaults';
 import { updatePreferencesSchema } from './schemas';
 import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
 import {
@@ -25,8 +26,8 @@ router.get('/', async (req: Request, res: Response) => {
       preferences = await UserPreferences.create({
         userId,
         exerciseTypes: DEFAULT_EXERCISE_TYPE_PREFERENCES,
-        baseLanguage: 'en',
-        targetLanguage: 'en'
+        baseLanguage: DEFAULT_BASE_LANGUAGE,
+        targetLanguage: DEFAULT_TARGET_LANGUAGE
       });
       await persistLearningSnapshot();
     }

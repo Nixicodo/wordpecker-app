@@ -56,11 +56,11 @@ function upgradeDifficulty(
 }
 
 function isChineseLanguage(language: string): boolean {
-  return /chinese|mandarin|zh|中文|汉语/i.test(language);
+  return /chinese|mandarin|zh|中文|汉语|简体中文/i.test(language);
 }
 
 function isSpanishLanguage(language: string): boolean {
-  return /spanish|espanol|español|castellano/i.test(language);
+  return /spanish|espa[nñ]ol|castellano|西班牙语|拉丁美洲西班牙语/i.test(language);
 }
 
 function buildLanguageCopy(baseLanguage: string, targetLanguage: string) {
