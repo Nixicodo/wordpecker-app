@@ -4,8 +4,11 @@ import { openaiRateLimiter } from '../../middleware/rateLimiter';
 import { vocabularyAgentService } from './agent-service';
 import { Word } from '../words/model';
 import { getUserLanguages } from '../../utils/getUserLanguages';
-import { discoveryWordsSchema, generateWordsSchema, getWordDetailsSchema } from './schemas';
+import { discoveryAssessmentSchema, discoveryWordsSchema, generateWordsSchema, getWordDetailsSchema } from './schemas';
 import { selectFixedDiscoveryWords } from '../../services/fixedDiscoveryChain';
+import { applyDiscoveryAssessment } from '../../services/learningScheduler';
+import { getDisciplineStatus } from '../../services/discipline';
+import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
 
 const router = Router();
 
@@ -69,11 +72,50 @@ router.post('/generate-words', openaiRateLimiter, validate(generateWordsSchema),
 
 router.post('/discovery-words', validate(discoveryWordsSchema), async (req, res) => {
   try {
+    const validation = validateRequest(req);
+    if ('error' in validation) {
+      return res.status(400).json({ error: validation.error });
+    }
+
     const { count = 15 } = req.body;
-    const batch = await selectFixedDiscoveryWords(count);
+    const batch = await selectFixedDiscoveryWords(validation.userId, count);
     res.json(batch);
   } catch (error) {
     res.status(500).json({ error: 'Failed to load discovery words' });
+  }
+});
+
+router.post('/discovery-rate', validate(discoveryAssessmentSchema), async (req, res) => {
+  try {
+    const validation = validateRequest(req);
+    if ('error' in validation) {
+      return res.status(400).json({ error: validation.error });
+    }
+
+    const { wordId, sourceListId, assessment } = req.body;
+    const disciplineStatus = await getDisciplineStatus(req.headers['user-id']);
+
+    if (
+      assessment !== 'mastered' &&
+      disciplineStatus.newWordsAddedToday >= disciplineStatus.dailyNewWordLimit
+    ) {
+      return res.status(409).json({ error: 'Daily new-word quota reached' });
+    }
+
+    const result = await applyDiscoveryAssessment(
+      validation.userId,
+      sourceListId,
+      wordId,
+      assessment
+    );
+    await persistLearningSnapshot();
+
+    res.json({
+      ...result,
+      disciplineStatus: await getDisciplineStatus(req.headers['user-id'])
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to rate discovery word' });
   }
 });
 

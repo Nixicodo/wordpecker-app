@@ -1,5 +1,6 @@
 import { IWordList, WordList } from '../api/lists/model';
 import { IWord, IWordListMembership, Word } from '../api/words/model';
+import { LearningState } from '../api/learning-state/model';
 import { getManagedSpanishVocabularyListNames } from '../scripts/spanishVocabularyData';
 
 export const FIXED_DISCOVERY_TARGET_LIST_NAME = '私教学习自用';
@@ -26,10 +27,6 @@ export type DiscoverySourceSummary = {
 };
 
 export type DiscoveryBatch = {
-  targetList: {
-    id: string;
-    name: string;
-  };
   sourceList: DiscoverySourceSummary | null;
   words: DiscoveryWord[];
   count: number;
@@ -73,32 +70,31 @@ export const buildFixedDiscoveryChain = () => [
 ];
 
 export const selectFixedDiscoveryWords = async (
+  userId: string,
   count = 15
 ): Promise<DiscoveryBatch> => {
   const chain = buildFixedDiscoveryChain();
-  const lists = (await WordList.find({ name: { $in: chain } })
+  const sourceNames = chain.slice(1);
+  const lists = (await WordList.find({ name: { $in: sourceNames } })
     .select('_id name context')
     .lean()) as LeanList[];
   const listsByName = new Map<string, LeanList>(
     lists.map((list) => [list.name, list])
   );
 
-  const targetList = listsByName.get(FIXED_DISCOVERY_TARGET_LIST_NAME);
-  if (!targetList) {
-    throw new Error(`Target list "${FIXED_DISCOVERY_TARGET_LIST_NAME}" not found`);
-  }
-
-  const targetWords = (await Word.find({ 'listMemberships.listId': targetList._id })
-    .select('_id value')
-    .lean()) as Array<Pick<IWord, '_id' | 'value'>>;
-  const knownTargetWordValues = new Set(
-    targetWords.map((word) => word.value.toLowerCase())
-  );
-
-  const orderedSourceLists = chain
-    .slice(1)
+  const orderedSourceLists = sourceNames
     .map((name) => listsByName.get(name))
     .filter((list): list is LeanList => Boolean(list));
+  const introducedStates = await LearningState.find({
+    userId,
+    listId: { $in: orderedSourceLists.map((list) => list._id) },
+    reviewCount: { $gt: 0 }
+  })
+    .select('wordId listId')
+    .lean();
+  const introducedWordKeys = new Set(
+    introducedStates.map((state) => `${state.listId.toString()}:${state.wordId.toString()}`)
+  );
 
   for (const [index, sourceList] of orderedSourceLists.entries()) {
     const sourceWords = (await Word.find({ 'listMemberships.listId': sourceList._id })
@@ -107,7 +103,7 @@ export const selectFixedDiscoveryWords = async (
       .lean()) as LeanWord[];
 
     const availableWords = sourceWords.flatMap((word) => {
-      if (knownTargetWordValues.has(word.value.toLowerCase())) {
+      if (introducedWordKeys.has(`${sourceList._id.toString()}:${word._id.toString()}`)) {
         return [];
       }
 
@@ -131,10 +127,6 @@ export const selectFixedDiscoveryWords = async (
 
     if (availableWords.length > 0) {
       return {
-        targetList: {
-          id: targetList._id.toString(),
-          name: targetList.name
-        },
         sourceList: {
           id: sourceList._id.toString(),
           name: sourceList.name,
@@ -151,10 +143,6 @@ export const selectFixedDiscoveryWords = async (
   }
 
   return {
-    targetList: {
-      id: targetList._id.toString(),
-      name: targetList.name
-    },
     sourceList: null,
     words: [],
     count: 0,

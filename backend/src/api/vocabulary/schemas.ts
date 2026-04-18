@@ -14,6 +14,14 @@ export const discoveryWordsSchema = {
   })
 };
 
+export const discoveryAssessmentSchema = {
+  body: z.object({
+    wordId: z.string().min(1),
+    sourceListId: z.string().min(1),
+    assessment: z.enum(['mastered', 'familiar', 'uncertain', 'unknown'])
+  })
+};
+
 export const getWordDetailsSchema = {
   body: z.object({
     word: z.string().min(1),

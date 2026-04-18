@@ -14,7 +14,7 @@ import {
   useColorModeValue
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { FaArrowRight, FaLink } from 'react-icons/fa';
+import { FaArrowRight } from 'react-icons/fa';
 
 const fixedChainPreview = [
   '私教学习自用',
@@ -39,7 +39,7 @@ export const GetNewWords: React.FC = () => {
               发现新词
             </Heading>
             <Text mt={3} color="gray.400" fontSize="lg">
-              这里不再按场景随机生词，而是按照固定词树链逆序向上学习。系统会永远先检查更旧的来源词树，只要旧词树里还有你没纳入私教词树的新词，就不会跳去更新一级。
+              这里会按固定词树链逆序向上出词。系统永远先检查更旧的来源词树，只要旧来源里还有未进入你学习流程的新词，就不会上移到更新一级。
             </Text>
           </Box>
 
@@ -61,13 +61,14 @@ export const GetNewWords: React.FC = () => {
 
                 <Box>
                   <Text fontSize="lg" fontWeight="bold" color="green.400" mb={3}>
-                    当前规则
+                    熟悉度评分规则
                   </Text>
                   <VStack align="start" spacing={2} color="gray.300">
-                    <Text>1. 永远先从更旧的来源词树取词。</Text>
-                    <Text>2. 只有当前旧来源已经没有可引入的新词时，才会上移到下一层来源词树。</Text>
-                    <Text>3. 如果旧来源词树之后又新增了词，会重新回到旧来源优先。</Text>
-                    <Text>4. 你在会话里点“我认识”，该词会直接纳入私教学习词树，避免下次重复出现。</Text>
+                    <Text>1. 非常熟练：直接归为完成学习，不占用今日新词额度，也不会再进入复习。</Text>
+                    <Text>2. 比较熟练：按较长的首次复习间隔进入 FSRS。</Text>
+                    <Text>3. 不太熟悉：按中等首次复习间隔进入 FSRS。</Text>
+                    <Text>4. 完全陌生：按最短首次复习间隔进入 FSRS。</Text>
+                    <Text>5. 每日最高新词数已提升为 15。</Text>
                   </VStack>
                 </Box>
 
@@ -75,7 +76,6 @@ export const GetNewWords: React.FC = () => {
 
                 <Box textAlign="center">
                   <Button
-                    leftIcon={<FaLink />}
                     rightIcon={<FaArrowRight />}
                     colorScheme="blue"
                     size="lg"
@@ -83,7 +83,7 @@ export const GetNewWords: React.FC = () => {
                     px={10}
                     onClick={() => navigate('/learn-new-words/session')}
                   >
-                    开始固定链学习
+                    开始评分式学新词
                   </Button>
                 </Box>
               </VStack>

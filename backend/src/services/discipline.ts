@@ -1,11 +1,9 @@
-import mongoose from 'mongoose';
-import { Word } from '../api/words/model';
-import { WordList } from '../api/lists/model';
+import { ReviewLog } from '../api/review-log/model';
 import { resolveUserId } from '../config/learning';
 import { summarizeDueReviewProgress } from './learningScheduler';
 import { ensureDueReviewList } from './dueReview';
 
-export const DISCIPLINE_DAILY_NEW_WORD_LIMIT = 10;
+export const DISCIPLINE_DAILY_NEW_WORD_LIMIT = 15;
 export const DISCIPLINE_BACKLOG_HARD_LIMIT = 30;
 
 export type DisciplineEntryState = 'open' | 'soft_locked' | 'hard_locked' | 'quota_reached';
@@ -31,21 +29,14 @@ const getTodayBounds = (now = new Date()) => {
   return { start, end };
 };
 
-const countNewWordsAddedToday = async (now = new Date()) => {
-  const customListIds = (await WordList.find({ kind: 'custom' }).select('_id').lean())
-    .map((list) => list._id as mongoose.Types.ObjectId);
-
-  if (!customListIds.length) {
-    return 0;
-  }
-
+const countNewWordsAddedToday = async (userId: string, now = new Date()) => {
   const { start, end } = getTodayBounds(now);
-  const [result] = await Word.aggregate<{ total: number }>([
-    { $unwind: '$listMemberships' },
+  const [result] = await ReviewLog.aggregate<{ total: number }>([
     {
       $match: {
-        'listMemberships.listId': { $in: customListIds },
-        'listMemberships.addedAt': { $gte: start, $lte: end }
+        userId,
+        questionType: 'discovery_assessment',
+        answeredAt: { $gte: start, $lte: end }
       }
     },
     { $count: 'total' }
@@ -59,7 +50,7 @@ export const getDisciplineStatus = async (userIdOrHeaderValue: string | string[]
   const [dueReviewList, dueProgress, newWordsAddedToday] = await Promise.all([
     ensureDueReviewList(),
     summarizeDueReviewProgress(userId),
-    countNewWordsAddedToday()
+    countNewWordsAddedToday(userId)
   ]);
 
   const backlog = dueProgress.dueCount || 0;

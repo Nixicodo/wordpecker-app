@@ -257,10 +257,6 @@ export interface DiscoveryWord {
 }
 
 export interface DiscoveryWordsResponse {
-  targetList: {
-    id: string;
-    name: string;
-  };
   sourceList: {
     id: string;
     name: string;
@@ -272,6 +268,16 @@ export interface DiscoveryWordsResponse {
   words: DiscoveryWord[];
   count: number;
   chain: string[];
+}
+
+export type DiscoveryAssessment = 'mastered' | 'familiar' | 'uncertain' | 'unknown';
+
+export interface DiscoveryRateResponse {
+  countedAsNewWord: boolean;
+  rating: 'again' | 'good' | 'easy';
+  dueAt?: string;
+  status: 'mastered_forever' | 'scheduled';
+  disciplineStatus: DisciplineStatus;
 }
 
 export interface VocabularyWordsResponse {

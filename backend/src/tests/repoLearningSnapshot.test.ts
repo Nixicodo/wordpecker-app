@@ -342,8 +342,8 @@ describe('repository learning snapshot integration', () => {
 
     expect(statusResponse.status).toBe(200);
     expect(statusResponse.body.entryState).toBe('open');
-    expect(statusResponse.body.dailyNewWordLimit).toBe(10);
-    expect(statusResponse.body.remainingNewWordQuota).toBe(10);
+    expect(statusResponse.body.dailyNewWordLimit).toBe(15);
+    expect(statusResponse.body.remainingNewWordQuota).toBe(15);
     expect(statusResponse.body.dueCount).toBe(0);
   });
 

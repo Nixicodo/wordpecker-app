@@ -1,4 +1,6 @@
+import { State } from 'ts-fsrs';
 import { closeDB, connectDB } from '../config/mongodb';
+import { LearningState } from '../api/learning-state/model';
 import { WordList } from '../api/lists/model';
 import { Word } from '../api/words/model';
 import {
@@ -13,6 +15,7 @@ describe('selectFixedDiscoveryWords', () => {
 
   beforeEach(async () => {
     await Promise.all([
+      LearningState.deleteMany({}),
       Word.deleteMany({}),
       WordList.deleteMany({})
     ]);
@@ -20,17 +23,18 @@ describe('selectFixedDiscoveryWords', () => {
 
   afterAll(async () => {
     await Promise.all([
+      LearningState.deleteMany({}),
       Word.deleteMany({}),
       WordList.deleteMany({})
     ]);
     await closeDB();
   });
 
-  it('always prefers the oldest source list that still has unseen words', async () => {
-    const targetList = await WordList.create({
+  it('always prefers the oldest source list that still has undiscovered words', async () => {
+    await WordList.create({
       name: FIXED_DISCOVERY_TARGET_LIST_NAME,
-      description: 'Private study target list',
-      context: 'Private study',
+      description: 'Discovery root',
+      context: 'Private study root',
       kind: 'custom'
     });
     const level0 = await WordList.create({
@@ -46,7 +50,7 @@ describe('selectFixedDiscoveryWords', () => {
       kind: 'custom'
     });
 
-    await Word.create({
+    const hola = await Word.create({
       value: 'hola',
       listMemberships: [
         {
@@ -55,7 +59,7 @@ describe('selectFixedDiscoveryWords', () => {
         }
       ]
     });
-    await Word.create({
+    const adios = await Word.create({
       value: 'adios',
       listMemberships: [
         {
@@ -74,30 +78,55 @@ describe('selectFixedDiscoveryWords', () => {
       ]
     });
 
-    let batch = await selectFixedDiscoveryWords(10);
+    let batch = await selectFixedDiscoveryWords('discovery-user', 10);
 
-    expect(batch.targetList.name).toBe(FIXED_DISCOVERY_TARGET_LIST_NAME);
     expect(batch.sourceList?.name).toBe(level0.name);
     expect(batch.words.map((word) => word.word).sort()).toEqual(['adios', 'hola']);
 
-    const adios = await Word.findOne({ value: 'adios' });
-    const hola = await Word.findOne({ value: 'hola' });
-
-    adios?.listMemberships.push({
-      listId: targetList._id,
-      meaning: '再见（goodbye）'
+    await LearningState.create({
+      userId: 'discovery-user',
+      wordId: hola._id,
+      listId: level0._id,
+      dueAt: new Date('2026-05-01T00:00:00.000Z'),
+      lastReviewedAt: new Date('2026-04-18T00:00:00.000Z'),
+      stability: 3,
+      difficulty: 3,
+      scheduledDays: 4,
+      elapsedDays: 0,
+      reps: 1,
+      lapses: 0,
+      learningSteps: 0,
+      state: State.Review,
+      reviewCount: 1,
+      lapseCount: 0,
+      consecutiveCorrect: 1,
+      consecutiveWrong: 0,
+      lastRating: 'good',
+      lastSource: 'learn'
     });
-    hola?.listMemberships.push({
-      listId: targetList._id,
-      meaning: '你好（hello）'
+    await LearningState.create({
+      userId: 'discovery-user',
+      wordId: adios._id,
+      listId: level0._id,
+      dueAt: new Date('2026-05-01T00:00:00.000Z'),
+      lastReviewedAt: new Date('2026-04-18T00:00:00.000Z'),
+      stability: 3,
+      difficulty: 3,
+      scheduledDays: 4,
+      elapsedDays: 0,
+      reps: 1,
+      lapses: 0,
+      learningSteps: 0,
+      state: State.Review,
+      reviewCount: 1,
+      lapseCount: 0,
+      consecutiveCorrect: 1,
+      consecutiveWrong: 0,
+      lastRating: 'good',
+      lastSource: 'learn'
     });
 
-    await Promise.all([
-      adios?.save(),
-      hola?.save()
-    ]);
-
-    batch = await selectFixedDiscoveryWords(10);
+    batch = await selectFixedDiscoveryWords('discovery-user', 10);
 
     expect(batch.sourceList?.name).toBe(level1.name);
     expect(batch.words.map((word) => word.word)).toEqual(['gracias']);
@@ -112,7 +141,7 @@ describe('selectFixedDiscoveryWords', () => {
       ]
     });
 
-    batch = await selectFixedDiscoveryWords(10);
+    batch = await selectFixedDiscoveryWords('discovery-user', 10);
 
     expect(batch.sourceList?.name).toBe(level0.name);
     expect(batch.words.map((word) => word.word)).toEqual(['buenos dias']);

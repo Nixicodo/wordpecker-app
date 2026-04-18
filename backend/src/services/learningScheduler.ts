@@ -27,6 +27,8 @@ export type ReviewSubmission = {
   answeredAt?: string;
 };
 
+export type DiscoveryAssessment = 'mastered' | 'familiar' | 'uncertain' | 'unknown';
+
 export type ScheduledWord = {
   id: string;
   value: string;
@@ -817,6 +819,123 @@ export const settleReviewResults = async (
   const groupedResults = groupNormalizedResults(normalizedResults);
 
   await applyGroupedReviewResultsToList(userId, list, source, groupedResults);
+};
+
+const resolveDiscoveryRating = (
+  assessment: Exclude<DiscoveryAssessment, 'mastered'>
+): ReviewRating => {
+  switch (assessment) {
+    case 'familiar':
+      return 'easy';
+    case 'uncertain':
+      return 'good';
+    case 'unknown':
+      return 'again';
+    default:
+      return 'good';
+  }
+};
+
+const markWordMasteredForever = (
+  state: ILearningState,
+  answeredAt: Date
+) => {
+  copyLearningMetrics(state, {
+    dueAt: new Date('9999-12-31T23:59:59.999Z'),
+    lastReviewedAt: answeredAt,
+    stability: 365000,
+    difficulty: 1,
+    scheduledDays: 365000,
+    elapsedDays: 0,
+    reps: Math.max(state.reps + 1, 8),
+    lapses: state.lapses,
+    learningSteps: 0,
+    state: State.Review,
+    reviewCount: state.reviewCount + 1,
+    lapseCount: state.lapseCount,
+    consecutiveCorrect: state.consecutiveCorrect + 1,
+    consecutiveWrong: 0,
+    lastRating: 'easy',
+    lastSource: 'learn'
+  });
+};
+
+export const applyDiscoveryAssessment = async (
+  userId: string,
+  listId: string,
+  wordId: string,
+  assessment: DiscoveryAssessment,
+  answeredAt = new Date()
+) => {
+  const [list, word] = await Promise.all([
+    WordList.findById(listId).lean(),
+    Word.findById(wordId)
+  ]);
+
+  if (!list) {
+    throw new Error('Source list not found');
+  }
+
+  if (!word) {
+    throw new Error('Word not found');
+  }
+
+  const membership = getMembership(word, listId);
+  if (!membership) {
+    throw new Error('Word does not belong to the source list');
+  }
+
+  if (assessment === 'mastered') {
+    const state = await ensureLearningState(userId, listId, word);
+    const stateBefore = snapshotLearningState(state);
+    markWordMasteredForever(state, answeredAt);
+
+    await Promise.all([
+      state.save(),
+      ReviewLog.create({
+        userId,
+        wordId: word._id,
+        listId: list._id,
+        source: 'learn',
+        questionType: 'discovery_mastered',
+        rating: 'easy',
+        correct: true,
+        answeredAt,
+        stateBefore
+      })
+    ]);
+
+    await syncLearningStateAcrossMemberships(userId, word, state);
+
+    return {
+      countedAsNewWord: false,
+      rating: 'easy' as ReviewRating,
+      dueAt: state.dueAt.toISOString(),
+      status: 'mastered_forever' as const
+    };
+  }
+
+  const rating = resolveDiscoveryRating(assessment);
+  await settleReviewResults(userId, list, 'learn', [{
+    wordId,
+    correct: rating !== 'again',
+    rating,
+    questionType: 'discovery_assessment',
+    answeredAt: answeredAt.toISOString()
+  }]);
+
+  const state = await LearningState.findOne({
+    userId,
+    wordId: word._id,
+    listId: list._id
+  }).lean();
+
+  return {
+    countedAsNewWord: true,
+    rating,
+    dueAt: state?.dueAt?.toISOString(),
+    status: 'scheduled' as const
+  };
 };
 
 const applyGroupedReviewResultsToList = async (
