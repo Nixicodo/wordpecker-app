@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { WordList, Word, Exercise, Question, Template, WordDetail, SentenceExample, UserPreferences, ExerciseTypePreferences, ImageDescriptionAnalysis, DescriptionExercise, VocabularyWordsResponse, WordDetailsResponse, ReviewSubmission, ScheduledWord, BackgroundAsset, WordSourceInfo, DisciplineStatus } from '../types';
+import { WordList, Word, Exercise, Question, Template, WordDetail, SentenceExample, UserPreferences, ExerciseTypePreferences, ImageDescriptionAnalysis, DescriptionExercise, VocabularyWordsResponse, WordDetailsResponse, ReviewSubmission, ScheduledWord, BackgroundAsset, WordSourceInfo, DisciplineStatus, DiscoveryWordsResponse } from '../types';
 
 // Generate or retrieve user ID
 const getUserId = () => {
@@ -214,6 +214,8 @@ export const apiService = {
   }> => api.get('/api/describe/context-suggestions'),
 
   // Vocabulary learning methods
+  getDiscoveryWords: (count = 15): ApiResponse<DiscoveryWordsResponse> =>
+    api.post('/api/vocabulary/discovery-words', { count }),
   generateVocabularyWords: (context: string, difficulty: 'basic' | 'intermediate' | 'advanced' = 'intermediate', count?: number): ApiResponse<VocabularyWordsResponse> => 
     api.post('/api/vocabulary/generate-words', { context, difficulty, count }),
   

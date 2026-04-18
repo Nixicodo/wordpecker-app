@@ -4,7 +4,8 @@ import { openaiRateLimiter } from '../../middleware/rateLimiter';
 import { vocabularyAgentService } from './agent-service';
 import { Word } from '../words/model';
 import { getUserLanguages } from '../../utils/getUserLanguages';
-import { generateWordsSchema, getWordDetailsSchema } from './schemas';
+import { discoveryWordsSchema, generateWordsSchema, getWordDetailsSchema } from './schemas';
+import { selectFixedDiscoveryWords } from '../../services/fixedDiscoveryChain';
 
 const router = Router();
 
@@ -63,6 +64,16 @@ router.post('/generate-words', openaiRateLimiter, validate(generateWordsSchema),
     });
   } catch (error) {
     res.status(500).json({ error: 'Failed to generate vocabulary words' });
+  }
+});
+
+router.post('/discovery-words', validate(discoveryWordsSchema), async (req, res) => {
+  try {
+    const { count = 15 } = req.body;
+    const batch = await selectFixedDiscoveryWords(count);
+    res.json(batch);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to load discovery words' });
   }
 });
 

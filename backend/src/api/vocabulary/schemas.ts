@@ -8,6 +8,12 @@ export const generateWordsSchema = {
   })
 };
 
+export const discoveryWordsSchema = {
+  body: z.object({
+    count: z.number().min(1).max(20).default(15)
+  })
+};
+
 export const getWordDetailsSchema = {
   body: z.object({
     word: z.string().min(1),

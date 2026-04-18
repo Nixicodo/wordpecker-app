@@ -244,6 +244,36 @@ export interface VocabularyWord {
   context: string;
 }
 
+export interface DiscoveryWord {
+  id: string;
+  word: string;
+  meaning: string;
+  example: string;
+  difficulty_level: 'basic' | 'intermediate' | 'advanced';
+  context: string;
+  sourceListId: string;
+  sourceListName: string;
+  sourceContext?: string;
+}
+
+export interface DiscoveryWordsResponse {
+  targetList: {
+    id: string;
+    name: string;
+  };
+  sourceList: {
+    id: string;
+    name: string;
+    context?: string;
+    remainingCount: number;
+    chainIndex: number;
+    totalSources: number;
+  } | null;
+  words: DiscoveryWord[];
+  count: number;
+  chain: string[];
+}
+
 export interface VocabularyWordsResponse {
   context: string;
   difficulty: 'basic' | 'intermediate' | 'advanced';
