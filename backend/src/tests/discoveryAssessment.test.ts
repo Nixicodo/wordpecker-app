@@ -7,6 +7,7 @@ import { WordList } from '../api/lists/model';
 import { Word } from '../api/words/model';
 import listRoutes from '../api/lists/routes';
 import vocabularyRoutes from '../api/vocabulary/routes';
+import * as repoLearningSnapshot from '../services/repoLearningSnapshot';
 
 const app = express();
 app.use(express.json());
@@ -109,5 +110,50 @@ describe('discovery assessment flow', () => {
     expect(logs).toHaveLength(2);
     expect(logs[0].questionType).toBe('discovery_mastered');
     expect(logs[1].questionType).toBe('discovery_assessment');
+  });
+
+  it('still returns success when snapshot persistence fails after a discovery rating is applied', async () => {
+    const sourceList = await WordList.create({
+      name: '西语3k词-Level0-Pre-A1',
+      description: 'Discovery source',
+      context: 'Mexican Spanish frequency vocabulary level 0 (Pre-A1)',
+      kind: 'custom'
+    });
+    const word = await Word.create({
+      value: 'verde',
+      listMemberships: [
+        {
+          listId: sourceList._id,
+          meaning: '绿色/绿的（green）'
+        }
+      ]
+    });
+
+    const persistSnapshotSpy = jest
+      .spyOn(repoLearningSnapshot, 'persistLearningSnapshot')
+      .mockRejectedValueOnce(new Error('Snapshot disk write failed'));
+
+    const response = await request(app)
+      .post('/api/vocabulary/discovery-rate')
+      .set('user-id', 'discovery-user')
+      .send({
+        wordId: word._id.toString(),
+        sourceListId: sourceList._id.toString(),
+        assessment: 'mastered'
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.body.countedAsNewWord).toBe(false);
+    expect(response.body.status).toBe('mastered_forever');
+
+    const masteredState = await LearningState.findOne({
+      userId: 'discovery-user',
+      wordId: word._id,
+      listId: sourceList._id
+    }).lean();
+
+    expect(masteredState?.dueAt.toISOString()).toBe('9999-12-31T23:59:59.999Z');
+
+    persistSnapshotSpy.mockRestore();
   });
 });

@@ -24,7 +24,12 @@ export const ensureDueReviewList = async () => {
     systemKey: DUE_REVIEW_SYSTEM_KEY
   });
 
-  await persistLearningSnapshot();
+  try {
+    await persistLearningSnapshot();
+  } catch (snapshotError) {
+    console.error('Failed to persist learning snapshot after creating due review list:', snapshotError);
+  }
+
   return list;
 };
 

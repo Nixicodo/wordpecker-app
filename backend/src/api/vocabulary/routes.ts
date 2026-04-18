@@ -108,14 +108,22 @@ router.post('/discovery-rate', validate(discoveryAssessmentSchema), async (req, 
       wordId,
       assessment
     );
-    await persistLearningSnapshot();
+
+    try {
+      await persistLearningSnapshot();
+    } catch (snapshotError) {
+      console.error('Failed to persist learning snapshot after discovery rating:', snapshotError);
+    }
 
     res.json({
       ...result,
       disciplineStatus: await getDisciplineStatus(req.headers['user-id'])
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to rate discovery word' });
+    console.error('Failed to rate discovery word:', error);
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Failed to rate discovery word'
+    });
   }
 });
 
