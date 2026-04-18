@@ -13,11 +13,11 @@ import {
   Spinner,
   Text,
   VStack,
-  useColorModeValue,
   useToast
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaCheck, FaHourglassHalf, FaSeedling, FaSnowflake } from 'react-icons/fa';
+import { useBackgrounds } from '../components/BackgroundProvider';
 import { apiService } from '../services/api';
 import { DiscoveryAssessment, DiscoveryWord, DiscoveryWordsResponse } from '../types';
 
@@ -34,6 +34,8 @@ const resolveApiErrorMessage = (error: unknown, fallback: string) => {
 
   return fallback;
 };
+
+const buildAlpha = (value: number) => (value / 100).toFixed(2);
 
 const assessmentButtons: Array<{
   assessment: DiscoveryAssessment;
@@ -75,6 +77,7 @@ const assessmentButtons: Array<{
 export const WordLearningSession: React.FC = () => {
   const navigate = useNavigate();
   const toast = useToast();
+  const { cardOpacity } = useBackgrounds();
 
   const [loading, setLoading] = useState(true);
   const [submittingAssessment, setSubmittingAssessment] = useState<DiscoveryAssessment | null>(null);
@@ -84,21 +87,21 @@ export const WordLearningSession: React.FC = () => {
   const [dailyLimit, setDailyLimit] = useState(15);
   const [remainingQuota, setRemainingQuota] = useState(15);
 
-  const cardBg = useColorModeValue('white', '#1E293B');
-  const borderColor = useColorModeValue('gray.200', '#334155');
-  const pageBg = useColorModeValue('gray.50', '#0F172A');
-  const headerBg = useColorModeValue('#EFF6FF', '#162032');
-  const meaningBg = useColorModeValue('gray.50', '#334155');
+  const cardBg = `rgba(15, 23, 42, ${buildAlpha(cardOpacity)})`;
+  const headerBg = `rgba(15, 23, 42, ${buildAlpha(Math.min(cardOpacity + 8, 100))})`;
+  const sourceBg = `rgba(15, 23, 42, ${buildAlpha(Math.max(cardOpacity - 10, 24))})`;
+  const meaningBg = `rgba(51, 65, 85, ${buildAlpha(Math.max(cardOpacity - 18, 28))})`;
+  const borderColor = `rgba(148, 163, 184, ${Math.min(cardOpacity / 180, 0.45).toFixed(2)})`;
 
   const currentWord = words[currentWordIndex];
   const progress = words.length ? ((currentWordIndex + 1) / words.length) * 100 : 0;
 
   const sourceDescription = useMemo(() => {
     if (!batch?.sourceList) {
-      return '固定链中的来源词树已经没有待引入的新词了。';
+      return '固定链里的来源词树暂时没有可安排的新词了。';
     }
 
-    return `当前来源：${batch.sourceList.name}。只要这一层还有新词，系统就不会切到更新一级。`;
+    return `当前来源：${batch.sourceList.name}。只要这一层还有新词，系统就不会切换到更新一级。`;
   }, [batch]);
 
   const loadDiscoveryWords = async () => {
@@ -192,14 +195,16 @@ export const WordLearningSession: React.FC = () => {
 
   if (loading) {
     return (
-      <Container maxW="container.lg" py={8}>
-        <Flex minH="60vh" align="center" justify="center">
-          <VStack spacing={4}>
-            <Spinner size="xl" color="blue.500" />
-            <Text>正在读取固定链新词…</Text>
-          </VStack>
-        </Flex>
-      </Container>
+      <Box minH="100vh" bg="transparent">
+        <Container maxW="container.lg" py={8}>
+          <Flex minH="60vh" align="center" justify="center">
+            <VStack spacing={4}>
+              <Spinner size="xl" color="blue.300" />
+              <Text color="whiteAlpha.900">正在读取固定链新词…</Text>
+            </VStack>
+          </Flex>
+        </Container>
+      </Box>
     );
   }
 
@@ -209,15 +214,22 @@ export const WordLearningSession: React.FC = () => {
 
   if (!currentWord) {
     return (
-      <Box minH="100vh" bg={pageBg}>
+      <Box minH="100vh" bg="transparent">
         <Container maxW="container.lg" py={8} px={{ base: 4, md: 8 }}>
-          <Card bg={cardBg} borderColor={borderColor} borderWidth="2px" borderRadius="xl" shadow="lg">
+          <Card
+            bg={cardBg}
+            borderColor={borderColor}
+            borderWidth="1px"
+            borderRadius="2xl"
+            shadow="2xl"
+            backdropFilter="blur(18px)"
+          >
             <CardBody>
               <VStack spacing={5} py={8}>
-                <Heading size="lg" color="green.400">
+                <Heading size="lg" color="green.300">
                   当前固定链已无新词
                 </Heading>
-                <Text color="gray.300" textAlign="center" maxW="2xl">
+                <Text color="whiteAlpha.800" textAlign="center" maxW="2xl">
                   {sourceDescription}
                 </Text>
                 <Button colorScheme="blue" onClick={() => void loadDiscoveryWords()}>
@@ -232,13 +244,20 @@ export const WordLearningSession: React.FC = () => {
   }
 
   return (
-    <Box minH="100vh" bg={pageBg}>
+    <Box minH="100vh" bg="transparent">
       <Container maxW="container.lg" py={8} px={{ base: 4, md: 8 }}>
         <VStack spacing={6} align="stretch">
-          <Flex justify="space-between" align={{ base: 'stretch', md: 'center' }} direction={{ base: 'column', md: 'row' }} gap={4}>
+          <Flex
+            justify="space-between"
+            align={{ base: 'stretch', md: 'center' }}
+            direction={{ base: 'column', md: 'row' }}
+            gap={4}
+          >
             <Button
               leftIcon={<FaArrowLeft />}
               variant="ghost"
+              color="whiteAlpha.900"
+              _hover={{ bg: 'whiteAlpha.200' }}
               onClick={() => navigate('/learn-new-words')}
               size="lg"
               alignSelf={{ base: 'flex-start', md: 'center' }}
@@ -247,43 +266,84 @@ export const WordLearningSession: React.FC = () => {
             </Button>
 
             <VStack spacing={2} align={{ base: 'start', md: 'center' }} flex={1}>
-              <Heading size="md" color="blue.400">
+              <Heading size="md" color="blue.200">
                 评分式学新词
               </Heading>
-              <Text color="gray.400" fontSize="sm">
+              <Text color="whiteAlpha.700" fontSize="sm" textAlign={{ base: 'left', md: 'center' }}>
                 {sourceDescription}
               </Text>
-              <Progress value={progress} colorScheme="blue" size="lg" width={{ base: '100%', md: '320px' }} borderRadius="full" />
-              <Text fontSize="sm" color="gray.500">
+              <Progress
+                value={progress}
+                colorScheme="blue"
+                size="lg"
+                width={{ base: '100%', md: '320px' }}
+                borderRadius="full"
+                bg="whiteAlpha.200"
+              />
+              <Text fontSize="sm" color="whiteAlpha.600">
                 当前批次 {currentWordIndex + 1} / {words.length}
               </Text>
             </VStack>
 
-            <Badge colorScheme="blue" variant="solid" alignSelf={{ base: 'flex-start', md: 'center' }}>
+            <Badge
+              bg="whiteAlpha.200"
+              color="whiteAlpha.900"
+              borderRadius="full"
+              px={3}
+              py={1.5}
+              alignSelf={{ base: 'flex-start', md: 'center' }}
+            >
               今日新词剩余 {remainingQuota}/{dailyLimit}
             </Badge>
           </Flex>
 
-          <Card bg={cardBg} borderColor={borderColor} borderWidth="2px" borderRadius="xl" shadow="lg">
-            <CardHeader bg={headerBg} borderTopRadius="xl">
-              <VStack spacing={2} align="start">
-                <Text fontSize="sm" color="gray.500">
-                  来源词树
-                </Text>
-                <Badge colorScheme="orange" variant="solid">
-                  {currentWord.sourceListName}
-                </Badge>
+          <Card
+            bg={cardBg}
+            borderColor={borderColor}
+            borderWidth="1px"
+            borderRadius="2xl"
+            shadow="2xl"
+            backdropFilter="blur(20px)"
+          >
+            <CardHeader bg={headerBg} borderTopRadius="2xl">
+              <VStack spacing={3} align="stretch">
+                <Box p={4} bg={sourceBg} borderRadius="xl">
+                  <Text fontSize="sm" color="whiteAlpha.700" mb={2}>
+                    来源词树
+                  </Text>
+                  <Badge colorScheme="orange" variant="solid">
+                    {currentWord.sourceListName}
+                  </Badge>
+                </Box>
               </VStack>
             </CardHeader>
 
             <CardBody>
               <VStack spacing={8} align="stretch">
-                <VStack spacing={4} py={4}>
-                  <Text fontSize={{ base: '3xl', md: '5xl' }} fontWeight="bold" color="blue.500" textAlign="center">
+                <VStack spacing={5} py={4}>
+                  <Text
+                    fontSize={{ base: '3xl', md: '5xl' }}
+                    fontWeight="bold"
+                    color="blue.300"
+                    textAlign="center"
+                    letterSpacing="0.02em"
+                  >
                     {currentWord.word}
                   </Text>
-                  <Box w="100%" p={5} bg={meaningBg} borderRadius="xl">
-                    <Text fontSize={{ base: 'lg', md: 'xl' }} color="gray.100" textAlign="center">
+                  <Box
+                    w="100%"
+                    p={5}
+                    bg={meaningBg}
+                    borderRadius="xl"
+                    borderWidth="1px"
+                    borderColor="whiteAlpha.100"
+                    backdropFilter="blur(14px)"
+                  >
+                    <Text
+                      fontSize={{ base: 'lg', md: 'xl' }}
+                      color="whiteAlpha.950"
+                      textAlign="center"
+                    >
                       {currentWord.meaning}
                     </Text>
                   </Box>
@@ -303,6 +363,7 @@ export const WordLearningSession: React.FC = () => {
                       isLoading={submittingAssessment === assessment}
                       loadingText="提交中…"
                       onClick={() => void handleAssessment(assessment)}
+                      backdropFilter="blur(10px)"
                     >
                       <Box textAlign="left" w="100%">
                         <Text fontWeight="bold">{label}</Text>
