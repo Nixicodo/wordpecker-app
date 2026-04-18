@@ -32,6 +32,7 @@ type AuditState = {
   submitted: boolean;
   status: ReviewTimelineStatus;
   correctness: boolean | null;
+  resolutionSource: 'ai' | 'manual' | null;
   usedHint: boolean;
   responseTimeMs: number;
   review?: ReviewSubmission;
@@ -54,6 +55,7 @@ const createAuditState = (): AuditState => ({
   submitted: false,
   status: 'idle',
   correctness: null,
+  resolutionSource: null,
   usedHint: false,
   responseTimeMs: 0,
   review: undefined,
@@ -73,6 +75,17 @@ const createAuditState = (): AuditState => ({
 
 const createSettlementKey = () => (
   globalThis.crypto?.randomUUID?.() || `settlement-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
+);
+
+const cleanMatchingText = (text: string) => (
+  text
+    .replace(/^[A-Za-z]\.\s*/, '')
+    .replace(/^[0-9]+\.\s*/, '')
+    .replace(/^\([A-Za-z]\)\s*/, '')
+    .replace(/^\([0-9]+\)\s*/, '')
+    .replace(/^[A-Za-z]\)\s*/, '')
+    .replace(/^[0-9]+\)\s*/, '')
+    .trim()
 );
 
 const INITIAL_VALIDATION_RETRY_DELAY_MS = 2000;
@@ -448,6 +461,167 @@ export const DisciplinedLearnSession = ({
       .then(() => runValidationRef.current(exerciseIndex, answer, usedHint, responseTimeMs));
   }, []);
 
+  const currentState = auditStates[currentIndex] || createAuditState();
+  const currentExercise = exercises[currentIndex];
+
+  const resolveReviewSubmission = useCallback((
+    exercise: Exercise,
+    isCorrect: boolean,
+    usedHint: boolean,
+    responseTimeMs: number,
+    settlementKey: string,
+    answeredAt: string
+  ) => {
+    const recommendation = recommendReviewRating({
+      isCorrect,
+      responseTimeMs,
+      usedHint,
+      difficulty: exercise.difficulty,
+      questionType: exercise.type
+    });
+    const sourceListIdByWordId = buildSourceListIdByWordId(exercise, wordSources);
+    const review = exercise.wordId
+      ? {
+          wordId: exercise.wordId,
+          wordIds: exercise.wordIds,
+          sourceListId: wordSources[exercise.wordId]?.sourceListId,
+          sourceListIdByWordId,
+          correct: isCorrect,
+          rating: recommendation.rating,
+          questionType: exercise.type,
+          responseTimeMs,
+          usedHint,
+          settlementKey,
+          answeredAt
+        } satisfies ReviewSubmission
+      : undefined;
+
+    return {
+      review,
+      recommendedRating: recommendation.rating,
+      recommendationReason: recommendation.reason
+    };
+  }, [wordSources]);
+
+  const getDisplayedAnswer = useCallback((exercise: Exercise | undefined, state: AuditState) => {
+    if (!exercise || state.status !== 'incorrect') {
+      return state.answer;
+    }
+
+    switch (exercise.type) {
+      case 'multiple_choice':
+      case 'sentence_completion':
+      case 'true_false': {
+        if (exercise.options && exercise.optionLabels) {
+          const correctAnswerIndex = exercise.options.indexOf(exercise.correctAnswer);
+          if (correctAnswerIndex >= 0) {
+            return exercise.optionLabels[correctAnswerIndex];
+          }
+        }
+        return exercise.correctAnswer;
+      }
+      case 'matching':
+        return (exercise.pairs || [])
+          .map((pair) => `${cleanMatchingText(pair.word)}:${cleanMatchingText(pair.definition)}`)
+          .join('|');
+      case 'fill_blank':
+      default:
+        return exercise.correctAnswer;
+    }
+  }, []);
+
+  const submitCurrentExercise = useCallback((options?: { forceIncorrect?: boolean }) => {
+    if (!currentExercise || currentState.submitted) {
+      return;
+    }
+
+    const forceIncorrect = options?.forceIncorrect ?? false;
+    const trimmedAnswer = currentState.answer.trim();
+    if (!forceIncorrect && !trimmedAnswer) {
+      return;
+    }
+
+    const responseTimeMs = Math.max(0, Date.now() - questionStartedAtRef.current);
+    const usedHint = currentState.usedHint;
+    const answeredAt = new Date().toISOString();
+    const settlementKey = createSettlementKey();
+
+    if (forceIncorrect) {
+      const {
+        review,
+        recommendedRating,
+        recommendationReason
+      } = resolveReviewSubmission(
+        currentExercise,
+        false,
+        usedHint,
+        responseTimeMs,
+        settlementKey,
+        answeredAt
+      );
+
+      clearValidationRetry(currentIndex);
+      updateAuditState(currentIndex, (previous) => ({
+        ...previous,
+        answer: trimmedAnswer,
+        submitted: true,
+        status: 'incorrect',
+        correctness: false,
+        resolutionSource: 'manual',
+        responseTimeMs,
+        review,
+        recommendedRating,
+        selectedRating: recommendedRating,
+        recommendationReason,
+        validationError: '',
+        settlementKey,
+        answeredAt,
+        syncStatus: 'idle',
+        syncError: '',
+        syncedSignature: '',
+        validationRetryCount: 0
+      }));
+    } else {
+      updateAuditState(currentIndex, (previous) => ({
+        ...previous,
+        answer: trimmedAnswer,
+        submitted: true,
+        status: 'pending',
+        correctness: null,
+        resolutionSource: null,
+        responseTimeMs,
+        validationError: '',
+        settlementKey,
+        answeredAt,
+        syncStatus: 'idle',
+        syncError: '',
+        syncedSignature: '',
+        validationRetryCount: 0
+      }));
+
+      clearValidationRetry(currentIndex);
+      queueValidation(currentIndex, trimmedAnswer, usedHint, responseTimeMs);
+    }
+
+    if (!forceIncorrect) {
+      const nextUnsubmittedIndex = findFirstIndex((state) => !state.submitted, currentIndex + 1);
+      if (nextUnsubmittedIndex >= 0) {
+        setCurrentIndex(nextUnsubmittedIndex);
+      }
+    }
+  }, [
+    clearValidationRetry,
+    currentExercise,
+    currentIndex,
+    currentState.answer,
+    currentState.submitted,
+    currentState.usedHint,
+    findFirstIndex,
+    queueValidation,
+    resolveReviewSubmission,
+    updateAuditState
+  ]);
+
   const scheduleValidationRetry = useCallback((
     exerciseIndex: number,
     answer: string,
@@ -498,29 +672,18 @@ export const DisciplinedLearnSession = ({
 
     try {
       const isValid = await validateAnswer(answer, exercise, list.context, { allowFallback: false });
-      const recommendation = recommendReviewRating({
-        isCorrect: isValid,
-        responseTimeMs,
+      const {
+        review,
+        recommendedRating,
+        recommendationReason
+      } = resolveReviewSubmission(
+        exercise,
+        isValid,
         usedHint,
-        difficulty: exercise.difficulty,
-        questionType: exercise.type
-      });
-      const sourceListIdByWordId = buildSourceListIdByWordId(exercise, wordSources);
-      const review = exercise.wordId
-        ? {
-            wordId: exercise.wordId,
-            wordIds: exercise.wordIds,
-            sourceListId: wordSources[exercise.wordId]?.sourceListId,
-            sourceListIdByWordId,
-            correct: isValid,
-            rating: recommendation.rating,
-            questionType: exercise.type,
-            responseTimeMs,
-            usedHint,
-            settlementKey: submittedState?.settlementKey,
-            answeredAt: submittedState?.answeredAt
-          } satisfies ReviewSubmission
-        : undefined;
+        responseTimeMs,
+        submittedState?.settlementKey || '',
+        submittedState?.answeredAt || ''
+      );
 
       if (!isMountedRef.current) {
         return;
@@ -532,10 +695,11 @@ export const DisciplinedLearnSession = ({
         ...previous,
         status: isValid ? 'correct' : 'incorrect',
         correctness: isValid,
+        resolutionSource: 'ai',
         review,
-        recommendedRating: recommendation.rating,
-        selectedRating: recommendation.rating,
-        recommendationReason: recommendation.reason,
+        recommendedRating,
+        selectedRating: recommendedRating,
+        recommendationReason,
         validationError: '',
         errorViewed: previous.errorViewed,
         syncStatus: 'idle',
@@ -563,6 +727,7 @@ export const DisciplinedLearnSession = ({
         ...previous,
         status: 'failed',
         correctness: null,
+        resolutionSource: null,
         review: undefined,
         validationError: `${getErrorMessage(error, 'AI 判题失败。')} 将在 ${retryDelaySeconds} 秒后自动重试（第 ${retryCount} 次）。`,
         syncStatus: 'idle',
@@ -571,45 +736,18 @@ export const DisciplinedLearnSession = ({
         validationRetryCount: retryCount
       }));
     }
-  }, [clearValidationRetry, exercises, list.context, scheduleValidationRetry, updateAuditState, wordSources]);
+  }, [clearValidationRetry, exercises, list.context, resolveReviewSubmission, scheduleValidationRetry, updateAuditState]);
 
   useEffect(() => {
     runValidationRef.current = runValidation;
   }, [runValidation]);
 
   const handleSubmit = async () => {
-    if (!currentExercise || currentState.submitted || !currentState.answer.trim()) {
-      return;
-    }
+    submitCurrentExercise();
+  };
 
-    const responseTimeMs = Math.max(0, Date.now() - questionStartedAtRef.current);
-    const answer = currentState.answer.trim();
-    const usedHint = currentState.usedHint;
-    const answeredAt = new Date().toISOString();
-    const settlementKey = createSettlementKey();
-
-    updateAuditState(currentIndex, (previous) => ({
-      ...previous,
-      answer,
-      submitted: true,
-      status: 'pending',
-      responseTimeMs,
-      validationError: '',
-      settlementKey,
-      answeredAt,
-      syncStatus: 'idle',
-      syncError: '',
-      syncedSignature: '',
-      validationRetryCount: 0
-    }));
-
-    clearValidationRetry(currentIndex);
-    queueValidation(currentIndex, answer, usedHint, responseTimeMs);
-
-    const nextUnsubmittedIndex = findFirstIndex((state) => !state.submitted, currentIndex + 1);
-    if (nextUnsubmittedIndex >= 0) {
-      setCurrentIndex(nextUnsubmittedIndex);
-    }
+  const handleSubmitAsUnknown = async () => {
+    submitCurrentExercise({ forceIncorrect: true });
   };
 
   const retryCurrentQuestion = async () => {
@@ -621,6 +759,7 @@ export const DisciplinedLearnSession = ({
     updateAuditState(currentIndex, (previous) => ({
       ...previous,
       status: 'pending',
+      resolutionSource: null,
       validationError: ''
     }));
 
@@ -631,9 +770,6 @@ export const DisciplinedLearnSession = ({
       currentState.responseTimeMs
     );
   };
-
-  const currentState = auditStates[currentIndex] || createAuditState();
-  const currentExercise = exercises[currentIndex];
 
   const timelineItems = useMemo(() => auditStates.map((state) => ({
     status: state.status,
@@ -663,6 +799,7 @@ export const DisciplinedLearnSession = ({
     ...currentExercise,
     exposedWords: resolveQuestionExposureWords(currentExercise, listWords)
   } : null;
+  const displayedAnswer = getDisplayedAnswer(currentExercise, currentState);
 
   const loadMoreExercises = async () => {
     await appendBufferedExercises({
@@ -915,7 +1052,7 @@ export const DisciplinedLearnSession = ({
 
           <QuestionRenderer
             question={resolvedExercise}
-            selectedAnswer={currentState.answer}
+            selectedAnswer={displayedAnswer}
             onAnswerChange={(answer) => updateAuditState(currentIndex, (previous) => ({ ...previous, answer }))}
             isAnswered={currentState.submitted}
             isCorrect={currentState.correctness}
@@ -924,6 +1061,7 @@ export const DisciplinedLearnSession = ({
 
           <HStack spacing={3} mt={8} justify="center" flexWrap="wrap">
             {!currentState.submitted ? (
+              <>
               <Button
                 colorScheme="orange"
                 size="lg"
@@ -932,6 +1070,15 @@ export const DisciplinedLearnSession = ({
               >
                 提交并进入审核
               </Button>
+                <Button
+                  variant="outline"
+                  colorScheme="red"
+                  size="lg"
+                  onClick={handleSubmitAsUnknown}
+                >
+                  不知道
+                </Button>
+              </>
             ) : (
               <>
                 {!allSubmitted && (
@@ -1000,7 +1147,9 @@ export const DisciplinedLearnSession = ({
               <Text>
                 {currentState.status === 'correct'
                   ? 'AI 判定为正确，系统会自动在后台结算这道题。'
-                  : 'AI 判定为错误。你可以先看解析，再决定继续下一题。'}
+                  : currentState.resolutionSource === 'manual'
+                    ? '本题已按“不知道”直接判负。你可以先看解析，再决定是否继续下一题。'
+                    : 'AI 判定为错误。你可以先看解析，再决定继续下一题。'}
               </Text>
             </Alert>
           )}

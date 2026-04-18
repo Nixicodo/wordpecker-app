@@ -6,6 +6,7 @@ const USER_ID = process.env.SMOKE_USER_ID || 'local-ai-test-user';
 const REVIEW_TIMEOUT_MS = Number(process.env.SMOKE_REVIEW_TIMEOUT_MS || 20000);
 const LEARNING_LABEL_ZH = '\u5b66\u4e60\u4e2d\uff1a';
 const SUBMIT_FOR_AUDIT_LABEL = '\u63d0\u4ea4\u5e76\u8fdb\u5165\u5ba1\u6838';
+const UNKNOWN_LABEL = '\u4e0d\u77e5\u9053';
 const SUBMITTED_LABEL = '\u5df2\u63d0\u4ea4';
 const RESOLVED_LABEL = '\u5df2\u5b8c\u6210\u5ba1\u6838';
 const PENDING_LABEL = '\u5ba1\u6838\u4e2d';
@@ -422,6 +423,29 @@ const main = async () => {
       pending: '0',
       incorrect: '1'
     }, REVIEW_TIMEOUT_MS);
+
+    const unknownExerciseIndex = invalidExerciseIndex + 1;
+    ensure(
+      unknownExerciseIndex < startPayload.exercises.length,
+      'Due-review session does not have a third exercise to validate the unknown shortcut'
+    );
+
+    const validationCountBeforeUnknown = validationResponses.length;
+    await page.getByRole('button', { name: `第 ${unknownExerciseIndex + 1} 题`, exact: true }).click();
+    await page.getByRole('button', { name: UNKNOWN_LABEL }).click();
+
+    await waitForAuditCounts(page, {
+      submitted: `${unknownExerciseIndex + 1}/10`,
+      resolved: `${unknownExerciseIndex + 1}`,
+      pending: '0',
+      incorrect: '2'
+    }, REVIEW_TIMEOUT_MS);
+
+    await sleep(1500);
+    ensure(
+      validationResponses.length === validationCountBeforeUnknown,
+      'Clicking the unknown shortcut should not trigger validate-answer'
+    );
 
     await page.getByRole('button', { name: '第 6 题', exact: true }).click();
     await waitForTotalQuestionCount(page, 15, REVIEW_TIMEOUT_MS);
