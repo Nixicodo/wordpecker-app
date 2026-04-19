@@ -4,7 +4,7 @@
   "main": "dist/app.js",
   "scripts": {
     "start": "node dist/app.js",
-    "dev": "nodemon src/app.ts",
+    "dev": "nodemon --watch src --ext ts,json --ignore data/** --ignore dist/** --ignore coverage/** src/app.ts",
     "build": "npx tsc",
     "lint": "eslint . --ext .ts",
     "test": "jest",

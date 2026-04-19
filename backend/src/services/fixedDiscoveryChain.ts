@@ -96,7 +96,8 @@ export const selectFixedDiscoveryWords = async (
     introducedStates.map((state) => `${state.listId.toString()}:${state.wordId.toString()}`)
   );
 
-  for (const [index, sourceList] of orderedSourceLists.entries()) {
+  for (let index = 0; index < orderedSourceLists.length; index += 1) {
+    const sourceList = orderedSourceLists[index];
     const sourceWords = (await Word.find({ 'listMemberships.listId': sourceList._id })
       .select('_id value listMemberships')
       .sort({ created_at: 1, value: 1 })

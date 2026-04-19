@@ -1,0 +1,10 @@
+{
+  "watch": ["src"],
+  "ext": "ts,json",
+  "ignore": [
+    "data/**",
+    "dist/**",
+    "coverage/**",
+    "*.log"
+  ]
+}
