@@ -6,6 +6,7 @@ import { Word } from '../api/words/model';
 import { UserPreferences } from '../api/preferences/model';
 import { LearningState } from '../api/learning-state/model';
 import { ReviewLog } from '../api/review-log/model';
+import { environment } from '../config/environment';
 
 type SnapshotWordList = {
   id: string;
@@ -129,6 +130,10 @@ const serializeDateOrEpoch = (value?: Date | string | null) =>
   value ? new Date(value).toISOString() : new Date(0).toISOString();
 
 export const persistLearningSnapshot = async () => {
+  if (environment.nodeEnv === 'development' && process.env.ENABLE_DEV_SNAPSHOT_PERSIST !== 'true') {
+    return;
+  }
+
   const snapshotPath = resolveSnapshotPath();
   const [lists, words, learningStates, reviewLogs, preferences] = await Promise.all([
     WordList.find().sort({ created_at: 1 }).lean(),

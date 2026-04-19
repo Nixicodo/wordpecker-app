@@ -105,6 +105,16 @@ if (Test-Path $frontendErrLog) { Remove-Item $frontendErrLog -Force }
 
 $backendProcess = Start-Process -FilePath $nodeExe -WorkingDirectory $backendDir -ArgumentList @(
     ".\node_modules\nodemon\bin\nodemon.js",
+    "--watch",
+    "src",
+    "--ext",
+    "ts,json",
+    "--ignore",
+    "data/**",
+    "--ignore",
+    "dist/**",
+    "--ignore",
+    "coverage/**",
     "src/app.ts"
 ) -RedirectStandardOutput $backendLog -RedirectStandardError $backendErrLog -WindowStyle Hidden -PassThru
 $backendProcess.Id | Set-Content -Path (Join-Path $runtimeDir "backend.pid") -NoNewline
