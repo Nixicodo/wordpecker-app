@@ -53,7 +53,6 @@ export const GetNewWords: React.FC = () => {
             borderWidth="1px"
             borderRadius="2xl"
             shadow="2xl"
-            backdropFilter="blur(18px)"
           >
             <CardBody>
               <VStack spacing={6} align="stretch">

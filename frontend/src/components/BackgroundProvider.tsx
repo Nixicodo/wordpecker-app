@@ -477,7 +477,7 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
                           <Slider
                             aria-label="卡片透明度"
                             value={cardOpacity}
-                            min={35}
+                            min={15}
                             max={100}
                             step={5}
                             onChange={handleCardOpacityChange}

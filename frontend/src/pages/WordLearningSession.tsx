@@ -222,7 +222,6 @@ export const WordLearningSession: React.FC = () => {
             borderWidth="1px"
             borderRadius="2xl"
             shadow="2xl"
-            backdropFilter="blur(18px)"
           >
             <CardBody>
               <VStack spacing={5} py={8}>
@@ -303,7 +302,6 @@ export const WordLearningSession: React.FC = () => {
             borderWidth="1px"
             borderRadius="2xl"
             shadow="2xl"
-            backdropFilter="blur(20px)"
           >
             <CardHeader bg={headerBg} borderTopRadius="2xl">
               <VStack spacing={3} align="stretch">
@@ -337,7 +335,6 @@ export const WordLearningSession: React.FC = () => {
                     borderRadius="xl"
                     borderWidth="1px"
                     borderColor="whiteAlpha.100"
-                    backdropFilter="blur(14px)"
                   >
                     <Text
                       fontSize={{ base: 'lg', md: 'xl' }}
@@ -363,7 +360,6 @@ export const WordLearningSession: React.FC = () => {
                       isLoading={submittingAssessment === assessment}
                       loadingText="提交中…"
                       onClick={() => void handleAssessment(assessment)}
-                      backdropFilter="blur(10px)"
                     >
                       <Box textAlign="left" w="100%">
                         <Text fontWeight="bold">{label}</Text>
