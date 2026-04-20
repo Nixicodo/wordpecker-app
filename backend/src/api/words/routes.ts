@@ -12,6 +12,7 @@ import { LearningState } from '../learning-state/model';
 import { resolveUserId } from '../../config/learning';
 import { ensureLearningState, selectDueReviewWords } from '../../services/learningScheduler';
 import { isDueReviewList } from '../../services/dueReview';
+import { isDeterministicallyCorrectAnswer } from '../../services/answerValidation';
 import {
   listIdSchema,
   addWordSchema,
@@ -307,12 +308,24 @@ router.delete('/:listId/words/:wordId', validate(deleteWordSchema), async (req, 
 router.post('/validate-answer', validate(validateAnswerSchema), async (req: any, res) => {
   try {
     const { userAnswer, correctAnswer, context } = req.body;
+    if (isDeterministicallyCorrectAnswer(userAnswer, correctAnswer)) {
+      return res.json({
+        isValid: true,
+        explanation: 'Matched by deterministic normalization before AI semantic validation.'
+      });
+    }
+
     const userId = resolveUserId(req.headers['user-id']);
     const { baseLanguage, targetLanguage } = await getUserLanguages(userId);
     const result = await wordAgentService.validateAnswer(userAnswer, correctAnswer, context, baseLanguage, targetLanguage);
     res.json(result);
   } catch (error) {
-    res.status(500).json({ message: 'Internal server error' });
+    const { userAnswer, correctAnswer } = req.body;
+    console.error('Answer validation fell back to deterministic comparison:', error);
+    res.json({
+      isValid: isDeterministicallyCorrectAnswer(userAnswer, correctAnswer),
+      explanation: 'AI semantic validation was unavailable, so deterministic comparison was used.'
+    });
   }
 });
 
