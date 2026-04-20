@@ -10,7 +10,7 @@ foreach ($name in @("backend", "frontend")) {
     if (Test-Path $pidFile) {
         $processId = Get-Content $pidFile -Raw
         if ($processId) {
-            taskkill /PID $processId /T /F | Out-Null
+            Stop-Process -Id $processId -Force -ErrorAction SilentlyContinue
         }
         Remove-Item $pidFile -Force -ErrorAction SilentlyContinue
     }

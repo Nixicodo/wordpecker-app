@@ -10,6 +10,27 @@ $codexDir = Join-Path $env:USERPROFILE ".codex"
 $codexAuthFile = Join-Path $codexDir "auth.json"
 $codexConfigFile = Join-Path $codexDir "config.toml"
 
+function Get-ListeningProcessInfo {
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$Port
+    )
+
+    $connection = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue |
+        Select-Object -First 1
+
+    if (-not $connection) {
+        return $null
+    }
+
+    $process = Get-Process -Id $connection.OwningProcess -ErrorAction SilentlyContinue
+    if ($process) {
+        return "$($process.ProcessName) (PID $($process.Id))"
+    }
+
+    return "PID $($connection.OwningProcess)"
+}
+
 New-Item -ItemType Directory -Force -Path $logsDir | Out-Null
 New-Item -ItemType Directory -Force -Path $runtimeDir | Out-Null
 
@@ -63,9 +84,18 @@ VITE_API_URL=http://localhost:3000
 VITE_API_URL=http://localhost:3000
 "@ | Set-Content -Path $frontendEnv -NoNewline
 
-if ((Get-Service MongoDB -ErrorAction SilentlyContinue).Status -ne "Running") {
+$mongoService = Get-Service MongoDB -ErrorAction SilentlyContinue
+if (-not $mongoService) {
+    throw "MongoDB service was not found. Please install MongoDB or update the script to use your actual service name."
+}
+
+if ($mongoService.Status -ne "Running") {
     Start-Service MongoDB
     Start-Sleep -Seconds 5
+    $mongoService.Refresh()
+    if ($mongoService.Status -ne "Running") {
+        throw "MongoDB service failed to start. Please check the Windows service status first."
+    }
 }
 
 foreach ($name in @("backend", "frontend")) {
@@ -73,10 +103,20 @@ foreach ($name in @("backend", "frontend")) {
     if (Test-Path $pidFile) {
         $processId = Get-Content $pidFile -Raw
         if ($processId) {
-            taskkill /PID $processId /T /F | Out-Null
+            Stop-Process -Id $processId -Force -ErrorAction SilentlyContinue
         }
         Remove-Item $pidFile -Force -ErrorAction SilentlyContinue
     }
+}
+
+$backendPortOwner = Get-ListeningProcessInfo -Port 3000
+if ($backendPortOwner) {
+    throw "Port 3000 is already in use by $backendPortOwner. Stop that process first, then rerun scripts\start-local.ps1."
+}
+
+$frontendPortOwner = Get-ListeningProcessInfo -Port 5173
+if ($frontendPortOwner) {
+    throw "Port 5173 is already in use by $frontendPortOwner. Stop that process first, then rerun scripts\start-local.ps1."
 }
 
 if (-not (Test-Path (Join-Path $backendDir "node_modules"))) {
@@ -124,7 +164,8 @@ Start-Sleep -Seconds 8
 $frontendProcess = Start-Process -FilePath $nodeExe -WorkingDirectory $frontendDir -ArgumentList @(
     ".\node_modules\vite\bin\vite.js",
     "--host",
-    "0.0.0.0"
+    "0.0.0.0",
+    "--strictPort"
 ) -RedirectStandardOutput $frontendLog -RedirectStandardError $frontendErrLog -WindowStyle Hidden -PassThru
 $frontendProcess.Id | Set-Content -Path (Join-Path $runtimeDir "frontend.pid") -NoNewline
 
