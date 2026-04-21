@@ -3,6 +3,7 @@ import { closeDB, connectDB } from '../config/mongodb';
 import { LearningState } from '../api/learning-state/model';
 import { WordList } from '../api/lists/model';
 import { Word } from '../api/words/model';
+import { buildSpanishVocabularyListName } from '../scripts/spanishVocabularyData';
 import {
   FIXED_DISCOVERY_TARGET_LIST_NAME,
   selectFixedDiscoveryWords
@@ -30,7 +31,7 @@ describe('selectFixedDiscoveryWords', () => {
     await closeDB();
   });
 
-  it('always prefers the oldest source list that still has undiscovered words', async () => {
+  it('always prefers the first source list in the reverse discovery chain that still has undiscovered words', async () => {
     await WordList.create({
       name: FIXED_DISCOVERY_TARGET_LIST_NAME,
       description: 'Discovery root',
@@ -38,13 +39,13 @@ describe('selectFixedDiscoveryWords', () => {
       kind: 'custom'
     });
     const level0 = await WordList.create({
-      name: '西语3k词-Level0-Pre-A1',
+      name: buildSpanishVocabularyListName(0),
       description: 'Level 0',
       context: 'Mexican Spanish frequency vocabulary level 0 (Pre-A1)',
       kind: 'custom'
     });
     const level1 = await WordList.create({
-      name: '西语3k词-Level1-A1',
+      name: buildSpanishVocabularyListName(1),
       description: 'Level 1',
       context: 'Mexican Spanish frequency vocabulary level 1 (A1)',
       kind: 'custom'
@@ -55,7 +56,7 @@ describe('selectFixedDiscoveryWords', () => {
       listMemberships: [
         {
           listId: level0._id,
-          meaning: '你好（hello）'
+          meaning: 'hello'
         }
       ]
     });
@@ -64,21 +65,48 @@ describe('selectFixedDiscoveryWords', () => {
       listMemberships: [
         {
           listId: level0._id,
-          meaning: '再见（goodbye）'
+          meaning: 'goodbye'
         }
       ]
     });
-    await Word.create({
+    const gracias = await Word.create({
       value: 'gracias',
       listMemberships: [
         {
           listId: level1._id,
-          meaning: '谢谢（thanks）'
+          meaning: 'thanks'
         }
       ]
     });
 
     let batch = await selectFixedDiscoveryWords('discovery-user', 10);
+
+    expect(batch.sourceList?.name).toBe(level1.name);
+    expect(batch.words.map((word) => word.word)).toEqual(['gracias']);
+
+    await LearningState.create({
+      userId: 'discovery-user',
+      wordId: gracias._id,
+      listId: level1._id,
+      dueAt: new Date('2026-05-01T00:00:00.000Z'),
+      lastReviewedAt: new Date('2026-04-18T00:00:00.000Z'),
+      stability: 3,
+      difficulty: 3,
+      scheduledDays: 4,
+      elapsedDays: 0,
+      reps: 1,
+      lapses: 0,
+      learningSteps: 0,
+      state: State.Review,
+      reviewCount: 1,
+      lapseCount: 0,
+      consecutiveCorrect: 1,
+      consecutiveWrong: 0,
+      lastRating: 'good',
+      lastSource: 'learn'
+    });
+
+    batch = await selectFixedDiscoveryWords('discovery-user', 10);
 
     expect(batch.sourceList?.name).toBe(level0.name);
     expect(batch.words.map((word) => word.word).sort()).toEqual(['adios', 'hola']);
@@ -128,15 +156,15 @@ describe('selectFixedDiscoveryWords', () => {
 
     batch = await selectFixedDiscoveryWords('discovery-user', 10);
 
-    expect(batch.sourceList?.name).toBe(level1.name);
-    expect(batch.words.map((word) => word.word)).toEqual(['gracias']);
+    expect(batch.sourceList).toBeNull();
+    expect(batch.words).toEqual([]);
 
     await Word.create({
       value: 'buenos dias',
       listMemberships: [
         {
           listId: level0._id,
-          meaning: '早上好（good morning）'
+          meaning: 'good morning'
         }
       ]
     });

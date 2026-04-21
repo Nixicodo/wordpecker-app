@@ -66,7 +66,7 @@ const resolveDifficultyLevel = (
 
 export const buildFixedDiscoveryChain = () => [
   FIXED_DISCOVERY_TARGET_LIST_NAME,
-  ...getManagedSpanishVocabularyListNames()
+  ...getManagedSpanishVocabularyListNames().reverse()
 ];
 
 export const selectFixedDiscoveryWords = async (
