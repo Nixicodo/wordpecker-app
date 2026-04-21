@@ -4,6 +4,7 @@ import { GiTreeBranch } from 'react-icons/gi';
 import { FaCamera, FaClock, FaCog, FaFeatherAlt, FaGraduationCap } from 'react-icons/fa';
 import { detectUiLocale } from '../i18n/ui';
 import { useDisciplineStatus } from '../hooks/useDisciplineStatus';
+import { formatDiscoveryQuotaSummary } from '../utils/discipline';
 
 const EntryBadge = ({ label, colorScheme }: { label: string; colorScheme: string }) => (
   <Badge colorScheme={colorScheme} variant="subtle" borderRadius="full" px={2} py={0.5}>
@@ -77,7 +78,7 @@ export const Header = () => {
                   <Text>{isZh ? '发现新词' : 'Get New Words'}</Text>
                   {status && (
                     <EntryBadge
-                      label={status.entryState === 'open' ? `余 ${status.remainingNewWordQuota}` : '受限'}
+                      label={status.entryState === 'open' ? formatDiscoveryQuotaSummary(status) : '受限'}
                       colorScheme={status.entryState === 'open' ? 'green' : 'orange'}
                     />
                   )}

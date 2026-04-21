@@ -34,8 +34,23 @@ export interface DisciplineStatus {
   dueCount: number;
   backlog: number;
   dailyNewWordLimit: number;
+  dailyNewWordLimits: {
+    familiar: number;
+    uncertain: number;
+    unknown: number;
+  };
   newWordsAddedToday: number;
+  newWordsAddedTodayByAssessment: {
+    familiar: number;
+    uncertain: number;
+    unknown: number;
+  };
   remainingNewWordQuota: number;
+  remainingNewWordQuotaByAssessment: {
+    familiar: number;
+    uncertain: number;
+    unknown: number;
+  };
   entryState: 'open' | 'soft_locked' | 'hard_locked' | 'quota_reached';
   canAccessExploration: boolean;
 }

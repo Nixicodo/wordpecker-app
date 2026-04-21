@@ -11,15 +11,16 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 import { FaArrowRight, FaClock } from 'react-icons/fa';
 import { DisciplineStatus } from '../types';
+import { discoveryQuotaAssessments, discoveryQuotaLabels } from '../utils/discipline';
 
 const getTitle = (status: DisciplineStatus) => {
   switch (status.entryState) {
     case 'hard_locked':
-      return '新增入口已被硬锁定';
+      return '新词入口已被硬锁定';
     case 'soft_locked':
       return '先清完今天的 due，再继续拓词';
     case 'quota_reached':
-      return '今天的新词额度已经用完';
+      return '今天的三档新词额度都已用完';
     default:
       return '当前入口暂不可用';
   }
@@ -28,11 +29,11 @@ const getTitle = (status: DisciplineStatus) => {
 const getDescription = (status: DisciplineStatus) => {
   switch (status.entryState) {
     case 'hard_locked':
-      return `当前 backlog 为 ${status.backlog}，已经超过硬阈值 30。现在不允许继续进入新增词汇主流程。`;
+      return `当前 backlog 为 ${status.backlog}，已经超过硬阈值 30。现在不允许继续进入新词发现流程。`;
     case 'soft_locked':
-      return `你还有 ${status.dueCount} 个待复习内容没清。纪律化主线要求先完成 due review，再进入探索型入口。`;
+      return `你还有 ${status.dueCount} 个待复习内容没清。纪律化主线要求先完成 due review，再继续探索型入口。`;
     case 'quota_reached':
-      return `今天已经引入 ${status.newWordsAddedToday} 个新词，达到每日上限 ${status.dailyNewWordLimit}。今天不再继续新增。`;
+      return '今天“比较熟悉 / 不太熟悉 / 完全陌生”三档的引入额度都已经耗尽，明天再继续。';
     default:
       return '请先回到主线复习。';
   }
@@ -56,7 +57,7 @@ export const DisciplineLockScreen = ({
       py={{ base: 6, md: 8 }}
     >
       <VStack align="stretch" spacing={6}>
-        <HStack spacing={3}>
+        <HStack spacing={3} flexWrap="wrap">
           <Badge
             colorScheme={status.entryState === 'hard_locked' ? 'red' : 'orange'}
             variant="solid"
@@ -70,7 +71,7 @@ export const DisciplineLockScreen = ({
             Due {status.dueCount}
           </Badge>
           <Badge colorScheme="purple" variant="subtle" px={3} py={1} borderRadius="full">
-            今日新词 {status.newWordsAddedToday}/{status.dailyNewWordLimit}
+            今日已引入 {status.newWordsAddedToday}/{status.dailyNewWordLimit}
           </Badge>
         </HStack>
 
@@ -98,8 +99,16 @@ export const DisciplineLockScreen = ({
             待复习 backlog：{status.backlog}
           </Text>
           <Text color="gray.300">
-            今日剩余新词额度：{status.remainingNewWordQuota}
+            今日总剩余额度：{status.remainingNewWordQuota}
           </Text>
+          <VStack align="stretch" spacing={2} mt={3}>
+            {discoveryQuotaAssessments.map((assessment) => (
+              <Text key={assessment} color="gray.300">
+                {discoveryQuotaLabels[assessment]}：{status.remainingNewWordQuotaByAssessment[assessment]}/
+                {status.dailyNewWordLimits[assessment]}
+              </Text>
+            ))}
+          </VStack>
         </Box>
 
         <HStack spacing={3} flexWrap="wrap">

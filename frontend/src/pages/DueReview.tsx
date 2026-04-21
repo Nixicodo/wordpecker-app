@@ -17,6 +17,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { FaBookOpen, FaClock, FaListUl, FaSitemap } from 'react-icons/fa';
 import { apiService } from '../services/api';
 import { DisciplineStatus, WordList } from '../types';
+import { discoveryQuotaAssessments, discoveryQuotaLabels } from '../utils/discipline';
 
 const formatDateTime = (value?: string) => {
   if (!value) {
@@ -227,11 +228,24 @@ export const DueReview = () => {
                         {getDisciplineLabel(disciplineStatus)}
                       </Badge>
                       <Badge colorScheme="purple" variant="subtle" px={3} py={1} borderRadius="full">
-                        今日新词 {disciplineStatus.newWordsAddedToday}/{disciplineStatus.dailyNewWordLimit}
+                        今日已引入 {disciplineStatus.newWordsAddedToday}/{disciplineStatus.dailyNewWordLimit}
                       </Badge>
                       <Badge colorScheme="yellow" variant="subtle" px={3} py={1} borderRadius="full">
-                        剩余额度 {disciplineStatus.remainingNewWordQuota}
+                        总剩余额度 {disciplineStatus.remainingNewWordQuota}
                       </Badge>
+                      {discoveryQuotaAssessments.map((assessment) => (
+                        <Badge
+                          key={assessment}
+                          colorScheme={assessment === 'familiar' ? 'teal' : assessment === 'uncertain' ? 'orange' : 'red'}
+                          variant="subtle"
+                          px={3}
+                          py={1}
+                          borderRadius="full"
+                        >
+                          {discoveryQuotaLabels[assessment]} {disciplineStatus.remainingNewWordQuotaByAssessment[assessment]}/
+                          {disciplineStatus.dailyNewWordLimits[assessment]}
+                        </Badge>
+                      ))}
                     </HStack>
                   </Box>
                 )}

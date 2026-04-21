@@ -75,10 +75,10 @@ export const GetNewWords: React.FC = () => {
                   </Text>
                   <VStack align="start" spacing={2} color="whiteAlpha.800">
                     <Text>1. 非常熟练：直接归为完成学习，不占用今日新词额度，也不会再进入复习。</Text>
-                    <Text>2. 比较熟练：按较长的首次复习间隔进入 FSRS。</Text>
-                    <Text>3. 不太熟悉：按中等的首次复习间隔进入 FSRS。</Text>
-                    <Text>4. 完全陌生：按最短的首次复习间隔进入 FSRS。</Text>
-                    <Text>5. 每日最高新词数已提升为 15。</Text>
+                    <Text>2. 比较熟练：按较长的首次复习间隔进入 FSRS，每日最多引入 20 个。</Text>
+                    <Text>3. 不太熟悉：按中等的首次复习间隔进入 FSRS，每日最多引入 10 个。</Text>
+                    <Text>4. 完全陌生：按最短的首次复习间隔进入 FSRS，每日最多引入 5 个。</Text>
+                    <Text>5. 三档额度彼此独立计算，非非常熟练最多合计可引入 35 个。</Text>
                   </VStack>
                 </Box>
 

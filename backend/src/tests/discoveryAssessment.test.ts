@@ -75,8 +75,23 @@ describe('discovery assessment flow', () => {
 
     expect(masteredResponse.status).toBe(200);
     expect(masteredResponse.body.countedAsNewWord).toBe(false);
-    expect(masteredResponse.body.disciplineStatus.dailyNewWordLimit).toBe(15);
+    expect(masteredResponse.body.disciplineStatus.dailyNewWordLimit).toBe(35);
+    expect(masteredResponse.body.disciplineStatus.dailyNewWordLimits).toEqual({
+      familiar: 20,
+      uncertain: 10,
+      unknown: 5
+    });
     expect(masteredResponse.body.disciplineStatus.newWordsAddedToday).toBe(0);
+    expect(masteredResponse.body.disciplineStatus.newWordsAddedTodayByAssessment).toEqual({
+      familiar: 0,
+      uncertain: 0,
+      unknown: 0
+    });
+    expect(masteredResponse.body.disciplineStatus.remainingNewWordQuotaByAssessment).toEqual({
+      familiar: 20,
+      uncertain: 10,
+      unknown: 5
+    });
 
     const masteredState = await LearningState.findOne({
       userId: 'discovery-user',
@@ -97,11 +112,21 @@ describe('discovery assessment flow', () => {
 
     expect(unknownResponse.status).toBe(200);
     expect(unknownResponse.body.countedAsNewWord).toBe(true);
-    expect(unknownResponse.body.disciplineStatus.dailyNewWordLimit).toBe(15);
+    expect(unknownResponse.body.disciplineStatus.dailyNewWordLimit).toBe(35);
     expect(unknownResponse.body.disciplineStatus.newWordsAddedToday).toBe(1);
+    expect(unknownResponse.body.disciplineStatus.newWordsAddedTodayByAssessment).toEqual({
+      familiar: 0,
+      uncertain: 0,
+      unknown: 1
+    });
     expect(
       unknownResponse.body.disciplineStatus.dailyNewWordLimit - unknownResponse.body.disciplineStatus.newWordsAddedToday
-    ).toBe(14);
+    ).toBe(34);
+    expect(unknownResponse.body.disciplineStatus.remainingNewWordQuotaByAssessment).toEqual({
+      familiar: 20,
+      uncertain: 10,
+      unknown: 4
+    });
 
     const logs = await ReviewLog.find({ userId: 'discovery-user' })
       .sort({ answeredAt: 1 })
@@ -155,5 +180,85 @@ describe('discovery assessment flow', () => {
     expect(masteredState?.dueAt.toISOString()).toBe('9999-12-31T23:59:59.999Z');
 
     persistSnapshotSpy.mockRestore();
+  });
+
+  it('enforces separate daily discovery quotas for unknown, uncertain, and familiar assessments', async () => {
+    const sourceList = await WordList.create({
+      name: 'Separate daily quotas',
+      description: 'Discovery source',
+      context: 'Used to verify per-assessment discovery limits',
+      kind: 'custom'
+    });
+
+    const words = await Word.insertMany(
+      Array.from({ length: 38 }, (_, index) => ({
+        value: `quota-word-${index + 1}`,
+        listMemberships: [
+          {
+            listId: sourceList._id,
+            meaning: `Meaning ${index + 1}`
+          }
+        ]
+      }))
+    );
+
+    const rateWord = (wordId: string, assessment: 'familiar' | 'uncertain' | 'unknown') => request(app)
+      .post('/api/vocabulary/discovery-rate')
+      .set('user-id', 'quota-user')
+      .send({
+        wordId,
+        sourceListId: sourceList._id.toString(),
+        assessment
+      });
+
+    for (let index = 0; index < 5; index += 1) {
+      const response = await rateWord(words[index]._id.toString(), 'unknown');
+      expect(response.status).toBe(200);
+    }
+
+    const sixthUnknownResponse = await rateWord(words[5]._id.toString(), 'unknown');
+    expect(sixthUnknownResponse.status).toBe(409);
+    expect(sixthUnknownResponse.body.code).toBe('DISCOVERY_ASSESSMENT_QUOTA_REACHED');
+    expect(sixthUnknownResponse.body.assessment).toBe('unknown');
+
+    for (let index = 6; index < 16; index += 1) {
+      const response = await rateWord(words[index]._id.toString(), 'uncertain');
+      expect(response.status).toBe(200);
+    }
+
+    const eleventhUncertainResponse = await rateWord(words[16]._id.toString(), 'uncertain');
+    expect(eleventhUncertainResponse.status).toBe(409);
+    expect(eleventhUncertainResponse.body.code).toBe('DISCOVERY_ASSESSMENT_QUOTA_REACHED');
+    expect(eleventhUncertainResponse.body.assessment).toBe('uncertain');
+
+    for (let index = 17; index < 37; index += 1) {
+      const response = await rateWord(words[index]._id.toString(), 'familiar');
+      expect(response.status).toBe(200);
+    }
+
+    const twentyFirstFamiliarResponse = await rateWord(words[37]._id.toString(), 'familiar');
+    expect(twentyFirstFamiliarResponse.status).toBe(409);
+    expect(twentyFirstFamiliarResponse.body.code).toBe('DISCOVERY_ASSESSMENT_QUOTA_REACHED');
+    expect(twentyFirstFamiliarResponse.body.assessment).toBe('familiar');
+
+    const statusResponse = await request(app)
+      .get('/api/lists/discipline-status')
+      .set('user-id', 'quota-user');
+
+    expect(statusResponse.status).toBe(200);
+    expect(statusResponse.body.entryState).toBe('soft_locked');
+    expect(statusResponse.body.dailyNewWordLimit).toBe(35);
+    expect(statusResponse.body.newWordsAddedToday).toBe(35);
+    expect(statusResponse.body.newWordsAddedTodayByAssessment).toEqual({
+      familiar: 20,
+      uncertain: 10,
+      unknown: 5
+    });
+    expect(statusResponse.body.remainingNewWordQuota).toBe(0);
+    expect(statusResponse.body.remainingNewWordQuotaByAssessment).toEqual({
+      familiar: 0,
+      uncertain: 0,
+      unknown: 0
+    });
   });
 });

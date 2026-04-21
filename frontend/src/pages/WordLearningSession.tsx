@@ -9,6 +9,7 @@ import {
   Container,
   Flex,
   Heading,
+  HStack,
   Progress,
   Spinner,
   Text,
@@ -19,20 +20,43 @@ import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaCheck, FaHourglassHalf, FaSeedling, FaSnowflake } from 'react-icons/fa';
 import { useBackgrounds } from '../components/BackgroundProvider';
 import { apiService } from '../services/api';
-import { DiscoveryAssessment, DiscoveryWord, DiscoveryWordsResponse } from '../types';
+import {
+  DisciplineStatus,
+  DiscoveryAssessment,
+  DiscoveryWord,
+  DiscoveryWordsResponse
+} from '../types';
+import {
+  discoveryQuotaAssessments,
+  discoveryQuotaLabels,
+  type DiscoveryQuotaAssessment
+} from '../utils/discipline';
 
-const resolveApiErrorMessage = (error: unknown, fallback: string) => {
+const resolveApiErrorPayload = (error: unknown) => {
   if (
     typeof error === 'object' &&
     error !== null &&
     'response' in error &&
     typeof (error as { response?: unknown }).response === 'object'
   ) {
-    const response = (error as { response?: { status?: number; data?: { message?: string; error?: string } } }).response;
-    return response?.data?.message || response?.data?.error || fallback;
+    return (error as {
+      response?: {
+        data?: {
+          message?: string;
+          error?: string;
+          code?: string;
+          assessment?: DiscoveryQuotaAssessment;
+        };
+      };
+    }).response?.data;
   }
 
-  return fallback;
+  return undefined;
+};
+
+const resolveApiErrorMessage = (error: unknown, fallback: string) => {
+  const payload = resolveApiErrorPayload(error);
+  return payload?.message || payload?.error || fallback;
 };
 
 const buildAlpha = (value: number) => (value / 100).toFixed(2);
@@ -47,7 +71,7 @@ const assessmentButtons: Array<{
   {
     assessment: 'mastered',
     label: '非常熟练',
-    description: '直接完成学习，不占今日新词数，也不再复习。',
+    description: '直接归为已掌握，不占用今日新词额度，也不会再进入复习。',
     colorScheme: 'green',
     icon: FaCheck
   },
@@ -74,6 +98,12 @@ const assessmentButtons: Array<{
   }
 ];
 
+const getQuotaMessage = (status: DisciplineStatus, assessment: DiscoveryQuotaAssessment) => {
+  const remaining = status.remainingNewWordQuotaByAssessment[assessment];
+  const limit = status.dailyNewWordLimits[assessment];
+  return `今日剩余 ${remaining}/${limit}`;
+};
+
 export const WordLearningSession: React.FC = () => {
   const navigate = useNavigate();
   const toast = useToast();
@@ -84,8 +114,7 @@ export const WordLearningSession: React.FC = () => {
   const [batch, setBatch] = useState<DiscoveryWordsResponse | null>(null);
   const [words, setWords] = useState<DiscoveryWord[]>([]);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const [dailyLimit, setDailyLimit] = useState(15);
-  const [remainingQuota, setRemainingQuota] = useState(15);
+  const [disciplineStatus, setDisciplineStatus] = useState<DisciplineStatus | null>(null);
 
   const cardBg = `rgba(15, 23, 42, ${buildAlpha(cardOpacity)})`;
   const headerBg = `rgba(15, 23, 42, ${buildAlpha(Math.min(cardOpacity + 8, 100))})`;
@@ -98,10 +127,10 @@ export const WordLearningSession: React.FC = () => {
 
   const sourceDescription = useMemo(() => {
     if (!batch?.sourceList) {
-      return '固定链里的来源词树暂时没有可安排的新词了。';
+      return '固定链当前已经没有可以继续引入的新词了。';
     }
 
-    return `当前来源：${batch.sourceList.name}。只要这一层还有新词，系统就不会切换到更新一级。`;
+    return `当前来源：${batch.sourceList.name}。只要这一层还有未进入学习流程的新词，系统就不会切到更高一级。`;
   }, [batch]);
 
   const loadDiscoveryWords = async () => {
@@ -130,8 +159,7 @@ export const WordLearningSession: React.FC = () => {
   const loadDisciplineStatus = async () => {
     try {
       const status = await apiService.getDisciplineStatus();
-      setDailyLimit(status.dailyNewWordLimit);
-      setRemainingQuota(Math.max(0, status.dailyNewWordLimit - status.newWordsAddedToday));
+      setDisciplineStatus(status);
     } catch (error) {
       console.error('Failed to load discipline status:', error);
     }
@@ -164,17 +192,14 @@ export const WordLearningSession: React.FC = () => {
         assessment
       );
 
-      setDailyLimit(response.disciplineStatus.dailyNewWordLimit);
-      setRemainingQuota(
-        Math.max(0, response.disciplineStatus.dailyNewWordLimit - response.disciplineStatus.newWordsAddedToday)
-      );
-
+      setDisciplineStatus(response.disciplineStatus);
       await moveToNextWord();
     } catch (error) {
       console.error('Failed to rate discovery word:', error);
+      const payload = resolveApiErrorPayload(error);
       const message = resolveApiErrorMessage(error, '新词评分提交失败。');
-      const translatedMessage = message === 'Daily new-word quota reached'
-        ? '今日新词额度已用完。非常熟练不占额度，但其余三档今天不能再继续引入。'
+      const translatedMessage = payload?.code === 'DISCOVERY_ASSESSMENT_QUOTA_REACHED' && payload.assessment
+        ? `${discoveryQuotaLabels[payload.assessment]}今天的额度已经用完，可以继续选择其他档位。`
         : message;
 
       toast({
@@ -185,7 +210,7 @@ export const WordLearningSession: React.FC = () => {
         isClosable: true
       });
 
-      if (message === 'Daily new-word quota reached') {
+      if (payload?.code === 'DISCOVERY_ASSESSMENT_QUOTA_REACHED') {
         await loadDisciplineStatus();
       }
     } finally {
@@ -226,7 +251,7 @@ export const WordLearningSession: React.FC = () => {
             <CardBody>
               <VStack spacing={5} py={8}>
                 <Heading size="lg" color="green.300">
-                  当前固定链已无新词
+                  当前固定链已经没有新词
                 </Heading>
                 <Text color="whiteAlpha.800" textAlign="center" maxW="2xl">
                   {sourceDescription}
@@ -284,16 +309,34 @@ export const WordLearningSession: React.FC = () => {
               </Text>
             </VStack>
 
-            <Badge
-              bg="whiteAlpha.200"
-              color="whiteAlpha.900"
-              borderRadius="full"
-              px={3}
-              py={1.5}
-              alignSelf={{ base: 'flex-start', md: 'center' }}
-            >
-              今日新词剩余 {remainingQuota}/{dailyLimit}
-            </Badge>
+            <VStack spacing={2} align={{ base: 'flex-start', md: 'flex-end' }}>
+              {disciplineStatus && (
+                <Badge
+                  bg="whiteAlpha.200"
+                  color="whiteAlpha.900"
+                  borderRadius="full"
+                  px={3}
+                  py={1.5}
+                >
+                  今日已引入 {disciplineStatus.newWordsAddedToday}/{disciplineStatus.dailyNewWordLimit}
+                </Badge>
+              )}
+              <HStack spacing={2} flexWrap="wrap" justify={{ base: 'flex-start', md: 'flex-end' }}>
+                {disciplineStatus && discoveryQuotaAssessments.map((assessment) => (
+                  <Badge
+                    key={assessment}
+                    colorScheme={assessment === 'familiar' ? 'teal' : assessment === 'uncertain' ? 'orange' : 'red'}
+                    variant="subtle"
+                    borderRadius="full"
+                    px={3}
+                    py={1.5}
+                  >
+                    {discoveryQuotaLabels[assessment]} {disciplineStatus.remainingNewWordQuotaByAssessment[assessment]}/
+                    {disciplineStatus.dailyNewWordLimits[assessment]}
+                  </Badge>
+                ))}
+              </HStack>
+            </VStack>
           </Flex>
 
           <Card
@@ -347,28 +390,44 @@ export const WordLearningSession: React.FC = () => {
                 </VStack>
 
                 <VStack spacing={3} align="stretch">
-                  {assessmentButtons.map(({ assessment, label, description, colorScheme, icon: Icon }) => (
-                    <Button
-                      key={assessment}
-                      leftIcon={<Icon />}
-                      colorScheme={colorScheme}
-                      variant={assessment === 'mastered' ? 'solid' : 'outline'}
-                      size="lg"
-                      justifyContent="space-between"
-                      px={5}
-                      py={7}
-                      isLoading={submittingAssessment === assessment}
-                      loadingText="提交中…"
-                      onClick={() => void handleAssessment(assessment)}
-                    >
-                      <Box textAlign="left" w="100%">
-                        <Text fontWeight="bold">{label}</Text>
-                        <Text fontSize="sm" opacity={0.85} whiteSpace="normal">
-                          {description}
-                        </Text>
-                      </Box>
-                    </Button>
-                  ))}
+                  {assessmentButtons.map(({ assessment, label, description, colorScheme, icon: Icon }) => {
+                    const isQuotaAssessment = assessment !== 'mastered';
+                    const quotaAssessment = assessment as DiscoveryQuotaAssessment;
+                    const isDisabled = Boolean(
+                      disciplineStatus &&
+                      isQuotaAssessment &&
+                      disciplineStatus.remainingNewWordQuotaByAssessment[quotaAssessment] <= 0
+                    );
+
+                    return (
+                      <Button
+                        key={assessment}
+                        leftIcon={<Icon />}
+                        colorScheme={colorScheme}
+                        variant={assessment === 'mastered' ? 'solid' : 'outline'}
+                        size="lg"
+                        justifyContent="space-between"
+                        px={5}
+                        py={7}
+                        isLoading={submittingAssessment === assessment}
+                        isDisabled={isDisabled}
+                        loadingText="提交中…"
+                        onClick={() => void handleAssessment(assessment)}
+                      >
+                        <Box textAlign="left" w="100%">
+                          <Text fontWeight="bold">{label}</Text>
+                          <Text fontSize="sm" opacity={0.85} whiteSpace="normal">
+                            {description}
+                          </Text>
+                          <Text fontSize="xs" opacity={0.72} whiteSpace="normal" mt={1}>
+                            {disciplineStatus && isQuotaAssessment
+                              ? getQuotaMessage(disciplineStatus, quotaAssessment)
+                              : '今日不限额'}
+                          </Text>
+                        </Box>
+                      </Button>
+                    );
+                  })}
                 </VStack>
               </VStack>
             </CardBody>

@@ -97,9 +97,13 @@ router.post('/discovery-rate', validate(discoveryAssessmentSchema), async (req, 
 
     if (
       assessment !== 'mastered' &&
-      disciplineStatus.newWordsAddedToday >= disciplineStatus.dailyNewWordLimit
+      disciplineStatus.remainingNewWordQuotaByAssessment[assessment] <= 0
     ) {
-      return res.status(409).json({ error: 'Daily new-word quota reached' });
+      return res.status(409).json({
+        error: 'Daily new-word quota reached for assessment',
+        code: 'DISCOVERY_ASSESSMENT_QUOTA_REACHED',
+        assessment
+      });
     }
 
     const result = await applyDiscoveryAssessment(
