@@ -66,7 +66,7 @@ const resolveDifficultyLevel = (
 
 export const buildFixedDiscoveryChain = () => [
   FIXED_DISCOVERY_TARGET_LIST_NAME,
-  ...getManagedSpanishVocabularyListNames().reverse()
+  ...getManagedSpanishVocabularyListNames()
 ];
 
 export const selectFixedDiscoveryWords = async (
@@ -74,7 +74,7 @@ export const selectFixedDiscoveryWords = async (
   count = 15
 ): Promise<DiscoveryBatch> => {
   const chain = buildFixedDiscoveryChain();
-  const sourceNames = chain.slice(1);
+  const sourceNames = chain;
   const lists = (await WordList.find({ name: { $in: sourceNames } })
     .select('_id name context')
     .lean()) as LeanList[];

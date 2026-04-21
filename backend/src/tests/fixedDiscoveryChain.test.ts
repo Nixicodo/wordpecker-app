@@ -6,6 +6,7 @@ import { Word } from '../api/words/model';
 import { buildSpanishVocabularyListName } from '../scripts/spanishVocabularyData';
 import {
   FIXED_DISCOVERY_TARGET_LIST_NAME,
+  buildFixedDiscoveryChain,
   selectFixedDiscoveryWords
 } from '../services/fixedDiscoveryChain';
 
@@ -31,8 +32,8 @@ describe('selectFixedDiscoveryWords', () => {
     await closeDB();
   });
 
-  it('always prefers the first source list in the reverse discovery chain that still has undiscovered words', async () => {
-    await WordList.create({
+  it('uses the fixed discovery order of private study first, then managed Spanish levels from Level0 upward', async () => {
+    const privateStudyList = await WordList.create({
       name: FIXED_DISCOVERY_TARGET_LIST_NAME,
       description: 'Discovery root',
       context: 'Private study root',
@@ -51,7 +52,16 @@ describe('selectFixedDiscoveryWords', () => {
       kind: 'custom'
     });
 
-    const hola = await Word.create({
+    const privateWord = await Word.create({
+      value: 'oscuro',
+      listMemberships: [
+        {
+          listId: privateStudyList._id,
+          meaning: 'dark'
+        }
+      ]
+    });
+    const level0Word = await Word.create({
       value: 'hola',
       listMemberships: [
         {
@@ -60,16 +70,7 @@ describe('selectFixedDiscoveryWords', () => {
         }
       ]
     });
-    const adios = await Word.create({
-      value: 'adios',
-      listMemberships: [
-        {
-          listId: level0._id,
-          meaning: 'goodbye'
-        }
-      ]
-    });
-    const gracias = await Word.create({
+    const level1Word = await Word.create({
       value: 'gracias',
       listMemberships: [
         {
@@ -81,13 +82,18 @@ describe('selectFixedDiscoveryWords', () => {
 
     let batch = await selectFixedDiscoveryWords('discovery-user', 10);
 
-    expect(batch.sourceList?.name).toBe(level1.name);
-    expect(batch.words.map((word) => word.word)).toEqual(['gracias']);
+    expect(buildFixedDiscoveryChain().slice(0, 3)).toEqual([
+      FIXED_DISCOVERY_TARGET_LIST_NAME,
+      level0.name,
+      level1.name
+    ]);
+    expect(batch.sourceList?.name).toBe(privateStudyList.name);
+    expect(batch.words.map((word) => word.word)).toEqual(['oscuro']);
 
     await LearningState.create({
       userId: 'discovery-user',
-      wordId: gracias._id,
-      listId: level1._id,
+      wordId: privateWord._id,
+      listId: privateStudyList._id,
       dueAt: new Date('2026-05-01T00:00:00.000Z'),
       lastReviewedAt: new Date('2026-04-18T00:00:00.000Z'),
       stability: 3,
@@ -109,11 +115,11 @@ describe('selectFixedDiscoveryWords', () => {
     batch = await selectFixedDiscoveryWords('discovery-user', 10);
 
     expect(batch.sourceList?.name).toBe(level0.name);
-    expect(batch.words.map((word) => word.word).sort()).toEqual(['adios', 'hola']);
+    expect(batch.words.map((word) => word.word)).toEqual(['hola']);
 
     await LearningState.create({
       userId: 'discovery-user',
-      wordId: hola._id,
+      wordId: level0Word._id,
       listId: level0._id,
       dueAt: new Date('2026-05-01T00:00:00.000Z'),
       lastReviewedAt: new Date('2026-04-18T00:00:00.000Z'),
@@ -132,10 +138,16 @@ describe('selectFixedDiscoveryWords', () => {
       lastRating: 'good',
       lastSource: 'learn'
     });
+
+    batch = await selectFixedDiscoveryWords('discovery-user', 10);
+
+    expect(batch.sourceList?.name).toBe(level1.name);
+    expect(batch.words.map((word) => word.word)).toEqual(['gracias']);
+
     await LearningState.create({
       userId: 'discovery-user',
-      wordId: adios._id,
-      listId: level0._id,
+      wordId: level1Word._id,
+      listId: level1._id,
       dueAt: new Date('2026-05-01T00:00:00.000Z'),
       lastReviewedAt: new Date('2026-04-18T00:00:00.000Z'),
       stability: 3,
@@ -160,18 +172,18 @@ describe('selectFixedDiscoveryWords', () => {
     expect(batch.words).toEqual([]);
 
     await Word.create({
-      value: 'buenos dias',
+      value: 'segun',
       listMemberships: [
         {
-          listId: level0._id,
-          meaning: 'good morning'
+          listId: privateStudyList._id,
+          meaning: 'according to'
         }
       ]
     });
 
     batch = await selectFixedDiscoveryWords('discovery-user', 10);
 
-    expect(batch.sourceList?.name).toBe(level0.name);
-    expect(batch.words.map((word) => word.word)).toEqual(['buenos dias']);
+    expect(batch.sourceList?.name).toBe(privateStudyList.name);
+    expect(batch.words.map((word) => word.word)).toEqual(['segun']);
   });
 });
