@@ -62,7 +62,7 @@ interface BackgroundContextValue {
   isSwitching: boolean;
   isDeleting: boolean;
   cardOpacity: number;
-  cycleBackground: (reason?: 'manual' | 'timer' | 'correct-answer') => void;
+  cycleBackground: (reason?: 'manual' | 'timer' | 'correct-answer' | 'next-question') => void;
   deleteCurrentBackground: () => Promise<void>;
 }
 
@@ -155,7 +155,7 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
     }
   }, [applyBackground, toast]);
 
-  const cycleBackground = useCallback((reason: 'manual' | 'timer' | 'correct-answer' = 'manual') => {
+  const cycleBackground = useCallback((reason: 'manual' | 'timer' | 'correct-answer' | 'next-question' = 'manual') => {
     if (reason === 'timer' && isAutoRotationPaused) {
       return;
     }

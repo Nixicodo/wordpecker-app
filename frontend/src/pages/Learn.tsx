@@ -355,6 +355,7 @@ export const Learn = () => {
         queue?.ensureBuffered(newExercises);
         syncHasMoreExercises();
         resetQuestionState();
+        cycleBackground('next-question');
         return true;
       }
 
@@ -509,6 +510,7 @@ export const Learn = () => {
 
     setCurrentExercise(prev => prev + 1);
     resetQuestionState();
+    cycleBackground('next-question');
   };
 
   if (isLoading) {

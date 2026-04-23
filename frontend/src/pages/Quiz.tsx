@@ -346,6 +346,9 @@ export const Quiz = () => {
           setCurrentQuestion(firstNewQuestionIndex);
         }
         resetQuestionState();
+        if (startFromNewBatch) {
+          cycleBackground('next-question');
+        }
         return true;
       }
 
@@ -500,6 +503,7 @@ export const Quiz = () => {
 
     setCurrentQuestion(prev => prev + 1);
     resetQuestionState();
+    cycleBackground('next-question');
   };
 
   if (isLoading) {
