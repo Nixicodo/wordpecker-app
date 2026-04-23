@@ -30,7 +30,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { Word, WordList } from '../types';
-import { ArrowBackIcon, DeleteIcon } from '@chakra-ui/icons';
+import { ArrowBackIcon, CheckCircleIcon, DeleteIcon } from '@chakra-ui/icons';
 import { FaGraduationCap, FaGamepad, FaPlus, FaBookOpen, FaMicrophone, FaFileImport, FaClock } from 'react-icons/fa';
 import { GiTreeBranch } from 'react-icons/gi';
 import { AddWordModal } from '../components/AddWordModal';
@@ -38,7 +38,7 @@ import { BulkImportWordsModal } from '../components/BulkImportWordsModal';
 import { ProgressIndicator, OverallProgress, deriveWordScore } from '../components/ProgressIndicator';
 import { apiService } from '../services/api';
 import { UserPreferences } from '../types';
-import { isDueForReview } from '../utils/reviewState';
+import { hasStartedReviewFlow, isDueForReview, isMasteredForever } from '../utils/reviewState';
 
 const generateColor = (word: string) => {
   const hue = word.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % 360;
@@ -62,11 +62,16 @@ const formatDueDate = (value?: string) => {
     return '';
   }
 
-  return new Intl.DateTimeFormat('zh-CN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  }).format(new Date(value));
+  const dueAt = new Date(value);
+  if (!Number.isFinite(dueAt.getTime())) {
+    return '';
+  }
+
+  const year = String(dueAt.getFullYear()).slice(-2);
+  const month = String(dueAt.getMonth() + 1).padStart(2, '0');
+  const day = String(dueAt.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
 };
 
 const UI = {
@@ -458,6 +463,9 @@ export const ListDetail = () => {
             <SimpleGrid columns={{ base: 1, xl: 2 }} spacing={3} p={4}>
               {words.map((word: Word, index: number) => {
                 const score = deriveWordScore(word);
+                const startedReviewFlow = hasStartedReviewFlow(word);
+                const masteredForever = isMasteredForever(word);
+                const nextReviewDate = masteredForever ? '' : formatDueDate(word.dueAt);
 
                 return (
                   <MotionBox
@@ -503,10 +511,16 @@ export const ListDetail = () => {
                         <Text color="gray.200" fontSize="md" mt={3} noOfLines={selectedWord === word.id ? undefined : 1}>
                           {word.meaning}
                         </Text>
-                        {isDueReview && word.dueAt && (
-                          <Text color="gray.400" fontSize="sm" mt={2}>
-                            {`计划复习日期：${formatDueDate(word.dueAt)}`}
-                          </Text>
+                        {startedReviewFlow && (
+                          masteredForever ? (
+                            <Flex mt={2} align="center" color="green.300">
+                              <Icon as={CheckCircleIcon} boxSize={4} />
+                            </Flex>
+                          ) : nextReviewDate ? (
+                            <Text color="gray.400" fontSize="sm" mt={2}>
+                              {nextReviewDate}
+                            </Text>
+                          ) : null
                         )}
                       </Box>
 
