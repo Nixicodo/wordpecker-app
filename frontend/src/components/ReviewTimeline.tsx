@@ -2,10 +2,11 @@ import { Box, HStack, Icon, Spinner, Text, Tooltip } from '@chakra-ui/react';
 import { useEffect, useMemo, useRef } from 'react';
 import { CheckCircleIcon, WarningIcon } from '@chakra-ui/icons';
 import { FaTimes } from 'react-icons/fa';
+import { useBackgrounds } from './BackgroundProvider';
 
 export type ReviewTimelineStatus = 'idle' | 'pending' | 'correct' | 'incorrect' | 'failed';
 
-const getStatusStyles = (status: ReviewTimelineStatus, viewed: boolean) => {
+const getStatusStyles = (status: ReviewTimelineStatus, viewed: boolean, idleBg: string) => {
   switch (status) {
     case 'pending':
       return {
@@ -33,7 +34,7 @@ const getStatusStyles = (status: ReviewTimelineStatus, viewed: boolean) => {
       };
     default:
       return {
-        bg: 'gray.700',
+        bg: idleBg,
         color: 'gray.200',
         borderColor: 'whiteAlpha.300'
       };
@@ -64,7 +65,10 @@ export const ReviewTimeline = ({
   currentIndex: number;
   onSelect: (index: number) => void;
 }) => {
+  const { cardOpacity } = useBackgrounds();
   const itemRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const timelineBg = `rgba(15, 23, 42, ${(Math.max(cardOpacity - 8, 18) / 100).toFixed(2)})`;
+  const idleBg = `rgba(51, 65, 85, ${(Math.max(cardOpacity - 4, 24) / 100).toFixed(2)})`;
 
   useEffect(() => {
     const currentNode = itemRefs.current[currentIndex];
@@ -72,7 +76,7 @@ export const ReviewTimeline = ({
   }, [currentIndex]);
 
   const nodes = useMemo(() => items.map((item, index) => {
-    const style = getStatusStyles(item.status, item.viewed);
+    const style = getStatusStyles(item.status, item.viewed, idleBg);
     const isCurrent = index === currentIndex;
 
     return (
@@ -112,14 +116,14 @@ export const ReviewTimeline = ({
         </Box>
       </Tooltip>
     );
-  }), [currentIndex, items, onSelect]);
+  }), [currentIndex, idleBg, items, onSelect]);
 
   return (
     <Box
       borderRadius="2xl"
       borderWidth="1px"
       borderColor="whiteAlpha.200"
-      bg="whiteAlpha.090"
+      bg={timelineBg}
       px={4}
       py={4}
       overflowX="auto"

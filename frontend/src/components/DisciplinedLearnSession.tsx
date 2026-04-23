@@ -22,6 +22,7 @@ import { QuestionAnsweredSupplement, QuestionRenderer } from './QuestionRenderer
 import { QuestionConfidencePanel } from './QuestionConfidencePanel';
 import { ReviewRatingPanel } from './ReviewRatingPanel';
 import { ReviewTimeline, ReviewTimelineStatus } from './ReviewTimeline';
+import { useBackgrounds } from './BackgroundProvider';
 import { apiService } from '../services/api';
 import { validateAnswer } from '../utils/answerValidation';
 import { recommendReviewRating } from '../utils/reviewRating';
@@ -176,6 +177,7 @@ export const DisciplinedLearnSession = ({
 }) => {
   const navigate = useNavigate();
   const toast = useToast();
+  const { cardOpacity } = useBackgrounds();
   const isMountedRef = useRef(true);
   const questionStartedAtRef = useRef(Date.now());
   const auditStatesRef = useRef<AuditState[]>(initialExercises.map(() => createAuditState()));
@@ -794,6 +796,7 @@ export const DisciplinedLearnSession = ({
   const settlementFailedCount = auditStates.filter((state) => state.syncStatus === 'failed').length;
   const allSubmitted = auditStates.length > 0 && auditStates.every((state) => state.submitted);
   const progress = exercises.length ? (submittedCount / exercises.length) * 100 : 0;
+  const cardBg = `rgba(15, 23, 42, ${(cardOpacity / 100).toFixed(2)})`;
 
   const resolvedExercise = currentExercise ? {
     ...currentExercise,
@@ -1041,7 +1044,7 @@ export const DisciplinedLearnSession = ({
           borderRadius="2xl"
           borderWidth="1px"
           borderColor="orange.200"
-          bg="rgba(15, 23, 42, 0.92)"
+          bg={cardBg}
           px={{ base: 4, md: 7 }}
           py={6}
           boxShadow="2xl"

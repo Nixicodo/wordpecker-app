@@ -15,6 +15,7 @@ import {
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { FaBookOpen, FaClock, FaListUl, FaSitemap } from 'react-icons/fa';
+import { useBackgrounds } from '../components/BackgroundProvider';
 import { apiService } from '../services/api';
 import { DisciplineStatus, WordList } from '../types';
 import { discoveryQuotaAssessments, discoveryQuotaLabels } from '../utils/discipline';
@@ -57,6 +58,7 @@ const getDisciplineLabel = (status?: DisciplineStatus | null) => {
 
 export const DueReview = () => {
   const toast = useToast();
+  const { cardOpacity } = useBackgrounds();
   const [list, setList] = useState<WordList | null>(null);
   const [disciplineStatus, setDisciplineStatus] = useState<DisciplineStatus | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -112,6 +114,12 @@ export const DueReview = () => {
   const dueCount = list?.dueCount ?? 0;
   const sourceListCount = list?.sourceListCount ?? 0;
   const retentionScore = list?.retentionScore ?? 0;
+  const mainCardBg = `rgba(15, 23, 42, ${(cardOpacity / 100).toFixed(2)})`;
+  const sectionCardBg = `rgba(255, 255, 255, ${(Math.max(cardOpacity - 74, 6) / 100).toFixed(2)})`;
+  const systemInfoBg = `rgba(255, 255, 255, ${(Math.max(cardOpacity - 80, 4) / 100).toFixed(2)})`;
+  const actionCardBg = dueCount > 0
+    ? `rgba(154, 52, 18, ${(Math.max(cardOpacity - 66, 10) / 100).toFixed(2)})`
+    : sectionCardBg;
 
   return (
     <Container maxW="container.lg" py={{ base: 6, md: 10 }} px={{ base: 4, md: 6 }} data-testid="due-review-page">
@@ -120,7 +128,7 @@ export const DueReview = () => {
           borderRadius="3xl"
           borderWidth="1px"
           borderColor="orange.200"
-          bg="rgba(15, 23, 42, 0.92)"
+          bg={mainCardBg}
           boxShadow="0 24px 60px rgba(15, 23, 42, 0.38)"
           px={{ base: 5, md: 8 }}
           py={{ base: 6, md: 8 }}
@@ -150,18 +158,18 @@ export const DueReview = () => {
                   borderRadius="2xl"
                   borderWidth="1px"
                   borderColor="whiteAlpha.200"
-                  bg="whiteAlpha.90"
-                  color="gray.900"
+                  bg={systemInfoBg}
+                  color="white"
                   px={5}
                   py={4}
                 >
-                  <Text fontSize="xs" textTransform="uppercase" letterSpacing="0.14em" color="gray.500">
+                  <Text fontSize="xs" textTransform="uppercase" letterSpacing="0.14em" color="whiteAlpha.700">
                     系统清单
                   </Text>
                   <Text mt={2} fontSize="xl" fontWeight="bold">
                     {list.name}
                   </Text>
-                  <Text mt={1} fontSize="sm" color="gray.600">
+                  <Text mt={1} fontSize="sm" color="whiteAlpha.700">
                     最近更新：{formatDateTime(list.updated_at)}
                   </Text>
                 </Box>
@@ -190,7 +198,7 @@ export const DueReview = () => {
             ) : (
               <>
                 <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
-                  <Box borderRadius="2xl" bg="whiteAlpha.120" borderWidth="1px" borderColor="whiteAlpha.200" px={5} py={5}>
+                  <Box borderRadius="2xl" bg={sectionCardBg} borderWidth="1px" borderColor="whiteAlpha.200" px={5} py={5}>
                     <Text fontSize="sm" color="orange.100">今日应复习</Text>
                     <Text mt={2} fontSize="4xl" lineHeight="1" fontWeight="bold" color="white">
                       {dueCount}
@@ -200,7 +208,7 @@ export const DueReview = () => {
                     </Text>
                   </Box>
 
-                  <Box borderRadius="2xl" bg="whiteAlpha.120" borderWidth="1px" borderColor="whiteAlpha.200" px={5} py={5}>
+                  <Box borderRadius="2xl" bg={sectionCardBg} borderWidth="1px" borderColor="whiteAlpha.200" px={5} py={5}>
                     <Text fontSize="sm" color="orange.100">来源词树</Text>
                     <Text mt={2} fontSize="4xl" lineHeight="1" fontWeight="bold" color="white">
                       {sourceListCount}
@@ -210,7 +218,7 @@ export const DueReview = () => {
                     </Text>
                   </Box>
 
-                  <Box borderRadius="2xl" bg="whiteAlpha.120" borderWidth="1px" borderColor="whiteAlpha.200" px={5} py={5}>
+                  <Box borderRadius="2xl" bg={sectionCardBg} borderWidth="1px" borderColor="whiteAlpha.200" px={5} py={5}>
                     <Text fontSize="sm" color="orange.100">当前保持率</Text>
                     <Text mt={2} fontSize="4xl" lineHeight="1" fontWeight="bold" color="white">
                       {retentionScore}%
@@ -222,7 +230,7 @@ export const DueReview = () => {
                 </SimpleGrid>
 
                 {disciplineStatus && (
-                  <Box borderRadius="2xl" bg="whiteAlpha.090" borderWidth="1px" borderColor="whiteAlpha.200" px={5} py={5}>
+                  <Box borderRadius="2xl" bg={sectionCardBg} borderWidth="1px" borderColor="whiteAlpha.200" px={5} py={5}>
                     <HStack spacing={3} flexWrap="wrap">
                       <Badge colorScheme={disciplineStatus.entryState === 'open' ? 'green' : 'orange'} variant="solid" px={3} py={1} borderRadius="full">
                         {getDisciplineLabel(disciplineStatus)}
@@ -254,7 +262,7 @@ export const DueReview = () => {
                   borderRadius="2xl"
                   borderWidth="1px"
                   borderColor={dueCount > 0 ? 'orange.200' : 'whiteAlpha.200'}
-                  bg={dueCount > 0 ? 'rgba(154, 52, 18, 0.24)' : 'whiteAlpha.090'}
+                  bg={actionCardBg}
                   px={{ base: 5, md: 6 }}
                   py={{ base: 5, md: 6 }}
                 >

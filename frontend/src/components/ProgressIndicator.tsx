@@ -1,6 +1,7 @@
 import { Box, Text, Progress, HStack, Badge, VStack, SimpleGrid } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { isDueForReview } from '../utils/reviewState';
+import { useBackgrounds } from './BackgroundProvider';
 
 const MotionBox = motion(Box);
 
@@ -143,6 +144,7 @@ const buildAggregateScore = (words: OverallProgressProps['words']) => {
 };
 
 export const OverallProgress: React.FC<OverallProgressProps> = ({ words, size = 'md' }) => {
+  const { cardOpacity } = useBackgrounds();
   const totalWords = words.length;
   const now = Date.now();
   const dueWords = words.filter((word) => isDueForReview(word, now)).length;
@@ -150,6 +152,8 @@ export const OverallProgress: React.FC<OverallProgressProps> = ({ words, size = 
   const learningWords = words.filter((word) => word.status === 1 || word.status === 3).length;
   const stableWords = words.filter((word) => word.status === 2 && word.lapseCount === 0 && word.stability >= 4).length;
   const aggregateScore = buildAggregateScore(words);
+  const shellBg = `linear-gradient(135deg, rgba(17,25,40,${(Math.max(cardOpacity - 2, 18) / 100).toFixed(2)}), rgba(8,15,28,${(Math.max(cardOpacity - 6, 14) / 100).toFixed(2)}))`;
+  const statBg = `rgba(255, 255, 255, ${(Math.max(cardOpacity - 72, 4) / 100).toFixed(2)})`;
 
   return (
     <MotionBox
@@ -157,7 +161,7 @@ export const OverallProgress: React.FC<OverallProgressProps> = ({ words, size = 
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       p={5}
-      bg="linear-gradient(135deg, rgba(17,25,40,0.96), rgba(8,15,28,0.92))"
+      bg={shellBg}
       borderRadius="2xl"
       borderWidth={1}
       borderColor="whiteAlpha.120"
@@ -176,19 +180,19 @@ export const OverallProgress: React.FC<OverallProgressProps> = ({ words, size = 
         />
 
         <SimpleGrid columns={4} spacing={3}>
-          <Box bg="whiteAlpha.060" borderRadius="xl" px={3} py={2}>
+          <Box bg={statBg} borderRadius="xl" px={3} py={2}>
             <Text fontSize="xs" color="gray.400" textTransform="uppercase" letterSpacing="0.08em">Due</Text>
             <Text fontSize="lg" color="red.300" fontWeight="bold">{dueWords}</Text>
           </Box>
-          <Box bg="whiteAlpha.060" borderRadius="xl" px={3} py={2}>
+          <Box bg={statBg} borderRadius="xl" px={3} py={2}>
             <Text fontSize="xs" color="gray.400" textTransform="uppercase" letterSpacing="0.08em">New</Text>
             <Text fontSize="lg" color="orange.300" fontWeight="bold">{newWords}</Text>
           </Box>
-          <Box bg="whiteAlpha.060" borderRadius="xl" px={3} py={2}>
+          <Box bg={statBg} borderRadius="xl" px={3} py={2}>
             <Text fontSize="xs" color="gray.400" textTransform="uppercase" letterSpacing="0.08em">Learning</Text>
             <Text fontSize="lg" color="blue.300" fontWeight="bold">{learningWords}</Text>
           </Box>
-          <Box bg="whiteAlpha.060" borderRadius="xl" px={3} py={2}>
+          <Box bg={statBg} borderRadius="xl" px={3} py={2}>
             <Text fontSize="xs" color="gray.400" textTransform="uppercase" letterSpacing="0.08em">Stable</Text>
             <Text fontSize="lg" color="green.300" fontWeight="bold">{stableWords}</Text>
           </Box>
