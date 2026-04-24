@@ -130,7 +130,7 @@ const serializeDateOrEpoch = (value?: Date | string | null) =>
   value ? new Date(value).toISOString() : new Date(0).toISOString();
 
 export const persistLearningSnapshot = async () => {
-  if (environment.nodeEnv === 'development' && process.env.ENABLE_DEV_SNAPSHOT_PERSIST !== 'true') {
+  if (environment.nodeEnv === 'development' && process.env.ENABLE_DEV_SNAPSHOT_PERSIST === 'false') {
     return;
   }
 

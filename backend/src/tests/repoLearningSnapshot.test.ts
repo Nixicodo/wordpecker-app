@@ -22,6 +22,7 @@ import {
   getLearningSnapshotPath,
   restoreLearningSnapshotIfNeeded
 } from '../services/repoLearningSnapshot';
+import { environment } from '../config/environment';
 
 const emptySnapshot = {
   version: 2,
@@ -37,6 +38,8 @@ const emptySnapshot = {
 
 describe('repository learning snapshot integration', () => {
   const originalSnapshotPathEnv = process.env.LEARNING_SNAPSHOT_PATH;
+  const originalDevSnapshotPersistEnv = process.env.ENABLE_DEV_SNAPSHOT_PERSIST;
+  const originalNodeEnv = environment.nodeEnv;
   const snapshotPath = path.join(os.tmpdir(), `wordpecker-learning-snapshot-${process.pid}.json`);
   const app = express();
 
@@ -53,6 +56,13 @@ describe('repository learning snapshot integration', () => {
   });
 
   beforeEach(async () => {
+    (environment as { nodeEnv: string }).nodeEnv = originalNodeEnv;
+    if (originalDevSnapshotPersistEnv !== undefined) {
+      process.env.ENABLE_DEV_SNAPSHOT_PERSIST = originalDevSnapshotPersistEnv;
+    } else {
+      delete process.env.ENABLE_DEV_SNAPSHOT_PERSIST;
+    }
+
     await Promise.all([
       ReviewLog.deleteMany({}),
       LearningState.deleteMany({}),
@@ -78,6 +88,12 @@ describe('repository learning snapshot integration', () => {
     } else {
       delete process.env.LEARNING_SNAPSHOT_PATH;
     }
+    if (originalDevSnapshotPersistEnv !== undefined) {
+      process.env.ENABLE_DEV_SNAPSHOT_PERSIST = originalDevSnapshotPersistEnv;
+    } else {
+      delete process.env.ENABLE_DEV_SNAPSHOT_PERSIST;
+    }
+    (environment as { nodeEnv: string }).nodeEnv = originalNodeEnv;
     await closeDB();
   });
 
@@ -187,6 +203,36 @@ describe('repository learning snapshot integration', () => {
     const persistedSnapshot = JSON.parse(await fs.promises.readFile(snapshotPath, 'utf-8'));
     expect(persistedSnapshot.data.learningStates[0].reviewCount).toBe(1);
     expect(persistedSnapshot.data.reviewLogs[0].rating).toBe('good');
+  });
+
+  it('persists repository snapshot in development mode by default', async () => {
+    (environment as { nodeEnv: string }).nodeEnv = 'development';
+    delete process.env.ENABLE_DEV_SNAPSHOT_PERSIST;
+
+    const listResponse = await request(app)
+      .post('/api/lists')
+      .send({
+        name: 'Development snapshot list',
+        description: 'Verify development snapshot persistence is enabled by default',
+        context: 'Development persistence'
+      });
+
+    expect(listResponse.status).toBe(201);
+    const listId = listResponse.body.id as string;
+
+    const addWordResponse = await request(app)
+      .post(`/api/lists/${listId}/words`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        word: 'persist',
+        meaning: '持久化'
+      });
+
+    expect(addWordResponse.status).toBe(201);
+
+    const persistedSnapshot = JSON.parse(await fs.promises.readFile(snapshotPath, 'utf-8'));
+    expect(persistedSnapshot.data.lists).toHaveLength(1);
+    expect(persistedSnapshot.data.words).toHaveLength(1);
   });
 
   it('syncs a word learning state across lists and seeds newly linked lists from the existing record', async () => {
