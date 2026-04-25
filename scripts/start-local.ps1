@@ -10,7 +10,7 @@ $codexDir = Join-Path $env:USERPROFILE ".codex"
 $codexAuthFile = Join-Path $codexDir "auth.json"
 $codexConfigFile = Join-Path $codexDir "config.toml"
 
-function Get-ListeningProcessInfo {
+function Get-ListeningProcess {
     param(
         [Parameter(Mandatory = $true)]
         [int]$Port
@@ -24,11 +24,59 @@ function Get-ListeningProcessInfo {
     }
 
     $process = Get-Process -Id $connection.OwningProcess -ErrorAction SilentlyContinue
+    $commandLine = $null
+    $processName = "PID $($connection.OwningProcess)"
+
     if ($process) {
-        return "$($process.ProcessName) (PID $($process.Id))"
+        $processName = "$($process.ProcessName) (PID $($process.Id))"
+        $processInfo = Get-CimInstance Win32_Process -Filter "ProcessId=$($process.Id)" -ErrorAction SilentlyContinue
+        if ($processInfo) {
+            $commandLine = $processInfo.CommandLine
+        }
     }
 
-    return "PID $($connection.OwningProcess)"
+    return [pscustomobject]@{
+        Id = $connection.OwningProcess
+        DisplayName = $processName
+        CommandLine = $commandLine
+    }
+}
+
+function Stop-ProcessTree {
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$ProcessId
+    )
+
+    $children = Get-CimInstance Win32_Process -Filter "ParentProcessId=$ProcessId" -ErrorAction SilentlyContinue
+    foreach ($child in $children) {
+        Stop-ProcessTree -ProcessId $child.ProcessId
+    }
+
+    Stop-Process -Id $ProcessId -Force -ErrorAction SilentlyContinue
+}
+
+function Stop-ProjectPortOwner {
+    param(
+        [Parameter(Mandatory = $true)]
+        [int]$Port,
+        [Parameter(Mandatory = $true)]
+        [string]$ProjectRoot
+    )
+
+    $owner = Get-ListeningProcess -Port $Port
+    if (-not $owner) {
+        return
+    }
+
+    if ($owner.CommandLine -and $owner.CommandLine.Contains($ProjectRoot)) {
+        Write-Host "Stopping stale WordPecker process on port ${Port}: $($owner.DisplayName)"
+        Stop-ProcessTree -ProcessId $owner.Id
+        Start-Sleep -Seconds 1
+        return
+    }
+
+    throw "Port $Port is already in use by $($owner.DisplayName). Stop that process first, then rerun scripts\start-local.ps1."
 }
 
 New-Item -ItemType Directory -Force -Path $logsDir | Out-Null
@@ -103,21 +151,14 @@ foreach ($name in @("backend", "frontend")) {
     if (Test-Path $pidFile) {
         $processId = Get-Content $pidFile -Raw
         if ($processId) {
-            Stop-Process -Id $processId -Force -ErrorAction SilentlyContinue
+            Stop-ProcessTree -ProcessId $processId
         }
         Remove-Item $pidFile -Force -ErrorAction SilentlyContinue
     }
 }
 
-$backendPortOwner = Get-ListeningProcessInfo -Port 3000
-if ($backendPortOwner) {
-    throw "Port 3000 is already in use by $backendPortOwner. Stop that process first, then rerun scripts\start-local.ps1."
-}
-
-$frontendPortOwner = Get-ListeningProcessInfo -Port 5173
-if ($frontendPortOwner) {
-    throw "Port 5173 is already in use by $frontendPortOwner. Stop that process first, then rerun scripts\start-local.ps1."
-}
+Stop-ProjectPortOwner -Port 3000 -ProjectRoot $projectRoot
+Stop-ProjectPortOwner -Port 5173 -ProjectRoot $projectRoot
 
 if (-not (Test-Path (Join-Path $backendDir "node_modules"))) {
     Write-Host "Installing backend dependencies..."
