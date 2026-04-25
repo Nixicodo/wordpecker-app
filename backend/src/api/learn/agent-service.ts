@@ -140,8 +140,13 @@ Language-format requirements:
     context: string, 
     exerciseTypes: string[], 
     baseLanguage: string, 
-    targetLanguage: string
+    targetLanguage: string,
+    options: { preferLocal?: boolean } = {}
   ): Promise<ExerciseWithId[]> {
+    if (options.preferLocal) {
+      return generateLocalExercises(words, distractorWords, context, exerciseTypes, baseLanguage, targetLanguage);
+    }
+
     const cacheKey = this.buildCacheKey(words, distractorWords, context, exerciseTypes, baseLanguage, targetLanguage);
 
     return generationCache.getOrCreate(cacheKey, async () => {

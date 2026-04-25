@@ -77,7 +77,8 @@ router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
       list.context || 'General',
       exerciseTypes,
       baseLanguage,
-      targetLanguage
+      targetLanguage,
+      { preferLocal: isDisciplinedReview }
     );
 
     res.json({
@@ -122,7 +123,8 @@ router.post('/:listId/more', validate(listIdSchema), async (req, res) => {
       list.context || 'General',
       exerciseTypes,
       baseLanguage,
-      targetLanguage
+      targetLanguage,
+      { preferLocal: isDisciplinedReview }
     );
     res.json({
       exercises,
