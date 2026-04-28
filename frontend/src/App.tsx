@@ -7,7 +7,7 @@ import { Learn } from './pages/Learn';
 import { Quiz } from './pages/Quiz';
 import { WordDetailPage } from './pages/WordDetail';
 import { Settings } from './pages/Settings';
-import { ImageDescription } from './pages/ImageDescription';
+
 import { GetNewWords } from './pages/GetNewWords';
 import { WordLearningSession } from './pages/WordLearningSession';
 import { ReadingPage } from './pages/ReadingPage';
@@ -36,14 +36,7 @@ function App() {
               <Route path="/reviews" element={<DueReview />} />
               <Route path="/words/:wordId" element={<WordDetailPage />} />
               <Route path="/settings" element={<Settings />} />
-              <Route
-                path="/describe"
-                element={(
-                  <ExplorationGate title="视觉花园">
-                    <ImageDescription />
-                  </ExplorationGate>
-                )}
-              />
+
               <Route
                 path="/learn-new-words"
                 element={(

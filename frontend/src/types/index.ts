@@ -225,32 +225,6 @@ export interface UserPreferences {
   targetLanguage: string;
 }
 
-export interface VocabularyRecommendation {
-  word: string;
-  meaning: string;
-  example: string;
-  difficulty_level?: 'basic' | 'intermediate' | 'advanced';
-}
-
-export interface ImageDescriptionAnalysis {
-  corrected_description: string;
-  feedback: string;
-  recommendations: VocabularyRecommendation[];
-  user_strengths: string[];
-  missed_concepts: string[];
-}
-
-export interface DescriptionExercise {
-  id: string;
-  context: string;
-  imageUrl: string;
-  imageAlt: string;
-  userDescription: string;
-  analysis: ImageDescriptionAnalysis;
-  recommendedWords: VocabularyRecommendation[];
-  created_at: string;
-}
-
 export interface VocabularyWord {
   word: string;
   meaning: string;

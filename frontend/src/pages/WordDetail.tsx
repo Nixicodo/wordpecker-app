@@ -21,7 +21,6 @@ import {
   Flex,
   Collapse,
   useToast,
-  Image,
   Checkbox,
   Modal,
   ModalOverlay,
@@ -35,7 +34,7 @@ import {
   FormControl,
   FormLabel
 } from '@chakra-ui/react';
-import { FaArrowLeft, FaLightbulb, FaBookOpen, FaEye, FaEyeSlash, FaCamera, FaRobot, FaExchangeAlt, FaPlus } from 'react-icons/fa';
+import { FaArrowLeft, FaLightbulb, FaBookOpen, FaEye, FaEyeSlash, FaExchangeAlt, FaPlus } from 'react-icons/fa';
 import { apiService } from '../services/api';
 import { ProgressIndicator, deriveWordScore } from '../components/ProgressIndicator';
 import { isDueForReview } from '../utils/reviewState';
@@ -52,8 +51,7 @@ export function WordDetailPage() {
   const [sentencesLoading, setSentencesLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showSentences, setShowSentences] = useState(false);
-  const [generatingImage, setGeneratingImage] = useState<string | null>(null);
-  const [generatedImage, setGeneratedImage] = useState<{ url: string; alt: string; source: 'ai' | 'stock' } | null>(null);
+
   const [selectedContextIndex, setSelectedContextIndex] = useState<number>(0);
   const [similarWords, setSimilarWords] = useState<SimilarWordsResponse | null>(null);
   const [similarWordsLoading, setSimilarWordsLoading] = useState(false);
@@ -284,48 +282,6 @@ export function WordDetailPage() {
 
   const handleBack = () => {
     navigate(-1);
-  };
-
-  const handleGenerateWordImage = async (imageSource: 'ai' | 'stock') => {
-    if (!wordDetail || !wordDetail.contexts[selectedContextIndex]) return;
-    
-    const selectedContext = wordDetail.contexts[selectedContextIndex];
-    const contextName = selectedContext.listContext || selectedContext.listName;
-    
-    // Combine word and context for better image generation
-    const combinedPrompt = `${wordDetail.value} in ${contextName} context`;
-    
-    setGeneratingImage(imageSource);
-    try {
-      // Use the combined word+context prompt for image generation
-      const data = await apiService.startDescriptionExercise(combinedPrompt, imageSource);
-      
-      // Store the generated image to display below
-      setGeneratedImage({
-        url: data.image.url,
-        alt: data.image.alt,
-        source: imageSource
-      });
-      
-      toast({
-        title: `${imageSource === 'ai' ? 'AI Image' : 'Stock Photo'} Generated!`,
-        description: `Generated image for "${wordDetail.value}" in ${contextName} context`,
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
-    } catch (error) {
-      console.error(`Error generating ${imageSource} image:`, error);
-      toast({
-        title: 'Error',
-        description: `Failed to generate ${imageSource === 'ai' ? 'AI image' : 'stock photo'}. Please try again.`,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
-    } finally {
-      setGeneratingImage(null);
-    }
   };
 
   const getContextScore = (context: { reviewCount: number; lapseCount: number; stability: number; dueAt?: string }) =>
@@ -600,66 +556,6 @@ export function WordDetailPage() {
             )}
           </VStack>
         </Collapse>
-      </VStack>
-
-      <Divider my={8} />
-
-      {/* Visual Learning Section */}
-      <VStack align="stretch" spacing={4}>
-        <Flex align="center" justify="space-between" wrap="wrap" gap={4}>
-          <HStack minW="0" flex="1">
-            <FaCamera color="purple" />
-            <Heading as="h2" size={{ base: "md", md: "lg" }} color="purple.300" wordBreak="break-word">
-              Visual Learning
-            </Heading>
-          </HStack>
-          <HStack spacing={3} flexShrink={0}>
-            <Button
-              leftIcon={<FaRobot />}
-              onClick={() => handleGenerateWordImage('ai')}
-              colorScheme="blue"
-              variant="outline"
-              size="sm"
-              isLoading={generatingImage === 'ai'}
-              loadingText="Generating..."
-              flexShrink={0}
-            >
-              Generate AI Image
-            </Button>
-            
-            <Button
-              leftIcon={<FaCamera />}
-              onClick={() => handleGenerateWordImage('stock')}
-              colorScheme="purple"
-              variant="outline"
-              size="sm"
-              isLoading={generatingImage === 'stock'}
-              loadingText="Finding..."
-              flexShrink={0}
-            >
-              Find Stock Photo
-            </Button>
-          </HStack>
-        </Flex>
-
-        {/* Generated Image Display */}
-        {generatedImage && (
-          <Box>
-            <Text fontSize="sm" color="gray.400" mb={3}>
-              Generated {generatedImage.source === 'ai' ? 'AI Image' : 'Stock Photo'} for "{wordDetail.value}":
-            </Text>
-            <Box borderRadius="lg" overflow="hidden" border="2px solid" borderColor="purple.200" shadow="md">
-              <Image
-                src={generatedImage.url}
-                alt={generatedImage.alt}
-                objectFit="contain"
-                w="100%"
-                maxW="500px"
-                mx="auto"
-              />
-            </Box>
-          </Box>
-        )}
       </VStack>
 
       <Divider my={8} />

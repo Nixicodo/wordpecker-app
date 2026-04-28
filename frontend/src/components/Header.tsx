@@ -1,7 +1,7 @@
 import { Badge, Box, Button, Container, Flex, HStack, Icon, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { GiTreeBranch } from 'react-icons/gi';
-import { FaCamera, FaClock, FaCog, FaFeatherAlt, FaGraduationCap } from 'react-icons/fa';
+import { FaClock, FaCog, FaFeatherAlt, FaGraduationCap } from 'react-icons/fa';
 import { detectUiLocale } from '../i18n/ui';
 import { useDisciplineStatus } from '../hooks/useDisciplineStatus';
 import { formatDiscoveryQuotaSummary } from '../utils/discipline';
@@ -48,22 +48,6 @@ export const Header = () => {
                   <Text>{isZh ? '我的词树' : 'My Trees'}</Text>
                   <Icon as={FaFeatherAlt} color="#FA8C16" transform="rotate(-45deg)" boxSize={3} ml={-1} mt={-2} />
                 </Flex>
-              </Button>
-            </Link>
-
-            <Link to="/describe">
-              <Button
-                variant="ghost"
-                leftIcon={<Icon as={FaCamera} color="#FA8C16" />}
-                _hover={{ transform: 'translateY(-2px)', color: '#FA8C16' }}
-                transition="all 0.2s"
-              >
-                <HStack spacing={2}>
-                  <Text>{isZh ? '视觉花园' : 'Vision Garden'}</Text>
-                  {status?.entryState === 'soft_locked' && <EntryBadge label="先复习" colorScheme="yellow" />}
-                  {status?.entryState === 'hard_locked' && <EntryBadge label="硬锁" colorScheme="red" />}
-                  {status?.entryState === 'quota_reached' && <EntryBadge label="额度满" colorScheme="purple" />}
-                </HStack>
               </Button>
             </Link>
 

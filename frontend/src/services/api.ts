@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { WordList, Word, Exercise, Question, Template, WordDetail, SentenceExample, UserPreferences, ExerciseTypePreferences, ImageDescriptionAnalysis, DescriptionExercise, VocabularyWordsResponse, WordDetailsResponse, ReviewSubmission, ScheduledWord, BackgroundAsset, WordSourceInfo, DisciplineStatus, DiscoveryAssessment, DiscoveryRateResponse, DiscoveryWordsResponse } from '../types';
+import { WordList, Word, Exercise, Question, Template, WordDetail, SentenceExample, UserPreferences, ExerciseTypePreferences, VocabularyWordsResponse, WordDetailsResponse, ReviewSubmission, ScheduledWord, BackgroundAsset, WordSourceInfo, DisciplineStatus, DiscoveryAssessment, DiscoveryRateResponse, DiscoveryWordsResponse } from '../types';
 
 // Generate or retrieve user ID
 const getUserId = () => {
@@ -170,48 +170,6 @@ export const apiService = {
     }> | null;
     explanation: string | null;
   }> => api.post('/api/language-validation/validate', { language }),
-
-  // Image Description Learning
-  startDescriptionExercise: (context?: string, imageSource: 'ai' | 'stock' = 'ai'): ApiResponse<{
-    context: string;
-    image: { url: string; alt: string; id: string };
-    instructions: string;
-  }> => api.post('/api/describe/start', { 
-    ...(context ? { context } : {}),
-    imageSource 
-  }),
-  
-  submitDescription: (data: {
-    context: string;
-    imageUrl: string;
-    imageAlt: string;
-    userDescription: string;
-  }): ApiResponse<{
-    exerciseId: string;
-    analysis: ImageDescriptionAnalysis;
-    message: string;
-  }> => api.post('/api/describe/submit', data),
-  
-  addWordsToList: (data: {
-    exerciseId: string;
-    listId?: string;
-    selectedWords: Array<{ word: string; meaning: string }>;
-    createNewList?: boolean;
-  }): ApiResponse<{
-    message: string;
-    addedWords: Array<{ word: string; meaning: string }>;
-    listId: string;
-    listName: string;
-    createdNewList: boolean;
-  }> => api.post('/api/describe/add-words', data),
-  
-  getDescriptionHistory: (limit?: number): ApiResponse<{
-    exercises: DescriptionExercise[];
-  }> => api.get('/api/describe/history', { params: { limit } }),
-  
-  getContextSuggestions: (): ApiResponse<{
-    suggestions: string[];
-  }> => api.get('/api/describe/context-suggestions'),
 
   // Vocabulary learning methods
   getDiscoveryWords: (count = 15): ApiResponse<DiscoveryWordsResponse> =>

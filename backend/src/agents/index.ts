@@ -11,7 +11,3 @@ export { similarWordsAgent } from './similar-words-agent';
 export { readingAgent } from './reading-agent';
 export { languageValidationAgent } from './language-validation-agent';
 
-// Image-related agents
-export { imageAnalysisAgent } from './image-analysis-agent';
-export { imageGenerationAgent } from './image-generation-agent';
-export { contextualImageAgent } from './contextual-image-agent';

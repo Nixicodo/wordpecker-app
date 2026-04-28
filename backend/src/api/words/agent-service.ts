@@ -4,7 +4,6 @@ import { ExamplesResult, ExamplesResultType, SentenceExampleType } from '../../a
 import { SimilarWordsResult, SimilarWordsResultType } from '../../agents/similar-words-agent/schemas';
 import { ReadingResult, ReadingResultType } from '../../agents/reading-agent/schemas';
 import { generateStructuredResult } from '../../services/structuredChat';
-import { generateDeepseekStructuredResult } from '../../services/deepseekStructuredChat';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -63,7 +62,7 @@ export class WordAgentService {
 
   async validateAnswer(userAnswer: string, correctAnswer: string, context: string, baseLanguage: string, targetLanguage: string): Promise<ValidationResultType> {
     const prompt = `Validate if the user's answer "${userAnswer}" is correct for the expected answer "${correctAnswer}". Context: ${context || 'General language exercise'}. User speaks ${baseLanguage} and is learning ${targetLanguage}.`;
-    return generateDeepseekStructuredResult<ValidationResultType>({
+    return generateStructuredResult<ValidationResultType>({
       systemPrompt: validationPrompt,
       userPrompt: prompt,
       schema: ValidationResult,

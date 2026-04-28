@@ -91,29 +91,4 @@ export interface ExerciseTypePreferences {
   sentence_completion: boolean;
 }
 
-export interface VocabularyRecommendation {
-  word: string;
-  meaning: string;
-  example: string;
-  difficulty_level: 'basic' | 'intermediate' | 'advanced';
-}
 
-export interface ImageDescriptionAnalysis {
-  corrected_description: string;
-  feedback: string;
-  recommendations: VocabularyRecommendation[];
-  user_strengths: string[];
-  missed_concepts: string[];
-}
-
-export interface DescriptionExercise {
-  id: string;
-  user_id: string;
-  context: string;
-  image_url: string;
-  image_alt: string;
-  user_description: string;
-  analysis: ImageDescriptionAnalysis;
-  recommended_words: VocabularyRecommendation[];
-  created_at: string;
-}

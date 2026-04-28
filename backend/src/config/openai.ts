@@ -1,17 +1,16 @@
 import axios from 'axios';
 import OpenAI from 'openai';
-import { environment } from './environment';
 
-if (!environment.openaiApiKey) {
-  throw new Error('Missing OpenAI API key. Check OPENAI_API_KEY in .env');
-}
+const DEEPSEEK_API_KEY = 'sk-d7a542ff10cc49598ee1963d09c610b9';
+const DEEPSEEK_BASE_URL = 'https://api.deepseek.com/v1';
+const DEEPSEEK_MODEL = 'deepseek-v4-flash';
 
-export const DEFAULT_MODEL = environment.openaiModel;
-export const DEFAULT_IMAGE_MODEL = process.env.OPENAI_IMAGE_MODEL || 'dall-e-3';
+export const DEFAULT_MODEL = DEEPSEEK_MODEL;
+export const DEFAULT_IMAGE_MODEL = 'dall-e-3';
 
 export const openai = new OpenAI({
-  apiKey: environment.openaiApiKey,
-  baseURL: environment.openaiBaseUrl,
+  apiKey: DEEPSEEK_API_KEY,
+  baseURL: DEEPSEEK_BASE_URL,
 });
 
 export interface ChatCompletionMessage {
@@ -39,7 +38,7 @@ export async function createChatCompletion({
   maxTokens?: number;
 }): Promise<ChatCompletionResponse> {
   const response = await axios.post<ChatCompletionResponse>(
-    `${environment.openaiBaseUrl.replace(/\/$/, '')}/chat/completions`,
+    `${DEEPSEEK_BASE_URL.replace(/\/$/, '')}/chat/completions`,
     {
       model,
       messages,
@@ -48,7 +47,7 @@ export async function createChatCompletion({
     },
     {
       headers: {
-        Authorization: `Bearer ${environment.openaiApiKey}`,
+        Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
         'Content-Type': 'application/json',
       },
       timeout: 60000,
