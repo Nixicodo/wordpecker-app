@@ -25,10 +25,21 @@ export const normalizeAnswerForComparison = (value: string) => (
     .toLocaleLowerCase()
 );
 
+const removeDiacritics = (value: string) =>
+  value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
 export const isDeterministicallyCorrectAnswer = (userAnswer: string, correctAnswer: string) => {
   if (!userAnswer?.trim() || !correctAnswer?.trim()) {
     return false;
   }
 
-  return normalizeAnswerForComparison(userAnswer) === normalizeAnswerForComparison(correctAnswer);
+  const normalizedUser = normalizeAnswerForComparison(userAnswer);
+  const normalizedCorrect = normalizeAnswerForComparison(correctAnswer);
+
+  if (normalizedUser === normalizedCorrect) {
+    return true;
+  }
+
+  const unaccentedCorrect = removeDiacritics(normalizedCorrect);
+  return normalizedUser === unaccentedCorrect;
 };
