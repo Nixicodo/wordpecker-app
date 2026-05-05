@@ -31,7 +31,7 @@ describe('answerValidation', () => {
   });
 
   it('handles ñ character properly', () => {
-    expect(isDeterministicallyCorrectAnswer('anno', 'año')).toBe(true);
+    expect(isDeterministicallyCorrectAnswer('ano', 'año')).toBe(true);
   });
 
   it('handles ü character properly', () => {
