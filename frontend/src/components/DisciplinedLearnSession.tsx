@@ -237,15 +237,6 @@ export const DisciplinedLearnSession = ({
     }
   }, [auditStates, currentIndex]);
 
-  const questionCycleRef = useRef(false);
-  useEffect(() => {
-    if (!questionCycleRef.current) {
-      questionCycleRef.current = true;
-      return;
-    }
-    cycleBackground('next-question');
-  }, [currentIndex, cycleBackground]);
-
   const fetchMoreExercises = useCallback(async (excludeWordIds: string[]): Promise<Exercise[] | null> => {
     try {
       const response = await apiService.getExercises(list.id, {
@@ -618,6 +609,7 @@ export const DisciplinedLearnSession = ({
       const nextUnsubmittedIndex = findFirstIndex((state) => !state.submitted, currentIndex + 1);
       if (nextUnsubmittedIndex >= 0) {
         setCurrentIndex(nextUnsubmittedIndex);
+        cycleBackground('next-question');
       }
     }
   }, [
@@ -628,6 +620,7 @@ export const DisciplinedLearnSession = ({
     currentState.submitted,
     currentState.usedHint,
     findFirstIndex,
+    cycleBackground,
     queueValidation,
     resolveReviewSubmission,
     updateAuditState
@@ -955,12 +948,14 @@ export const DisciplinedLearnSession = ({
     const nextUnsubmittedIndex = findFirstIndex((state) => !state.submitted, currentIndex + 1);
     if (nextUnsubmittedIndex >= 0) {
       setCurrentIndex(nextUnsubmittedIndex);
+      cycleBackground('next-question');
       return;
     }
 
     const nextFailedIndex = findFirstIndex((state) => state.status === 'failed', currentIndex + 1);
     if (nextFailedIndex >= 0) {
       setCurrentIndex(nextFailedIndex);
+      cycleBackground('next-question');
     }
   };
 
