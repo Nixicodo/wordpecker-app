@@ -177,7 +177,7 @@ export const DisciplinedLearnSession = ({
 }) => {
   const navigate = useNavigate();
   const toast = useToast();
-  const { cardOpacity } = useBackgrounds();
+  const { cycleBackground, cardOpacity } = useBackgrounds();
   const isMountedRef = useRef(true);
   const questionStartedAtRef = useRef(Date.now());
   const auditStatesRef = useRef<AuditState[]>(initialExercises.map(() => createAuditState()));
@@ -236,6 +236,15 @@ export const DisciplinedLearnSession = ({
       questionStartedAtRef.current = Date.now();
     }
   }, [auditStates, currentIndex]);
+
+  const questionCycleRef = useRef(false);
+  useEffect(() => {
+    if (!questionCycleRef.current) {
+      questionCycleRef.current = true;
+      return;
+    }
+    cycleBackground('next-question');
+  }, [currentIndex, cycleBackground]);
 
   const fetchMoreExercises = useCallback(async (excludeWordIds: string[]): Promise<Exercise[] | null> => {
     try {
@@ -935,6 +944,13 @@ export const DisciplinedLearnSession = ({
     );
   }
 
+  const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' && !currentState.submitted && currentState.answer.trim()) {
+      event.preventDefault();
+      handleSubmit();
+    }
+  }, [currentState.submitted, currentState.answer, handleSubmit]);
+
   const gotoNextRelevantQuestion = () => {
     const nextUnsubmittedIndex = findFirstIndex((state) => !state.submitted, currentIndex + 1);
     if (nextUnsubmittedIndex >= 0) {
@@ -949,7 +965,7 @@ export const DisciplinedLearnSession = ({
   };
 
   return (
-    <Box p={4}>
+    <Box p={4} onKeyDown={handleKeyDown}>
       <Flex mb={4} justify="space-between">
         <IconButton
           aria-label="返回上一页"
