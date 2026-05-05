@@ -9,6 +9,7 @@ import { listIdSchema, updatePointsSchema } from './schemas';
 import { applyReviewResults } from '../../services/learningProgress';
 import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
 import { resolveUserId } from '../../config/learning';
+import { openaiRateLimiter } from '../../middleware/rateLimiter';
 import {
   resolveDisciplinedQuestionTypes,
   resolveEnabledQuestionTypes
@@ -18,6 +19,17 @@ import { resolveGenerationLanguages } from '../../services/generationLanguages';
 import { isDueReviewList } from '../../services/dueReview';
 
 const router = Router();
+
+const limitAiExerciseGeneration = async (req: any, res: any, next: any) => {
+  const list = await WordList.findById(req.params.listId).select('kind systemKey').lean();
+
+  if (!list || isDueReviewList(list)) {
+    next();
+    return;
+  }
+
+  openaiRateLimiter(req, res, next);
+};
 
 const getExerciseTypes = async (userId: string, isDisciplinedReview: boolean): Promise<QuestionType[]> => {
   if (isDisciplinedReview) {
@@ -50,7 +62,7 @@ const buildWordSources = (
     ])
 );
 
-router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
+router.post('/:listId/start', validate(listIdSchema), limitAiExerciseGeneration, async (req, res) => {
   try {
     const { listId } = req.params;
     const list = await WordList.findById(listId).lean();
@@ -92,7 +104,7 @@ router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
   }
 });
 
-router.post('/:listId/more', validate(listIdSchema), async (req, res) => {
+router.post('/:listId/more', validate(listIdSchema), limitAiExerciseGeneration, async (req, res) => {
   try {
     const { listId } = req.params;
     const list = await WordList.findById(listId).lean();

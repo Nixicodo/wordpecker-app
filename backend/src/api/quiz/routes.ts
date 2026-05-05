@@ -13,6 +13,7 @@ import { resolveEnabledQuestionTypes } from '../../services/exerciseTypePreferen
 import { selectGenerationWordPool } from '../../services/exerciseGenerationPool';
 import { resolveGenerationLanguages } from '../../services/generationLanguages';
 import { isDueReviewList } from '../../services/dueReview';
+import { openaiRateLimiter } from '../../middleware/rateLimiter';
 
 const router = Router();
 
@@ -21,7 +22,7 @@ const getQuestionTypes = async (userId: string): Promise<QuestionType[]> => {
   return resolveEnabledQuestionTypes(preferences?.exerciseTypes);
 };
 
-router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
+router.post('/:listId/start', validate(listIdSchema), openaiRateLimiter, async (req, res) => {
   try {
     const { listId } = req.params;
     const list = await WordList.findById(listId).lean();
@@ -63,7 +64,7 @@ router.post('/:listId/start', validate(listIdSchema), async (req, res) => {
   }
 });
 
-router.post('/:listId/more', validate(listIdSchema), async (req, res) => {
+router.post('/:listId/more', validate(listIdSchema), openaiRateLimiter, async (req, res) => {
   try {
     const { listId } = req.params;
     const list = await WordList.findById(listId).lean();

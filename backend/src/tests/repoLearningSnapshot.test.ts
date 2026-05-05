@@ -23,6 +23,7 @@ import {
   restoreLearningSnapshotIfNeeded
 } from '../services/repoLearningSnapshot';
 import { environment } from '../config/environment';
+import { openaiRateLimiter } from '../middleware/rateLimiter';
 
 const emptySnapshot = {
   version: 2,
@@ -690,5 +691,198 @@ describe('repository learning snapshot integration', () => {
     expect(listTwoState?.lastSource).toBe('due_review');
     expect(dueReviewLogs).toHaveLength(2);
     expect(dueReviewLogs.every((log) => log.source === 'due_review')).toBe(true);
+  });
+
+  it('allows due review local exercise batches even when AI rate limiting blocks normal learn generation', async () => {
+    const listOneResponse = await request(app)
+      .post('/api/lists')
+      .send({
+        name: '待复习限流来源一',
+        description: '验证 due review 本地出题不会误伤 AI 限流',
+        context: 'Due review rate limit bypass'
+      });
+
+    const listTwoResponse = await request(app)
+      .post('/api/lists')
+      .send({
+        name: '待复习限流来源二',
+        description: '验证 due review 本地出题不会误伤 AI 限流',
+        context: 'Due review rate limit bypass'
+      });
+
+    const listOneId = listOneResponse.body.id as string;
+    const listTwoId = listTwoResponse.body.id as string;
+
+    const [wordOneResponse, wordTwoResponse] = await Promise.all([
+      request(app)
+        .post(`/api/lists/${listOneId}/words`)
+        .set('user-id', 'snapshot-user')
+        .send({
+          word: 'alpha',
+          meaning: '阿尔法'
+        }),
+      request(app)
+        .post(`/api/lists/${listTwoId}/words`)
+        .set('user-id', 'snapshot-user')
+        .send({
+          word: 'beta',
+          meaning: '贝塔'
+        })
+    ]);
+
+    const wordOneId = wordOneResponse.body.id as string;
+    const wordTwoId = wordTwoResponse.body.id as string;
+
+    await Promise.all([
+      request(app)
+        .put(`/api/learn/${listOneId}/reviews`)
+        .set('user-id', 'snapshot-user')
+        .send({
+          results: [{ wordId: wordOneId, correct: true, rating: 'good', questionType: 'fill_blank' }]
+        }),
+      request(app)
+        .put(`/api/learn/${listTwoId}/reviews`)
+        .set('user-id', 'snapshot-user')
+        .send({
+          results: [{ wordId: wordTwoId, correct: true, rating: 'good', questionType: 'fill_blank' }]
+        })
+    ]);
+
+    const now = new Date();
+    const dueAt = new Date(now.getTime() - 60 * 60 * 1000);
+
+    await Promise.all([
+      LearningState.updateOne(
+        { userId: 'snapshot-user', wordId: wordOneId, listId: listOneId },
+        { $set: { dueAt } }
+      ),
+      LearningState.updateOne(
+        { userId: 'snapshot-user', wordId: wordTwoId, listId: listTwoId },
+        { $set: { dueAt } }
+      )
+    ]);
+
+    const dueReviewResponse = await request(app)
+      .get('/api/lists/due-review')
+      .set('user-id', 'snapshot-user');
+
+    const dueReviewId = dueReviewResponse.body.id as string;
+    const nextSpy = jest.fn();
+    const limitedResponse = {
+      statusCode: 200,
+      status(code: number) {
+        this.statusCode = code;
+        return this;
+      },
+      setHeader() {
+        return this;
+      },
+      send() {
+        return this;
+      }
+    } as any;
+
+    for (let index = 0; index < 101; index += 1) {
+      await openaiRateLimiter({
+        ip: '127.0.0.1',
+        method: 'POST',
+        originalUrl: `/api/learn/${listOneId}/start`,
+        path: `/api/learn/${listOneId}/start`,
+        headers: {}
+      } as any, limitedResponse, nextSpy);
+    }
+
+    expect(limitedResponse.statusCode).toBe(429);
+
+    const startResponse = await request(app)
+      .post(`/api/learn/${dueReviewId}/start`)
+      .set('user-id', 'snapshot-user');
+
+    expect(startResponse.status).toBe(200);
+    expect(startResponse.body.exercises.length).toBeGreaterThan(0);
+
+    const excludeWordIds = Array.from(new Set(
+      (startResponse.body.exercises as Array<{ wordId?: string; wordIds?: string[] }>).flatMap((exercise) => [
+        exercise.wordId || null,
+        ...(exercise.wordIds || [])
+      ]).filter((wordId): wordId is string => Boolean(wordId))
+    ));
+
+    const moreResponse = await request(app)
+      .post(`/api/learn/${dueReviewId}/more`)
+      .set('user-id', 'snapshot-user')
+      .send({ excludeWordIds });
+
+    expect([200, 400]).toContain(moreResponse.status);
+    if (moreResponse.status === 400) {
+      expect(moreResponse.body.message).toBe('List has no words');
+    } else {
+      expect(Array.isArray(moreResponse.body.exercises)).toBe(true);
+    }
+  });
+
+  it('allows quiz review settlements even when AI rate limiting blocks question generation', async () => {
+    const listResponse = await request(app)
+      .post('/api/lists')
+      .send({
+        name: '测验结算限流验证',
+        description: '验证 /reviews 不会再被 AI 限流误拦',
+        context: 'Quiz settlement bypass'
+      });
+
+    const listId = listResponse.body.id as string;
+
+    const addWordResponse = await request(app)
+      .post(`/api/lists/${listId}/words`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        word: 'gamma',
+        meaning: '伽马'
+      });
+
+    const wordId = addWordResponse.body.id as string;
+    const limitedResponse = {
+      statusCode: 200,
+      status(code: number) {
+        this.statusCode = code;
+        return this;
+      },
+      setHeader() {
+        return this;
+      },
+      send() {
+        return this;
+      }
+    } as any;
+
+    for (let index = 0; index < 101; index += 1) {
+      await openaiRateLimiter({
+        ip: '127.0.0.1',
+        method: 'POST',
+        originalUrl: `/api/quiz/${listId}/start`,
+        path: `/api/quiz/${listId}/start`,
+        headers: {}
+      } as any, limitedResponse, jest.fn());
+    }
+
+    expect(limitedResponse.statusCode).toBe(429);
+
+    const reviewResponse = await request(app)
+      .put(`/api/quiz/${listId}/reviews`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        results: [{ wordId, correct: true, rating: 'good', questionType: 'multiple_choice' }]
+      });
+
+    expect(reviewResponse.status).toBe(200);
+
+    const state = await LearningState.findOne({
+      userId: 'snapshot-user',
+      wordId,
+      listId
+    }).lean();
+
+    expect(state?.reviewCount).toBe(1);
+    expect(state?.lastSource).toBe('quiz');
   });
 });

@@ -32,8 +32,6 @@ app.use(cors());
 app.use(express.json());
 
 // Apply rate limiter only to OpenAI-powered routes
-app.use('/api/learn', openaiRateLimiter);
-app.use('/api/quiz', openaiRateLimiter);
 app.use('/api/vocabulary', openaiRateLimiter);
 app.use('/api/language-validation', openaiRateLimiter);
 app.use('/api/audio', openaiRateLimiter); // Audio routes use ElevenLabs API
