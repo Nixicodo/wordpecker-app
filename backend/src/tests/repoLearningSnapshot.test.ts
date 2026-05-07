@@ -20,7 +20,8 @@ import {
 } from '../api/preferences/defaults';
 import {
   getLearningSnapshotPath,
-  restoreLearningSnapshotIfNeeded
+  restoreLearningSnapshotIfNeeded,
+  flushLearningSnapshot
 } from '../services/repoLearningSnapshot';
 import { environment } from '../config/environment';
 import { openaiRateLimiter } from '../middleware/rateLimiter';
@@ -137,6 +138,7 @@ describe('repository learning snapshot integration', () => {
 
     expect(updateReviewsResponse.status).toBe(200);
 
+    await flushLearningSnapshot();
     const persistedSnapshot = JSON.parse(await fs.promises.readFile(snapshotPath, 'utf-8'));
     expect(persistedSnapshot.data.lists).toHaveLength(1);
     expect(persistedSnapshot.data.words).toHaveLength(1);
@@ -201,6 +203,7 @@ describe('repository learning snapshot integration', () => {
 
     expect(updateReviewsResponse.status).toBe(200);
 
+    await flushLearningSnapshot();
     const persistedSnapshot = JSON.parse(await fs.promises.readFile(snapshotPath, 'utf-8'));
     expect(persistedSnapshot.data.learningStates[0].reviewCount).toBe(1);
     expect(persistedSnapshot.data.reviewLogs[0].rating).toBe('good');

@@ -206,24 +206,6 @@ export const persistLearningSnapshot = async () => {
         usedHint: log.usedHint,
         settlementKey: log.settlementKey,
         answeredAt: serializeDateOrEpoch(log.answeredAt),
-        stateBefore: log.stateBefore ? {
-          dueAt: serializeDateOrEpoch(log.stateBefore.dueAt),
-          lastReviewedAt: serializeDate(log.stateBefore.lastReviewedAt),
-          stability: log.stateBefore.stability,
-          difficulty: log.stateBefore.difficulty,
-          scheduledDays: log.stateBefore.scheduledDays,
-          elapsedDays: log.stateBefore.elapsedDays,
-          reps: log.stateBefore.reps,
-          lapses: log.stateBefore.lapses,
-          learningSteps: log.stateBefore.learningSteps,
-          state: log.stateBefore.state,
-          reviewCount: log.stateBefore.reviewCount,
-          lapseCount: log.stateBefore.lapseCount,
-          consecutiveCorrect: log.stateBefore.consecutiveCorrect,
-          consecutiveWrong: log.stateBefore.consecutiveWrong,
-          lastRating: log.stateBefore.lastRating,
-          lastSource: log.stateBefore.lastSource
-        } : undefined,
         createdAt: serializeDateOrEpoch(log.createdAt),
         updatedAt: serializeDateOrEpoch(log.updatedAt)
       })),
@@ -379,6 +361,30 @@ export const restoreLearningSnapshotIfNeeded = async () => {
   }
 
   return true;
+};
+
+let snapshotDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+
+export const scheduleLearningSnapshot = (): void => {
+  if (snapshotDebounceTimer) {
+    clearTimeout(snapshotDebounceTimer);
+  }
+  snapshotDebounceTimer = setTimeout(async () => {
+    snapshotDebounceTimer = null;
+    try {
+      await persistLearningSnapshot();
+    } catch (error) {
+      console.error('Failed to persist learning snapshot:', error);
+    }
+  }, 5000);
+};
+
+export const flushLearningSnapshot = async (): Promise<void> => {
+  if (snapshotDebounceTimer) {
+    clearTimeout(snapshotDebounceTimer);
+    snapshotDebounceTimer = null;
+    await persistLearningSnapshot();
+  }
 };
 
 export const getLearningSnapshotPath = () => resolveSnapshotPath();
