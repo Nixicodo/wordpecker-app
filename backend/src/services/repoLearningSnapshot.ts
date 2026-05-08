@@ -363,28 +363,4 @@ export const restoreLearningSnapshotIfNeeded = async () => {
   return true;
 };
 
-let snapshotDebounceTimer: ReturnType<typeof setTimeout> | null = null;
-
-export const scheduleLearningSnapshot = (): void => {
-  if (snapshotDebounceTimer) {
-    clearTimeout(snapshotDebounceTimer);
-  }
-  snapshotDebounceTimer = setTimeout(async () => {
-    snapshotDebounceTimer = null;
-    try {
-      await persistLearningSnapshot();
-    } catch (error) {
-      console.error('Failed to persist learning snapshot:', error);
-    }
-  }, 5000);
-};
-
-export const flushLearningSnapshot = async (): Promise<void> => {
-  if (snapshotDebounceTimer) {
-    clearTimeout(snapshotDebounceTimer);
-    snapshotDebounceTimer = null;
-    await persistLearningSnapshot();
-  }
-};
-
 export const getLearningSnapshotPath = () => resolveSnapshotPath();

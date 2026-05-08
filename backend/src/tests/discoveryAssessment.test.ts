@@ -1,5 +1,7 @@
 import express from 'express';
 import request from 'supertest';
+import os from 'os';
+import path from 'path';
 import { closeDB, connectDB } from '../config/mongodb';
 import { LearningState } from '../api/learning-state/model';
 import { ReviewLog } from '../api/review-log/model';
@@ -15,7 +17,11 @@ app.use('/api/lists', listRoutes);
 app.use('/api/vocabulary', vocabularyRoutes);
 
 describe('discovery assessment flow', () => {
+  const originalSnapshotPathEnv = process.env.LEARNING_SNAPSHOT_PATH;
+  const snapshotPath = path.join(os.tmpdir(), `wordpecker-discovery-snapshot-${process.pid}.json`);
+
   beforeAll(async () => {
+    process.env.LEARNING_SNAPSHOT_PATH = snapshotPath;
     await connectDB(1, 100);
   });
 
@@ -35,6 +41,11 @@ describe('discovery assessment flow', () => {
       Word.deleteMany({}),
       WordList.deleteMany({})
     ]);
+    if (originalSnapshotPathEnv) {
+      process.env.LEARNING_SNAPSHOT_PATH = originalSnapshotPathEnv;
+    } else {
+      delete process.env.LEARNING_SNAPSHOT_PATH;
+    }
     await closeDB();
   });
 
