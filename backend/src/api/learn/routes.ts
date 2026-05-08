@@ -72,7 +72,9 @@ router.post('/:listId/start', validate(listIdSchema), limitAiExerciseGeneration,
     const userId = resolveUserId(req.headers['user-id']);
     const isDisciplinedReview = isDueReviewList(list);
     const [{ scheduledWords, extraDistractors }, exerciseTypes, userLanguages] = await Promise.all([
-      selectGenerationWordPool(userId, listId),
+      selectGenerationWordPool(userId, listId, undefined, undefined, [], {
+        shuffleScheduledWords: isDisciplinedReview
+      }),
       getExerciseTypes(userId, isDisciplinedReview),
       getUserLanguages(userId)
     ]);
@@ -118,7 +120,9 @@ router.post('/:listId/more', validate(listIdSchema), limitAiExerciseGeneration, 
       ? requestBody.excludeWordIds.filter((wordId: unknown): wordId is string => typeof wordId === 'string')
       : [];
     const [{ scheduledWords, extraDistractors }, exerciseTypes, userLanguages] = await Promise.all([
-      selectGenerationWordPool(userId, listId, undefined, undefined, excludeWordIds),
+      selectGenerationWordPool(userId, listId, undefined, undefined, excludeWordIds, {
+        shuffleScheduledWords: isDisciplinedReview
+      }),
       getExerciseTypes(userId, isDisciplinedReview),
       getUserLanguages(userId)
     ]);

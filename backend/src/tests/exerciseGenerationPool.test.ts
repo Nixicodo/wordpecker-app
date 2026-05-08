@@ -1,4 +1,5 @@
 import { buildGenerationWordPool } from '../services/exerciseGenerationPool';
+import * as arrayUtils from '../utils/arrayUtils';
 
 describe('buildGenerationWordPool', () => {
   const candidates = Array.from({ length: 24 }, (_, index) => ({
@@ -41,5 +42,19 @@ describe('buildGenerationWordPool', () => {
 
     expect(scheduledWords.map((word) => word.id)).toEqual(['6', '7', '8', '9', '10']);
     expect(generationPool.every((word) => !excludedWordIds.has(word.id))).toBe(true);
+  });
+
+  it('can shuffle scheduled due-review words before slicing the active batch', () => {
+    const shuffleSpy = jest.spyOn(arrayUtils, 'shuffleArray').mockImplementation((items) => [...items].reverse());
+
+    const { scheduledWords, extraDistractors, generationPool } = buildGenerationWordPool(candidates, 5, 15, {
+      shuffleScheduledWords: true
+    });
+
+    expect(scheduledWords.map((word) => word.id)).toEqual(['24', '23', '22', '21', '20']);
+    expect(extraDistractors.every((word) => !scheduledWords.some((scheduled) => scheduled.id === word.id))).toBe(true);
+    expect(generationPool.slice(0, 5).map((word) => word.id)).toEqual(['24', '23', '22', '21', '20']);
+
+    shuffleSpy.mockRestore();
   });
 });

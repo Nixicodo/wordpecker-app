@@ -24,6 +24,8 @@ import {
 } from '../services/repoLearningSnapshot';
 import { environment } from '../config/environment';
 import { openaiRateLimiter } from '../middleware/rateLimiter';
+import { selectScheduledWords } from '../services/learningProgress';
+import * as arrayUtils from '../utils/arrayUtils';
 
 const emptySnapshot = {
   version: 2,
@@ -818,6 +820,98 @@ describe('repository learning snapshot integration', () => {
       expect(moreResponse.body.message).toBe('List has no words');
     } else {
       expect(Array.isArray(moreResponse.body.exercises)).toBe(true);
+    }
+  });
+
+  it('randomizes due review scheduled words across the start and more batches', async () => {
+    const listResponse = await request(app)
+      .post('/api/lists')
+      .send({
+        name: 'Due review random order',
+        description: 'Verify due review batches are randomized before they are sliced into groups of five',
+        context: 'Due review randomization'
+      });
+
+    expect(listResponse.status).toBe(201);
+    const listId = listResponse.body.id as string;
+
+    const createdWordIds: string[] = [];
+    for (let index = 0; index < 10; index += 1) {
+      const addWordResponse = await request(app)
+        .post(`/api/lists/${listId}/words`)
+        .set('user-id', 'snapshot-user')
+        .send({
+          word: `random-word-${index + 1}`,
+          meaning: `random meaning ${index + 1}`
+        });
+
+      expect(addWordResponse.status).toBe(201);
+      createdWordIds.push(addWordResponse.body.id as string);
+    }
+
+    for (const wordId of createdWordIds) {
+      const reviewResponse = await request(app)
+        .put(`/api/learn/${listId}/reviews`)
+        .set('user-id', 'snapshot-user')
+        .send({
+          results: [{ wordId, correct: true, rating: 'good', questionType: 'fill_blank' }]
+        });
+
+      expect(reviewResponse.status).toBe(200);
+    }
+
+    const now = new Date();
+    await Promise.all(
+      createdWordIds.map((wordId, index) => (
+        LearningState.updateOne(
+          { userId: 'snapshot-user', wordId, listId },
+          { $set: { dueAt: new Date(now.getTime() - (index + 1) * 60 * 60 * 1000) } }
+        )
+      ))
+    );
+
+    const dueReviewResponse = await request(app)
+      .get('/api/lists/due-review')
+      .set('user-id', 'snapshot-user');
+
+    expect(dueReviewResponse.status).toBe(200);
+    const dueReviewId = dueReviewResponse.body.id as string;
+
+    const baselineCandidates = await selectScheduledWords(
+      'snapshot-user',
+      dueReviewId,
+      5,
+      Number.MAX_SAFE_INTEGER
+    );
+    const baselineIds = baselineCandidates.map((word) => word.id);
+    expect(baselineIds).toHaveLength(10);
+
+    const shuffleSpy = jest.spyOn(arrayUtils, 'shuffleArray').mockImplementation((items) => [...items].reverse());
+
+    try {
+      const startResponse = await request(app)
+        .post(`/api/learn/${dueReviewId}/start`)
+        .set('user-id', 'snapshot-user');
+
+      expect(startResponse.status).toBe(200);
+      expect(startResponse.body.scheduledWords.map((word: { id: string }) => word.id)).toEqual(
+        [...baselineIds].reverse().slice(0, 5)
+      );
+
+      const excludeWordIds = startResponse.body.scheduledWords.map((word: { id: string }) => word.id);
+      const remainingBaselineIds = baselineIds.filter((wordId) => !excludeWordIds.includes(wordId));
+
+      const moreResponse = await request(app)
+        .post(`/api/learn/${dueReviewId}/more`)
+        .set('user-id', 'snapshot-user')
+        .send({ excludeWordIds });
+
+      expect(moreResponse.status).toBe(200);
+      expect(moreResponse.body.scheduledWords.map((word: { id: string }) => word.id)).toEqual(
+        [...remainingBaselineIds].reverse().slice(0, 5)
+      );
+    } finally {
+      shuffleSpy.mockRestore();
     }
   });
 
