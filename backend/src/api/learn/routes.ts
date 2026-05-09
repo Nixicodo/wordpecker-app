@@ -7,7 +7,7 @@ import { learnAgentService } from './agent-service';
 import { getUserLanguages } from '../../utils/getUserLanguages';
 import { listIdSchema, updatePointsSchema } from './schemas';
 import { applyReviewResults } from '../../services/learningProgress';
-import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
+import { requestLearningSnapshotPersist } from '../../services/repoLearningSnapshot';
 import { resolveUserId } from '../../config/learning';
 import { openaiRateLimiter } from '../../middleware/rateLimiter';
 import {
@@ -178,7 +178,7 @@ router.put('/:listId/reviews', validate(updatePointsSchema), async (req, res) =>
     }));
 
     await applyReviewResults(userId, listId, source, results);
-    await persistLearningSnapshot();
+    await requestLearningSnapshotPersist();
     res.json({ message: 'Review results updated successfully' });
   } catch (error) {
     console.error('Error updating review results after learning session:', error);

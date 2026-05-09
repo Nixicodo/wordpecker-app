@@ -1,5 +1,5 @@
 import { WordList } from '../api/lists/model';
-import { persistLearningSnapshot } from './repoLearningSnapshot';
+import { requestLearningSnapshotPersist } from './repoLearningSnapshot';
 
 export const DUE_REVIEW_SYSTEM_KEY = 'due-review';
 
@@ -25,7 +25,7 @@ export const ensureDueReviewList = async () => {
   });
 
   try {
-    await persistLearningSnapshot();
+    await requestLearningSnapshotPersist();
   } catch (snapshotError) {
     console.error('Failed to persist learning snapshot after creating due review list:', snapshotError);
   }

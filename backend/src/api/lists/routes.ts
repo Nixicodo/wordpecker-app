@@ -3,7 +3,7 @@ import { validate } from 'echt';
 import { WordList, IWordList } from './model';
 import { Word } from '../words/model';
 import { createListSchema, listParamsSchema, updateListSchema } from './schemas';
-import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
+import { requestLearningSnapshotPersist } from '../../services/repoLearningSnapshot';
 import { ensureMistakeBook, isMistakeBookList } from '../../services/mistakeBook';
 import { summarizeDueReviewProgress, summarizeListProgress } from '../../services/learningScheduler';
 import { resolveUserId } from '../../config/learning';
@@ -46,7 +46,7 @@ const buildDueReviewSummary = async (list: IWordList, userId: string) => {
 router.post('/', validate(createListSchema), async (req, res) => {
   try {
     const list = await WordList.create({ ...req.body, kind: 'custom' });
-    await persistLearningSnapshot();
+    await requestLearningSnapshotPersist();
     res.status(201).json(transform(list));
   } catch (error) {
     res.status(500).json({ message: 'Error creating list' });
@@ -119,7 +119,7 @@ router.put('/:id', validate(updateListSchema), async (req, res) => {
     const list = await WordList.findByIdAndUpdate(id, req.body, { new: true });
     if (!list) return res.status(404).json({ message: 'List not found' });
 
-    await persistLearningSnapshot();
+    await requestLearningSnapshotPersist();
     res.json(transform(list));
   } catch (error) {
     res.status(500).json({ message: 'Error updating list' });
@@ -143,7 +143,7 @@ router.delete('/:id', validate(listParamsSchema), async (req, res) => {
 
     await WordList.findByIdAndDelete(id);
 
-    await persistLearningSnapshot();
+    await requestLearningSnapshotPersist();
     res.status(204).send();
   } catch (error) {
     res.status(500).json({ message: 'Error deleting list' });

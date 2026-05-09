@@ -1,5 +1,5 @@
 import { WordList } from '../api/lists/model';
-import { persistLearningSnapshot } from './repoLearningSnapshot';
+import { requestLearningSnapshotPersist } from './repoLearningSnapshot';
 
 export const MISTAKE_BOOK_SYSTEM_KEY = 'mistake-book';
 
@@ -24,6 +24,6 @@ export const ensureMistakeBook = async () => {
     systemKey: MISTAKE_BOOK_SYSTEM_KEY
   });
 
-  await persistLearningSnapshot();
+  await requestLearningSnapshotPersist();
   return list;
 };

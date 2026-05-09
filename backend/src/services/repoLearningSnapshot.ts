@@ -123,6 +123,9 @@ const ensureSnapshotDirectory = async () => {
   await fs.promises.mkdir(path.dirname(snapshotPath), { recursive: true });
 };
 
+let snapshotPersistRequested = false;
+let snapshotPersistWorker: Promise<void> | null = null;
+
 const serializeDate = (value?: Date | string | null) =>
   value ? new Date(value).toISOString() : undefined;
 
@@ -224,6 +227,39 @@ export const persistLearningSnapshot = async () => {
   const tempPath = `${snapshotPath}.tmp`;
   await fs.promises.writeFile(tempPath, JSON.stringify(snapshot, null, 2) + '\n', 'utf-8');
   await fs.promises.rename(tempPath, snapshotPath);
+};
+
+const runQueuedSnapshotPersists = async () => {
+  do {
+    snapshotPersistRequested = false;
+
+    try {
+      await persistLearningSnapshot();
+    } catch (error) {
+      console.error('Failed to persist learning snapshot in background:', error);
+    }
+  } while (snapshotPersistRequested);
+
+  snapshotPersistWorker = null;
+};
+
+export const requestLearningSnapshotPersist = async () => {
+  if (process.env.NODE_ENV === 'test') {
+    await persistLearningSnapshot();
+    return;
+  }
+
+  snapshotPersistRequested = true;
+
+  if (!snapshotPersistWorker) {
+    snapshotPersistWorker = runQueuedSnapshotPersists();
+  }
+};
+
+export const waitForRequestedLearningSnapshotPersist = async () => {
+  while (snapshotPersistWorker) {
+    await snapshotPersistWorker;
+  }
 };
 
 const databaseHasLearningData = async () => {

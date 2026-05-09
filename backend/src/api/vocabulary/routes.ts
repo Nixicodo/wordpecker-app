@@ -8,7 +8,7 @@ import { discoveryAssessmentSchema, discoveryWordsSchema, generateWordsSchema, g
 import { selectFixedDiscoveryWords } from '../../services/fixedDiscoveryChain';
 import { applyDiscoveryAssessment } from '../../services/learningScheduler';
 import { getDisciplineStatus } from '../../services/discipline';
-import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
+import { requestLearningSnapshotPersist } from '../../services/repoLearningSnapshot';
 
 const router = Router();
 
@@ -114,7 +114,7 @@ router.post('/discovery-rate', validate(discoveryAssessmentSchema), async (req, 
     );
 
     try {
-      await persistLearningSnapshot();
+      await requestLearningSnapshotPersist();
     } catch (snapshotError) {
       console.error('Failed to persist learning snapshot after discovery rating:', snapshotError);
     }

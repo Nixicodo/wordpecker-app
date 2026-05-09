@@ -6,7 +6,7 @@ import { Word, IWord } from './model';
 import { wordAgentService } from './agent-service';
 import mongoose from 'mongoose';
 import { getUserLanguages } from '../../utils/getUserLanguages';
-import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
+import { requestLearningSnapshotPersist } from '../../services/repoLearningSnapshot';
 import { assertMeaningEncoding } from '../../utils/meaningEncoding';
 import { LearningState } from '../learning-state/model';
 import { resolveUserId } from '../../config/learning';
@@ -138,7 +138,7 @@ router.post('/:listId/words', validate(addWordSchema), async (req, res) => {
     }
 
     await WordList.findByIdAndUpdate(listId, { updated_at: new Date() });
-    await persistLearningSnapshot();
+    await requestLearningSnapshotPersist();
     res.status(201).json(await transformWord(result.word, listId, resolveUserId(req.headers['user-id'])));
   } catch (error) {
     res.status(500).json({ message: 'Internal server error' });
@@ -208,7 +208,7 @@ router.post('/:listId/words/bulk', validate(bulkAddWordsSchema), async (req, res
 
     if (imported.length > 0) {
       await WordList.findByIdAndUpdate(listId, { updated_at: new Date() });
-      await persistLearningSnapshot();
+      await requestLearningSnapshotPersist();
     }
 
     res.status(201).json({
@@ -298,7 +298,7 @@ router.delete('/:listId/words/:wordId', validate(deleteWordSchema), async (req, 
     }
 
     await WordList.findByIdAndUpdate(listId, { updated_at: new Date() });
-    await persistLearningSnapshot();
+    await requestLearningSnapshotPersist();
     res.json({ message: 'Word deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Internal server error' });

@@ -3,7 +3,7 @@ import { validate } from 'echt';
 import { UserPreferences } from './model';
 import { DEFAULT_BASE_LANGUAGE, DEFAULT_TARGET_LANGUAGE } from './defaults';
 import { updatePreferencesSchema } from './schemas';
-import { persistLearningSnapshot } from '../../services/repoLearningSnapshot';
+import { requestLearningSnapshotPersist } from '../../services/repoLearningSnapshot';
 import {
   DEFAULT_EXERCISE_TYPE_PREFERENCES,
   resolveEnabledQuestionTypes
@@ -29,7 +29,7 @@ router.get('/', async (req: Request, res: Response) => {
         baseLanguage: DEFAULT_BASE_LANGUAGE,
         targetLanguage: DEFAULT_TARGET_LANGUAGE
       });
-      await persistLearningSnapshot();
+      await requestLearningSnapshotPersist();
     }
 
     res.json({
@@ -74,7 +74,7 @@ router.put('/', validate(updatePreferencesSchema), async (req, res) => {
       { new: true, upsert: true }
     );
 
-    await persistLearningSnapshot();
+    await requestLearningSnapshotPersist();
     res.json({
       exerciseTypes: {
         ...DEFAULT_EXERCISE_TYPE_PREFERENCES,
