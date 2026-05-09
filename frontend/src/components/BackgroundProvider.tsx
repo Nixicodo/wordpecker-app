@@ -40,7 +40,7 @@ const DEFAULT_INTERVAL_MS = 60_000;
 const DEFAULT_BACKGROUND_OPACITY = 72;
 const DEFAULT_MASK_OPACITY = 48;
 const DEFAULT_CARD_OPACITY = 88;
-const BACKGROUND_CROSSFADE_DURATION_SECONDS = 1.5;
+const BACKGROUND_CROSSFADE_DURATION_SECONDS = 0.35;
 const CURRENT_BACKGROUND_STORAGE_KEY = 'wordpecker-current-background-id';
 const BACKGROUND_OPACITY_STORAGE_KEY = 'wordpecker-background-opacity';
 const BACKGROUND_MASK_OPACITY_STORAGE_KEY = 'wordpecker-background-mask-opacity';
@@ -90,6 +90,35 @@ const readStoredNumber = (key: string, fallbackValue: number) => {
 
 const shouldPauseAutoRotation = (pathname: string) => /^\/(?:learn|quiz)\/[^/]+\/?$/.test(pathname);
 
+const pickBackground = (
+  backgrounds: BackgroundAsset[],
+  options?: {
+    excludeId?: string;
+    preferredId?: string;
+  }
+) => {
+  if (!backgrounds.length) {
+    return null;
+  }
+
+  if (options?.preferredId) {
+    const preferredBackground = backgrounds.find((background) => background.id === options.preferredId);
+    if (preferredBackground) {
+      return preferredBackground;
+    }
+  }
+
+  const candidates = options?.excludeId
+    ? backgrounds.filter((background) => background.id !== options.excludeId)
+    : backgrounds;
+
+  if (!candidates.length) {
+    return null;
+  }
+
+  return candidates[Math.floor(Math.random() * candidates.length)] ?? candidates[0];
+};
+
 export const BackgroundProvider = ({ children }: PropsWithChildren) => {
   const location = useLocation();
   const toast = useToast();
@@ -105,6 +134,7 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
   const [isControlTrayExpanded, setIsControlTrayExpanded] = useState(false);
   const hasLoadedRef = useRef(false);
   const currentBackgroundRef = useRef<BackgroundAsset | null>(null);
+  const backgroundCatalogRef = useRef<BackgroundAsset[]>([]);
   const isAutoRotationPaused = shouldPauseAutoRotation(location.pathname);
 
   const persistCurrentBackground = useCallback((background: BackgroundAsset | null) => {
@@ -121,6 +151,36 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
     currentBackgroundRef.current = background;
     persistCurrentBackground(background);
   }, [persistCurrentBackground]);
+
+  const applyBackgroundCatalog = useCallback((backgrounds: BackgroundAsset[]) => {
+    backgroundCatalogRef.current = backgrounds;
+    setTotalBackgrounds(backgrounds.length);
+  }, []);
+
+  const loadBackgroundCatalog = useCallback(async (options?: { silent?: boolean }) => {
+    try {
+      const response = await apiService.getBackgrounds();
+      const normalizedBackgrounds = response.backgrounds
+        .map((background) => normalizeBackground(background))
+        .filter((background): background is BackgroundAsset => Boolean(background));
+
+      applyBackgroundCatalog(normalizedBackgrounds);
+      return normalizedBackgrounds;
+    } catch (error) {
+      console.error('Failed to load background catalog:', error);
+      if (!options?.silent) {
+        toast({
+          title: '背景图库加载失败',
+          description: '暂时无法读取壁纸清单，稍后会继续重试。',
+          status: 'warning',
+          duration: 2500,
+          isClosable: true
+        });
+      }
+
+      return [];
+    }
+  }, [applyBackgroundCatalog, toast]);
 
   const requestBackground = useCallback(async (options?: {
     excludeId?: string;
@@ -160,10 +220,19 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
       return;
     }
 
+    const nextBackground = pickBackground(backgroundCatalogRef.current, {
+      excludeId: currentBackgroundRef.current?.id
+    });
+
+    if (nextBackground) {
+      applyBackground(nextBackground);
+      return;
+    }
+
     void requestBackground({
       excludeId: currentBackgroundRef.current?.id
     });
-  }, [isAutoRotationPaused, requestBackground]);
+  }, [applyBackground, isAutoRotationPaused, requestBackground]);
 
   const deleteCurrentBackground = useCallback(async () => {
     if (!currentBackgroundRef.current) {
@@ -175,10 +244,23 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
     setIsDeleting(true);
     try {
       await apiService.deleteBackground(deletingBackground.id);
-      const nextBackground = await requestBackground({
-        excludeId: deletingBackground.id,
-        silent: true
+      const remainingBackgrounds = backgroundCatalogRef.current.filter((background) => background.id !== deletingBackground.id);
+      applyBackgroundCatalog(remainingBackgrounds);
+
+      let nextBackground = pickBackground(remainingBackgrounds, {
+        excludeId: deletingBackground.id
       });
+
+      if (nextBackground) {
+        applyBackground(nextBackground);
+      } else if (remainingBackgrounds.length === 0) {
+        applyBackground(null);
+      } else {
+        nextBackground = await requestBackground({
+          excludeId: deletingBackground.id,
+          silent: true
+        });
+      }
 
       toast({
         title: '壁纸已删除',
@@ -201,7 +283,7 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
     } finally {
       setIsDeleting(false);
     }
-  }, [requestBackground, toast]);
+  }, [applyBackground, applyBackgroundCatalog, requestBackground, toast]);
 
   const handleCopyPath = useCallback(async () => {
     if (!currentBackground) {
@@ -279,11 +361,12 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
         preferredId: savedBackgroundId ?? undefined,
         silent: true
       });
+      void loadBackgroundCatalog({ silent: true });
       setIsReady(true);
     };
 
     void loadBackground();
-  }, [requestBackground]);
+  }, [loadBackgroundCatalog, requestBackground]);
 
   useEffect(() => {
     if (isAutoRotationPaused || totalBackgrounds <= 1) {
@@ -550,7 +633,10 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
                           leftIcon={<RepeatIcon />}
                           size="sm"
                           variant="ghost"
-                          onClick={() => void requestBackground({ silent: true })}
+                          onClick={() => {
+                            void requestBackground({ silent: true });
+                            void loadBackgroundCatalog({ silent: true });
+                          }}
                           isLoading={isSwitching}
                           flex="1"
                           {...trayGhostActionStyles}
