@@ -1,4 +1,4 @@
-import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js';
+import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js/wrapper/ElevenLabsClient';
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
