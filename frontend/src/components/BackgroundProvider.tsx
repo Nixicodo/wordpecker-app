@@ -40,7 +40,8 @@ const DEFAULT_INTERVAL_MS = 60_000;
 const DEFAULT_BACKGROUND_OPACITY = 72;
 const DEFAULT_MASK_OPACITY = 48;
 const DEFAULT_CARD_OPACITY = 88;
-const BACKGROUND_CROSSFADE_DURATION_SECONDS = 0.35;
+const BACKGROUND_CROSSFADE_DURATION_SECONDS = 1;
+const PRELOADED_BACKGROUND_COUNT = 2;
 const CURRENT_BACKGROUND_STORAGE_KEY = 'wordpecker-current-background-id';
 const BACKGROUND_OPACITY_STORAGE_KEY = 'wordpecker-background-opacity';
 const BACKGROUND_MASK_OPACITY_STORAGE_KEY = 'wordpecker-background-mask-opacity';
@@ -119,6 +120,30 @@ const pickBackground = (
   return candidates[Math.floor(Math.random() * candidates.length)] ?? candidates[0];
 };
 
+const pickBackgroundBatch = (
+  backgrounds: BackgroundAsset[],
+  count: number,
+  excludeIds: string[] = []
+) => {
+  if (count <= 0) {
+    return [] as BackgroundAsset[];
+  }
+
+  const excluded = new Set(excludeIds);
+  const candidates = backgrounds.filter((background) => !excluded.has(background.id));
+  const selected: BackgroundAsset[] = [];
+
+  while (selected.length < count && candidates.length > 0) {
+    const randomIndex = Math.floor(Math.random() * candidates.length);
+    const [background] = candidates.splice(randomIndex, 1);
+    if (background) {
+      selected.push(background);
+    }
+  }
+
+  return selected;
+};
+
 export const BackgroundProvider = ({ children }: PropsWithChildren) => {
   const location = useLocation();
   const toast = useToast();
@@ -135,6 +160,9 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
   const hasLoadedRef = useRef(false);
   const currentBackgroundRef = useRef<BackgroundAsset | null>(null);
   const backgroundCatalogRef = useRef<BackgroundAsset[]>([]);
+  const preparedBackgroundQueueRef = useRef<BackgroundAsset[]>([]);
+  const preloadPromiseByBackgroundIdRef = useRef(new Map<string, Promise<BackgroundAsset | null>>());
+  const isSwitchingRef = useRef(false);
   const isAutoRotationPaused = shouldPauseAutoRotation(location.pathname);
 
   const persistCurrentBackground = useCallback((background: BackgroundAsset | null) => {
@@ -157,6 +185,94 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
     setTotalBackgrounds(backgrounds.length);
   }, []);
 
+  const preloadBackground = useCallback((background: BackgroundAsset) => {
+    const existingPromise = preloadPromiseByBackgroundIdRef.current.get(background.id);
+    if (existingPromise) {
+      return existingPromise;
+    }
+
+    const preloadPromise = new Promise<BackgroundAsset | null>((resolve) => {
+      const image = new window.Image();
+      let settled = false;
+
+      const finish = (result: BackgroundAsset | null) => {
+        if (settled) {
+          return;
+        }
+
+        settled = true;
+        image.onload = null;
+        image.onerror = null;
+
+        if (!result) {
+          preloadPromiseByBackgroundIdRef.current.delete(background.id);
+        }
+
+        resolve(result);
+      };
+
+      image.onload = () => finish(background);
+      image.onerror = () => finish(null);
+      image.src = background.url;
+
+      if (image.complete && image.naturalWidth > 0) {
+        finish(background);
+      }
+    });
+
+    preloadPromiseByBackgroundIdRef.current.set(background.id, preloadPromise);
+    return preloadPromise;
+  }, []);
+
+  const refillPreparedBackgroundQueue = useCallback((excludeIds: string[] = []) => {
+    const existingQueueIds = preparedBackgroundQueueRef.current.map((background) => background.id);
+    const candidates = pickBackgroundBatch(
+      backgroundCatalogRef.current,
+      PRELOADED_BACKGROUND_COUNT - preparedBackgroundQueueRef.current.length,
+      [...excludeIds, ...existingQueueIds]
+    );
+
+    if (!candidates.length) {
+      return;
+    }
+
+    void Promise.all(candidates.map((background) => preloadBackground(background)))
+      .then((loadedBackgrounds) => {
+        const blockedIds = new Set([
+          ...excludeIds,
+          currentBackgroundRef.current?.id || '',
+          ...preparedBackgroundQueueRef.current.map((background) => background.id)
+        ]);
+
+        loadedBackgrounds.forEach((background) => {
+          if (!background || blockedIds.has(background.id)) {
+            return;
+          }
+
+          preparedBackgroundQueueRef.current.push(background);
+          blockedIds.add(background.id);
+        });
+
+        if (preparedBackgroundQueueRef.current.length > PRELOADED_BACKGROUND_COUNT) {
+          preparedBackgroundQueueRef.current = preparedBackgroundQueueRef.current.slice(0, PRELOADED_BACKGROUND_COUNT);
+        }
+      })
+      .catch((error) => {
+        console.error('Failed to preload upcoming backgrounds:', error);
+      });
+  }, [preloadBackground]);
+
+  const takePreparedBackground = useCallback((excludeId?: string) => {
+    const index = preparedBackgroundQueueRef.current.findIndex((background) => background.id !== excludeId);
+
+    if (index < 0) {
+      return null;
+    }
+
+    const [background] = preparedBackgroundQueueRef.current.splice(index, 1);
+    return background ?? null;
+  }, []);
+
   const loadBackgroundCatalog = useCallback(async (options?: { silent?: boolean }) => {
     try {
       const response = await apiService.getBackgrounds();
@@ -165,6 +281,8 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
         .filter((background): background is BackgroundAsset => Boolean(background));
 
       applyBackgroundCatalog(normalizedBackgrounds);
+      const validIds = new Set(normalizedBackgrounds.map((background) => background.id));
+      preparedBackgroundQueueRef.current = preparedBackgroundQueueRef.current.filter((background) => validIds.has(background.id));
       return normalizedBackgrounds;
     } catch (error) {
       console.error('Failed to load background catalog:', error);
@@ -215,24 +333,57 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
     }
   }, [applyBackground, toast]);
 
+  const prepareAndApplyBackground = useCallback(async (options?: {
+    excludeId?: string;
+    preferredId?: string;
+    silent?: boolean;
+  }) => {
+    if (isSwitchingRef.current) {
+      return null;
+    }
+
+    isSwitchingRef.current = true;
+    setIsSwitching(true);
+
+    try {
+      let nextBackground = options?.preferredId
+        ? backgroundCatalogRef.current.find((background) => background.id === options.preferredId) ?? null
+        : null;
+
+      if (!nextBackground) {
+        nextBackground = takePreparedBackground(options?.excludeId)
+          ?? pickBackground(backgroundCatalogRef.current, { excludeId: options?.excludeId });
+      }
+
+      if (nextBackground) {
+        const loadedBackground = await preloadBackground(nextBackground);
+        if (loadedBackground) {
+          applyBackground(loadedBackground);
+          refillPreparedBackgroundQueue([loadedBackground.id, options?.excludeId || '']);
+          return loadedBackground;
+        }
+      }
+
+      const fallbackBackground = await requestBackground(options);
+      if (fallbackBackground) {
+        refillPreparedBackgroundQueue([fallbackBackground.id, options?.excludeId || '']);
+      }
+      return fallbackBackground;
+    } finally {
+      isSwitchingRef.current = false;
+      setIsSwitching(false);
+    }
+  }, [applyBackground, preloadBackground, refillPreparedBackgroundQueue, requestBackground, takePreparedBackground]);
+
   const cycleBackground = useCallback((reason: 'manual' | 'timer' | 'correct-answer' | 'next-question' = 'manual') => {
     if (reason === 'timer' && isAutoRotationPaused) {
       return;
     }
 
-    const nextBackground = pickBackground(backgroundCatalogRef.current, {
+    void prepareAndApplyBackground({
       excludeId: currentBackgroundRef.current?.id
     });
-
-    if (nextBackground) {
-      applyBackground(nextBackground);
-      return;
-    }
-
-    void requestBackground({
-      excludeId: currentBackgroundRef.current?.id
-    });
-  }, [applyBackground, isAutoRotationPaused, requestBackground]);
+  }, [isAutoRotationPaused, prepareAndApplyBackground]);
 
   const deleteCurrentBackground = useCallback(async () => {
     if (!currentBackgroundRef.current) {
@@ -244,19 +395,17 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
     setIsDeleting(true);
     try {
       await apiService.deleteBackground(deletingBackground.id);
+      preparedBackgroundQueueRef.current = preparedBackgroundQueueRef.current.filter((background) => background.id !== deletingBackground.id);
+      preloadPromiseByBackgroundIdRef.current.delete(deletingBackground.id);
       const remainingBackgrounds = backgroundCatalogRef.current.filter((background) => background.id !== deletingBackground.id);
       applyBackgroundCatalog(remainingBackgrounds);
 
-      let nextBackground = pickBackground(remainingBackgrounds, {
-        excludeId: deletingBackground.id
-      });
+      let nextBackground: BackgroundAsset | null = null;
 
-      if (nextBackground) {
-        applyBackground(nextBackground);
-      } else if (remainingBackgrounds.length === 0) {
+      if (remainingBackgrounds.length === 0) {
         applyBackground(null);
       } else {
-        nextBackground = await requestBackground({
+        nextBackground = await prepareAndApplyBackground({
           excludeId: deletingBackground.id,
           silent: true
         });
@@ -283,7 +432,7 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
     } finally {
       setIsDeleting(false);
     }
-  }, [applyBackground, applyBackgroundCatalog, requestBackground, toast]);
+  }, [applyBackground, applyBackgroundCatalog, prepareAndApplyBackground, toast]);
 
   const handleCopyPath = useCallback(async () => {
     if (!currentBackground) {
@@ -357,16 +506,19 @@ export const BackgroundProvider = ({ children }: PropsWithChildren) => {
 
     const loadBackground = async () => {
       const savedBackgroundId = localStorage.getItem(CURRENT_BACKGROUND_STORAGE_KEY);
-      await requestBackground({
+      const initialBackground = await requestBackground({
         preferredId: savedBackgroundId ?? undefined,
         silent: true
       });
-      void loadBackgroundCatalog({ silent: true });
+      await loadBackgroundCatalog({ silent: true });
+      if (initialBackground) {
+        refillPreparedBackgroundQueue([initialBackground.id]);
+      }
       setIsReady(true);
     };
 
     void loadBackground();
-  }, [loadBackgroundCatalog, requestBackground]);
+  }, [loadBackgroundCatalog, refillPreparedBackgroundQueue, requestBackground]);
 
   useEffect(() => {
     if (isAutoRotationPaused || totalBackgrounds <= 1) {
