@@ -647,7 +647,6 @@ export const Learn = () => {
           onAnswerChange={setSelectedAnswer}
           isAnswered={isAnswered}
           isCorrect={actualCorrectness}
-          onHintShown={() => setUsedHint(true)}
         />
 
         <Flex justify="center" mt={8} gap={4}>

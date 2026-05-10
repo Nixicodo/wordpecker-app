@@ -2,17 +2,16 @@ import {
   Alert,
   AlertIcon,
   Box,
-  Button,
-  Collapse,
+  Card,
+  CardBody,
   HStack,
   Text,
   VStack,
   useColorModeValue
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
-import { FaLightbulb } from 'react-icons/fa';
 import { Exercise, Question } from '../types';
+import PronunciationButton from './PronunciationButton';
 import {
   FillBlankQuestion,
   MatchingQuestion,
@@ -24,13 +23,10 @@ import {
 const MotionBox = motion(Box);
 
 const UI = {
-  hideHint: '隐藏提示',
-  showHint: '显示提示',
-  hintPrefix: '提示：',
-  feedbackPrefix: '讲解：',
-  correctAnswerPrefix: '正确答案：',
-  correctMatches: '正确配对：',
-  relatedWordsTitle: '本题相关词汇：'
+  feedbackPrefix: '璁茶В锛?',
+  correctAnswerPrefix: '姝ｇ‘绛旀锛?',
+  correctMatches: '姝ｇ‘閰嶅锛?',
+  relatedWordsTitle: '鏈鐩稿叧璇嶆眹锛?'
 };
 
 interface QuestionRendererProps {
@@ -39,22 +35,29 @@ interface QuestionRendererProps {
   onAnswerChange: (answer: string) => void;
   isAnswered: boolean;
   isCorrect?: boolean | null;
-  onHintShown?: () => void;
+  autoPlayPronunciation?: boolean;
 }
 
 interface QuestionAnsweredSupplementProps {
   question: Exercise | Question;
   isAnswered: boolean;
   isCorrect?: boolean | null;
+  autoPlayPronunciation?: boolean;
 }
 
 export const QuestionAnsweredSupplement: React.FC<QuestionAnsweredSupplementProps> = ({
   question,
   isAnswered,
-  isCorrect
+  isCorrect,
+  autoPlayPronunciation = false
 }) => {
   const feedbackBg = useColorModeValue('green.50', 'green.900');
   const feedbackColor = useColorModeValue('green.700', 'green.200');
+  const panelBg = useColorModeValue('white', 'slate.800');
+  const mutedColor = useColorModeValue('gray.700', 'gray.300');
+  const secondaryColor = useColorModeValue('gray.500', 'gray.400');
+  const primaryWord = question.exposedWords?.[0]?.value || question.word;
+  const primaryWordData = question.exposedWords?.[0];
 
   if (!isAnswered) {
     return null;
@@ -62,6 +65,50 @@ export const QuestionAnsweredSupplement: React.FC<QuestionAnsweredSupplementProp
 
   return (
     <VStack spacing={4} align="stretch" mt={6}>
+      <Card borderRadius="xl" bg={panelBg} variant="outline">
+        <CardBody>
+          <VStack spacing={4} align="stretch">
+            <HStack justify="space-between" align="center" wrap="wrap" spacing={3}>
+              <Box>
+                <Text fontSize="sm" fontWeight="bold" color="blue.400">
+                  发音与说明
+                </Text>
+                <Text fontSize="xs" color={secondaryColor}>
+                  结算完成后展示，可在这里复听和回顾
+                </Text>
+              </Box>
+              <PronunciationButton
+                text={primaryWord}
+                type="word"
+                language="es"
+                size="sm"
+                colorScheme="blue"
+                tooltipText="播放这个单词的发音"
+                autoPlay={autoPlayPronunciation}
+              />
+            </HStack>
+
+            <Box>
+              <Text fontSize="xs" color={secondaryColor} mb={1}>
+                音标
+              </Text>
+              <Text fontSize="sm" color={mutedColor} lineHeight="1.6">
+                {primaryWordData?.phonetic || '—'}
+              </Text>
+            </Box>
+
+            <Box>
+              <Text fontSize="xs" color={secondaryColor} mb={1}>
+                详细解释
+              </Text>
+              <Text fontSize="sm" color={mutedColor} lineHeight="1.6">
+                {primaryWordData?.detailedExplanation || '—'}
+              </Text>
+            </Box>
+          </VStack>
+        </CardBody>
+      </Card>
+
       {question.feedback && isCorrect && (
         <Alert status="success" borderRadius="lg" bg={feedbackBg}>
           <AlertIcon />
@@ -79,7 +126,9 @@ export const QuestionAnsweredSupplement: React.FC<QuestionAnsweredSupplementProp
 
       {question.type === 'matching' && question.pairs && question.pairs.length > 0 && (
         <Box p={4} bg="slate.800" borderRadius="md">
-          <Text fontWeight="bold" mb={2}>{UI.correctMatches}</Text>
+          <Text fontWeight="bold" mb={2}>
+            {UI.correctMatches}
+          </Text>
           {question.pairs.map((pair, index) => (
             <Text key={`${pair.word}-${pair.definition}-${index}`} fontSize="sm" color="green.300">
               {pair.word} {'->'} {pair.definition}
@@ -92,7 +141,9 @@ export const QuestionAnsweredSupplement: React.FC<QuestionAnsweredSupplementProp
         question.exposedWords &&
         question.exposedWords.length > 0 && (
           <Box p={4} bg="slate.800" borderRadius="md">
-            <Text fontWeight="bold" mb={2}>{UI.relatedWordsTitle}</Text>
+            <Text fontWeight="bold" mb={2}>
+              {UI.relatedWordsTitle}
+            </Text>
             {question.exposedWords.map((word) => (
               <Text key={word.id} fontSize="sm" color="green.300">
                 {word.value} {'->'} {word.meaning || '释义解析中'}
@@ -110,17 +161,8 @@ export const QuestionRenderer: React.FC<QuestionRendererProps> = ({
   onAnswerChange,
   isAnswered,
   isCorrect,
-  onHintShown
+  autoPlayPronunciation = false
 }) => {
-  const [showHint, setShowHint] = useState(false);
-
-  useEffect(() => {
-    setShowHint(false);
-  }, [question.word, question.question]);
-
-  const hintBg = useColorModeValue('blue.50', 'blue.900');
-  const hintColor = useColorModeValue('blue.700', 'blue.200');
-
   const renderQuestionComponent = () => {
     switch (question.type) {
       case 'multiple_choice':
@@ -178,14 +220,6 @@ export const QuestionRenderer: React.FC<QuestionRendererProps> = ({
     }
   };
 
-  const toggleHint = () => {
-    if (!showHint) {
-      onHintShown?.();
-    }
-
-    setShowHint((previous) => !previous);
-  };
-
   return (
     <MotionBox
       initial={{ opacity: 0, y: 20 }}
@@ -203,32 +237,16 @@ export const QuestionRenderer: React.FC<QuestionRendererProps> = ({
           {question.question}
         </Text>
 
-        {question.hint && !isAnswered && (
-          <HStack justify="center">
-            <Button
-              leftIcon={<FaLightbulb />}
-              variant="outline"
-              colorScheme="blue"
-              size="sm"
-              onClick={toggleHint}
-            >
-              {showHint ? UI.hideHint : UI.showHint}
-            </Button>
-          </HStack>
-        )}
-
-        {question.hint && !isAnswered && (
-          <Collapse in={showHint} animateOpacity>
-            <Alert status="info" borderRadius="lg" bg={hintBg}>
-              <AlertIcon />
-              <Text color={hintColor} fontSize="sm">
-                {`${UI.hintPrefix}${question.hint}`}
-              </Text>
-            </Alert>
-          </Collapse>
-        )}
-
         {renderQuestionComponent()}
+
+        {isAnswered && (
+          <QuestionAnsweredSupplement
+            question={question}
+            isAnswered={isAnswered}
+            isCorrect={isCorrect}
+            autoPlayPronunciation={autoPlayPronunciation}
+          />
+        )}
       </VStack>
     </MotionBox>
   );

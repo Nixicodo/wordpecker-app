@@ -39,6 +39,8 @@ export interface PronunciationButtonProps {
   onEnd?: () => void;
   /** Custom icon */
   icon?: React.ReactElement;
+  /** Auto-generate and play audio when the component mounts or text changes */
+  autoPlay?: boolean;
 }
 
 export const PronunciationButton: React.FC<PronunciationButtonProps> = ({
@@ -56,12 +58,14 @@ export const PronunciationButton: React.FC<PronunciationButtonProps> = ({
   onPlay,
   onEnd,
   icon,
+  autoPlay = false,
 }) => {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const autoPlayRequestedRef = useRef(false);
   
   const toast = useToast();
   
@@ -80,6 +84,7 @@ export const PronunciationButton: React.FC<PronunciationButtonProps> = ({
     setAudioUrl(null);
     setIsPlaying(false);
     setError(null);
+    autoPlayRequestedRef.current = false;
   }, [text]);
 
   const defaultTooltip = `Listen to pronunciation${type === 'word' ? ` of "${text}"` : ''}${language ? ` in ${language.toUpperCase()}` : ''}`;
@@ -193,6 +198,15 @@ export const PronunciationButton: React.FC<PronunciationButtonProps> = ({
       setTimeout(playAudio, 100);
     }
   }, [audioUrl]); // Remove dependencies that might cause re-runs
+
+  useEffect(() => {
+    if (!autoPlay || autoPlayRequestedRef.current || audioUrl || isLoading || disabled) {
+      return;
+    }
+
+    autoPlayRequestedRef.current = true;
+    void generateAudio();
+  }, [autoPlay, audioUrl, disabled, generateAudio, isLoading]);
 
   // Show full player when we have audio and not minimal
   if (audioUrl && !minimal) {

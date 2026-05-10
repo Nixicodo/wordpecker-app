@@ -60,6 +60,8 @@ export interface Word {
   list_id?: string;
   value: string;
   meaning: string;
+  phonetic?: string;
+  detailedExplanation?: string;
   dueAt?: string;
   lastReviewedAt?: string;
   reviewCount: number;
@@ -123,6 +125,8 @@ export interface Exercise {
     id: string;
     value: string;
     meaning: string;
+    phonetic?: string;
+    detailedExplanation?: string;
   }>;
 }
 
@@ -145,6 +149,8 @@ export interface Question {
     id: string;
     value: string;
     meaning: string;
+    phonetic?: string;
+    detailedExplanation?: string;
   }>;
 }
 
@@ -152,6 +158,8 @@ export interface ScheduledWord {
   id: string;
   value: string;
   meaning: string;
+  phonetic?: string;
+  detailedExplanation?: string;
   sourceListId?: string;
   sourceListIds?: string[];
   sourceListName?: string;

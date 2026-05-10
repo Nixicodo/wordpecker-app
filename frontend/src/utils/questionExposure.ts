@@ -4,6 +4,8 @@ export type ExposureWord = {
   id: string;
   value: string;
   meaning: string;
+  phonetic?: string;
+  detailedExplanation?: string;
 };
 
 const normalizeText = (value: string) => value.trim().toLowerCase();
@@ -20,6 +22,20 @@ const dedupeExposureWords = (words: ExposureWord[]) => {
   });
 };
 
+const toExposureWord = (word: {
+  id: string;
+  value: string;
+  meaning: string;
+  phonetic?: string;
+  detailedExplanation?: string;
+}): ExposureWord => ({
+  id: word.id,
+  value: word.value,
+  meaning: word.meaning,
+  phonetic: word.phonetic,
+  detailedExplanation: word.detailedExplanation
+});
+
 export const resolveQuestionExposureWords = (
   question: Exercise | Question,
   listWords: Word[]
@@ -35,11 +51,13 @@ export const resolveQuestionExposureWords = (
     return mergeWithExisting(question.pairs.map((pair, index) => {
       const matchedWord = wordsByValue.get(normalizeText(pair.word));
 
-      return {
+      return toExposureWord({
         id: matchedWord?.id || `${pair.word}-${index}`,
         value: matchedWord?.value || pair.word,
-        meaning: matchedWord?.meaning || pair.definition
-      };
+        meaning: matchedWord?.meaning || pair.definition,
+        phonetic: matchedWord?.phonetic,
+        detailedExplanation: matchedWord?.detailedExplanation
+      });
     }));
   }
 
@@ -47,24 +65,28 @@ export const resolveQuestionExposureWords = (
     const optionWords = question.options.map((option) => {
       const wordMatch = wordsByValue.get(normalizeText(option));
       if (wordMatch) {
-        return {
+        return toExposureWord({
           id: wordMatch.id,
           value: wordMatch.value,
-          meaning: wordMatch.meaning
-        };
+          meaning: wordMatch.meaning,
+          phonetic: wordMatch.phonetic,
+          detailedExplanation: wordMatch.detailedExplanation
+        });
       }
 
       const meaningMatch = wordsByMeaning.get(normalizeText(option));
       if (meaningMatch) {
-        return {
+        return toExposureWord({
           id: meaningMatch.id,
           value: meaningMatch.value,
-          meaning: meaningMatch.meaning
-        };
+          meaning: meaningMatch.meaning,
+          phonetic: meaningMatch.phonetic,
+          detailedExplanation: meaningMatch.detailedExplanation
+        });
       }
 
       return null;
-    }).filter((word): word is ExposureWord => Boolean(word));
+    }).filter((word): word is ExposureWord => word !== null);
 
     if (optionWords.length > 0) {
       return mergeWithExisting(optionWords);
@@ -79,7 +101,9 @@ export const resolveQuestionExposureWords = (
     return mergeWithExisting([{
       id: primaryWord.id,
       value: primaryWord.value,
-      meaning: primaryWord.meaning
+      meaning: primaryWord.meaning,
+      phonetic: primaryWord.phonetic,
+      detailedExplanation: primaryWord.detailedExplanation
     }]);
   }
 
@@ -87,7 +111,9 @@ export const resolveQuestionExposureWords = (
     return mergeWithExisting([{
       id: question.wordId,
       value: question.word,
-      meaning: ''
+      meaning: '',
+      phonetic: undefined,
+      detailedExplanation: undefined
     }]);
   }
 

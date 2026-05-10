@@ -1070,7 +1070,7 @@ export const DisciplinedLearnSession = ({
             onAnswerChange={(answer) => updateAuditState(currentIndex, (previous) => ({ ...previous, answer }))}
             isAnswered={currentState.submitted}
             isCorrect={currentState.correctness}
-            onHintShown={() => updateAuditState(currentIndex, (previous) => ({ ...previous, usedHint: true }))}
+            autoPlayPronunciation={currentState.submitted}
           />
 
           <HStack spacing={3} mt={8} justify="center" flexWrap="wrap">
@@ -1190,9 +1190,11 @@ export const DisciplinedLearnSession = ({
           )}
 
           <QuestionAnsweredSupplement
+            key={`${currentIndex}-${currentState.answeredAt || 'pending'}`}
             question={resolvedExercise}
             isAnswered={currentState.status === 'correct' || currentState.status === 'incorrect'}
             isCorrect={currentState.correctness}
+            autoPlayPronunciation={currentState.status === 'correct' || currentState.status === 'incorrect'}
           />
 
           {currentState.review && (currentState.status === 'correct' || currentState.status === 'incorrect') && (
