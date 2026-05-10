@@ -4,6 +4,8 @@ type GenerationWord = {
   id: string;
   value: string;
   meaning: string;
+  phonetic?: string;
+  detailedExplanation?: string;
   challengeScore?: number;
 };
 
@@ -11,6 +13,8 @@ type WordSummary = {
   id: string;
   value: string;
   meaning: string;
+  phonetic?: string;
+  detailedExplanation?: string;
 };
 
 const normalizeText = (value: string) => value.trim();
@@ -47,7 +51,9 @@ const buildExposedWords = (
     .map((candidate) => ({
       id: candidate.id,
       value: candidate.value,
-      meaning: candidate.meaning
+      meaning: candidate.meaning,
+      phonetic: candidate.phonetic,
+      detailedExplanation: candidate.detailedExplanation
     }));
 };
 

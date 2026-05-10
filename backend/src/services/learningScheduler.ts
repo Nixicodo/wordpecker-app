@@ -34,6 +34,8 @@ export type ScheduledWord = {
   id: string;
   value: string;
   meaning: string;
+  phonetic?: string;
+  detailedExplanation?: string;
   sourceListId?: string;
   sourceListIds?: string[];
   sourceListName?: string;
@@ -713,6 +715,8 @@ const pickPreferredDueReviewSource = (
 
   return {
     meaning: sourceMembership.meaning,
+    phonetic: sourceMembership.phonetic,
+    detailedExplanation: sourceMembership.detailedExplanation,
     sourceListId,
     sourceListIds,
     sourceListName: listsById.get(sourceListId)?.name,
@@ -794,6 +798,8 @@ export const selectDueReviewWords = async (
       id: word._id.toString(),
       value: word.value,
       meaning: source.meaning,
+      phonetic: source.phonetic,
+      detailedExplanation: source.detailedExplanation,
       sourceListId: source.sourceListId,
       sourceListIds: source.sourceListIds,
       sourceListName: source.sourceListName,

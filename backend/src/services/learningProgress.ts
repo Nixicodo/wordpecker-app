@@ -15,6 +15,8 @@ type WordDocumentLike = {
   listMemberships: Array<{
     listId: { toString(): string };
     meaning?: string;
+    phonetic?: string;
+    detailedExplanation?: string;
   }>;
 };
 
@@ -25,7 +27,9 @@ export function mapWordsWithProgress(words: WordDocumentLike[], listId: string) 
     return {
       id: word._id.toString(),
       value: word.value,
-      meaning: membership?.meaning || ''
+      meaning: membership?.meaning || '',
+      phonetic: membership?.phonetic,
+      detailedExplanation: membership?.detailedExplanation
     };
   });
 }
