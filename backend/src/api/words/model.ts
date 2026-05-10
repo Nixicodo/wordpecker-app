@@ -3,6 +3,9 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface IWordListMembership {
   listId: mongoose.Types.ObjectId;
   meaning: string;
+  phonetic?: string;
+  detailedExplanation?: string;
+  detailedExplanationGeneratedAt?: Date;
   sourceListIds?: mongoose.Types.ObjectId[];
   tags?: string[];
   addedAt?: Date;
@@ -37,6 +40,20 @@ const WordListMembershipSchema = new Schema<IWordListMembership>({
     type: String,
     required: true,
     trim: true
+  },
+  phonetic: {
+    type: String,
+    default: undefined,
+    trim: true
+  },
+  detailedExplanation: {
+    type: String,
+    default: undefined,
+    trim: true
+  },
+  detailedExplanationGeneratedAt: {
+    type: Date,
+    default: undefined
   },
   sourceListIds: {
     type: [Schema.Types.ObjectId],

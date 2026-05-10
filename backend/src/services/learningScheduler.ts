@@ -6,6 +6,7 @@ import { IWord, Word } from '../api/words/model';
 import { IWordList, WordList } from '../api/lists/model';
 import { isMistakeBookList } from './mistakeBook';
 import { getDueReviewCutoff, isDueReviewList } from './dueReview';
+import { prefetchDiscoveryContentForList } from './fixedDiscoveryChain';
 
 const scheduler = fsrs({
   enable_fuzz: false,
@@ -906,6 +907,7 @@ export const applyDiscoveryAssessment = async (
     ]);
 
     await syncLearningStateAcrossMemberships(userId, word, state);
+    void prefetchDiscoveryContentForList(userId, listId, 20);
 
     return {
       countedAsNewWord: false,
@@ -929,6 +931,8 @@ export const applyDiscoveryAssessment = async (
     wordId: word._id,
     listId: list._id
   }).lean();
+
+  void prefetchDiscoveryContentForList(userId, listId, 20);
 
   return {
     countedAsNewWord: true,

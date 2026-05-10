@@ -92,6 +92,10 @@ describe('selectFixedDiscoveryWords', () => {
     expect(batch.words[0].phonetic).toMatch(/^\/.+\/$/);
     expect(batch.words[0].detailedExplanation).toContain('墨西哥');
 
+    const storedPrivateWord = await Word.findById(privateWord._id).lean();
+    expect(storedPrivateWord?.listMemberships[0].phonetic).toMatch(/^\/.+\/$/);
+    expect(storedPrivateWord?.listMemberships[0].detailedExplanation).toBeDefined();
+
     await LearningState.create({
       userId: 'discovery-user',
       wordId: privateWord._id,

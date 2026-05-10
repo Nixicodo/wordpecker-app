@@ -2,7 +2,11 @@ import { IWordList, WordList } from '../api/lists/model';
 import { IWord, IWordListMembership, Word } from '../api/words/model';
 import { LearningState } from '../api/learning-state/model';
 import { getManagedSpanishVocabularyListNames } from '../scripts/spanishVocabularyData';
-import { buildMexicanUsageExplanation, buildSpanishPhonetic } from './spanishDiscoveryContent';
+import {
+  buildMexicanUsageExplanation,
+  buildSpanishPhonetic,
+  generateDiscoveryDetailedExplanations
+} from './spanishDiscoveryContent';
 
 export const FIXED_DISCOVERY_TARGET_LIST_NAME = '私教学习自用';
 
@@ -67,6 +71,119 @@ const resolveDifficultyLevel = (
   return 'advanced';
 };
 
+const getDiscoveryExplanationKey = (word: Pick<IWord, 'value'>) => word.value.trim().toLowerCase();
+
+const cacheDiscoveryWordContent = async (
+  sourceList: LeanList,
+  words: IWord[]
+) => {
+  const sourceListId = sourceList._id.toString();
+  const itemsToGenerate = words
+    .map((word) => {
+      const membership = getMembership(word, sourceListId);
+      if (!membership) {
+        return null;
+      }
+
+      return {
+        word,
+        membership,
+        meaning: membership.meaning,
+        context: sourceList.context || sourceList.name
+      };
+    })
+    .filter((item): item is {
+      word: IWord;
+      membership: IWordListMembership;
+      meaning: string;
+      context: string;
+    } => Boolean(item));
+
+  if (!itemsToGenerate.length) {
+    return new Map<string, string>();
+  }
+
+  const explanationInputs = itemsToGenerate
+    .filter(({ membership }) => !membership.detailedExplanation)
+    .map(({ word, meaning, context }) => ({
+      word: word.value,
+      meaning,
+      context
+    }));
+
+  const generatedExplanations = explanationInputs.length
+    ? await generateDiscoveryDetailedExplanations(explanationInputs)
+    : [];
+
+  const generatedExplanationMap = new Map(
+    generatedExplanations.map((item) => [item.word.trim().toLowerCase(), item.detailedExplanation])
+  );
+
+  await Promise.all(itemsToGenerate.map(async ({ word, membership, meaning, context }) => {
+    const currentPhonetic = membership.phonetic || buildSpanishPhonetic(word.value);
+    const generatedExplanation = membership.detailedExplanation
+      || generatedExplanationMap.get(getDiscoveryExplanationKey(word))
+      || buildMexicanUsageExplanation(meaning, context);
+    const hasChanges =
+      membership.phonetic !== currentPhonetic ||
+      membership.detailedExplanation !== generatedExplanation ||
+      !membership.detailedExplanationGeneratedAt;
+
+    if (!hasChanges) {
+      return;
+    }
+
+    membership.phonetic = currentPhonetic;
+    membership.detailedExplanation = generatedExplanation;
+    membership.detailedExplanationGeneratedAt = new Date();
+    membership.updatedAt = new Date();
+    word.markModified('listMemberships');
+    await word.save();
+  }));
+
+  return new Map(
+    itemsToGenerate.map(({ word, membership, meaning, context }) => [
+      getDiscoveryExplanationKey(word),
+      membership.detailedExplanation || generatedExplanationMap.get(getDiscoveryExplanationKey(word)) || buildMexicanUsageExplanation(meaning, context)
+    ])
+  );
+};
+
+export const prefetchDiscoveryContentForList = async (
+  userId: string,
+  sourceListId: string,
+  count: number
+) => {
+  const sourceList = await WordList.findById(sourceListId)
+    .select('_id name context')
+    .lean() as LeanList | null;
+
+  if (!sourceList) {
+    return;
+  }
+
+  const introducedStates = await LearningState.find({
+    userId,
+    listId: sourceList._id,
+    reviewCount: { $gt: 0 }
+  })
+    .select('wordId listId')
+    .lean();
+  const introducedWordKeys = new Set(
+    introducedStates.map((state) => `${state.listId.toString()}:${state.wordId.toString()}`)
+  );
+
+  const sourceWords = await Word.find({ 'listMemberships.listId': sourceList._id })
+    .select('_id value listMemberships')
+    .sort({ created_at: 1, value: 1 });
+
+  const remainingWords = sourceWords.filter((word) =>
+    !introducedWordKeys.has(`${sourceList._id.toString()}:${word._id.toString()}`)
+  );
+
+  await cacheDiscoveryWordContent(sourceList, remainingWords.slice(0, count));
+};
+
 export const buildFixedDiscoveryChain = () => [
   FIXED_DISCOVERY_TARGET_LIST_NAME,
   ...getManagedSpanishVocabularyListNames()
@@ -101,10 +218,11 @@ export const selectFixedDiscoveryWords = async (
 
   for (let index = 0; index < orderedSourceLists.length; index += 1) {
     const sourceList = orderedSourceLists[index];
-    const sourceWords = (await Word.find({ 'listMemberships.listId': sourceList._id })
+    const sourceWords = await Word.find({ 'listMemberships.listId': sourceList._id })
       .select('_id value listMemberships')
-      .sort({ created_at: 1, value: 1 })
-      .lean()) as LeanWord[];
+      .sort({ created_at: 1, value: 1 });
+    const cachedExplanationMap = await cacheDiscoveryWordContent(sourceList, sourceWords.slice(0, count));
+    void prefetchDiscoveryContentForList(userId, sourceList._id.toString(), count + 20);
 
     const availableWords = sourceWords.flatMap((word) => {
       if (introducedWordKeys.has(`${sourceList._id.toString()}:${word._id.toString()}`)) {
@@ -121,11 +239,14 @@ export const selectFixedDiscoveryWords = async (
         word: word.value,
         meaning: sourceMembership.meaning,
         phonetic: buildSpanishPhonetic(word.value),
-        detailedExplanation: buildMexicanUsageExplanation(
-          sourceMembership.meaning,
-          sourceList.context || sourceList.name,
-          sourceList.context
-        ),
+        detailedExplanation:
+          cachedExplanationMap.get(getDiscoveryExplanationKey(word))
+          || sourceMembership.detailedExplanation
+          || buildMexicanUsageExplanation(
+            sourceMembership.meaning,
+            sourceList.context || sourceList.name,
+            sourceList.context
+          ),
         example: '',
         difficulty_level: resolveDifficultyLevel(sourceList.name),
         context: sourceList.context || sourceList.name,

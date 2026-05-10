@@ -22,13 +22,16 @@ type SnapshotWordList = {
 type SnapshotWord = {
   id: string;
   value: string;
-  listMemberships: Array<{
-    listId: string;
-    meaning: string;
-    sourceListIds?: string[];
-    tags?: string[];
-    addedAt?: string;
-    updatedAt?: string;
+      listMemberships: Array<{
+        listId: string;
+        meaning: string;
+        phonetic?: string;
+        detailedExplanation?: string;
+        detailedExplanationGeneratedAt?: string;
+        sourceListIds?: string[];
+        tags?: string[];
+        addedAt?: string;
+        updatedAt?: string;
   }>;
   created_at: string;
   updated_at: string;
@@ -166,6 +169,9 @@ export const persistLearningSnapshot = async () => {
         listMemberships: (word.listMemberships || []).map((membership: any) => ({
           listId: membership.listId.toString(),
           meaning: membership.meaning,
+          phonetic: membership.phonetic,
+          detailedExplanation: membership.detailedExplanation,
+          detailedExplanationGeneratedAt: serializeDate(membership.detailedExplanationGeneratedAt),
           sourceListIds: membership.sourceListIds?.map((sourceId: any) => sourceId.toString()),
           tags: membership.tags,
           addedAt: serializeDate(membership.addedAt),
@@ -313,6 +319,11 @@ export const restoreLearningSnapshotIfNeeded = async () => {
       listMemberships: word.listMemberships.map((membership) => ({
         listId: new mongoose.Types.ObjectId(membership.listId),
         meaning: membership.meaning,
+        phonetic: membership.phonetic,
+        detailedExplanation: membership.detailedExplanation,
+        detailedExplanationGeneratedAt: membership.detailedExplanationGeneratedAt
+          ? new Date(membership.detailedExplanationGeneratedAt)
+          : undefined,
         sourceListIds: membership.sourceListIds?.map((sourceId) => new mongoose.Types.ObjectId(sourceId)),
         tags: membership.tags,
         addedAt: membership.addedAt ? new Date(membership.addedAt) : undefined,
