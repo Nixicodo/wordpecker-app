@@ -395,7 +395,6 @@ export const WordLearningSession: React.FC = () => {
                         text={currentWord.word}
                         type="word"
                         language="es"
-                        context={currentWord.context}
                         size="sm"
                         minimal
                         tooltipText={`播放 ${currentWord.word} 的发音`}

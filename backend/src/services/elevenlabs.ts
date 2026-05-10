@@ -1,7 +1,9 @@
 import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js/wrapper/ElevenLabsClient';
+import { execFile } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import { promisify } from 'util';
 import { getUserLanguages } from '../utils/getUserLanguages';
 
 export interface VoiceConfig {
@@ -26,8 +28,15 @@ export interface AudioGenerationResponse {
   duration?: number;
 }
 
+export interface CachedAudioResponse {
+  buffer: Buffer;
+  contentType: string;
+}
+
+const execFileAsync = promisify(execFile);
+
 export class ElevenLabsService {
-  private client: ElevenLabsClient;
+  private client?: ElevenLabsClient;
   private cacheDir: string;
   private defaultVoices: Record<string, string> = {
     // High-quality multilingual voices - these work well across languages
@@ -53,16 +62,22 @@ export class ElevenLabsService {
   private nativeVoiceCache: Map<string, string[]> = new Map();
   private lastVoiceCacheUpdate: number = 0;
   private readonly VOICE_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
+  private readonly placeholderApiKeys = new Set([
+    '',
+    'your_elevenlabs_api_key_here',
+    'local-placeholder-key',
+    'test-key',
+  ]);
 
   constructor() {
-    const apiKey = process.env.ELEVENLABS_API_KEY;
-    if (!apiKey) {
-      throw new Error('ELEVENLABS_API_KEY environment variable is required');
+    const apiKey = process.env.ELEVENLABS_API_KEY?.trim() || '';
+    if (this.hasUsableElevenLabsApiKey(apiKey)) {
+      this.client = new ElevenLabsClient({
+        apiKey,
+      });
+    } else {
+      console.warn('ElevenLabs API key is missing or placeholder; pronunciation will use local fallback when needed.');
     }
-
-    this.client = new ElevenLabsClient({
-      apiKey: apiKey,
-    });
 
     // Create cache directory
     this.cacheDir = path.join(process.cwd(), 'audio-cache');
@@ -82,22 +97,49 @@ export class ElevenLabsService {
   /**
    * Get cached audio file path
    */
-  private getCachedFilePath(cacheKey: string): string {
-    return path.join(this.cacheDir, `${cacheKey}.mp3`);
+  private getCachedFilePath(cacheKey: string, extension: '.mp3' | '.wav'): string {
+    return path.join(this.cacheDir, `${cacheKey}${extension}`);
+  }
+
+  private hasUsableElevenLabsApiKey(apiKey: string): boolean {
+    return !this.placeholderApiKeys.has(apiKey);
+  }
+
+  private getContentTypeFromExtension(extension: '.mp3' | '.wav'): string {
+    return extension === '.wav' ? 'audio/wav' : 'audio/mpeg';
+  }
+
+  private findCachedAudioFile(cacheKey: string): { filePath: string; contentType: string } | null {
+    const extensions: Array<'.mp3' | '.wav'> = ['.mp3', '.wav'];
+
+    for (const extension of extensions) {
+      const filePath = this.getCachedFilePath(cacheKey, extension);
+      if (fs.existsSync(filePath)) {
+        return {
+          filePath,
+          contentType: this.getContentTypeFromExtension(extension),
+        };
+      }
+    }
+
+    return null;
   }
 
   /**
    * Check if audio is cached
    */
   private isAudioCached(cacheKey: string): boolean {
-    const filePath = this.getCachedFilePath(cacheKey);
-    return fs.existsSync(filePath);
+    return this.findCachedAudioFile(cacheKey) !== null;
   }
 
   /**
    * Get native voices for a specific language from cache or API
    */
   private async getNativeVoicesForLanguage(language: string): Promise<string[]> {
+    if (!this.client) {
+      return [];
+    }
+
     const now = Date.now();
     
     // Check if we have cached voices and cache is still valid
@@ -255,7 +297,6 @@ export class ElevenLabsService {
     
     // Generate cache key including language for better cache management
     const cacheKey = this.generateCacheKey(text, voice, audioSettings.speed);
-    const filePath = this.getCachedFilePath(cacheKey);
 
     // Check cache first
     if (this.isAudioCached(cacheKey)) {
@@ -268,6 +309,10 @@ export class ElevenLabsService {
     }
 
     try {
+      if (!this.client) {
+        throw new Error('ElevenLabs client is not configured');
+      }
+
       console.log(`Generating ${language} audio: "${text.substring(0, 50)}..." with voice ${voice}`);
       
       // Generate audio using ElevenLabs with language-optimized settings
@@ -294,6 +339,7 @@ export class ElevenLabsService {
       }
       
       const audioBuffer = Buffer.concat(chunks);
+      const filePath = this.getCachedFilePath(cacheKey, '.mp3');
       fs.writeFileSync(filePath, audioBuffer);
 
       console.log(`Audio generated and cached: ${cacheKey} (${language}, ${audioSettings.speed}x speed)`);
@@ -305,14 +351,29 @@ export class ElevenLabsService {
       };
     } catch (error) {
       console.error('ElevenLabs API error:', error);
-      
+
+      try {
+        const fallbackResult = await this.generateLocalAudioFallback(text, language, cacheKey, audioSettings.speed);
+        console.log(`Audio generated with local fallback: ${cacheKey} (${language})`);
+        return {
+          audioUrl: `/api/audio/cache/${cacheKey}`,
+          cacheKey,
+          voice: fallbackResult.voice,
+        };
+      } catch (fallbackError) {
+        console.error('Local audio fallback error:', fallbackError);
+      }
+
       if (error instanceof Error) {
-        // Handle specific ElevenLabs errors
-        if (error.message.includes('quota')) {
-          throw new Error('Audio generation quota exceeded. Please try again later.');
+        const message = error.message.toLowerCase();
+        if (message.includes('quota')) {
+          throw new Error('Audio generation quota exceeded and local fallback was unavailable.');
         }
-        if (error.message.includes('voice')) {
-          throw new Error('Selected voice is not available. Using default voice.');
+        if (message.includes('voice')) {
+          throw new Error('Selected voice is not available and local fallback was unavailable.');
+        }
+        if (message.includes('401') || message.includes('unauthorized')) {
+          throw new Error('Pronunciation service authentication failed and local fallback was unavailable.');
         }
       }
       
@@ -324,6 +385,10 @@ export class ElevenLabsService {
    * Get available voices for a language
    */
   async getAvailableVoices(language?: string): Promise<VoiceConfig[]> {
+    if (!this.client) {
+      return [];
+    }
+
     try {
       const voicesResponse = await this.client.voices.getAll();
       
@@ -349,19 +414,112 @@ export class ElevenLabsService {
   /**
    * Serve cached audio file
    */
-  getCachedAudio(cacheKey: string): Buffer | null {
-    const filePath = this.getCachedFilePath(cacheKey);
-    
-    if (!this.isAudioCached(cacheKey)) {
+  getCachedAudio(cacheKey: string): CachedAudioResponse | null {
+    const cachedAudio = this.findCachedAudioFile(cacheKey);
+
+    if (!cachedAudio) {
       return null;
     }
 
     try {
-      return fs.readFileSync(filePath);
+      return {
+        buffer: fs.readFileSync(cachedAudio.filePath),
+        contentType: cachedAudio.contentType,
+      };
     } catch (error) {
       console.error('Error reading cached audio:', error);
       return null;
     }
+  }
+
+  private async generateLocalAudioFallback(
+    text: string,
+    language: string,
+    cacheKey: string,
+    speed: number
+  ): Promise<{ voice: string }> {
+    if (process.platform !== 'win32') {
+      throw new Error('Local audio fallback is only available on Windows.');
+    }
+
+    const outputPath = this.getCachedFilePath(cacheKey, '.wav');
+    const targetCulture = this.mapLanguageToCulture(language);
+    const rate = this.mapSpeedToWindowsRate(speed);
+    const command = this.buildWindowsTtsCommand(text, outputPath, targetCulture, rate);
+
+    await execFileAsync('powershell', ['-NoProfile', '-EncodedCommand', command], {
+      timeout: 30000,
+      windowsHide: true,
+      maxBuffer: 1024 * 1024,
+    });
+
+    if (!fs.existsSync(outputPath)) {
+      throw new Error('Local TTS did not produce an output file.');
+    }
+
+    return {
+      voice: `local:${targetCulture}`,
+    };
+  }
+
+  private mapLanguageToCulture(language: string): string {
+    const cultures: Record<string, string> = {
+      zh: 'zh-CN',
+      en: 'en-US',
+      es: 'es-ES',
+      fr: 'fr-FR',
+      de: 'de-DE',
+      it: 'it-IT',
+      pt: 'pt-PT',
+      ru: 'ru-RU',
+      ja: 'ja-JP',
+      ko: 'ko-KR',
+      ar: 'ar-SA',
+      tr: 'tr-TR',
+    };
+
+    return cultures[language] || 'en-US';
+  }
+
+  private mapSpeedToWindowsRate(speed: number): number {
+    const rate = Math.round((speed - 1) * 5);
+    return Math.max(-10, Math.min(10, rate));
+  }
+
+  private buildWindowsTtsCommand(
+    text: string,
+    outputPath: string,
+    targetCulture: string,
+    rate: number
+  ): string {
+    const encodedText = Buffer.from(text, 'utf8').toString('base64');
+    const encodedOutputPath = Buffer.from(outputPath, 'utf8').toString('base64');
+    const encodedTargetCulture = Buffer.from(targetCulture, 'utf8').toString('base64');
+    const script = `
+Add-Type -AssemblyName System.Speech
+$text = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${encodedText}'))
+$outputPath = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${encodedOutputPath}'))
+$targetCulture = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('${encodedTargetCulture}'))
+$synth = New-Object System.Speech.Synthesis.SpeechSynthesizer
+try {
+  $voices = $synth.GetInstalledVoices() | ForEach-Object { $_.VoiceInfo }
+  $selectedVoice = $voices | Where-Object { $_.Culture.Name -like "$targetCulture*" } | Select-Object -First 1
+  if (-not $selectedVoice) {
+    $selectedVoice = $voices | Where-Object { $_.Culture.Name -like 'en-*' } | Select-Object -First 1
+  }
+  if ($selectedVoice) {
+    $synth.SelectVoice($selectedVoice.Name)
+  }
+  $synth.Rate = ${rate}
+  $synth.SetOutputToWaveFile($outputPath)
+  $synth.Speak($text)
+}
+finally {
+  $synth.Dispose()
+}
+`;
+
+    return Buffer.from(script, 'utf16le').toString('base64');
   }
 
   /**

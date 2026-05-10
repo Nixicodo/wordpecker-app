@@ -120,9 +120,9 @@ router.get('/cache/:cacheKey',
       const { cacheKey } = req.params;
 
       // Get cached audio
-      const audioBuffer = elevenLabsService.getCachedAudio(cacheKey);
+      const cachedAudio = elevenLabsService.getCachedAudio(cacheKey);
       
-      if (!audioBuffer) {
+      if (!cachedAudio) {
         return res.status(404).json({
           error: 'Audio not found',
           message: 'The requested audio file was not found in cache.',
@@ -131,8 +131,8 @@ router.get('/cache/:cacheKey',
 
       // Set appropriate headers for audio streaming
       res.set({
-        'Content-Type': 'audio/mpeg',
-        'Content-Length': audioBuffer.length.toString(),
+        'Content-Type': cachedAudio.contentType,
+        'Content-Length': cachedAudio.buffer.length.toString(),
         'Cache-Control': 'public, max-age=31536000', // Cache for 1 year
         'Accept-Ranges': 'bytes',
         'Access-Control-Allow-Origin': '*', // Allow all origins for audio files
@@ -140,7 +140,7 @@ router.get('/cache/:cacheKey',
         'Cross-Origin-Resource-Policy': 'cross-origin', // Allow cross-origin access
       });
 
-      res.send(audioBuffer);
+      res.send(cachedAudio.buffer);
     } catch (error) {
       console.error('Audio cache serve error:', error);
       
