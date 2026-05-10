@@ -36,6 +36,7 @@ interface QuestionRendererProps {
   isAnswered: boolean;
   isCorrect?: boolean | null;
   autoPlayPronunciation?: boolean;
+  showAnsweredSupplement?: boolean;
 }
 
 interface QuestionAnsweredSupplementProps {
@@ -161,7 +162,8 @@ export const QuestionRenderer: React.FC<QuestionRendererProps> = ({
   onAnswerChange,
   isAnswered,
   isCorrect,
-  autoPlayPronunciation = false
+  autoPlayPronunciation = false,
+  showAnsweredSupplement = true
 }) => {
   const renderQuestionComponent = () => {
     switch (question.type) {
@@ -239,7 +241,7 @@ export const QuestionRenderer: React.FC<QuestionRendererProps> = ({
 
         {renderQuestionComponent()}
 
-        {isAnswered && (
+        {showAnsweredSupplement && isAnswered && (
           <QuestionAnsweredSupplement
             question={question}
             isAnswered={isAnswered}

@@ -20,7 +20,6 @@ import { ArrowBackIcon, CloseIcon, WarningIcon } from '@chakra-ui/icons';
 import { Exercise, ReviewSubmission, ReviewRating, Word, WordList, WordSourceInfo } from '../types';
 import { QuestionAnsweredSupplement, QuestionRenderer } from './QuestionRenderer';
 import { QuestionConfidencePanel } from './QuestionConfidencePanel';
-import { ReviewRatingPanel } from './ReviewRatingPanel';
 import { ReviewTimeline, ReviewTimelineStatus } from './ReviewTimeline';
 import { useBackgrounds } from './BackgroundProvider';
 import { apiService } from '../services/api';
@@ -1071,6 +1070,7 @@ export const DisciplinedLearnSession = ({
             isAnswered={currentState.submitted}
             isCorrect={currentState.correctness}
             autoPlayPronunciation={currentState.submitted}
+            showAnsweredSupplement={false}
           />
 
           <HStack spacing={3} mt={8} justify="center" flexWrap="wrap">
@@ -1155,40 +1155,6 @@ export const DisciplinedLearnSession = ({
             </Alert>
           )}
 
-          {(currentState.status === 'correct' || currentState.status === 'incorrect') && (
-            <Alert status={currentState.status === 'correct' ? 'success' : 'error'} borderRadius="lg" mt={6}>
-              <AlertIcon />
-              <Text>
-                {currentState.status === 'correct'
-                  ? 'AI 判定为正确，系统会自动在后台结算这道题。'
-                  : currentState.resolutionSource === 'manual'
-                    ? '本题已按“不知道”直接判负。你可以先看解析，再决定是否继续下一题。'
-                    : 'AI 判定为错误。你可以先看解析，再决定继续下一题。'}
-              </Text>
-            </Alert>
-          )}
-
-          {(currentState.status === 'correct' || currentState.status === 'incorrect') && currentState.syncStatus === 'syncing' && (
-            <Alert status="info" borderRadius="lg" mt={4}>
-              <AlertIcon />
-              <Text>这道题的复习数据正在后台结算中，你可以继续做别的题。</Text>
-            </Alert>
-          )}
-
-          {(currentState.status === 'correct' || currentState.status === 'incorrect') && currentState.syncStatus === 'synced' && (
-            <Alert status="success" borderRadius="lg" mt={4}>
-              <AlertIcon />
-              <Text>这道题的复习数据已经后台结算完成。修改评级后会自动重新结算。</Text>
-            </Alert>
-          )}
-
-          {(currentState.status === 'correct' || currentState.status === 'incorrect') && currentState.syncStatus === 'failed' && (
-            <Alert status="warning" borderRadius="lg" mt={4}>
-              <AlertIcon />
-              <Text>{currentState.syncError || '这道题的后台结算失败了。修改评级后会再次触发重结算。'}</Text>
-            </Alert>
-          )}
-
           <QuestionAnsweredSupplement
             key={`${currentIndex}-${currentState.answeredAt || 'pending'}`}
             question={resolvedExercise}
@@ -1196,24 +1162,6 @@ export const DisciplinedLearnSession = ({
             isCorrect={currentState.correctness}
             autoPlayPronunciation={currentState.status === 'correct' || currentState.status === 'incorrect'}
           />
-
-          {currentState.review && (currentState.status === 'correct' || currentState.status === 'incorrect') && (
-            <ReviewRatingPanel
-              isCorrect={currentState.review.correct}
-              selectedRating={currentState.selectedRating}
-              recommendedRating={currentState.recommendedRating}
-              recommendationReason={currentState.recommendationReason}
-              responseTimeMs={currentState.responseTimeMs}
-              questionType={currentExercise.type}
-              usedHint={currentState.usedHint}
-              onRatingChange={(rating) => updateAuditState(currentIndex, (previous) => ({
-                ...previous,
-                selectedRating: rating,
-                syncStatus: 'idle',
-                syncError: ''
-              }))}
-            />
-          )}
 
           {(currentState.status === 'correct' || currentState.status === 'incorrect') && (
             <QuestionConfidencePanel
