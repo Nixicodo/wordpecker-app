@@ -68,28 +68,8 @@ export const QuestionAnsweredSupplement: React.FC<QuestionAnsweredSupplementProp
     <VStack spacing={4} align="stretch" mt={6}>
       <Card borderRadius="xl" bg={panelBg} variant="outline">
         <CardBody>
-          <VStack spacing={4} align="stretch">
-            <HStack justify="space-between" align="center" wrap="wrap" spacing={3}>
-              <Box>
-                <Text fontSize="sm" fontWeight="bold" color="blue.400">
-                  发音与说明
-                </Text>
-                <Text fontSize="xs" color={secondaryColor}>
-                  结算完成后展示，可在这里复听和回顾
-                </Text>
-              </Box>
-              <PronunciationButton
-                text={primaryWord}
-                type="word"
-                language="es"
-                size="sm"
-                colorScheme="blue"
-                tooltipText="播放这个单词的发音"
-                autoPlay={autoPlayPronunciation}
-              />
-            </HStack>
-
-            <Box>
+          <HStack justify="space-between" align="center" wrap="wrap" spacing={3}>
+            <Box flex="1" minW={0}>
               <Text fontSize="xs" color={secondaryColor} mb={1}>
                 音标
               </Text>
@@ -97,16 +77,16 @@ export const QuestionAnsweredSupplement: React.FC<QuestionAnsweredSupplementProp
                 {primaryWordData?.phonetic || '—'}
               </Text>
             </Box>
-
-            <Box>
-              <Text fontSize="xs" color={secondaryColor} mb={1}>
-                详细解释
-              </Text>
-              <Text fontSize="sm" color={mutedColor} lineHeight="1.6">
-                {primaryWordData?.detailedExplanation || '—'}
-              </Text>
-            </Box>
-          </VStack>
+            <PronunciationButton
+              text={primaryWord}
+              type="word"
+              language="es"
+              size="sm"
+              colorScheme="blue"
+              tooltipText="播放这个单词的发音"
+              autoPlay={autoPlayPronunciation}
+            />
+          </HStack>
         </CardBody>
       </Card>
 
