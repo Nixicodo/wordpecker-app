@@ -2,6 +2,7 @@ import { IWordList, WordList } from '../api/lists/model';
 import { IWord, IWordListMembership, Word } from '../api/words/model';
 import { LearningState } from '../api/learning-state/model';
 import { getManagedSpanishVocabularyListNames } from '../scripts/spanishVocabularyData';
+import { buildMexicanUsageExplanation, buildSpanishPhonetic } from './spanishDiscoveryContent';
 
 export const FIXED_DISCOVERY_TARGET_LIST_NAME = '私教学习自用';
 
@@ -9,6 +10,8 @@ export type DiscoveryWord = {
   id: string;
   word: string;
   meaning: string;
+  phonetic: string;
+  detailedExplanation: string;
   example: string;
   difficulty_level: 'basic' | 'intermediate' | 'advanced';
   context: string;
@@ -117,6 +120,12 @@ export const selectFixedDiscoveryWords = async (
         id: word._id.toString(),
         word: word.value,
         meaning: sourceMembership.meaning,
+        phonetic: buildSpanishPhonetic(word.value),
+        detailedExplanation: buildMexicanUsageExplanation(
+          sourceMembership.meaning,
+          sourceList.context || sourceList.name,
+          sourceList.context
+        ),
         example: '',
         difficulty_level: resolveDifficultyLevel(sourceList.name),
         context: sourceList.context || sourceList.name,

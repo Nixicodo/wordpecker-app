@@ -89,6 +89,8 @@ describe('selectFixedDiscoveryWords', () => {
     ]);
     expect(batch.sourceList?.name).toBe(privateStudyList.name);
     expect(batch.words.map((word) => word.word)).toEqual(['oscuro']);
+    expect(batch.words[0].phonetic).toMatch(/^\/.+\/$/);
+    expect(batch.words[0].detailedExplanation).toContain('墨西哥');
 
     await LearningState.create({
       userId: 'discovery-user',
