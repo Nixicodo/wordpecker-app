@@ -13,7 +13,8 @@
     "repair:private-study-list": "ts-node src/scripts/repairCorruptedPrivateStudyList.ts",
     "reset:learning-progress": "ts-node src/scripts/resetLearningProgress.ts",
     "seed:templates": "ts-node src/scripts/seedTemplatesFromFiles.ts",
-    "seed:templates:legacy": "ts-node src/scripts/seedTemplates.ts"
+    "seed:templates:legacy": "ts-node src/scripts/seedTemplates.ts",
+    "download:spanish-pronunciations": "ts-node src/scripts/downloadSpanishPronunciations.ts"
   },
   "dependencies": {
     "@elevenlabs/elevenlabs-js": "^2.6.0",

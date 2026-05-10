@@ -33,6 +33,15 @@ export interface CachedAudioResponse {
   contentType: string;
 }
 
+type LocalPronunciationIndexEntry = {
+  word: string;
+  normalizedWord: string;
+  filePath: string;
+  fileUrl: string;
+  sourceTitle: string;
+  bytes?: number;
+};
+
 const execFileAsync = promisify(execFile);
 
 export class ElevenLabsService {
@@ -68,6 +77,8 @@ export class ElevenLabsService {
     'local-placeholder-key',
     'test-key',
   ]);
+  private localPronunciationIndex: LocalPronunciationIndexEntry[] | null = null;
+  private readonly localPronunciationIndexPath = path.join(process.cwd(), 'data', 'pronunciations', 'spanish', 'index.json');
 
   constructor() {
     const apiKey = process.env.ELEVENLABS_API_KEY?.trim() || '';
@@ -92,6 +103,15 @@ export class ElevenLabsService {
   private generateCacheKey(text: string, voice: string, speed: number): string {
     const content = `${text}-${voice}-${speed}`;
     return crypto.createHash('md5').update(content).digest('hex');
+  }
+
+  private normalizeWord(value: string): string {
+    return value
+      .toLowerCase()
+      .trim()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^\p{L}\p{N}]+/gu, '');
   }
 
   /**
@@ -123,6 +143,57 @@ export class ElevenLabsService {
     }
 
     return null;
+  }
+
+  private getLocalPronunciationIndex(): LocalPronunciationIndexEntry[] {
+    if (this.localPronunciationIndex) {
+      return this.localPronunciationIndex;
+    }
+
+    try {
+      if (!fs.existsSync(this.localPronunciationIndexPath)) {
+        this.localPronunciationIndex = [];
+        return this.localPronunciationIndex;
+      }
+
+      const parsed = JSON.parse(fs.readFileSync(this.localPronunciationIndexPath, 'utf8')) as {
+        entries?: LocalPronunciationIndexEntry[];
+      };
+
+      this.localPronunciationIndex = parsed.entries || [];
+      return this.localPronunciationIndex;
+    } catch (error) {
+      console.error('Failed to load local pronunciation index:', error);
+      this.localPronunciationIndex = [];
+      return this.localPronunciationIndex;
+    }
+  }
+
+  private resolveLocalPronunciationPath(text: string, language: string): { filePath: string; contentType: string } | null {
+    if (language !== 'es') {
+      return null;
+    }
+
+    const normalizedText = this.normalizeWord(text);
+    if (!normalizedText) {
+      return null;
+    }
+
+    const match = this.getLocalPronunciationIndex().find((entry) => entry.normalizedWord === normalizedText);
+    if (!match) {
+      return null;
+    }
+
+    const filePath = path.resolve(path.dirname(this.localPronunciationIndexPath), match.filePath);
+    if (!fs.existsSync(filePath)) {
+      return null;
+    }
+
+    const extension = path.extname(filePath).toLowerCase();
+    return {
+      filePath,
+      contentType: extension === '.wav' ? 'audio/wav' : 'audio/mpeg',
+    };
   }
 
   /**
@@ -297,6 +368,21 @@ export class ElevenLabsService {
     
     // Generate cache key including language for better cache management
     const cacheKey = this.generateCacheKey(text, voice, audioSettings.speed);
+
+    const localPronunciation = this.resolveLocalPronunciationPath(text, language);
+    if (localPronunciation) {
+      const audioBuffer = fs.readFileSync(localPronunciation.filePath);
+      const extension = path.extname(localPronunciation.filePath).toLowerCase() === '.wav' ? '.wav' : '.mp3';
+      const filePath = this.getCachedFilePath(cacheKey, extension);
+      fs.writeFileSync(filePath, audioBuffer);
+
+      console.log(`Local pronunciation cache hit: ${cacheKey} (${language})`);
+      return {
+        audioUrl: `/api/audio/cache/${cacheKey}`,
+        cacheKey,
+        voice: 'local-library',
+      };
+    }
 
     // Check cache first
     if (this.isAudioCached(cacheKey)) {
