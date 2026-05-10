@@ -237,6 +237,8 @@ export interface DiscoveryWord {
   id: string;
   word: string;
   meaning: string;
+  phonetic: string;
+  detailedExplanation: string;
   example: string;
   difficulty_level: 'basic' | 'intermediate' | 'advanced';
   context: string;

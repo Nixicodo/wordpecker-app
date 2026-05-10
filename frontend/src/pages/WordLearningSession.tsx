@@ -19,6 +19,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaCheck, FaHourglassHalf, FaSeedling, FaSnowflake } from 'react-icons/fa';
 import { useBackgrounds } from '../components/BackgroundProvider';
+import PronunciationButton from '../components/PronunciationButton';
 import { apiService } from '../services/api';
 import {
   DisciplineStatus,
@@ -385,6 +386,31 @@ export const WordLearningSession: React.FC = () => {
                       textAlign="center"
                     >
                       {currentWord.meaning}
+                    </Text>
+                    <HStack spacing={2} justify="center" mt={3} flexWrap="wrap">
+                      <Text fontSize="sm" color="whiteAlpha.700">
+                        {currentWord.phonetic}
+                      </Text>
+                      <PronunciationButton
+                        text={currentWord.word}
+                        type="word"
+                        language="es"
+                        context={currentWord.context}
+                        size="sm"
+                        minimal
+                        tooltipText={`播放 ${currentWord.word} 的发音`}
+                        colorScheme="blue"
+                      />
+                    </HStack>
+                    <Text
+                      mt={3}
+                      fontSize="sm"
+                      color="whiteAlpha.700"
+                      lineHeight="1.5"
+                      textAlign="center"
+                      whiteSpace="normal"
+                    >
+                      {currentWord.detailedExplanation}
                     </Text>
                   </Box>
                 </VStack>
