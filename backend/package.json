@@ -11,6 +11,8 @@
     "import:spanish-vocabulary": "ts-node src/scripts/importSpanishVocabulary.ts",
     "repair:placeholder-meanings": "ts-node src/scripts/repairPlaceholderMeanings.ts",
     "repair:private-study-list": "ts-node src/scripts/repairCorruptedPrivateStudyList.ts",
+    "backfill:learned-word-metadata": "ts-node src/scripts/backfillLearnedWordMetadata.ts",
+    "backfill:learned-word-metadata:force": "ts-node src/scripts/backfillLearnedWordMetadata.ts --force",
     "reset:learning-progress": "ts-node src/scripts/resetLearningProgress.ts",
     "seed:templates": "ts-node src/scripts/seedTemplatesFromFiles.ts",
     "seed:templates:legacy": "ts-node src/scripts/seedTemplates.ts",

@@ -50,7 +50,7 @@ export async function generateStructuredResult<T>({
 }): Promise<T> {
   const response = await withTimeout(
     createChatCompletion({
-      model: process.env.OPENAI_MODEL || DEFAULT_MODEL,
+      model: DEFAULT_MODEL,
       temperature,
       messages: [
         {

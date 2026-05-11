@@ -149,6 +149,75 @@ const cacheDiscoveryWordContent = async (
   );
 };
 
+export const backfillDiscoveryContentForList = async (
+  userId: string,
+  sourceListId: string,
+  options?: { force?: boolean }
+) => {
+  const force = options?.force ?? false;
+  const sourceList = await WordList.findById(sourceListId)
+    .select('_id name context')
+    .lean() as LeanList | null;
+
+  if (!sourceList) {
+    return 0;
+  }
+
+  const reviewedStates = await LearningState.find({
+    userId,
+    listId: sourceList._id,
+    reviewCount: { $gt: 0 }
+  })
+    .select('wordId listId')
+    .lean();
+
+  if (!reviewedStates.length) {
+    return 0;
+  }
+
+  const reviewedWordIds = new Set(reviewedStates.map((state) => state.wordId.toString()));
+  const reviewedWords = await Word.find({
+    _id: { $in: Array.from(reviewedWordIds) },
+    'listMemberships.listId': sourceList._id
+  })
+    .select('_id value listMemberships')
+    .sort({ created_at: 1, value: 1 });
+
+  const wordsToBackfill = force
+    ? reviewedWords
+    : reviewedWords.filter((word) => {
+        const membership = getMembership(word, sourceList._id.toString());
+        return Boolean(
+          membership &&
+          (
+            !membership.phonetic ||
+            !membership.detailedExplanation ||
+            !membership.detailedExplanationGeneratedAt
+          )
+        );
+      });
+
+  if (!wordsToBackfill.length) {
+    return 0;
+  }
+
+  if (force) {
+    for (const word of wordsToBackfill) {
+      const membership = getMembership(word, sourceList._id.toString());
+      if (!membership) {
+        continue;
+      }
+
+      membership.detailedExplanation = undefined;
+      membership.detailedExplanationGeneratedAt = undefined;
+      word.markModified('listMemberships');
+    }
+  }
+
+  await cacheDiscoveryWordContent(sourceList, wordsToBackfill);
+  return wordsToBackfill.length;
+};
+
 export const prefetchDiscoveryContentForList = async (
   userId: string,
   sourceListId: string,
@@ -189,6 +258,15 @@ export const buildFixedDiscoveryChain = () => [
   ...getManagedSpanishVocabularyListNames()
 ];
 
+const runDiscoveryBackgroundTask = async <T>(task: () => Promise<T>): Promise<T | undefined> => {
+  if (process.env.NODE_ENV === 'test') {
+    return task();
+  }
+
+  void task();
+  return undefined;
+};
+
 export const selectFixedDiscoveryWords = async (
   userId: string,
   count = 15
@@ -221,8 +299,11 @@ export const selectFixedDiscoveryWords = async (
     const sourceWords = await Word.find({ 'listMemberships.listId': sourceList._id })
       .select('_id value listMemberships')
       .sort({ created_at: 1, value: 1 });
+    await backfillDiscoveryContentForList(userId, sourceList._id.toString());
     const cachedExplanationMap = await cacheDiscoveryWordContent(sourceList, sourceWords.slice(0, count));
-    void prefetchDiscoveryContentForList(userId, sourceList._id.toString(), count + 20);
+    await runDiscoveryBackgroundTask(() =>
+      prefetchDiscoveryContentForList(userId, sourceList._id.toString(), count + 20)
+    );
 
     const availableWords = sourceWords.flatMap((word) => {
       if (introducedWordKeys.has(`${sourceList._id.toString()}:${word._id.toString()}`)) {

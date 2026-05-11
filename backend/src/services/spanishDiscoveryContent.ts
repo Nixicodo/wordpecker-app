@@ -151,33 +151,36 @@ export type DiscoveryExplanationInput = {
   context: string;
 };
 
-export const generateDiscoveryDetailedExplanations = async (
+const DISCOVERY_EXPLANATION_BATCH_SIZE = 20;
+
+const buildDiscoveryExplanationPrompt = (items: DiscoveryExplanationInput[]) => ([
+  '请为下面的西班牙语单词生成「一行中文详细解释」；解释必须简短，适合词卡展示。',
+  '要求：',
+  '1. 每个词输出一句，不要分行，不要项目符号。',
+  '2. 语气自然，突出它在墨西哥文化语境中的常见用法。',
+  '3. 不要写长篇词典释义，不要超过 28 个汉字为宜。',
+  '4. 如果是口语、俚语、日常高频词，可以直接说明适用场景。',
+  '5. 输出 JSON only，严格按照要求的字段名。',
+  '',
+  '词条列表：',
+  ...items.map((item, index) => `${index + 1}. ${item.word}｜${item.meaning}｜${item.context}`)
+]).join('\n');
+
+const generateDiscoveryExplanationBatch = async (
   items: DiscoveryExplanationInput[]
-) => {
-  const normalizedItems = items.filter((item) => item.word.trim().length > 0);
-  if (!normalizedItems.length) {
+): Promise<Array<{ word: string; detailedExplanation: string }>> => {
+  if (!items.length) {
     return [];
   }
 
   if (process.env.NODE_ENV === 'test') {
-    return normalizedItems.map((item) => ({
+    return items.map((item) => ({
       word: item.word,
       detailedExplanation: buildMexicanUsageExplanation(item.meaning, item.context)
     }));
   }
 
-  const prompt = [
-    '请为下面的西班牙语单词生成「一行中文详细解释」；解释必须简短，适合词卡展示。',
-    '要求：',
-    '1. 每个词输出一句，不要分行，不要项目符号。',
-    '2. 语气自然，突出它在墨西哥文化语境中的常见用法。',
-    '3. 不要写长篇词典释义，不要超过 28 个汉字为宜。',
-    '4. 如果是口语、俚语、日常高频词，可以直接说明适用场景。',
-    '5. 输出 JSON only，严格按照要求的字段名。',
-    '',
-    '词条列表：',
-    ...normalizedItems.map((item, index) => `${index + 1}. ${item.word}｜${item.meaning}｜${item.context}`)
-  ].join('\n');
+  const prompt = buildDiscoveryExplanationPrompt(items);
 
   try {
     const result = await generateStructuredResult<z.infer<typeof DiscoveryExplanationResult>>({
@@ -202,17 +205,43 @@ export const generateDiscoveryDetailedExplanations = async (
       result.explanations.map((item) => [item.word.trim().toLowerCase(), item.detailedExplanation.trim()])
     );
 
-    return normalizedItems.map((item) => ({
+    return items.map((item) => ({
       word: item.word,
       detailedExplanation:
         resultByWord.get(item.word.trim().toLowerCase()) ||
         buildMexicanUsageExplanation(item.meaning, item.context)
     }));
   } catch (error) {
+    if (items.length > 1) {
+      const midpoint = Math.ceil(items.length / 2);
+      const left = await generateDiscoveryExplanationBatch(items.slice(0, midpoint));
+      const right = await generateDiscoveryExplanationBatch(items.slice(midpoint));
+      return [...left, ...right];
+    }
+
     console.error('Failed to generate discovery explanations with DeepseekFlash:', error);
-    return normalizedItems.map((item) => ({
+    return items.map((item) => ({
       word: item.word,
       detailedExplanation: buildMexicanUsageExplanation(item.meaning, item.context)
     }));
   }
+};
+
+export const generateDiscoveryDetailedExplanations = async (
+  items: DiscoveryExplanationInput[]
+) => {
+  const normalizedItems = items.filter((item) => item.word.trim().length > 0);
+  if (!normalizedItems.length) {
+    return [];
+  }
+
+  const results: Array<{ word: string; detailedExplanation: string }> = [];
+
+  for (let index = 0; index < normalizedItems.length; index += DISCOVERY_EXPLANATION_BATCH_SIZE) {
+    const batch = normalizedItems.slice(index, index + DISCOVERY_EXPLANATION_BATCH_SIZE);
+    const batchResults = await generateDiscoveryExplanationBatch(batch);
+    results.push(...batchResults);
+  }
+
+  return results;
 };
