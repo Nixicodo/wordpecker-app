@@ -46,6 +46,7 @@ const execFileAsync = promisify(execFile);
 
 export class ElevenLabsService {
   private client?: ElevenLabsClient;
+  private readonly backendRoot = path.resolve(__dirname, '../..');
   private cacheDir: string;
   private defaultVoices: Record<string, string> = {
     // High-quality multilingual voices - these work well across languages
@@ -78,7 +79,7 @@ export class ElevenLabsService {
     'test-key',
   ]);
   private localPronunciationIndex: LocalPronunciationIndexEntry[] | null = null;
-  private readonly localPronunciationIndexPath = path.join(process.cwd(), 'data', 'pronunciations', 'spanish', 'index.json');
+  private readonly localPronunciationIndexPath = path.join(this.backendRoot, 'data', 'pronunciations', 'spanish', 'index.json');
 
   constructor() {
     const apiKey = process.env.ELEVENLABS_API_KEY?.trim() || '';
@@ -91,7 +92,7 @@ export class ElevenLabsService {
     }
 
     // Create cache directory
-    this.cacheDir = path.join(process.cwd(), 'audio-cache');
+    this.cacheDir = path.join(this.backendRoot, 'audio-cache');
     if (!fs.existsSync(this.cacheDir)) {
       fs.mkdirSync(this.cacheDir, { recursive: true });
     }
@@ -363,26 +364,31 @@ export class ElevenLabsService {
       throw new Error('Text is too long. Maximum 2500 characters allowed.');
     }
 
+    if (language === 'es') {
+      const localPronunciation = this.resolveLocalPronunciationPath(text, language);
+      if (localPronunciation) {
+        const audioBuffer = fs.readFileSync(localPronunciation.filePath);
+        const extension = path.extname(localPronunciation.filePath).toLowerCase() === '.wav' ? '.wav' : '.mp3';
+        const cacheKey = this.generateCacheKey(text, 'local-library', audioSettings.speed);
+        const filePath = this.getCachedFilePath(cacheKey, extension);
+        fs.writeFileSync(filePath, audioBuffer);
+
+        console.log(`Local pronunciation cache hit: ${cacheKey} (${language})`);
+        return {
+          audioUrl: `/api/audio/cache/${cacheKey}`,
+          cacheKey,
+          voice: 'local-library',
+        };
+      }
+
+      throw new Error(`No local Spanish pronunciation found for "${text}".`);
+    }
+
     // Select best voice for the language
     const voice = await this.getBestVoiceForLanguage(language, requestedVoice);
     
     // Generate cache key including language for better cache management
     const cacheKey = this.generateCacheKey(text, voice, audioSettings.speed);
-
-    const localPronunciation = this.resolveLocalPronunciationPath(text, language);
-    if (localPronunciation) {
-      const audioBuffer = fs.readFileSync(localPronunciation.filePath);
-      const extension = path.extname(localPronunciation.filePath).toLowerCase() === '.wav' ? '.wav' : '.mp3';
-      const filePath = this.getCachedFilePath(cacheKey, extension);
-      fs.writeFileSync(filePath, audioBuffer);
-
-      console.log(`Local pronunciation cache hit: ${cacheKey} (${language})`);
-      return {
-        audioUrl: `/api/audio/cache/${cacheKey}`,
-        cacheKey,
-        voice: 'local-library',
-      };
-    }
 
     // Check cache first
     if (this.isAudioCached(cacheKey)) {
