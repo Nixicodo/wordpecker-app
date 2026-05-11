@@ -21,6 +21,7 @@ logs/
 *.sw?
 
 */audio-cache
+backend/data/pronunciations/
 
 # Local wallpaper library; keep runtime assets out of Git history.
 backgrounds/*
