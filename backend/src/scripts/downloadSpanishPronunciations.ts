@@ -6,6 +6,7 @@ import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js/wrapper/ElevenLabsCl
 import { execFile } from 'child_process';
 import { promisify } from 'util';
 import { loadSpanishVocabularyLevels } from './spanishVocabularyData';
+import { getLearningSnapshotPath } from '../services/repoLearningSnapshot';
 
 type CommonsFileEntry = {
   title: string;
@@ -48,6 +49,19 @@ type ScriptOptions = {
   provider: DownloadProvider;
   limit?: number;
   force: boolean;
+};
+
+type LearningSnapshot = {
+  data?: {
+    learningStates?: Array<{
+      wordId: string;
+      reviewCount?: number;
+    }>;
+    words?: Array<{
+      id: string;
+      value: string;
+    }>;
+  };
 };
 
 const normalizeWord = (value: string) =>
@@ -243,6 +257,33 @@ const buildTargetWordMap = () => {
       if (!targetWords.has(normalizedWord)) {
         targetWords.set(normalizedWord, word.spanish);
       }
+    }
+  }
+
+  const snapshotPath = getLearningSnapshotPath();
+  if (fs.existsSync(snapshotPath)) {
+    try {
+      const snapshot = JSON.parse(fs.readFileSync(snapshotPath, 'utf8')) as LearningSnapshot;
+      const reviewedWordIds = new Set(
+        snapshot.data?.learningStates
+          ?.filter((state) => (state.reviewCount || 0) > 0)
+          .map((state) => state.wordId) || []
+      );
+
+      for (const word of snapshot.data?.words || []) {
+        if (!reviewedWordIds.has(word.id)) {
+          continue;
+        }
+
+        const normalizedWord = normalizeWord(word.value);
+        if (!normalizedWord || targetWords.has(normalizedWord)) {
+          continue;
+        }
+
+        targetWords.set(normalizedWord, word.value);
+      }
+    } catch (error) {
+      console.warn(`Failed to load reviewed words from ${snapshotPath}:`, error);
     }
   }
 
