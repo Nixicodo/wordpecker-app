@@ -3,12 +3,22 @@ import { generateStructuredResult } from './structuredChat';
 
 const VOWELS = new Set(['a', 'e', 'i', 'o', 'u', '\u00e1', '\u00e9', '\u00ed', '\u00f3', '\u00fa', '\u00fc']);
 
-const normalizeMeaning = (meaning: string) =>
-  meaning
-    .trim()
-    .replace(/\s+/g, ' ')
-    .split(/[;()]/)[0]
-    .trim();
+const DAILY_CONTEXT = '\u65e5\u5e38\u4ea4\u6d41';
+const MEXICAN_DAILY_CONTEXT = '\u58a8\u897f\u54e5\u897f\u73ed\u7259\u8bed\u65e5\u5e38\u4ea4\u6d41';
+
+const normalizeMeaning = (meaning: string) => {
+  let current = meaning.trim().replace(/\s+/g, ' ');
+
+  while (current.length > 0) {
+    const next = current.replace(/\s*[\(\uFF08][^()\uFF08\uFF09]*[\)\uFF09]\s*$/u, '').trim();
+    if (next === current) {
+      break;
+    }
+    current = next;
+  }
+
+  return current.split(/[;\uFF1B]/)[0].trim();
+};
 
 const isVowel = (char: string | undefined) => Boolean(char && VOWELS.has(char));
 
@@ -20,6 +30,21 @@ const mapVowel = (char: string) =>
     .replace('\u00f3', 'o')
     .replace('\u00fa', 'u')
     .replace('\u00fc', 'u');
+
+const DISCOVERY_MACHINE_CONTEXT_PATTERN = /^Mexican Spanish frequency vocabulary level \d+ \([^)]+\)$/i;
+
+const normalizeDiscoveryContext = (context?: string) => {
+  const trimmed = context?.trim();
+  if (!trimmed) {
+    return DAILY_CONTEXT;
+  }
+
+  if (DISCOVERY_MACHINE_CONTEXT_PATTERN.test(trimmed)) {
+    return MEXICAN_DAILY_CONTEXT;
+  }
+
+  return trimmed;
+};
 
 export const buildSpanishPhonetic = (word: string) => {
   const lower = word.trim().toLowerCase();
@@ -128,12 +153,15 @@ export const buildMexicanUsageExplanation = (
   sourceContext?: string
 ) => {
   const normalizedMeaning = normalizeMeaning(meaning);
-  const sourceContextText = sourceContext?.trim() || context?.trim() || '\u65e5\u5e38\u4ea4\u6d41';
-  const shortContext = sourceContextText.length > 16
-    ? `${sourceContextText.slice(0, 16)}...`
-    : sourceContextText;
+  const normalizedContext = normalizeDiscoveryContext(sourceContext || context);
 
-  return `\u58a8\u897f\u54e5\u5e38\u7528\uff0c\u591a\u6307\u201c${normalizedMeaning}\u201d\uff0c\u591a\u89c1\u4e8e${shortContext}\u3002`;
+  if (!normalizedMeaning) {
+    return normalizedContext === DAILY_CONTEXT
+      ? '\u7528\u4e8e\u65e5\u5e38\u4ea4\u6d41\u3002'
+      : `\u7528\u4e8e${normalizedContext}\u3002`;
+  }
+
+  return `${normalizedMeaning}\u3002`;
 };
 
 const DiscoveryExplanationItem = z.object({
@@ -153,18 +181,27 @@ export type DiscoveryExplanationInput = {
 
 const DISCOVERY_EXPLANATION_BATCH_SIZE = 20;
 
-const buildDiscoveryExplanationPrompt = (items: DiscoveryExplanationInput[]) => ([
-  '请为下面的西班牙语单词生成「一行中文详细解释」；解释必须简短，适合词卡展示。',
-  '要求：',
-  '1. 每个词输出一句，不要分行，不要项目符号。',
-  '2. 语气自然，突出它在墨西哥文化语境中的常见用法。',
-  '3. 不要写长篇词典释义，不要超过 28 个汉字为宜。',
-  '4. 如果是口语、俚语、日常高频词，可以直接说明适用场景。',
-  '5. 输出 JSON only，严格按照要求的字段名。',
+export const buildDiscoveryExplanationPrompt = (items: DiscoveryExplanationInput[]) => ([
+  '\u8bf7\u4e3a\u4e0b\u9762\u7684\u897f\u73ed\u7259\u8bed\u8bcd\u6761\u751f\u6210\u4e00\u884c\u4e2d\u6587\u8be6\u7ec6\u89e3\u91ca\uff0c\u9002\u5408\u8bcd\u5361\u5c55\u793a\u3002',
+  '\u8981\u6c42\uff1a',
+  '1. \u6bcf\u4e2a\u8bcd\u53ea\u8f93\u51fa\u4e00\u53e5\u4e2d\u6587\uff0c\u4e0d\u8981\u5206\u884c\uff0c\u4e0d\u8981\u9879\u76ee\u7b26\u53f7\u3002',
+  '2. \u76f4\u63a5\u89e3\u91ca\u8fd9\u4e2a\u8bcd\u6700\u57fa\u672c\u7684\u7528\u6cd5\uff0c\u5fc5\u8981\u65f6\u8865\u4e00\u53e5\u6700\u503c\u5f97\u6ce8\u610f\u7684\u70b9\uff0c\u6bd4\u5982\u5e38\u89c1\u573a\u666f\u3001\u642d\u914d\u3001\u8bed\u6c14\u6216\u6613\u6df7\u533a\u522b\u3002',
+  '3. \u4e0d\u8981\u5199\u201c\u58a8\u897f\u54e5\u5e38\u7528\u201d\u201c\u591a\u89c1\u4e8e\u201d\u201cMexican Spanish\u201d\u201c\u591a\u6307\u201d\u8fd9\u7c7b\u5957\u8bdd\uff0c\u4e5f\u4e0d\u8981\u7167\u6284\u8bcd\u4e49\u6807\u7b7e\u3002',
+  '4. \u4e0d\u8981\u628a level\u3001Mexican Spanish frequency vocabulary \u4e4b\u7c7b\u7684\u673a\u5668\u4e0a\u4e0b\u6587\u5199\u8fdb\u7ed3\u679c\u91cc\u3002',
+  '5. \u4e0d\u8981\u5199\u957f\u7bc7\u8bcd\u5178\u91ca\u4e49\uff0c\u5c3d\u91cf\u7b80\u77ed\u6e05\u695a\uff0c\u9002\u5408\u76f4\u63a5\u5c55\u793a\u3002',
+  '6. \u8f93\u51fa JSON only\uff0c\u4e25\u683c\u6309\u8981\u6c42\u5b57\u6bb5\u540d\u3002',
   '',
-  '词条列表：',
-  ...items.map((item, index) => `${index + 1}. ${item.word}｜${item.meaning}｜${item.context}`)
+  '\u8bcd\u6761\u5217\u8868\uff1a',
+  ...items.map((item, index) => `${index + 1}. ${item.word} | ${item.meaning} | ${normalizeDiscoveryContext(item.context)}`)
 ]).join('\n');
+
+const discoveryExplanationSystemPrompt = [
+  '\u4f60\u662f\u897f\u73ed\u7259\u8bed\u5b66\u4e60\u5185\u5bb9\u7f16\u8f91\u52a9\u624b\u3002',
+  '\u4f60\u7684\u4efb\u52a1\u662f\u628a\u8bcd\u6761\u6539\u5199\u6210\u9002\u5408\u8bcd\u5361\u5c55\u793a\u7684\u4e2d\u6587\u77ed\u89e3\u91ca\u3002',
+  '\u89e3\u91ca\u8981\u76f4\u63a5\u3001\u5177\u4f53\u3001\u81ea\u7136\uff0c\u4f18\u5148\u8bf4\u660e\u57fa\u672c\u7528\u6cd5\u548c\u9700\u8981\u6ce8\u610f\u7684\u5730\u65b9\u3002',
+  '\u9ed8\u8ba4\u6309\u58a8\u897f\u54e5\u897f\u73ed\u7259\u8bed\u7406\u89e3\uff0c\u4f46\u53ea\u6709\u5730\u57df\u5dee\u5f02\u771f\u7684\u91cd\u8981\u65f6\u624d\u7b80\u77ed\u70b9\u660e\u3002',
+  '\u5fc5\u987b\u4e25\u683c\u8f93\u51fa JSON\uff0c\u4e0d\u8981\u8f93\u51fa\u4efb\u4f55\u989d\u5916\u6587\u5b57\u3002'
+].join('\n');
 
 const generateDiscoveryExplanationBatch = async (
   items: DiscoveryExplanationInput[]
@@ -184,19 +221,10 @@ const generateDiscoveryExplanationBatch = async (
 
   try {
     const result = await generateStructuredResult<z.infer<typeof DiscoveryExplanationResult>>({
-      systemPrompt: [
-        '你是西班牙语墨西哥用法说明助手。',
-        '你的任务是把词条转换成适合词卡展示的中文短解释。',
-        '必须严格输出 JSON，不要输出任何额外文字。'
-      ].join('\n'),
+      systemPrompt: discoveryExplanationSystemPrompt,
       userPrompt: prompt,
       schema: DiscoveryExplanationResult,
-      schemaHint: `{
-  "explanations": Array<{
-    "word": string,
-    "detailedExplanation": string
-  }>
-}`,
+      schemaHint: '{\n  "explanations": Array<{\n    "word": string,\n    "detailedExplanation": string\n  }>\n}',
       temperature: 0.3,
       maxTokens: 1400
     });

@@ -149,6 +149,58 @@ const cacheDiscoveryWordContent = async (
   );
 };
 
+export const refreshDiscoveryContentForList = async (
+  sourceListId: string,
+  options?: { force?: boolean }
+) => {
+  const force = options?.force ?? false;
+  const sourceList = await WordList.findById(sourceListId)
+    .select('_id name context')
+    .lean() as LeanList | null;
+
+  if (!sourceList) {
+    return 0;
+  }
+
+  const sourceWords = await Word.find({ 'listMemberships.listId': sourceList._id })
+    .select('_id value listMemberships')
+    .sort({ created_at: 1, value: 1 });
+
+  const wordsToRefresh = force
+    ? sourceWords
+    : sourceWords.filter((word) => {
+        const membership = getMembership(word, sourceList._id.toString());
+        return Boolean(
+          membership &&
+          (
+            !membership.phonetic ||
+            !membership.detailedExplanation ||
+            !membership.detailedExplanationGeneratedAt
+          )
+        );
+      });
+
+  if (!wordsToRefresh.length) {
+    return 0;
+  }
+
+  if (force) {
+    for (const word of wordsToRefresh) {
+      const membership = getMembership(word, sourceList._id.toString());
+      if (!membership) {
+        continue;
+      }
+
+      membership.detailedExplanation = undefined;
+      membership.detailedExplanationGeneratedAt = undefined;
+      word.markModified('listMemberships');
+    }
+  }
+
+  await cacheDiscoveryWordContent(sourceList, wordsToRefresh);
+  return wordsToRefresh.length;
+};
+
 export const backfillDiscoveryContentForList = async (
   userId: string,
   sourceListId: string,

@@ -57,7 +57,7 @@ describe('selectFixedDiscoveryWords', () => {
       listMemberships: [
         {
           listId: privateStudyList._id,
-          meaning: 'dark'
+          meaning: '\u6df1\u8272\u7684\uff08dark\uff09'
         }
       ]
     });
@@ -90,11 +90,11 @@ describe('selectFixedDiscoveryWords', () => {
     expect(batch.sourceList?.name).toBe(privateStudyList.name);
     expect(batch.words.map((word) => word.word)).toEqual(['oscuro']);
     expect(batch.words[0].phonetic).toMatch(/^\/.+\/$/);
-    expect(batch.words[0].detailedExplanation).toContain('墨西哥');
+    expect(batch.words[0].detailedExplanation).toBe('\u6df1\u8272\u7684\u3002');
 
     const storedPrivateWord = await Word.findById(privateWord._id).lean();
     expect(storedPrivateWord?.listMemberships[0].phonetic).toMatch(/^\/.+\/$/);
-    expect(storedPrivateWord?.listMemberships[0].detailedExplanation).toBeDefined();
+    expect(storedPrivateWord?.listMemberships[0].detailedExplanation).toBe('\u6df1\u8272\u7684\u3002');
 
     await LearningState.create({
       userId: 'discovery-user',
