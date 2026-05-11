@@ -1,4 +1,32 @@
+import type { Request } from 'express';
 import rateLimit from 'express-rate-limit';
+import { elevenLabsService } from '../services/elevenlabs';
+
+const shouldSkipLocalSpanishPronunciationLimit = (req: Request) => {
+  if (req.method !== 'POST') {
+    return false;
+  }
+
+  if (req.baseUrl !== '/api/audio' || req.path !== '/word-pronunciation') {
+    return false;
+  }
+
+  const body = req.body as {
+    word?: unknown;
+    language?: unknown;
+    context?: unknown;
+  } | undefined;
+
+  if (typeof body?.word !== 'string' || body.language !== 'es') {
+    return false;
+  }
+
+  if (typeof body.context === 'string' && body.context.trim().length > 0) {
+    return false;
+  }
+
+  return elevenLabsService.hasLocalSpanishPronunciation(body.word);
+};
 
 // Default rate limiter for general endpoints
 export const defaultRateLimiter = rateLimit({
@@ -43,4 +71,5 @@ export const openaiRateLimiter = rateLimit({
   message: 'Too many AI-powered requests. Please try again in an hour.',
   standardHeaders: true,
   legacyHeaders: false,
-}); 
+  skip: shouldSkipLocalSpanishPronunciationLimit,
+});

@@ -197,6 +197,10 @@ export class ElevenLabsService {
     };
   }
 
+  hasLocalSpanishPronunciation(text: string): boolean {
+    return Boolean(this.resolveLocalPronunciationPath(text, 'es'));
+  }
+
   /**
    * Check if audio is cached
    */

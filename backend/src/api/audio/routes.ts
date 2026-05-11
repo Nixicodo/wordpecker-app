@@ -203,7 +203,6 @@ router.get('/voices',
  * Generate pronunciation specifically for a single word
  */
 router.post('/word-pronunciation',
-  audioGenerationLimit,
   [
     body('word')
       .isString()
