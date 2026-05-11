@@ -10,6 +10,27 @@ import { FaVolumeUp, FaPause } from 'react-icons/fa';
 import { apiService } from '../services/api';
 import AudioPlayer from './AudioPlayer';
 
+const AUTO_PLAY_DEDUP_WINDOW_MS = 2000;
+const autoPlayRequestHistory = new Map<string, number>();
+
+const shouldSkipAutoPlayRequest = (requestKey: string) => {
+  const now = Date.now();
+  const lastRequestedAt = autoPlayRequestHistory.get(requestKey);
+
+  if (lastRequestedAt && now - lastRequestedAt < AUTO_PLAY_DEDUP_WINDOW_MS) {
+    return true;
+  }
+
+  autoPlayRequestHistory.set(requestKey, now);
+  setTimeout(() => {
+    if (autoPlayRequestHistory.get(requestKey) === now) {
+      autoPlayRequestHistory.delete(requestKey);
+    }
+  }, AUTO_PLAY_DEDUP_WINDOW_MS);
+
+  return false;
+};
+
 export interface PronunciationButtonProps {
   /** Text to pronounce */
   text: string;
@@ -88,6 +109,7 @@ export const PronunciationButton: React.FC<PronunciationButtonProps> = ({
   }, [text]);
 
   const defaultTooltip = `Listen to pronunciation${type === 'word' ? ` of "${text}"` : ''}${language ? ` in ${language.toUpperCase()}` : ''}`;
+  const autoPlayRequestKey = `${type}|${language || ''}|${speed}|${context || ''}|${text.trim()}`;
 
   const generateAudio = useCallback(async () => {
     if (!text.trim() || isLoading || disabled) return;
@@ -204,9 +226,13 @@ export const PronunciationButton: React.FC<PronunciationButtonProps> = ({
       return;
     }
 
+    if (shouldSkipAutoPlayRequest(autoPlayRequestKey)) {
+      return;
+    }
+
     autoPlayRequestedRef.current = true;
     void generateAudio();
-  }, [autoPlay, audioUrl, disabled, generateAudio, isLoading]);
+  }, [autoPlay, audioUrl, autoPlayRequestKey, disabled, generateAudio, isLoading]);
 
   // Show full player when we have audio and not minimal
   if (audioUrl && !minimal) {
