@@ -68,25 +68,31 @@ export const QuestionAnsweredSupplement: React.FC<QuestionAnsweredSupplementProp
     <VStack spacing={4} align="stretch" mt={6}>
       <Card borderRadius="xl" bg={panelBg} variant="outline">
         <CardBody>
-          <HStack justify="space-between" align="center" wrap="wrap" spacing={3}>
-            <Box flex="1" minW={0}>
-              <Text fontSize="xs" color={secondaryColor} mb={1}>
-                音标
-              </Text>
-              <Text fontSize="sm" color={mutedColor} lineHeight="1.6">
-                {primaryWordData?.phonetic || '—'}
-              </Text>
-            </Box>
-            <PronunciationButton
-              text={primaryWord}
-              type="word"
-              language="es"
-              size="sm"
-              colorScheme="blue"
-              tooltipText="播放这个单词的发音"
-              autoPlay={autoPlayPronunciation}
-            />
-          </HStack>
+          <VStack spacing={4} align="stretch">
+            <HStack justify="space-between" align="center" wrap="wrap" spacing={3}>
+              <Box flex="1" minW={0}>
+                <Text fontSize="xs" color={secondaryColor} mb={1}>
+                  音标
+                </Text>
+                <Text fontSize="sm" color={mutedColor} lineHeight="1.6">
+                  {primaryWordData?.phonetic || "—"}
+                </Text>
+              </Box>
+              <PronunciationButton
+                text={primaryWord}
+                type="word"
+                language="es"
+                size="sm"
+                colorScheme="blue"
+                tooltipText="播放这个单词的发音"
+                autoPlay={autoPlayPronunciation}
+              />
+            </HStack>
+
+            <Text fontSize="sm" color={mutedColor} lineHeight="1.6">
+              {primaryWordData?.detailedExplanation || "—"}
+            </Text>
+          </VStack>
         </CardBody>
       </Card>
 
