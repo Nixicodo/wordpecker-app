@@ -278,16 +278,33 @@ export const DueReview = () => {
                   <HStack spacing={3} mt={5} flexWrap="wrap">
                     {list && (
                       <Button
-                        data-testid="due-review-start-link"
+                        data-testid="due-review-start-meaning-to-word-link"
                         as={RouterLink}
                         to={`/learn/${list.id}`}
-                        state={{ list }}
+                        state={{ list, reviewMode: 'meaning_to_word' }}
                         colorScheme="orange"
                         leftIcon={<FaBookOpen />}
                         size="lg"
                         isDisabled={dueCount <= 0}
                       >
                         开始复习
+                      </Button>
+                    )}
+                    {list && (
+                      <Button
+                        data-testid="due-review-start-word-to-meaning-link"
+                        as={RouterLink}
+                        to={`/learn/${list.id}`}
+                        state={{ list, reviewMode: 'word_to_meaning' }}
+                        variant="outline"
+                        borderColor="orange.300"
+                        color="orange.100"
+                        _hover={{ bg: 'orange.900' }}
+                        leftIcon={<FaBookOpen />}
+                        size="lg"
+                        isDisabled={dueCount <= 0}
+                      >
+                        给词答义
                       </Button>
                     )}
                     {list && (

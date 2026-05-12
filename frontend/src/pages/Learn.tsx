@@ -26,7 +26,7 @@ import {
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Exercise, ReviewSubmission, Word, WordList, WordSourceInfo } from '../types';
+import { DueReviewMode, Exercise, ReviewSubmission, Word, WordList, WordSourceInfo } from '../types';
 import { ArrowBackIcon, CloseIcon, CheckCircleIcon, InfoIcon, StarIcon } from '@chakra-ui/icons';
 import { apiService } from '../services/api';
 import { QuestionAnsweredSupplement, QuestionRenderer } from '../components/QuestionRenderer';
@@ -181,6 +181,7 @@ export const Learn = () => {
   const [currentReview, setCurrentReview] = useState<ReviewSubmission | null>(null);
   const [responseTimeMs, setResponseTimeMs] = useState(0);
   const [selfAssessedWordIds, setSelfAssessedWordIds] = useState<string[]>([]);
+  const reviewMode = (state?.reviewMode as DueReviewMode | undefined) || undefined;
   const questionStartedAtRef = useRef(Date.now());
   const summaryCardBg = useColorModeValue('white', 'gray.800');
   const summaryCardBorder = useColorModeValue('green.200', 'green.600');
@@ -199,7 +200,8 @@ export const Learn = () => {
 
     try {
       const response = await apiService.getExercises(id, {
-        excludeWordIds
+        excludeWordIds,
+        reviewMode
       });
       if (response?.wordSources) {
         setWordSources((prevSources) => ({ ...prevSources, ...response.wordSources }));
@@ -302,7 +304,7 @@ export const Learn = () => {
         setList(resolvedList);
         setListWords(resolvedWords);
 
-        const response = await apiService.startLearning(id);
+        const response = await apiService.startLearning(id, reviewMode ? { reviewMode } : undefined);
         if (response && response.exercises) {
           setExercises(response.exercises);
           setWordSources(response.wordSources || {});
@@ -533,14 +535,15 @@ export const Learn = () => {
   }
 
   if (list.kind === 'due_review') {
-    return (
-      <DisciplinedLearnSession
-        list={list}
-        listWords={listWords}
-        initialExercises={exercises}
-        initialWordSources={wordSources}
-      />
-    );
+      return (
+        <DisciplinedLearnSession
+          list={list}
+          listWords={listWords}
+          initialExercises={exercises}
+          initialWordSources={wordSources}
+          reviewMode={reviewMode}
+        />
+      );
   }
 
   const exercise = exercises[currentExercise];

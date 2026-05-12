@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { createEmptyCard, fsrs, Rating, State, type Card, type Grade } from 'ts-fsrs';
 import { LearningState, ReviewRating, ReviewSource, type ILearningState } from '../api/learning-state/model';
 import { ReviewLog, type IReviewLog, type IReviewStateSnapshot } from '../api/review-log/model';
+import { DueReviewProgress, type IDueReviewProgress, type DueReviewMode } from '../api/due-review-progress/model';
 import { IWord, Word } from '../api/words/model';
 import { IWordList, WordList } from '../api/lists/model';
 import { isMistakeBookList } from './mistakeBook';
@@ -25,6 +26,7 @@ export type ReviewSubmission = {
   rating: ReviewRating;
   correct: boolean;
   questionType: string;
+  reviewMode?: DueReviewMode;
   responseTimeMs?: number;
   usedHint?: boolean;
   settlementKey?: string;
@@ -43,6 +45,7 @@ export type ScheduledWord = {
   sourceListIds?: string[];
   sourceListName?: string;
   sourceListNames?: string[];
+  pendingReviewModes?: DueReviewMode[];
   state: {
     dueAt: string;
     lastReviewedAt?: string;
@@ -86,6 +89,10 @@ type ReviewResultGroup = {
   results: ExpandedReviewSubmission[];
 };
 
+type DueReviewSelectOptions = {
+  reviewMode?: DueReviewMode;
+};
+
 const ratingMap: Record<ReviewRating, Grade> = {
   again: Rating.Again,
   hard: Rating.Again,
@@ -98,6 +105,16 @@ const ratingSeverity: Record<ReviewRating, number> = {
   good: 1,
   hard: 2,
   again: 3
+};
+
+const dueReviewModeFieldMap: Record<DueReviewMode, 'meaningToWord' | 'wordToMeaning'> = {
+  meaning_to_word: 'meaningToWord',
+  word_to_meaning: 'wordToMeaning'
+};
+
+const dueReviewModeQuestionTypeFallback: Record<DueReviewMode, string> = {
+  meaning_to_word: 'fill_blank',
+  word_to_meaning: 'fill_blank_reverse'
 };
 
 const stateNameMap: Record<State, ScheduledWord['state']['status']> = {
@@ -113,6 +130,18 @@ const hasStartedReviewFlow = (
 
 const RECENT_LOG_LIMIT = 400;
 const RECENT_LOGS_PER_WORD = 6;
+
+const getDueReviewCycleKey = (now = new Date()) => (
+  now.toISOString().slice(0, 10)
+);
+
+const hasDueReviewCycleExpired = (cycleKey: string, now = new Date()) => (
+  cycleKey !== getDueReviewCycleKey(now)
+);
+
+const pickWorseRating = (left: ReviewRating, right: ReviewRating): ReviewRating => (
+  ratingSeverity[left] >= ratingSeverity[right] ? left : right
+);
 
 const emptyReviewBehaviorStats = (): ReviewBehaviorStats => ({
   recentReviewCount: 0,
@@ -736,11 +765,113 @@ const pickPreferredDueReviewSource = (
   };
 };
 
+const createEmptyDueReviewModeProgress = () => ({
+  completed: false,
+  hadError: false,
+  selfAssessedWordIds: [] as mongoose.Types.ObjectId[]
+});
+
+const resetDueReviewProgressCycle = (
+  progress: IDueReviewProgress,
+  cycleKey: string
+) => {
+  progress.cycleKey = cycleKey;
+  progress.meaningToWord = createEmptyDueReviewModeProgress();
+  progress.wordToMeaning = createEmptyDueReviewModeProgress();
+  progress.settledAt = undefined;
+  progress.settledCorrect = undefined;
+  progress.settledRating = undefined;
+};
+
+const ensureDueReviewProgress = async (
+  userId: string,
+  wordId: string,
+  sourceListId: string,
+  now = new Date()
+) => {
+  const cycleKey = getDueReviewCycleKey(now);
+  let progress = await DueReviewProgress.findOne({
+    userId,
+    wordId,
+    sourceListId
+  });
+
+  if (!progress) {
+    progress = await DueReviewProgress.create({
+      userId,
+      wordId: new mongoose.Types.ObjectId(wordId),
+      sourceListId: new mongoose.Types.ObjectId(sourceListId),
+      cycleKey,
+      meaningToWord: createEmptyDueReviewModeProgress(),
+      wordToMeaning: createEmptyDueReviewModeProgress()
+    });
+    return progress;
+  }
+
+  if (hasDueReviewCycleExpired(progress.cycleKey, now)) {
+    resetDueReviewProgressCycle(progress, cycleKey);
+    await progress.save();
+  }
+
+  return progress;
+};
+
+const summarizePendingDueReviewModes = (
+  progress: Pick<IDueReviewProgress, 'meaningToWord' | 'wordToMeaning'>
+) => {
+  const pendingModes: DueReviewMode[] = [];
+  if (!progress.meaningToWord.completed) {
+    pendingModes.push('meaning_to_word');
+  }
+  if (!progress.wordToMeaning.completed) {
+    pendingModes.push('word_to_meaning');
+  }
+  return pendingModes;
+};
+
+const buildDueReviewFinalSubmission = (
+  progress: Pick<IDueReviewProgress, 'meaningToWord' | 'wordToMeaning'>,
+  wordId: string,
+  sourceListId: string,
+  settlementKey: string
+): ReviewSubmission => {
+  const hadAnyError = progress.meaningToWord.hadError || progress.wordToMeaning.hadError;
+  const finalRating = hadAnyError
+    ? 'again'
+    : pickWorseRating(
+        progress.meaningToWord.rating || 'good',
+        progress.wordToMeaning.rating || 'good'
+      );
+  const answeredAt = progress.wordToMeaning.answeredAt || progress.meaningToWord.answeredAt || new Date();
+  const responseTimeMs = [progress.meaningToWord.responseTimeMs, progress.wordToMeaning.responseTimeMs]
+    .filter((value): value is number => typeof value === 'number')
+    .reduce((sum, value) => sum + value, 0);
+  const usedHint = Boolean(progress.meaningToWord.usedHint || progress.wordToMeaning.usedHint);
+  const selfAssessedWordIds = Array.from(new Set([
+    ...(progress.meaningToWord.selfAssessedWordIds || []).map((value) => value.toString()),
+    ...(progress.wordToMeaning.selfAssessedWordIds || []).map((value) => value.toString())
+  ]));
+
+  return {
+    wordId,
+    sourceListId,
+    correct: !hadAnyError,
+    rating: finalRating,
+    questionType: 'due_review_dual_mode',
+    responseTimeMs: responseTimeMs || undefined,
+    usedHint,
+    settlementKey,
+    answeredAt: answeredAt.toISOString(),
+    selfAssessedWordIds
+  };
+};
+
 export const selectDueReviewWords = async (
   userId: string,
   count: number,
   poolSize?: number,
-  excludedWordIds: string[] = []
+  excludedWordIds: string[] = [],
+  options: DueReviewSelectOptions = {}
 ): Promise<ScheduledWord[]> => {
   const now = new Date();
   const cutoff = getDueReviewCutoff(now);
@@ -784,7 +915,7 @@ export const selectDueReviewWords = async (
   }
 
   const excludedWordIdSet = new Set(excludedWordIds);
-  const scheduled = typedWords.flatMap((word) => {
+  const rawScheduled = typedWords.flatMap((word) => {
     if (excludedWordIdSet.has(word._id.toString())) {
       return [];
     }
@@ -816,9 +947,33 @@ export const selectDueReviewWords = async (
       sourceListIds: source.sourceListIds,
       sourceListName: source.sourceListName,
       sourceListNames: source.sourceListNames,
+      pendingReviewModes: ['meaning_to_word', 'word_to_meaning'] as DueReviewMode[],
       state: buildScheduledWordState(sourceState, now, behaviorStats)
     }];
   });
+
+  const scheduledWithProgress = await Promise.all(rawScheduled.map(async (word) => {
+    if (!word.sourceListId) {
+      return null;
+    }
+
+    const progress = await ensureDueReviewProgress(userId, word.id, word.sourceListId, now);
+    const pendingReviewModes = summarizePendingDueReviewModes(progress);
+    if (!pendingReviewModes.length) {
+      return null;
+    }
+
+    if (options.reviewMode && !pendingReviewModes.includes(options.reviewMode)) {
+      return null;
+    }
+
+    return {
+      ...word,
+      pendingReviewModes
+    };
+  }));
+
+  const scheduled: ScheduledWord[] = scheduledWithProgress.filter((word): word is NonNullable<typeof word> => Boolean(word));
 
   const prioritized = scheduled.sort((a: ScheduledWord, b: ScheduledWord) => (
     b.state.urgency - a.state.urgency ||
@@ -1044,64 +1199,58 @@ export const settleDueReviewResults = async (
   source: ReviewSource,
   results: ReviewSubmission[]
 ) => {
-  const normalizedResults = normalizeReviewResults(results);
-  const groupedResults = groupNormalizedResults(normalizedResults);
-  if (!groupedResults.length) {
+  const dueReviewResults = results.filter((result) => Boolean(result.wordId));
+  if (!dueReviewResults.length) {
     return;
   }
 
-  const sourceListIds = Array.from(new Set(
-    groupedResults.flatMap((group) => group.results)
-      .map((result) => result.sourceListId)
-      .filter((listId): listId is string => Boolean(listId))
-  ));
-
-  if (!sourceListIds.length) {
-    return;
-  }
-
-  const lists = (await WordList.find({ _id: { $in: sourceListIds } }).lean()) as Array<Pick<IWordList, '_id' | 'kind' | 'systemKey'>>;
-  const listsById = new Map<string, Pick<IWordList, '_id' | 'kind' | 'systemKey'>>(
-    lists.map((list) => [list._id.toString(), list])
-  );
-  for (const group of groupedResults) {
-    if (group.settlementKey) {
-      await revertSettlementGroup(userId, source, group.settlementKey);
+  for (const result of dueReviewResults) {
+    if (!result.sourceListId || !result.reviewMode) {
+      continue;
     }
 
-    const groupedBySourceListId = new Map<string, ExpandedReviewSubmission[]>();
+    const answeredAt = result.answeredAt ? new Date(result.answeredAt) : new Date();
+    const progress = await ensureDueReviewProgress(userId, result.wordId, result.sourceListId, answeredAt);
+    const fieldName = dueReviewModeFieldMap[result.reviewMode];
+    const modeProgress = progress[fieldName];
 
-    for (const result of group.results) {
-      if (!result.sourceListId || !listsById.has(result.sourceListId)) {
-        continue;
-      }
+    modeProgress.completed = Boolean(result.correct);
+    modeProgress.hadError = modeProgress.hadError || !result.correct;
+    modeProgress.rating = result.rating;
+    modeProgress.responseTimeMs = result.responseTimeMs;
+    modeProgress.usedHint = result.usedHint;
+    modeProgress.questionType = result.questionType || dueReviewModeQuestionTypeFallback[result.reviewMode];
+    modeProgress.answeredAt = answeredAt;
+    modeProgress.selfAssessedWordIds = (result.selfAssessedWordIds || []).map((wordId) => new mongoose.Types.ObjectId(wordId));
 
-      const currentResults = groupedBySourceListId.get(result.sourceListId) || [];
-      currentResults.push(result);
-      groupedBySourceListId.set(result.sourceListId, currentResults);
+    const pendingModes = summarizePendingDueReviewModes(progress);
+    if (pendingModes.length > 0) {
+      progress.settledAt = undefined;
+      progress.settledCorrect = undefined;
+      progress.settledRating = undefined;
+      await progress.save();
+      continue;
     }
 
-    for (const [sourceListId, grouped] of groupedBySourceListId.entries()) {
-      const list = listsById.get(sourceListId);
-      if (!list) {
-        continue;
-      }
-
-      await applyGroupedReviewResultsToList(
-        userId,
-        list,
-        source,
-        [{
-          settlementKey: group.settlementKey,
-          answeredAt: group.answeredAt,
-          results: grouped.map((result) => ({
-            ...result,
-            answeredAt: group.answeredAt.toISOString()
-          }))
-        }],
-        { skipSettlementRevert: true }
-      );
+    const finalSettlementKey = `due-review:${result.sourceListId}:${result.wordId}:${progress.cycleKey}`;
+    const finalSubmission = buildDueReviewFinalSubmission(
+      progress,
+      result.wordId,
+      result.sourceListId,
+      finalSettlementKey
+    );
+    const list = await WordList.findById(result.sourceListId).lean();
+    if (!list) {
+      await progress.save();
+      continue;
     }
+
+    await settleReviewResults(userId, list, source, [finalSubmission]);
+
+    progress.settledAt = answeredAt;
+    progress.settledCorrect = finalSubmission.correct;
+    progress.settledRating = finalSubmission.rating;
+    await progress.save();
   }
 };
 

@@ -7,6 +7,16 @@ export const listIdSchema = {
   })
 };
 
+export const dueReviewModeSchema = z.enum(['meaning_to_word', 'word_to_meaning']);
+
+export const learnBatchRequestSchema = {
+  ...listIdSchema,
+  body: z.object({
+    excludeWordIds: z.array(z.string()).optional(),
+    reviewMode: dueReviewModeSchema.optional()
+  }).optional()
+};
+
 export const updatePointsSchema = {
   ...listIdSchema,
   body: z.object({
@@ -20,6 +30,7 @@ export const updatePointsSchema = {
       correct: z.boolean(),
       rating: z.enum(['again', 'hard', 'good', 'easy']).optional(),
       questionType: z.string().optional(),
+      reviewMode: dueReviewModeSchema.optional(),
       selfAssessedWordIds: z.array(z.string().refine(val => mongoose.Types.ObjectId.isValid(val), 'Invalid word ID')).optional(),
       responseTimeMs: z.number().nonnegative().optional(),
       usedHint: z.boolean().optional(),

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { WordList, Word, Exercise, Question, Template, WordDetail, SentenceExample, UserPreferences, ExerciseTypePreferences, VocabularyWordsResponse, WordDetailsResponse, ReviewSubmission, ScheduledWord, BackgroundAsset, WordSourceInfo, DisciplineStatus, DiscoveryAssessment, DiscoveryRateResponse, DiscoveryWordsResponse } from '../types';
+import { WordList, Word, Exercise, Question, Template, WordDetail, SentenceExample, UserPreferences, ExerciseTypePreferences, VocabularyWordsResponse, WordDetailsResponse, ReviewSubmission, ScheduledWord, BackgroundAsset, WordSourceInfo, DisciplineStatus, DiscoveryAssessment, DiscoveryRateResponse, DiscoveryWordsResponse, DueReviewMode } from '../types';
 
 // Generate or retrieve user ID
 const getUserId = () => {
@@ -47,12 +47,14 @@ interface LearnStartResponse {
   exercises: Exercise[];
   scheduledWords?: ScheduledWord[];
   wordSources?: Record<string, WordSourceInfo>;
+  reviewMode?: DueReviewMode;
 }
 
 interface LearnExercisesResponse {
   exercises: Exercise[];
   scheduledWords?: ScheduledWord[];
   wordSources?: Record<string, WordSourceInfo>;
+  reviewMode?: DueReviewMode;
 }
 
 interface QuizStartResponse {
@@ -69,6 +71,7 @@ interface QuizQuestionsResponse {
 
 interface MoreBatchRequest {
   excludeWordIds?: string[];
+  reviewMode?: DueReviewMode;
 }
 
 interface BackgroundListResponse {
@@ -112,8 +115,8 @@ export const apiService = {
     api.post('/api/lists/validate-answer', { userAnswer, correctAnswer, question, context }, { timeout: 15000 }),
 
   // Learning
-  startLearning: (listId: string): ApiResponse<LearnStartResponse> => 
-    api.post(`/api/learn/${listId}/start`),
+  startLearning: (listId: string, payload?: { reviewMode?: DueReviewMode }): ApiResponse<LearnStartResponse> => 
+    api.post(`/api/learn/${listId}/start`, payload),
   getExercises: (listId: string, payload?: MoreBatchRequest): ApiResponse<LearnExercisesResponse> => 
     api.post(`/api/learn/${listId}/more`, payload),
   updateLearningLearnedPoints: (listId: string, results: ReviewSubmission[]): ApiResponse<{message: string}> =>

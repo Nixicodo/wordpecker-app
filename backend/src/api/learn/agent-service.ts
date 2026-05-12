@@ -3,6 +3,7 @@ import { generateStructuredResult } from '../../services/structuredChat';
 import { generationCache } from '../../services/generationCache';
 import { generateLocalExercises } from '../../services/localExerciseGenerator';
 import { annotateGeneratedExercises } from '../../services/generatedExerciseMetadata';
+import type { DueReviewMode } from '../due-review-progress/model';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -141,10 +142,10 @@ Language-format requirements:
     exerciseTypes: string[], 
     baseLanguage: string, 
     targetLanguage: string,
-    options: { preferLocal?: boolean } = {}
+    options: { preferLocal?: boolean; reviewMode?: DueReviewMode } = {}
   ): Promise<ExerciseWithId[]> {
     if (options.preferLocal) {
-      return generateLocalExercises(words, distractorWords, context, exerciseTypes, baseLanguage, targetLanguage);
+      return generateLocalExercises(words, distractorWords, context, exerciseTypes, baseLanguage, targetLanguage, options.reviewMode);
     }
 
     const cacheKey = this.buildCacheKey(words, distractorWords, context, exerciseTypes, baseLanguage, targetLanguage);
@@ -154,7 +155,7 @@ Language-format requirements:
         return await this.generateExercisesWithAi(words, distractorWords, context, exerciseTypes, baseLanguage, targetLanguage);
       } catch (error) {
         console.error('Learn exercise generation fell back to local generator:', error);
-        return generateLocalExercises(words, distractorWords, context, exerciseTypes, baseLanguage, targetLanguage);
+        return generateLocalExercises(words, distractorWords, context, exerciseTypes, baseLanguage, targetLanguage, options.reviewMode);
       }
     }, CACHE_TTL_MS);
   }

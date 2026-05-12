@@ -6,6 +6,7 @@ import { Word } from '../api/words/model';
 import { UserPreferences } from '../api/preferences/model';
 import { LearningState } from '../api/learning-state/model';
 import { ReviewLog } from '../api/review-log/model';
+import { DueReviewProgress } from '../api/due-review-progress/model';
 import { environment } from '../config/environment';
 
 type SnapshotWordList = {
@@ -95,6 +96,31 @@ type SnapshotReviewLog = {
   updatedAt: string;
 };
 
+type SnapshotDueReviewModeProgress = {
+  completed: boolean;
+  hadError: boolean;
+  rating?: string;
+  responseTimeMs?: number;
+  usedHint?: boolean;
+  questionType?: string;
+  answeredAt?: string;
+  selfAssessedWordIds: string[];
+};
+
+type SnapshotDueReviewProgress = {
+  userId: string;
+  wordId: string;
+  sourceListId: string;
+  cycleKey: string;
+  meaningToWord: SnapshotDueReviewModeProgress;
+  wordToMeaning: SnapshotDueReviewModeProgress;
+  settledAt?: string;
+  settledCorrect?: boolean;
+  settledRating?: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 type SnapshotUserPreference = {
   userId: string;
   exerciseTypes: Record<string, boolean>;
@@ -112,6 +138,7 @@ type LearningSnapshot = {
     words: SnapshotWord[];
     learningStates: SnapshotLearningState[];
     reviewLogs: SnapshotReviewLog[];
+    dueReviewProgresses: SnapshotDueReviewProgress[];
     preferences: SnapshotUserPreference[];
   };
 };
@@ -141,11 +168,12 @@ export const persistLearningSnapshot = async () => {
   }
 
   const snapshotPath = resolveSnapshotPath();
-  const [lists, words, learningStates, reviewLogs, preferences] = await Promise.all([
+  const [lists, words, learningStates, reviewLogs, dueReviewProgresses, preferences] = await Promise.all([
     WordList.find().sort({ created_at: 1 }).lean(),
     Word.find().sort({ created_at: 1 }).lean(),
     LearningState.find().sort({ createdAt: 1 }).lean(),
     ReviewLog.find().sort({ answeredAt: 1 }).lean(),
+    DueReviewProgress.find().sort({ updatedAt: 1 }).lean(),
     UserPreferences.find().sort({ createdAt: 1 }).lean()
   ]);
 
@@ -218,6 +246,37 @@ export const persistLearningSnapshot = async () => {
         createdAt: serializeDateOrEpoch(log.createdAt),
         updatedAt: serializeDateOrEpoch(log.updatedAt)
       })),
+      dueReviewProgresses: dueReviewProgresses.map((progress: any) => ({
+        userId: progress.userId,
+        wordId: progress.wordId.toString(),
+        sourceListId: progress.sourceListId.toString(),
+        cycleKey: progress.cycleKey,
+        meaningToWord: {
+          completed: Boolean(progress.meaningToWord?.completed),
+          hadError: Boolean(progress.meaningToWord?.hadError),
+          rating: progress.meaningToWord?.rating,
+          responseTimeMs: progress.meaningToWord?.responseTimeMs,
+          usedHint: progress.meaningToWord?.usedHint,
+          questionType: progress.meaningToWord?.questionType,
+          answeredAt: serializeDate(progress.meaningToWord?.answeredAt),
+          selfAssessedWordIds: (progress.meaningToWord?.selfAssessedWordIds || []).map((wordId: any) => wordId.toString())
+        },
+        wordToMeaning: {
+          completed: Boolean(progress.wordToMeaning?.completed),
+          hadError: Boolean(progress.wordToMeaning?.hadError),
+          rating: progress.wordToMeaning?.rating,
+          responseTimeMs: progress.wordToMeaning?.responseTimeMs,
+          usedHint: progress.wordToMeaning?.usedHint,
+          questionType: progress.wordToMeaning?.questionType,
+          answeredAt: serializeDate(progress.wordToMeaning?.answeredAt),
+          selfAssessedWordIds: (progress.wordToMeaning?.selfAssessedWordIds || []).map((wordId: any) => wordId.toString())
+        },
+        settledAt: serializeDate(progress.settledAt),
+        settledCorrect: progress.settledCorrect,
+        settledRating: progress.settledRating,
+        createdAt: serializeDateOrEpoch(progress.createdAt),
+        updatedAt: serializeDateOrEpoch(progress.updatedAt)
+      })),
       preferences: preferences.map((preference: any) => ({
         userId: preference.userId,
         exerciseTypes: preference.exerciseTypes,
@@ -269,15 +328,16 @@ export const waitForRequestedLearningSnapshotPersist = async () => {
 };
 
 const databaseHasLearningData = async () => {
-  const [listCount, wordCount, preferenceCount, learningStateCount, reviewLogCount] = await Promise.all([
+  const [listCount, wordCount, preferenceCount, learningStateCount, reviewLogCount, dueReviewProgressCount] = await Promise.all([
     WordList.countDocuments(),
     Word.countDocuments(),
     UserPreferences.countDocuments(),
     LearningState.countDocuments(),
-    ReviewLog.countDocuments()
+    ReviewLog.countDocuments(),
+    DueReviewProgress.countDocuments()
   ]);
 
-  return listCount > 0 || wordCount > 0 || preferenceCount > 0 || learningStateCount > 0 || reviewLogCount > 0;
+  return listCount > 0 || wordCount > 0 || preferenceCount > 0 || learningStateCount > 0 || reviewLogCount > 0 || dueReviewProgressCount > 0;
 };
 
 export const restoreLearningSnapshotIfNeeded = async () => {
@@ -297,7 +357,7 @@ export const restoreLearningSnapshotIfNeeded = async () => {
     return false;
   }
 
-  const { lists, words, learningStates, reviewLogs, preferences } = snapshot.data;
+  const { lists, words, learningStates, reviewLogs, dueReviewProgresses, preferences } = snapshot.data;
 
   if (lists.length > 0) {
     await WordList.insertMany(lists.map((list) => ({
@@ -393,6 +453,40 @@ export const restoreLearningSnapshotIfNeeded = async () => {
       } : undefined,
       createdAt: new Date(log.createdAt),
       updatedAt: new Date(log.updatedAt)
+    })));
+  }
+
+  if (dueReviewProgresses.length > 0) {
+    await DueReviewProgress.insertMany(dueReviewProgresses.map((progress) => ({
+      userId: progress.userId,
+      wordId: new mongoose.Types.ObjectId(progress.wordId),
+      sourceListId: new mongoose.Types.ObjectId(progress.sourceListId),
+      cycleKey: progress.cycleKey,
+      meaningToWord: {
+        completed: progress.meaningToWord.completed,
+        hadError: progress.meaningToWord.hadError,
+        rating: progress.meaningToWord.rating,
+        responseTimeMs: progress.meaningToWord.responseTimeMs,
+        usedHint: progress.meaningToWord.usedHint,
+        questionType: progress.meaningToWord.questionType,
+        answeredAt: progress.meaningToWord.answeredAt ? new Date(progress.meaningToWord.answeredAt) : undefined,
+        selfAssessedWordIds: progress.meaningToWord.selfAssessedWordIds.map((wordId) => new mongoose.Types.ObjectId(wordId))
+      },
+      wordToMeaning: {
+        completed: progress.wordToMeaning.completed,
+        hadError: progress.wordToMeaning.hadError,
+        rating: progress.wordToMeaning.rating,
+        responseTimeMs: progress.wordToMeaning.responseTimeMs,
+        usedHint: progress.wordToMeaning.usedHint,
+        questionType: progress.wordToMeaning.questionType,
+        answeredAt: progress.wordToMeaning.answeredAt ? new Date(progress.wordToMeaning.answeredAt) : undefined,
+        selfAssessedWordIds: progress.wordToMeaning.selfAssessedWordIds.map((wordId) => new mongoose.Types.ObjectId(wordId))
+      },
+      settledAt: progress.settledAt ? new Date(progress.settledAt) : undefined,
+      settledCorrect: progress.settledCorrect,
+      settledRating: progress.settledRating,
+      createdAt: new Date(progress.createdAt),
+      updatedAt: new Date(progress.updatedAt)
     })));
   }
 

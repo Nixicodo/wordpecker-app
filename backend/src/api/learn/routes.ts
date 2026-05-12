@@ -5,7 +5,7 @@ import { UserPreferences } from '../preferences/model';
 import { QuestionType } from '../../types';
 import { learnAgentService } from './agent-service';
 import { getUserLanguages } from '../../utils/getUserLanguages';
-import { listIdSchema, updatePointsSchema } from './schemas';
+import { dueReviewModeSchema, learnBatchRequestSchema, listIdSchema, updatePointsSchema } from './schemas';
 import { applyReviewResults } from '../../services/learningProgress';
 import { requestLearningSnapshotPersist } from '../../services/repoLearningSnapshot';
 import { resolveUserId } from '../../config/learning';
@@ -17,6 +17,7 @@ import {
 import { selectGenerationWordPool } from '../../services/exerciseGenerationPool';
 import { resolveGenerationLanguages } from '../../services/generationLanguages';
 import { isDueReviewList } from '../../services/dueReview';
+import { DueReviewMode } from '../due-review-progress/model';
 
 const router = Router();
 
@@ -62,7 +63,19 @@ const buildWordSources = (
     ])
 );
 
-router.post('/:listId/start', validate(listIdSchema), limitAiExerciseGeneration, async (req, res) => {
+const resolveRequestedReviewMode = (
+  candidate: unknown,
+  isDisciplinedReview: boolean
+): DueReviewMode | undefined => {
+  if (!isDisciplinedReview || typeof candidate !== 'string') {
+    return undefined;
+  }
+
+  const parsed = dueReviewModeSchema.safeParse(candidate);
+  return parsed.success ? parsed.data : undefined;
+};
+
+router.post('/:listId/start', validate(learnBatchRequestSchema), limitAiExerciseGeneration, async (req, res) => {
   try {
     const { listId } = req.params;
     const list = await WordList.findById(listId).lean();
@@ -71,10 +84,11 @@ router.post('/:listId/start', validate(listIdSchema), limitAiExerciseGeneration,
 
     const userId = resolveUserId(req.headers['user-id']);
     const isDisciplinedReview = isDueReviewList(list);
+    const reviewMode = resolveRequestedReviewMode(req.body?.reviewMode, isDisciplinedReview);
     const [{ scheduledWords, extraDistractors }, exerciseTypes, userLanguages] = await Promise.all([
       selectGenerationWordPool(userId, listId, undefined, undefined, [], {
         shuffleScheduledWords: isDisciplinedReview
-      }),
+      }, reviewMode),
       getExerciseTypes(userId, isDisciplinedReview),
       getUserLanguages(userId)
     ]);
@@ -92,21 +106,22 @@ router.post('/:listId/start', validate(listIdSchema), limitAiExerciseGeneration,
       exerciseTypes,
       baseLanguage,
       targetLanguage,
-      { preferLocal: isDisciplinedReview }
+      { preferLocal: isDisciplinedReview, reviewMode }
     );
 
     res.json({
       exercises,
       scheduledWords,
       wordSources: buildWordSources([...scheduledWords, ...extraDistractors]),
-      list: { id: list._id.toString(), name: list.name, context: list.context, kind: list.kind }
+      list: { id: list._id.toString(), name: list.name, context: list.context, kind: list.kind },
+      reviewMode
     });
   } catch (error) {
     res.status(500).json({ message: 'Error starting learning session' });
   }
 });
 
-router.post('/:listId/more', validate(listIdSchema), limitAiExerciseGeneration, async (req, res) => {
+router.post('/:listId/more', validate(learnBatchRequestSchema), limitAiExerciseGeneration, async (req, res) => {
   try {
     const { listId } = req.params;
     const list = await WordList.findById(listId).lean();
@@ -116,13 +131,14 @@ router.post('/:listId/more', validate(listIdSchema), limitAiExerciseGeneration, 
     const userId = resolveUserId(req.headers['user-id']);
     const isDisciplinedReview = isDueReviewList(list);
     const requestBody = req.body as { excludeWordIds?: unknown[] } | undefined;
+    const reviewMode = resolveRequestedReviewMode(req.body?.reviewMode, isDisciplinedReview);
     const excludeWordIds = Array.isArray(requestBody?.excludeWordIds)
       ? requestBody.excludeWordIds.filter((wordId: unknown): wordId is string => typeof wordId === 'string')
       : [];
     const [{ scheduledWords, extraDistractors }, exerciseTypes, userLanguages] = await Promise.all([
       selectGenerationWordPool(userId, listId, undefined, undefined, excludeWordIds, {
         shuffleScheduledWords: isDisciplinedReview
-      }),
+      }, reviewMode),
       getExerciseTypes(userId, isDisciplinedReview),
       getUserLanguages(userId)
     ]);
@@ -140,12 +156,13 @@ router.post('/:listId/more', validate(listIdSchema), limitAiExerciseGeneration, 
       exerciseTypes,
       baseLanguage,
       targetLanguage,
-      { preferLocal: isDisciplinedReview }
+      { preferLocal: isDisciplinedReview, reviewMode }
     );
     res.json({
       exercises,
       scheduledWords,
-      wordSources: buildWordSources([...scheduledWords, ...extraDistractors])
+      wordSources: buildWordSources([...scheduledWords, ...extraDistractors]),
+      reviewMode
     });
   } catch (error) {
     res.status(500).json({ message: 'Error getting more exercises' });
@@ -170,6 +187,7 @@ router.put('/:listId/reviews', validate(updatePointsSchema), async (req, res) =>
       correct: result.correct,
       rating: result.rating || (result.correct ? 'good' : 'again'),
       questionType: result.questionType || 'unknown',
+      reviewMode: result.reviewMode,
       selfAssessedWordIds: result.selfAssessedWordIds,
       responseTimeMs: result.responseTimeMs,
       usedHint: result.usedHint,

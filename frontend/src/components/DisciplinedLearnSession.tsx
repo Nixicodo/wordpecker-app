@@ -17,7 +17,7 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowBackIcon, CloseIcon, WarningIcon } from '@chakra-ui/icons';
-import { Exercise, ReviewSubmission, ReviewRating, Word, WordList, WordSourceInfo } from '../types';
+import { DueReviewMode, Exercise, ReviewSubmission, ReviewRating, Word, WordList, WordSourceInfo } from '../types';
 import { QuestionAnsweredSupplement, QuestionRenderer } from './QuestionRenderer';
 import { QuestionConfidencePanel } from './QuestionConfidencePanel';
 import { ReviewTimeline, ReviewTimelineStatus } from './ReviewTimeline';
@@ -167,12 +167,14 @@ export const DisciplinedLearnSession = ({
   list,
   listWords,
   initialExercises,
-  initialWordSources
+  initialWordSources,
+  reviewMode
 }: {
   list: WordList;
   listWords: Word[];
   initialExercises: Exercise[];
   initialWordSources: Record<string, WordSourceInfo>;
+  reviewMode?: DueReviewMode;
 }) => {
   const navigate = useNavigate();
   const toast = useToast();
@@ -200,6 +202,7 @@ export const DisciplinedLearnSession = ({
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMoreExercises, setHasMoreExercises] = useState(true);
   const [autoLoadError, setAutoLoadError] = useState('');
+  const reviewModeLabel = reviewMode === 'meaning_to_word' ? '给义答词' : reviewMode === 'word_to_meaning' ? '给词答义' : '纪律化复习';
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -239,7 +242,8 @@ export const DisciplinedLearnSession = ({
   const fetchMoreExercises = useCallback(async (excludeWordIds: string[]): Promise<Exercise[] | null> => {
     try {
       const response = await apiService.getExercises(list.id, {
-        excludeWordIds
+        excludeWordIds,
+        reviewMode
       });
 
       if (response?.wordSources) {
@@ -490,6 +494,7 @@ export const DisciplinedLearnSession = ({
           correct: isCorrect,
           rating: recommendation.rating,
           questionType: exercise.type,
+          reviewMode,
           responseTimeMs,
           usedHint,
           settlementKey,
@@ -502,7 +507,7 @@ export const DisciplinedLearnSession = ({
       recommendedRating: recommendation.rating,
       recommendationReason: recommendation.reason
     };
-  }, [wordSources]);
+  }, [reviewMode, wordSources]);
 
   const getDisplayedAnswer = useCallback((exercise: Exercise | undefined, state: AuditState) => {
     if (!exercise || state.status !== 'incorrect') {
@@ -994,7 +999,7 @@ export const DisciplinedLearnSession = ({
       <VStack spacing={5} align="stretch" maxW="980px" mx="auto">
         <Box>
           <Text color="orange.200" fontSize="sm" fontWeight="bold" textTransform="uppercase" letterSpacing="0.14em">
-            Disciplined Review
+            {reviewModeLabel}
           </Text>
           <Text color="white" fontSize={{ base: '3xl', md: '4xl' }} fontWeight="bold" mt={2}>
             学习中：{list.name}

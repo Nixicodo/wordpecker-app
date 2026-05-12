@@ -8,6 +8,7 @@ import {
   type ReviewSubmission
 } from './learningScheduler';
 import { isDueReviewList } from './dueReview';
+import type { DueReviewMode } from '../api/due-review-progress/model';
 
 type WordDocumentLike = {
   _id: { toString(): string };
@@ -35,6 +36,16 @@ export function mapWordsWithProgress(words: WordDocumentLike[], listId: string) 
 }
 
 export async function selectScheduledWords(userId: string, listId: string, count = 5, poolSize?: number) {
+  return selectScheduledWordsByMode(userId, listId, count, poolSize);
+}
+
+export async function selectScheduledWordsByMode(
+  userId: string,
+  listId: string,
+  count = 5,
+  poolSize?: number,
+  reviewMode?: DueReviewMode
+) {
   const list = await WordList.findById(listId).lean();
 
   if (!list) {
@@ -42,7 +53,7 @@ export async function selectScheduledWords(userId: string, listId: string, count
   }
 
   if (isDueReviewList(list)) {
-    return selectDueReviewWords(userId, count, poolSize);
+    return selectDueReviewWords(userId, count, poolSize, [], { reviewMode });
   }
 
   const words = await Word.find({ 'listMemberships.listId': listId }).lean();

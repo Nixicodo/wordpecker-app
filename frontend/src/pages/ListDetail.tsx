@@ -393,9 +393,14 @@ export const ListDetail = () => {
             )}
           </Box>
           <Flex gap={3} flexWrap="wrap" justify={{ base: 'center', md: 'flex-end' }}>
-            <Button variant="ghost" leftIcon={<FaGraduationCap />} colorScheme="green" size="lg" isDisabled={words.length === 0} onClick={() => navigate(`/learn/${list.id}`, { state: { list } })}>
+            <Button variant="ghost" leftIcon={<FaGraduationCap />} colorScheme="green" size="lg" isDisabled={words.length === 0} onClick={() => navigate(`/learn/${list.id}`, { state: isDueReview ? { list, reviewMode: 'meaning_to_word' } : { list } })}>
               {isDueReview ? '开始复习' : UI.actionLearn}
             </Button>
+            {isDueReview && (
+              <Button variant="outline" leftIcon={<FaGraduationCap />} colorScheme="orange" size="lg" isDisabled={words.length === 0} onClick={() => navigate(`/learn/${list.id}`, { state: { list, reviewMode: 'word_to_meaning' } })}>
+                给词答义
+              </Button>
+            )}
             {!isDueReview && (
               <Button variant="ghost" leftIcon={<FaGamepad />} colorScheme="orange" size="lg" isDisabled={words.length === 0} onClick={() => navigate(`/quiz/${list.id}`, { state: { list } })}>
                 {UI.actionQuiz}

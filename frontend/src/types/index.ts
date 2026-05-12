@@ -130,6 +130,8 @@ export interface Exercise {
   }>;
 }
 
+export type DueReviewMode = 'meaning_to_word' | 'word_to_meaning';
+
 export interface Question {
   word: string;
   wordId?: string | null;
@@ -190,6 +192,7 @@ export interface ReviewSubmission {
   correct: boolean;
   rating: ReviewRating;
   questionType: string;
+  reviewMode?: DueReviewMode;
   responseTimeMs?: number;
   usedHint?: boolean;
   settlementKey?: string;

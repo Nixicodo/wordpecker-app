@@ -1,5 +1,6 @@
 import { ExerciseType, ExerciseWithId } from '../agents/exercise-agent/schemas';
 import { shuffleArray } from '../utils/arrayUtils';
+import type { DueReviewMode } from '../api/due-review-progress/model';
 
 type GeneratorWord = {
   id: string;
@@ -38,6 +39,16 @@ function selectDirection(index: number, type: ExerciseType['type']): ExerciseDir
   }
 
   return index % 2 === 0 ? 'target_to_base' : 'base_to_target';
+}
+
+function resolveForcedDirection(reviewMode?: DueReviewMode): ExerciseDirection | undefined {
+  if (reviewMode === 'meaning_to_word') {
+    return 'base_to_target';
+  }
+  if (reviewMode === 'word_to_meaning') {
+    return 'target_to_base';
+  }
+  return undefined;
 }
 
 function upgradeDifficulty(
@@ -193,9 +204,31 @@ function buildMultipleChoice(
   };
 }
 
-function buildFillBlank(word: GeneratorWord, context: string, copy: LanguageCopy): ExerciseWithId {
+function buildFillBlank(
+  word: GeneratorWord,
+  context: string,
+  copy: LanguageCopy,
+  direction: ExerciseDirection = 'base_to_target'
+): ExerciseWithId {
   void context;
   const correctMeaning = normalizeMeaning(word.meaning, word.value);
+
+  if (direction === 'target_to_base') {
+    return {
+      type: 'fill_blank',
+      direction,
+      word: word.value,
+      wordId: word.id,
+      question: copy.multipleChoiceTargetToBaseQuestion(word.value),
+      options: null,
+      optionLabels: null,
+      correctAnswer: correctMeaning,
+      difficulty: upgradeDifficulty('easy', word.challengeScore),
+      hint: copy.hintForWord(word.value),
+      feedback: copy.feedbackForMeaning(word.value, correctMeaning),
+      pairs: null,
+    };
+  }
 
   return {
     type: 'fill_blank',
@@ -338,6 +371,7 @@ export function generateLocalExercises(
   exerciseTypes: string[],
   baseLanguage = 'English',
   targetLanguage = 'English',
+  reviewMode?: DueReviewMode,
 ): ExerciseWithId[] {
   const availableTypes = (exerciseTypes.length ? exerciseTypes : ['multiple_choice', 'fill_blank', 'true_false'])
     .map(resolveType);
@@ -345,14 +379,15 @@ export function generateLocalExercises(
     ? distractorWords
     : shuffleArray([...words, ...distractorWords]);
   const copy = buildLanguageCopy(baseLanguage, targetLanguage);
+  const forcedDirection = resolveForcedDirection(reviewMode);
 
   return words.map((word, index) => {
     const type = availableTypes[index % availableTypes.length] ?? 'multiple_choice';
-    const direction = selectDirection(index, type);
+    const direction = forcedDirection || selectDirection(index, type);
 
     switch (type) {
       case 'fill_blank':
-        return buildFillBlank(word, context, copy);
+        return buildFillBlank(word, context, copy, direction);
       case 'true_false':
         return buildTrueFalse(word, distractorPool, context, direction, copy);
       case 'sentence_completion':

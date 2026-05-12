@@ -1,6 +1,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import mongoose from 'mongoose';
 import express from 'express';
 import request from 'supertest';
 import { connectDB, closeDB } from '../config/mongodb';
@@ -68,6 +69,7 @@ describe('repository learning snapshot integration', () => {
 
     await Promise.all([
       ReviewLog.deleteMany({}),
+      mongoose.connection.collection('duereviewprogresses').deleteMany({}).catch(() => undefined),
       LearningState.deleteMany({}),
       Word.deleteMany({}),
       WordList.deleteMany({}),
@@ -80,6 +82,7 @@ describe('repository learning snapshot integration', () => {
   afterAll(async () => {
     await Promise.all([
       ReviewLog.deleteMany({}),
+      mongoose.connection.collection('duereviewprogresses').deleteMany({}).catch(() => undefined),
       LearningState.deleteMany({}),
       Word.deleteMany({}),
       WordList.deleteMany({}),
@@ -519,14 +522,40 @@ describe('repository learning snapshot integration', () => {
       .send({
         results: [{
           wordId,
-          correct: true,
-          rating: 'good',
+          correct: false,
+          rating: 'again',
           questionType: 'fill_blank',
-          sourceListId: listId
+          sourceListId: listId,
+          reviewMode: 'meaning_to_word'
         }]
       });
 
     expect(recoverResponse.status).toBe(200);
+
+    const afterFirstDirectionState = await LearningState.findOne({
+      userId: 'snapshot-user',
+      wordId,
+      listId
+    }).lean();
+
+    expect(afterFirstDirectionState?.reviewCount).toBe(1);
+    expect(afterFirstDirectionState?.consecutiveWrong).toBe(1);
+
+    const finishOtherDirectionResponse = await request(app)
+      .put(`/api/learn/${dueReviewId}/reviews`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        results: [{
+          wordId,
+          correct: true,
+          rating: 'good',
+          questionType: 'fill_blank_reverse',
+          sourceListId: listId,
+          reviewMode: 'word_to_meaning'
+        }]
+      });
+
+    expect(finishOtherDirectionResponse.status).toBe(200);
 
     const recoveredSourceState = await LearningState.findOne({
       userId: 'snapshot-user',
@@ -534,8 +563,8 @@ describe('repository learning snapshot integration', () => {
       listId
     }).lean();
 
-    expect(recoveredSourceState?.reviewCount).toBe(2);
-    expect(recoveredSourceState?.consecutiveWrong).toBe(0);
+    expect(recoveredSourceState?.reviewCount).toBe(1);
+    expect(recoveredSourceState?.consecutiveWrong).toBe(1);
   });
 
   it('aggregates due review words across trees and settles reviews back to each source tree', async () => {
@@ -663,19 +692,63 @@ describe('repository learning snapshot integration', () => {
       .send({
         results: [{
           wordId: wordOneId,
-          wordIds: [wordOneId, wordTwoId],
           sourceListId: listOneId,
-          sourceListIdByWordId: {
-            [wordOneId]: listOneId,
-            [wordTwoId]: listTwoId
-          },
           correct: true,
           rating: 'good',
-          questionType: 'matching'
+          questionType: 'fill_blank',
+          reviewMode: 'meaning_to_word'
         }]
       });
 
     expect(settleDueReviewResponse.status).toBe(200);
+
+    const settleDueReviewResponseTwo = await request(app)
+      .put(`/api/learn/${dueReviewId}/reviews`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        results: [{
+          wordId: wordTwoId,
+          sourceListId: listTwoId,
+          correct: true,
+          rating: 'good',
+          questionType: 'fill_blank',
+          reviewMode: 'meaning_to_word'
+        }]
+      });
+
+    expect(settleDueReviewResponseTwo.status).toBe(200);
+
+    const settleDueReviewResponseThree = await request(app)
+      .put(`/api/learn/${dueReviewId}/reviews`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        results: [{
+          wordId: wordOneId,
+          sourceListId: listOneId,
+          correct: true,
+          rating: 'good',
+          questionType: 'fill_blank_reverse',
+          reviewMode: 'word_to_meaning'
+        }]
+      });
+
+    expect(settleDueReviewResponseThree.status).toBe(200);
+
+    const settleDueReviewResponseFour = await request(app)
+      .put(`/api/learn/${dueReviewId}/reviews`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        results: [{
+          wordId: wordTwoId,
+          sourceListId: listTwoId,
+          correct: true,
+          rating: 'good',
+          questionType: 'fill_blank_reverse',
+          reviewMode: 'word_to_meaning'
+        }]
+      });
+
+    expect(settleDueReviewResponseFour.status).toBe(200);
 
     const [listOneState, listTwoState, dueReviewLogs] = await Promise.all([
       LearningState.findOne({ userId: 'snapshot-user', wordId: wordOneId, listId: listOneId }).lean(),
@@ -693,6 +766,90 @@ describe('repository learning snapshot integration', () => {
     expect(listTwoState?.lastSource).toBe('due_review');
     expect(dueReviewLogs).toHaveLength(2);
     expect(dueReviewLogs.every((log) => log.source === 'due_review')).toBe(true);
+  });
+
+  it('tracks due review progress independently for the two entry modes', async () => {
+    const listResponse = await request(app)
+      .post('/api/lists')
+      .send({
+        name: 'Dual mode due review',
+        description: 'Verify meaning-to-word and word-to-meaning progress are independent',
+        context: 'Dual mode verification'
+      });
+
+    expect(listResponse.status).toBe(201);
+    const listId = listResponse.body.id as string;
+
+    const addWordResponse = await request(app)
+      .post(`/api/lists/${listId}/words`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        word: 'persistir',
+        meaning: '坚持'
+      });
+
+    expect(addWordResponse.status).toBe(201);
+    const wordId = addWordResponse.body.id as string;
+
+    const seedReviewResponse = await request(app)
+      .put(`/api/learn/${listId}/reviews`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        results: [{ wordId, correct: true, rating: 'good', questionType: 'fill_blank' }]
+      });
+
+    expect(seedReviewResponse.status).toBe(200);
+
+    await LearningState.updateOne(
+      { userId: 'snapshot-user', wordId, listId },
+      { $set: { dueAt: new Date(Date.now() - 60 * 60 * 1000) } }
+    );
+
+    const dueReviewResponse = await request(app)
+      .get('/api/lists/due-review')
+      .set('user-id', 'snapshot-user');
+
+    const dueReviewId = dueReviewResponse.body.id as string;
+
+    const startMeaningToWordResponse = await request(app)
+      .post(`/api/learn/${dueReviewId}/start`)
+      .set('user-id', 'snapshot-user')
+      .send({ reviewMode: 'meaning_to_word' });
+
+    expect(startMeaningToWordResponse.status).toBe(200);
+    expect(startMeaningToWordResponse.body.exercises).toHaveLength(1);
+    expect(startMeaningToWordResponse.body.exercises[0].direction).toBe('base_to_target');
+
+    const settleMeaningToWordResponse = await request(app)
+      .put(`/api/learn/${dueReviewId}/reviews`)
+      .set('user-id', 'snapshot-user')
+      .send({
+        results: [{
+          wordId,
+          correct: true,
+          rating: 'good',
+          questionType: 'fill_blank',
+          sourceListId: listId,
+          reviewMode: 'meaning_to_word'
+        }]
+      });
+
+    expect(settleMeaningToWordResponse.status).toBe(200);
+
+    const meaningToWordAfterSuccess = await request(app)
+      .post(`/api/learn/${dueReviewId}/start`)
+      .set('user-id', 'snapshot-user')
+      .send({ reviewMode: 'meaning_to_word' });
+    const wordToMeaningAfterSuccess = await request(app)
+      .post(`/api/learn/${dueReviewId}/start`)
+      .set('user-id', 'snapshot-user')
+      .send({ reviewMode: 'word_to_meaning' });
+
+    expect(meaningToWordAfterSuccess.status).toBe(400);
+    expect(meaningToWordAfterSuccess.body.message).toBe('List has no words');
+    expect(wordToMeaningAfterSuccess.status).toBe(200);
+    expect(wordToMeaningAfterSuccess.body.exercises).toHaveLength(1);
+    expect(wordToMeaningAfterSuccess.body.exercises[0].direction).toBe('target_to_base');
   });
 
   it('allows due review local exercise batches even when AI rate limiting blocks normal learn generation', async () => {
