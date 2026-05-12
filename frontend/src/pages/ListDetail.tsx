@@ -393,11 +393,27 @@ export const ListDetail = () => {
             )}
           </Box>
           <Flex gap={3} flexWrap="wrap" justify={{ base: 'center', md: 'flex-end' }}>
-            <Button variant="ghost" leftIcon={<FaGraduationCap />} colorScheme="green" size="lg" isDisabled={words.length === 0} onClick={() => navigate(`/learn/${list.id}`, { state: isDueReview ? { list, reviewMode: 'meaning_to_word' } : { list } })}>
-              {isDueReview ? '开始复习' : UI.actionLearn}
+            <Button
+              data-testid={isDueReview ? 'due-review-list-start-meaning-to-word-button' : undefined}
+              variant="ghost"
+              leftIcon={<FaGraduationCap />}
+              colorScheme="green"
+              size="lg"
+              isDisabled={words.length === 0}
+              onClick={() => navigate(`/learn/${list.id}`, { state: isDueReview ? { list, reviewMode: 'meaning_to_word' } : { list } })}
+            >
+              {isDueReview ? '给义答词' : UI.actionLearn}
             </Button>
             {isDueReview && (
-              <Button variant="outline" leftIcon={<FaGraduationCap />} colorScheme="orange" size="lg" isDisabled={words.length === 0} onClick={() => navigate(`/learn/${list.id}`, { state: { list, reviewMode: 'word_to_meaning' } })}>
+              <Button
+                data-testid="due-review-list-start-word-to-meaning-button"
+                variant="outline"
+                leftIcon={<FaGraduationCap />}
+                colorScheme="orange"
+                size="lg"
+                isDisabled={words.length === 0}
+                onClick={() => navigate(`/learn/${list.id}`, { state: { list, reviewMode: 'word_to_meaning' } })}
+              >
                 给词答义
               </Button>
             )}

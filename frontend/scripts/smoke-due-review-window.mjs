@@ -4,8 +4,10 @@ const FRONTEND_URL = process.env.SMOKE_FRONTEND_URL || 'http://localhost:4174';
 const BACKEND_URL = process.env.SMOKE_BACKEND_URL || 'http://localhost:3000';
 const USER_ID = process.env.SMOKE_USER_ID || 'local-ai-test-user';
 const REVIEW_TIMEOUT_MS = Number(process.env.SMOKE_REVIEW_TIMEOUT_MS || 30000);
-const END_REVIEW_LABEL = '\u7ed3\u675f\u590d\u4e60';
-const SUBMIT_FOR_AUDIT_LABEL = '\u63d0\u4ea4\u5e76\u8fdb\u5165\u5ba1\u6838';
+const LEARNING_LABEL_ZH = '\u5b66\u4e60\u4e2d\uff1a';
+const MEANING_TO_WORD_LABEL = '\u7ed9\u4e49\u7b54\u8bcd';
+const WORD_TO_MEANING_LABEL = '\u7ed9\u8bcd\u7b54\u4e49';
+const LEGACY_START_LABEL = '\u5f00\u59cb\u590d\u4e60';
 
 const ensure = (condition, message) => {
   if (!condition) {
@@ -44,87 +46,71 @@ const fetchDueReviewSnapshot = async () => {
   return response.json();
 };
 
-const fetchWordContext = async (wordId, listId) => {
-  const response = await fetch(`${BACKEND_URL}/api/lists/word/${wordId}`, {
-    headers: { 'user-id': USER_ID }
-  });
+const waitForBodyText = async (page, timeoutMs, predicate, description) => {
+  const startedAt = Date.now();
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch word detail for ${wordId}: ${response.status} ${response.statusText}`);
-  }
-
-  const detail = await response.json();
-  const context = detail.contexts.find((item) => item.listId === listId);
-  ensure(Boolean(context), `Expected word ${wordId} to have context in list ${listId}`);
-  return context;
-};
-
-const waitForWordReviewIncrement = async (wordId, listId, beforeReviewCount) => (
-  waitFor(async () => {
-    const context = await fetchWordContext(wordId, listId);
-    return context.reviewCount > beforeReviewCount ? context : null;
-  }, `word ${wordId} reviewCount increment`)
-);
-
-const resolveCorrectLabel = (exercise) => {
-  if (!exercise.options || !exercise.optionLabels) {
-    return exercise.correctAnswer;
-  }
-
-  const answerIndex = exercise.options.indexOf(exercise.correctAnswer);
-  ensure(answerIndex >= 0, `Could not find correct answer "${exercise.correctAnswer}" in options`);
-  return exercise.optionLabels[answerIndex];
-};
-
-const cleanMatchingText = (text) => (
-  text
-    .replace(/^[A-Za-z]\.\s*/, '')
-    .replace(/^[0-9]+\.\s*/, '')
-    .replace(/^\([A-Za-z]\)\s*/, '')
-    .replace(/^\([0-9]+\)\s*/, '')
-    .replace(/^[A-Za-z]\)\s*/, '')
-    .replace(/^[0-9]+\)\s*/, '')
-    .trim()
-);
-
-const answerExercise = async (page, exercise) => {
-  switch (exercise.type) {
-    case 'fill_blank':
-      await page.locator('input').fill(exercise.correctAnswer);
-      break;
-    case 'multiple_choice':
-    case 'sentence_completion':
-    case 'true_false': {
-      const correctLabel = resolveCorrectLabel(exercise);
-      await page.locator(`input[type="radio"][value="${correctLabel}"]`).check({ force: true });
-      break;
+  while (Date.now() - startedAt < timeoutMs) {
+    const bodyText = await page.locator('body').innerText();
+    if (predicate(bodyText)) {
+      return bodyText;
     }
-    case 'matching': {
-      ensure(Array.isArray(exercise.pairs) && exercise.pairs.length > 0, 'Matching exercise has no pairs');
-      for (const pair of exercise.pairs) {
-        const word = cleanMatchingText(pair.word);
-        const definition = cleanMatchingText(pair.definition);
-        await page.getByRole('button', { name: word, exact: true }).click();
-        await page.getByRole('button', { name: definition, exact: true }).click();
-      }
-      break;
-    }
-    default:
-      throw new Error(`Unsupported exercise type for smoke test: ${exercise.type}`);
+
+    await sleep(250);
   }
+
+  const finalBodyText = await page.locator('body').innerText();
+  throw new Error(
+    `${description} did not finish loading within ${timeoutMs}ms. Current text sample:\n${finalBodyText.slice(0, 1200)}`
+  );
 };
 
-const clickTimelineQuestion = async (page, questionNumber) => {
-  await page.locator('button').filter({ hasText: new RegExp(`^${questionNumber}$`) }).first().click();
+const waitForStartPayload = async (startPayloads, expectedCount, timeoutMs, label) => {
+  const startedAt = Date.now();
+
+  while (Date.now() - startedAt < timeoutMs) {
+    if (startPayloads.length >= expectedCount) {
+      return startPayloads[expectedCount - 1];
+    }
+
+    await sleep(250);
+  }
+
+  throw new Error(`${label} did not finish within ${timeoutMs}ms`);
+};
+
+const assertHubEntries = async (page, snapshot) => {
+  await page.getByTestId('due-review-page').waitFor({ state: 'visible', timeout: 15000 });
+  await page.getByTestId('due-review-start-meaning-to-word-link').waitFor({ state: 'visible', timeout: 15000 });
+  await page.getByTestId('due-review-start-word-to-meaning-link').waitFor({ state: 'visible', timeout: 15000 });
+
+  const bodyText = await page.locator('body').innerText();
+  ensure(bodyText.includes(String(snapshot.dueCount)), 'Due-review hub does not show dueCount');
+  ensure(bodyText.includes(String(snapshot.sourceListCount)), 'Due-review hub does not show sourceListCount');
+  ensure(bodyText.includes(MEANING_TO_WORD_LABEL), 'Due-review hub should show 给义答词');
+  ensure(bodyText.includes(WORD_TO_MEANING_LABEL), 'Due-review hub should show 给词答义');
+  ensure(!bodyText.includes(LEGACY_START_LABEL), 'Due-review hub should no longer show 开始复习');
+};
+
+const assertListDetailEntries = async (page, snapshot) => {
+  ensure(
+    page.url().endsWith(`/lists/${snapshot.id}`),
+    `Expected list detail route /lists/${snapshot.id}, got ${page.url()}`
+  );
+  await page.getByTestId('due-review-list-start-meaning-to-word-button').waitFor({ state: 'visible', timeout: 15000 });
+  await page.getByTestId('due-review-list-start-word-to-meaning-button').waitFor({ state: 'visible', timeout: 15000 });
+
+  const bodyText = await page.locator('body').innerText();
+  ensure(bodyText.includes(MEANING_TO_WORD_LABEL), 'Due-review list detail should show 给义答词');
+  ensure(bodyText.includes(WORD_TO_MEANING_LABEL), 'Due-review list detail should show 给词答义');
+  ensure(!bodyText.includes(LEGACY_START_LABEL), 'Due-review list detail should no longer show 开始复习');
 };
 
 const main = async () => {
   const snapshot = await fetchDueReviewSnapshot();
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ viewport: { width: 1440, height: 1024 } });
-  const startPayloads = [];
-  const morePayloads = [];
   const consoleErrors = [];
+  const startPayloads = [];
 
   page.on('console', (message) => {
     if (message.type() === 'error') {
@@ -132,13 +118,13 @@ const main = async () => {
     }
   });
 
+  page.on('pageerror', (error) => {
+    consoleErrors.push(String(error));
+  });
+
   page.on('response', async (response) => {
-    const url = response.url();
-    if (/\/api\/learn\/[^/]+\/start$/.test(url)) {
+    if (/\/api\/learn\/[^/]+\/start$/.test(response.url())) {
       startPayloads.push(await response.json());
-    }
-    if (/\/api\/learn\/[^/]+\/more$/.test(url)) {
-      morePayloads.push(await response.json());
     }
   });
 
@@ -148,54 +134,31 @@ const main = async () => {
       timeout: 60000
     });
 
-    await page.getByTestId('due-review-start-link').click();
+    await assertHubEntries(page, snapshot);
+
+    await page.getByTestId('due-review-list-link').click();
+    await page.waitForLoadState('networkidle');
+    await assertListDetailEntries(page, snapshot);
+
+    await page.goto(`${FRONTEND_URL}/reviews`, {
+      waitUntil: 'networkidle',
+      timeout: 60000
+    });
+    await assertHubEntries(page, snapshot);
+
+    await page.getByTestId('due-review-start-meaning-to-word-link').click();
     await page.waitForLoadState('domcontentloaded');
 
-    await waitFor(() => startPayloads.length === 1 ? startPayloads[0] : null, 'learn start payload');
-    const [startPayload] = startPayloads;
-
-    await waitFor(async () => {
-      const bodyText = await page.locator('body').innerText();
-      return bodyText.includes('共 10 题') ? bodyText : null;
-    }, 'questions 1-10 visible');
-
+    const startPayload = await waitForStartPayload(startPayloads, 1, REVIEW_TIMEOUT_MS, 'meaning_to_word learn start payload');
     ensure(
-      morePayloads.length === 1 && (morePayloads[0].exercises?.length || 0) > 0,
-      `Expected exactly one auto-generated batch while question 1 is active, got ${morePayloads.length}`
+      startPayload?.reviewMode === 'meaning_to_word',
+      `Expected reviewMode "meaning_to_word", got "${startPayload?.reviewMode ?? 'undefined'}"`
     );
-
-    await clickTimelineQuestion(page, 6);
-    await waitFor(async () => {
-      const bodyText = await page.locator('body').innerText();
-      return bodyText.includes('共 15 题') ? bodyText : null;
-    }, 'questions 1-15 visible after entering question 6');
-
-    ensure(
-      morePayloads.length === 2 && (morePayloads[1].exercises?.length || 0) > 0,
-      `Expected exactly two auto-generated batches after entering question 6, got ${morePayloads.length}`
-    );
-
-    const targetExercise = startPayload.exercises.find((exercise) => (
-      exercise.wordId &&
-      startPayload.wordSources?.[exercise.wordId]?.sourceListId &&
-      ['fill_blank', 'multiple_choice', 'sentence_completion', 'true_false', 'matching'].includes(exercise.type)
-    ));
-    ensure(Boolean(targetExercise), 'Could not find a settleable exercise in the first batch');
-
-    const sourceListId = startPayload.wordSources[targetExercise.wordId].sourceListId;
-    const beforeContext = await fetchWordContext(targetExercise.wordId, sourceListId);
-
-    await clickTimelineQuestion(page, 1);
-    await answerExercise(page, targetExercise);
-    await page.getByRole('button', { name: SUBMIT_FOR_AUDIT_LABEL }).click();
-    await page.getByRole('button', { name: END_REVIEW_LABEL }).click();
-
-    await page.waitForURL(new RegExp(`/lists/${snapshot.id}$`), { timeout: REVIEW_TIMEOUT_MS });
-    const settledContext = await waitForWordReviewIncrement(
-      targetExercise.wordId,
-      sourceListId,
-      beforeContext.reviewCount
-    );
+    await waitForBodyText(page, REVIEW_TIMEOUT_MS, (bodyText) => (
+      bodyText.includes(LEARNING_LABEL_ZH) &&
+      bodyText.includes(MEANING_TO_WORD_LABEL) &&
+      bodyText.includes(snapshot.name)
+    ), 'meaning_to_word learning screen');
 
     if (consoleErrors.length > 0) {
       throw new Error(`Console errors detected:\n${consoleErrors.join('\n')}`);
@@ -203,12 +166,13 @@ const main = async () => {
 
     console.log(JSON.stringify({
       status: 'ok',
-      startExerciseCount: startPayload.exercises.length,
-      autoGeneratedBatchCount: morePayloads.length,
-      settledWordId: targetExercise.wordId,
-      sourceListId,
-      reviewCountBefore: beforeContext.reviewCount,
-      reviewCountAfter: settledContext.reviewCount,
+      snapshot: {
+        id: snapshot.id,
+        dueCount: snapshot.dueCount,
+        sourceListCount: snapshot.sourceListCount
+      },
+      startReviewMode: startPayload.reviewMode,
+      exerciseCount: startPayload.exercises?.length || 0,
       finalUrl: page.url()
     }, null, 2));
   } finally {

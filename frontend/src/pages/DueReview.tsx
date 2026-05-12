@@ -287,7 +287,7 @@ export const DueReview = () => {
                         size="lg"
                         isDisabled={dueCount <= 0}
                       >
-                        开始复习
+                        给义答词
                       </Button>
                     )}
                     {list && (
