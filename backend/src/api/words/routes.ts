@@ -4,6 +4,7 @@ import { openaiRateLimiter } from '../../middleware/rateLimiter';
 import { WordList } from '../lists/model';
 import { Word, IWord } from './model';
 import { wordAgentService } from './agent-service';
+import type { ValidationDirection } from './agent-service';
 import mongoose from 'mongoose';
 import { getUserLanguages } from '../../utils/getUserLanguages';
 import { requestLearningSnapshotPersist } from '../../services/repoLearningSnapshot';
@@ -12,7 +13,10 @@ import { LearningState } from '../learning-state/model';
 import { resolveUserId } from '../../config/learning';
 import { ensureLearningState, selectDueReviewWords } from '../../services/learningScheduler';
 import { isDueReviewList } from '../../services/dueReview';
-import { isDeterministicallyCorrectAnswer } from '../../services/answerValidation';
+import {
+  isDeterministicallyCorrectAnswer,
+  isDeterministicallyCorrectMeaningAnswer
+} from '../../services/answerValidation';
 import {
   listIdSchema,
   addWordSchema,
@@ -27,6 +31,47 @@ const router = Router();
 
 const getMembership = (word: Pick<IWord, 'listMemberships'>, listId: string) =>
   word.listMemberships.find((membership) => membership.listId.toString() === listId);
+
+const resolveValidationDirection = (
+  direction?: ValidationDirection,
+  question?: string
+): ValidationDirection | undefined => {
+  if (direction) {
+    return direction;
+  }
+
+  const normalizedQuestion = question?.normalize('NFKC').toLocaleLowerCase().trim();
+  if (!normalizedQuestion) {
+    return undefined;
+  }
+
+  if (
+    normalizedQuestion.includes('que significa')
+    || normalizedQuestion.includes('what does')
+    || normalizedQuestion.includes('是什么意思')
+  ) {
+    return 'target_to_base';
+  }
+
+  if (
+    normalizedQuestion.includes('escribe la')
+    || normalizedQuestion.includes('write the')
+    || normalizedQuestion.includes('写出')
+  ) {
+    return 'base_to_target';
+  }
+
+  return undefined;
+};
+
+const isDeterministicallyValidByDirection = (
+  userAnswer: string,
+  correctAnswer: string,
+  direction?: ValidationDirection
+) => (
+  isDeterministicallyCorrectAnswer(userAnswer, correctAnswer)
+  || (direction === 'target_to_base' && isDeterministicallyCorrectMeaningAnswer(userAnswer, correctAnswer))
+);
 
 const transformWord = async (word: IWord, listId: string, userId: string) => {
   const membership = getMembership(word, listId);
@@ -311,24 +356,38 @@ router.delete('/:listId/words/:wordId', validate(deleteWordSchema), async (req, 
 
 router.post('/validate-answer', validate(validateAnswerSchema), async (req: any, res) => {
   try {
-    const { userAnswer, correctAnswer, context } = req.body;
-    if (isDeterministicallyCorrectAnswer(userAnswer, correctAnswer)) {
+    const { userAnswer, correctAnswer, context, question, direction } = req.body;
+    const resolvedDirection = resolveValidationDirection(direction, question);
+
+    if (isDeterministicallyValidByDirection(userAnswer, correctAnswer, resolvedDirection)) {
       return res.json({
         isValid: true,
-        explanation: 'Matched by deterministic normalization before AI semantic validation.'
+        explanation: resolvedDirection === 'target_to_base'
+          ? 'Matched by deterministic gloss normalization before AI semantic validation.'
+          : 'Matched by deterministic normalization before AI semantic validation.'
       });
     }
 
     const userId = resolveUserId(req.headers['user-id']);
     const { baseLanguage, targetLanguage } = await getUserLanguages(userId);
-    const result = await wordAgentService.validateAnswer(userAnswer, correctAnswer, context, baseLanguage, targetLanguage);
+    const result = await wordAgentService.validateAnswer(
+      userAnswer,
+      correctAnswer,
+      context,
+      baseLanguage,
+      targetLanguage,
+      { question, direction: resolvedDirection }
+    );
     res.json(result);
   } catch (error) {
-    const { userAnswer, correctAnswer } = req.body;
+    const { userAnswer, correctAnswer, question, direction } = req.body;
+    const resolvedDirection = resolveValidationDirection(direction, question);
     console.error('Answer validation fell back to deterministic comparison:', error);
     res.json({
-      isValid: isDeterministicallyCorrectAnswer(userAnswer, correctAnswer),
-      explanation: 'AI semantic validation was unavailable, so deterministic comparison was used.'
+      isValid: isDeterministicallyValidByDirection(userAnswer, correctAnswer, resolvedDirection),
+      explanation: resolvedDirection === 'target_to_base'
+        ? 'AI semantic validation was unavailable, so deterministic gloss comparison was used.'
+        : 'AI semantic validation was unavailable, so deterministic comparison was used.'
     });
   }
 });

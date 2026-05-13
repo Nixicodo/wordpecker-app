@@ -14,6 +14,7 @@ const similarWordsPrompt = fs.readFileSync(path.join(__dirname, '../../agents/si
 const readingPrompt = fs.readFileSync(path.join(__dirname, '../../agents/reading-agent/prompt.md'), 'utf-8');
 
 export type DefinitionStyle = 'default' | 'compact_gloss';
+export type ValidationDirection = 'target_to_base' | 'base_to_target';
 
 export const buildDefinitionUserPrompt = (
   word: string,
@@ -40,6 +41,74 @@ export const buildDefinitionUserPrompt = (
   return `Generate a clear definition for the word "${word}" in the context of "${normalizedContext}". The word is in ${targetLanguage} and the definition should be in ${baseLanguage}.`;
 };
 
+export const buildValidationUserPrompt = ({
+  userAnswer,
+  correctAnswer,
+  question,
+  context,
+  baseLanguage,
+  targetLanguage,
+  direction,
+}: {
+  userAnswer: string;
+  correctAnswer: string;
+  question?: string;
+  context: string;
+  baseLanguage: string;
+  targetLanguage: string;
+  direction?: ValidationDirection;
+}) => {
+  const normalizedContext = context?.trim() || 'General language exercise';
+  const normalizedQuestion = question?.trim();
+  const directionLabel = direction
+    ? `${direction}${direction === 'target_to_base' ? ' (word -> meaning)' : ' (meaning -> word)'}`
+    : 'unknown';
+
+  const sharedInstructions = [
+    'Validate whether the learner answer should be accepted for this exercise.',
+    `Learner answer: "${userAnswer}".`,
+    `Reference answer: "${correctAnswer}".`,
+    normalizedQuestion ? `Visible question: "${normalizedQuestion}".` : null,
+    `Exercise context: "${normalizedContext}".`,
+    `Learner base language: ${baseLanguage}. Target language being studied: ${targetLanguage}.`,
+    `Exercise direction: ${directionLabel}.`,
+  ].filter((line): line is string => Boolean(line));
+
+  if (direction === 'target_to_base') {
+    return [
+      ...sharedInstructions,
+      'Critical grading rules for word -> meaning questions:',
+      '- The reference answer may be a compact glossary with multiple acceptable senses, slash-separated meanings, and parenthetical English hints.',
+      '- Accept the answer if it correctly states any one acceptable meaning or sense from the reference answer.',
+      '- Do not require the learner to provide every listed sense.',
+      `- Do not require the learner to repeat parenthetical English hints if they already answered correctly in ${baseLanguage}.`,
+      `- Likewise, if one of the provided parenthetical glosses is already a correct answer in another language such as English, that can still be accepted.`,
+      '- Treat slash-separated glosses and parenthetical glosses as alternative acceptable answers, not cumulative requirements, unless the question explicitly asks for all meanings.',
+      '- Prefer acceptance when the learner gives one clear core meaning that matches the reference answer.',
+      'Return isValid true only if the learner answer should be accepted. Keep explanation brief and educational.',
+    ].join(' ');
+  }
+
+  if (direction === 'base_to_target') {
+    return [
+      ...sharedInstructions,
+      'Critical grading rules for meaning -> word questions:',
+      '- Prefer lexical accuracy because the learner is expected to produce the target-language study word.',
+      '- Accept minor formatting, capitalization, punctuation, or diacritic differences, and obvious inflection or spelling variants only when they still clearly identify the same target word.',
+      '- Do not accept a different synonym or a different listed word merely because it is semantically related.',
+      'Return isValid true only if the learner answer should be accepted. Keep explanation brief and educational.',
+    ].join(' ');
+  }
+
+  return [
+    ...sharedInstructions,
+    'Critical grading rules:',
+    '- Be semantically fair and context-aware.',
+    '- If the reference answer includes multiple glosses or parenthetical hints, do not automatically require all of them.',
+    'Return isValid true only if the learner answer should be accepted. Keep explanation brief and educational.',
+  ].join(' ');
+};
+
 export class WordAgentService {
   async generateDefinition(
     word: string,
@@ -60,8 +129,23 @@ export class WordAgentService {
     return result.definition;
   }
 
-  async validateAnswer(userAnswer: string, correctAnswer: string, context: string, baseLanguage: string, targetLanguage: string): Promise<ValidationResultType> {
-    const prompt = `Validate if the user's answer "${userAnswer}" is correct for the expected answer "${correctAnswer}". Context: ${context || 'General language exercise'}. User speaks ${baseLanguage} and is learning ${targetLanguage}.`;
+  async validateAnswer(
+    userAnswer: string,
+    correctAnswer: string,
+    context: string,
+    baseLanguage: string,
+    targetLanguage: string,
+    options?: { question?: string; direction?: ValidationDirection }
+  ): Promise<ValidationResultType> {
+    const prompt = buildValidationUserPrompt({
+      userAnswer,
+      correctAnswer,
+      question: options?.question,
+      context,
+      baseLanguage,
+      targetLanguage,
+      direction: options?.direction,
+    });
     return generateStructuredResult<ValidationResultType>({
       systemPrompt: validationPrompt,
       userPrompt: prompt,

@@ -49,6 +49,8 @@ export const validateAnswerSchema = {
   body: z.object({
     userAnswer: z.string().min(1),
     correctAnswer: z.string().min(1),
+    question: z.string().optional(),
+    direction: z.enum(['target_to_base', 'base_to_target']).optional(),
     context: z.string().optional()
   })
 };

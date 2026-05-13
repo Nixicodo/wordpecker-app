@@ -111,8 +111,14 @@ export const apiService = {
     summary: { total: number; imported: number; skipped: number; failed: number };
   }> => api.post(`/api/lists/${listId}/words/bulk`, { words }),
   deleteWord: (listId: string, wordId: string): ApiResponse<void> => api.delete(`/api/lists/${listId}/words/${wordId}`),
-  validateFillBlankAnswer: (userAnswer: string, correctAnswer: string, question: string, context?: string): ApiResponse<{isValid: boolean}> => 
-    api.post('/api/lists/validate-answer', { userAnswer, correctAnswer, question, context }, { timeout: 15000 }),
+  validateFillBlankAnswer: (
+    userAnswer: string,
+    correctAnswer: string,
+    question: string,
+    direction: 'target_to_base' | 'base_to_target',
+    context?: string
+  ): ApiResponse<{isValid: boolean}> =>
+    api.post('/api/lists/validate-answer', { userAnswer, correctAnswer, question, direction, context }, { timeout: 15000 }),
 
   // Learning
   startLearning: (listId: string, payload?: { reviewMode?: DueReviewMode }): ApiResponse<LearnStartResponse> => 

@@ -46,6 +46,7 @@ export const validateAnswer = async (
           userAnswer,
           question.correctAnswer,
           question.question,
+          question.direction,
           context
         );
         return result.isValid;
