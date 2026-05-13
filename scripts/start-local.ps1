@@ -5,6 +5,7 @@ $backendDir = Join-Path $projectRoot "backend"
 $frontendDir = Join-Path $projectRoot "frontend"
 $logsDir = Join-Path $projectRoot "logs"
 $runtimeDir = Join-Path $projectRoot ".runtime"
+$healthCheckScript = Join-Path $PSScriptRoot "check-local-health.ps1"
 $nodeExe = (Get-Command node).Source
 $codexDir = Join-Path $env:USERPROFILE ".codex"
 $codexAuthFile = Join-Path $codexDir "auth.json"
@@ -211,7 +212,11 @@ $frontendProcess = Start-Process -FilePath $nodeExe -WorkingDirectory $frontendD
 $frontendProcess.Id | Set-Content -Path (Join-Path $runtimeDir "frontend.pid") -NoNewline
 
 Write-Host ""
-Write-Host "Local services should be available at:"
+Write-Host "Waiting for local health checks to pass..."
+& $healthCheckScript -BackendUrl "http://localhost:3000" -FrontendUrl "http://localhost:5173"
+
+Write-Host ""
+Write-Host "Local services are ready:"
 Write-Host "  Frontend: http://localhost:5173"
 Write-Host "  Backend:  http://localhost:3000"
 Write-Host "  MongoDB:  localhost:27017"

@@ -17,6 +17,7 @@ cd F:\aprojects\wordpecker-app
 - 自动写入 `backend/.env` 和 `frontend/.env`
 - 如果缺少依赖则执行 `npm ci`
 - 后台启动前后端，并把日志写到 `logs\`
+- 在返回成功前，主动检查 `/api/lists/due-review`、`/api/lists/discipline-status` 和真实的待复习浏览器 smoke
 
 启动完成后访问：
 
@@ -30,6 +31,22 @@ cd F:\aprojects\wordpecker-app
 cd F:\aprojects\wordpecker-app
 .\scripts\stop-local.ps1
 ```
+
+## 单独做健康检查
+
+如果你怀疑“端口起来了，但应用其实没恢复”，可以单独运行：
+
+```powershell
+cd F:\aprojects\wordpecker-app
+.\scripts\check-local-health.ps1
+```
+
+这会检查：
+
+- 后端 `due-review` 关键接口
+- 后端 `discipline-status` 关键接口
+- 前端 `/reviews` 路由可访问
+- 真实浏览器里的待复习主流程 smoke
 
 ## 说明
 
