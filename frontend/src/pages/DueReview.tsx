@@ -61,6 +61,7 @@ export const DueReview = () => {
   const { cardOpacity } = useBackgrounds();
   const [list, setList] = useState<WordList | null>(null);
   const [disciplineStatus, setDisciplineStatus] = useState<DisciplineStatus | null>(null);
+  const [disciplineStatusWarning, setDisciplineStatusWarning] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -71,17 +72,40 @@ export const DueReview = () => {
       try {
         setIsLoading(true);
         setErrorMessage('');
-        const [nextList, nextStatus] = await Promise.all([
+        setDisciplineStatusWarning('');
+
+        const [listResult, disciplineStatusResult] = await Promise.allSettled([
           apiService.getDueReview(),
           apiService.getDisciplineStatus()
         ]);
+
+        if (listResult.status !== 'fulfilled') {
+          throw listResult.reason;
+        }
 
         if (!isMounted) {
           return;
         }
 
-        setList(nextList);
-        setDisciplineStatus(nextStatus);
+        setList(listResult.value);
+
+        if (disciplineStatusResult.status === 'fulfilled') {
+          setDisciplineStatus(disciplineStatusResult.value);
+          return;
+        }
+
+        console.error('Failed to load discipline status for due review hub:', disciplineStatusResult.reason);
+        setDisciplineStatus(null);
+
+        const warningMessage = '今天的纪律额度暂时加载失败，不影响你继续处理待复习。';
+        setDisciplineStatusWarning(warningMessage);
+        toast({
+          title: '纪律状态暂时不可用',
+          description: warningMessage,
+          status: 'warning',
+          duration: 4000,
+          isClosable: true
+        });
       } catch (error) {
         console.error('Failed to load due review hub:', error);
         if (!isMounted) {
@@ -228,6 +252,24 @@ export const DueReview = () => {
                     </Text>
                   </Box>
                 </SimpleGrid>
+
+                {disciplineStatusWarning && (
+                  <Box
+                    borderRadius="2xl"
+                    borderWidth="1px"
+                    borderColor="yellow.300"
+                    bg="rgba(133, 77, 14, 0.26)"
+                    px={5}
+                    py={5}
+                  >
+                    <Text color="yellow.100" fontWeight="bold" fontSize="lg">
+                      纪律状态暂时不可用
+                    </Text>
+                    <Text mt={2} color="yellow.50">
+                      {disciplineStatusWarning}
+                    </Text>
+                  </Box>
+                )}
 
                 {disciplineStatus && (
                   <Box borderRadius="2xl" bg={sectionCardBg} borderWidth="1px" borderColor="whiteAlpha.200" px={5} py={5}>

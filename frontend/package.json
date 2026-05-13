@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "smoke:due-review": "node ./scripts/smoke-due-review.mjs",
+    "smoke:due-review-discipline-fallback": "node ./scripts/smoke-due-review-discipline-fallback.mjs",
     "smoke:due-review-window": "node ./scripts/smoke-due-review-window.mjs"
   },
   "dependencies": {
