@@ -84,6 +84,9 @@ export const buildValidationUserPrompt = ({
       `- Do not require the learner to repeat parenthetical English hints if they already answered correctly in ${baseLanguage}.`,
       `- Likewise, if one of the provided parenthetical glosses is already a correct answer in another language such as English, that can still be accepted.`,
       '- Treat slash-separated glosses and parenthetical glosses as alternative acceptable answers, not cumulative requirements, unless the question explicitly asks for all meanings.',
+      '- Accept close paraphrases, near-synonyms, and neighboring learner-friendly wording when they preserve the same core meaning in context.',
+      '- Do not reject solely because the learner used a nearby wording, a different but equivalent everyday phrasing, or a slightly different part-of-speech realization of the same idea in the base language.',
+      '- Reject only if the learner shifts the meaning in a material way, introduces an actually different concept, or becomes too vague to show understanding of the target word.',
       '- Prefer acceptance when the learner gives one clear core meaning that matches the reference answer.',
       'Return isValid true only if the learner answer should be accepted. Keep explanation brief and educational.',
     ].join(' ');

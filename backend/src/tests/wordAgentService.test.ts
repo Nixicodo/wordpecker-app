@@ -34,6 +34,23 @@ describe('wordAgentService prompt builders', () => {
     expect(prompt).toContain('Do not require the learner to repeat parenthetical English hints');
   });
 
+  it('tells word-to-meaning grading to accept close paraphrases with the same core meaning', () => {
+    const prompt = buildValidationUserPrompt({
+      userAnswer: '最后',
+      correctAnswer: '结尾',
+      question: 'Que significa "final"?',
+      context: 'General language exercise',
+      baseLanguage: 'Chinese',
+      targetLanguage: 'Spanish',
+      direction: 'target_to_base'
+    });
+
+    expect(prompt).toContain('Accept close paraphrases');
+    expect(prompt).toContain('same core meaning');
+    expect(prompt).toContain('Do not reject solely because the learner used a nearby wording');
+    expect(prompt).toContain('Reject only if the learner shifts the meaning in a material way');
+  });
+
   it('keeps meaning-to-word grading stricter about the study word', () => {
     const prompt = buildValidationUserPrompt({
       userAnswer: 'mojado',
