@@ -48,6 +48,28 @@ cd F:\aprojects\wordpecker-app
 - 前端 `/reviews` 路由可访问
 - 真实浏览器里的待复习主流程 smoke
 
+## 这次“又挂了”的根因
+
+这次不是 `/reviews` 页面再次因为 `discipline-status` 失败而整页报错，而是本地服务进入了一个“前端残留、后端掉线”的半死状态：
+
+- `5173` 还被之前的 Vite 进程占着
+- `3000` 已经没有监听
+- 旧版 `start-local.ps1` 只能靠端口占用进程的命令行里是否包含项目根目录来判断“是不是本项目自己的旧进程”
+- 但 Vite / Nodemon 在 Windows 上有时会只留下类似 `node ...\\node_modules\\vite\\bin\\vite.js` 这样的命令行，不一定带项目根目录绝对路径
+
+结果就是：
+
+- 脚本认不出 `5173` 上残留的是 WordPecker 自己的旧前端
+- 它不会自动清掉这个残留进程
+- 再次启动时就会报“Port 5173 is already in use...”，看起来像启动脚本也救不回来
+
+现在脚本已经补上了额外识别条件：
+
+- `3000` 上只要是 `nodemon.js + src/app.ts`
+- `5173` 上只要是 `vite.js + --strictPort`
+
+就会被视为 WordPecker 自己留下的陈旧进程并自动清理，然后继续拉起完整服务。
+
 ## 说明
 
 - 当前部署默认会自动写入 `backend/.env`，并填入一个本地占位 `OPENAI_API_KEY`，这样后端可以通过启动阶段的环境校验。

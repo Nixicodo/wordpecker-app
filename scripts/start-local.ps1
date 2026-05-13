@@ -7,6 +7,8 @@ $logsDir = Join-Path $projectRoot "logs"
 $runtimeDir = Join-Path $projectRoot ".runtime"
 $healthCheckScript = Join-Path $PSScriptRoot "check-local-health.ps1"
 $nodeExe = (Get-Command node).Source
+$backendLauncher = Join-Path $backendDir "node_modules\nodemon\bin\nodemon.js"
+$frontendLauncher = Join-Path $frontendDir "node_modules\vite\bin\vite.js"
 $codexDir = Join-Path $env:USERPROFILE ".codex"
 $codexAuthFile = Join-Path $codexDir "auth.json"
 $codexConfigFile = Join-Path $codexDir "config.toml"
@@ -70,7 +72,26 @@ function Stop-ProjectPortOwner {
         return
     }
 
-    if ($owner.CommandLine -and $owner.CommandLine.Contains($ProjectRoot)) {
+    $isProjectOwnedProcess = $false
+    if ($owner.CommandLine) {
+        if ($owner.CommandLine.Contains($ProjectRoot)) {
+            $isProjectOwnedProcess = $true
+        } elseif (
+            $Port -eq 3000 -and
+            $owner.CommandLine.Contains("node_modules\nodemon\bin\nodemon.js") -and
+            $owner.CommandLine.Contains("src/app.ts")
+        ) {
+            $isProjectOwnedProcess = $true
+        } elseif (
+            $Port -eq 5173 -and
+            $owner.CommandLine.Contains("node_modules\vite\bin\vite.js") -and
+            $owner.CommandLine.Contains("--strictPort")
+        ) {
+            $isProjectOwnedProcess = $true
+        }
+    }
+
+    if ($isProjectOwnedProcess) {
         Write-Host "Stopping stale WordPecker process on port ${Port}: $($owner.DisplayName)"
         Stop-ProcessTree -ProcessId $owner.Id
         Start-Sleep -Seconds 1
@@ -186,7 +207,7 @@ if (Test-Path $frontendLog) { Remove-Item $frontendLog -Force }
 if (Test-Path $frontendErrLog) { Remove-Item $frontendErrLog -Force }
 
 $backendProcess = Start-Process -FilePath $nodeExe -WorkingDirectory $backendDir -ArgumentList @(
-    ".\node_modules\nodemon\bin\nodemon.js",
+    $backendLauncher,
     "--watch",
     "src",
     "--ext",
@@ -204,7 +225,7 @@ $backendProcess.Id | Set-Content -Path (Join-Path $runtimeDir "backend.pid") -No
 Start-Sleep -Seconds 8
 
 $frontendProcess = Start-Process -FilePath $nodeExe -WorkingDirectory $frontendDir -ArgumentList @(
-    ".\node_modules\vite\bin\vite.js",
+    $frontendLauncher,
     "--host",
     "0.0.0.0",
     "--strictPort"
